@@ -1,8 +1,7 @@
-# El código vive dentro de smartrecruit-fuente.zip: Netlify lo descomprime y compila.
 [build]
-  command = "rm -rf app && (unzip -q -o smartrecruit-fuente.zip -d app || python3 -m zipfile -e smartrecruit-fuente.zip app) && cd app && npm install --no-audit --no-fund && npm run build"
-  publish = "app/dist"
+  command = "npm run build"
+  publish = "dist"
 
 [functions]
-  directory = "app/netlify/functions"
+  directory = "netlify/functions"
   node_bundler = "esbuild"

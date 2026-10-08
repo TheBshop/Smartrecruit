@@ -1,0 +1,9 @@
+{
+  "name": "smartrecruit",
+  "private": true,
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && cp -r public/. dist/ && esbuild main.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV=\\\"production\\\" --outfile=dist/assets/index.js"
+  },
+  "dependencies": { "react": "^19.0.0", "react-dom": "^19.0.0", "@supabase/supabase-js": "^2.45.0" },
+  "devDependencies": { "esbuild": "^0.24.0" }
+}
