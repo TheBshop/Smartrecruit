@@ -2295,7 +2295,7 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 `;
 
 const emptyProfile = {
-  name: "", email: "", phone: "", videoLink: "", country: "Argentina", gender: "F", sport: "Field Hockey", position: "M",
+  name: "", email: "", phone: "", videoLink: "", country: "", gender: "F", sport: "Field Hockey", position: "",
   gradYear: 2028, gradMonth: 12, gpaScale: "ar10", gpaRaw: 8.0, major: "Ingeniería Química",
   goals: 7, assists: 8, goal: "completa",
 };
@@ -2575,7 +2575,7 @@ const MAIL_FACT_FIELDS = {
   watched: { label: "¿Qué viste de su equipo?", es: "su partido contra Kutztown del 20 de septiembre", en: "your game against Kutztown on September 20" },
   met: { label: "¿Dónde se cruzaron o dónde te vio?", es: "el showcase de Buenos Aires de julio", en: "the Buenos Aires showcase in July" },
   result: { label: "Resultado o novedad reciente", es: "salimos campeonas del torneo regional sub-18", en: "my team won the U18 regional championship" },
-  avail: { label: "¿Cuándo podés hacer una llamada?", es: "de lunes a viernes después de las 17 (hora de Argentina)", en: "on weekdays after 4 pm Eastern Time" },
+  avail: { label: "¿Cuándo podés hacer una llamada?", es: "de lunes a viernes después de las 17 (hora de mi país)", en: "on weekdays after 4 pm Eastern Time" },
   answer: { label: "Tu respuesta a lo que te preguntó", es: "", en: "", long: true },
 };
 function cleanMailFacts(facts) {
@@ -2595,8 +2595,35 @@ function writeMailFacts(university, facts) {
   writeJSON("rr_mail_facts", all);
 }
 
+
+// Perfil que se manda a la IA: sin códigos ambiguos ("M", "PG"), con las estadísticas rotuladas en inglés
+// y las fechas ya calculadas, para que no tenga que adivinar nada.
+function aiProfile(p) {
+  p = p || {};
+  const okPos = !(POSITION_SELECT[p.sport] && p.position && !POSITION_SELECT[p.sport].includes(p.position));
+  const pos = okPos && p.position ? positionInfo(p.sport, p.position, "en", p.gender).phrase.replace(/\s*\([A-Z0-9]+\)$/, "") : "";
+  const isGK = /^(GK)$/i.test(String(p.position || "")) && (p.sport === "Soccer" || p.sport === "Field Hockey");
+  const L = isGK ? GK_STAT_LABELS.en : statLabelsFor(p.sport, "en");
+  const stats = {};
+  if (Number(p.goals) > 0) stats[L.goals] = p.goals;
+  if (Number(p.assists) > 0) stats[L.assists] = p.assists;
+  if (isGK && Number(p.gaa) > 0) stats[L.gaa] = p.gaa;
+  const name = String(p.name || "").trim().replace(/\s+/g, " ").split(" ").map((w) => (w === w.toLowerCase() || w === w.toUpperCase() ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w)).join(" ");
+  const MES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  let entry = null; try { entry = getEntryYear(p); } catch (e) {}
+  return {
+    name, country: p.country || "", sport: p.sport, team: p.gender === "M" ? "men's" : "women's",
+    position: pos || "(not provided)",
+    highSchoolGraduation: p.gradYear ? `${MES[(Number(p.gradMonth) || 12) - 1]} ${p.gradYear}` : "",
+    collegeEntry: entry ? `fall ${entry}` : "",
+    gpa: p.gpa4 ? `${p.gpa4} on a 4.0 scale (estimated conversion)` : "",
+    intendedMajor: p.major || "", stats, video: p.videoLink || "", email: p.email || "", phone: p.phone || "",
+  };
+}
 function composeEmail({ profile, university, r = null, kind = "first", lang = "en", exclude = [], contactEntry = null, hook = null, facts = null }) {
   if (!MAIL_KINDS[kind]) kind = "first";
+  // Una posición que no corresponde al deporte (p. ej. "M" de hockey que quedó al cambiar a básquet) no se usa.
+  if (profile && POSITION_SELECT[profile.sport] && profile.position && !POSITION_SELECT[profile.sport].includes(profile.position)) profile = { ...profile, position: "" };
   const T = (es, en) => (lang === "en" ? en : es);
   const skip = new Set(exclude);
   const blocks = [];
@@ -3085,13 +3112,13 @@ function ComposeLinks({ profile, r }) {
       const p = profile || {};
       const res = await fetch("/api/generate-email", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({
         kind: "intro", tone, lang,
-        profile: { name: p.name, country: p.country, sport: p.sport, gender: p.gender, position: p.position, gradYear: p.gradYear, gpa4: p.gpa4, major: p.major, video: p.videoLink, goals: p.goals, assists: p.assists, email: p.email, phone: p.phone },
+        profile: aiProfile(p),
         program: { university: r.university, division: r.division || r.Division || null, conference: r.conference || r.Conference || null, coachName },
         baseDraft: `${base.subject}\n\n${base.body}`,
       }) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.subject) throw new Error((data.error || `No se pudo generar el mail (error ${res.status}).`) + (data.detail ? ` Detalle: ${data.detail}` : ""));
-      setAi({ subject: data.subject, body: data.body });
+      setAi({ subject: data.subject, body: data.body, todo: Array.isArray(data.todo) ? data.todo : [] });
       try { window.posthog && window.posthog.capture("mail_generado_ia", { tone, lang }); } catch (e) {}
     } catch (e) { setAiErr(String(e.message || e)); }
     setAiBusy(false);
@@ -3132,9 +3159,15 @@ function ComposeLinks({ profile, r }) {
             {ai && <button type="button" className="rm-btn-inline" style={{ fontSize: 12.5 }} onClick={() => setAi(null)}>Volver al borrador original</button>}
           </div>
           {aiErr && <p style={{ fontSize: 12, color: "#b3261e", margin: "0 0 8px" }}>⚠ {aiErr}</p>}
+          {ai && ai.todo && ai.todo.length > 0 && (
+            <div style={{ fontSize: 12.5, background: "#fff7e6", border: "1px solid #f0d49a", borderRadius: 6, padding: "8px 12px", margin: "0 0 8px" }}>
+              <b>Para completar o revisar antes de enviar:</b>
+              <ul style={{ margin: "4px 0 0", paddingLeft: 18 }}>{ai.todo.map((t, i) => <li key={i}>{t}</li>)}</ul>
+            </div>
+          )}
           {ai && <p style={{ fontSize: 12, color: "var(--ink-soft)", margin: "0 0 8px" }}>Borrador generado con IA a partir de tus datos. Revisalo y editalo antes de mandarlo: vos firmás el mail.</p>}
           <textarea className="rm-compose-text" readOnly={!ai} value={`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`} rows={12}
-            onChange={(e) => { const t = e.target.value; const m = t.match(/^(?:Subject|Asunto):\s*(.*)\n\n?([\s\S]*)$/); setAi(m ? { subject: m[1], body: m[2] } : { subject, body: t }); }} />
+            onChange={(e) => { const t = e.target.value; const m = t.match(/^(?:Subject|Asunto):\s*(.*)\n\n?([\s\S]*)$/); const todo = ai && ai.todo ? ai.todo : []; setAi(m ? { subject: m[1], body: m[2], todo } : { subject, body: t, todo }); }} />
           <div className="rm-compose-actions">
             <a className="rm-compose-btn" href={gmailUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Gmail</a>
             <a className="rm-compose-btn" href={outlookUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Outlook</a>
@@ -4150,7 +4183,7 @@ const ELIGIBILITY_CHECKLISTS = {
   "NCAA D1": [
     { id: "d1-account", title: "Creá tu cuenta en el NCAA Eligibility Center", detail: "Registro obligatorio para D1 y D2 — hacelo en web3.ncaa.org/ecwr3. No hace falta esperar a tener todo listo, cuanto antes mejor. Cuenta de Certificación: USD 170 para internacionales (USD 110 si estudiás en EE.UU. o Canadá), con débito, crédito o e-check. Lleva unos 30 a 45 minutos e incluye el cuestionario de amateurismo; usá un mail que vas a seguir usando después del secundario." },
     { id: "d1-16core", title: "Completá las 16 materias \"core\" aprobadas por la NCAA", detail: "Inglés: 4 años · Matemática (Álgebra 1 o superior): 3 años · Ciencias naturales/físicas (con 1 año de laboratorio si tu secundario lo ofrece): 2 años · Ciencias sociales: 2 años · 1 año adicional de inglés/mate/ciencia · 4 años adicionales de inglés, mate, ciencia, idioma extranjero, religión comparada o filosofía." },
-    { id: "d1-10-7", title: "Regla 10/7: completá 10 de esas 16 materias antes de 7° semestre", detail: "\"7° semestre\" es el inicio de tu último año de secundaria. De esas 10, al menos 7 tienen que ser de inglés, matemática o ciencia natural/física. (No se aplica a estudiantes con credenciales académicas internacionales, como un secundario argentino.)" },
+    { id: "d1-10-7", title: "Regla 10/7: completá 10 de esas 16 materias antes de 7° semestre", detail: "\"7° semestre\" es el inicio de tu último año de secundaria. De esas 10, al menos 7 tienen que ser de inglés, matemática o ciencia natural/física. (No se aplica a estudiantes con credenciales académicas internacionales.)" },
     { id: "d1-gpa", title: "Alcanzá un promedio de 2.3 o más en esas materias core", detail: "Se calcula solo sobre las materias core aprobadas, no sobre todo tu boletín. Usá el conversor de GPA de Smartrecruit como referencia, pero el cálculo oficial lo hace el Eligibility Center." },
     { id: "d1-graduate", title: "Graduate del secundario", detail: "Requisito no negociable — sin título secundario no hay certificación final, sin importar el resto del perfil." },
     { id: "d1-amateurism", title: "Pedí la certificación final de amateurismo", detail: "Se pide desde tu cuenta del Eligibility Center a partir del 1° de abril anterior a tu ingreso (1° de octubre si entrás en enero). Se procesa cuando una universidad D1 o D2 te agrega a su lista de reclutados." },
@@ -4429,7 +4462,7 @@ function MailComposer({ profile, log, pick, onTracked }) {
       const hk = email.hook ? email.hooks.find((h) => h.id === email.hook) : null;
       const res = await fetch("/api/generate-email", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({
         kind, stage: email.stage || null, tone, lang,
-        profile: { name: p.name, country: p.country, sport: p.sport, gender: p.gender, position: p.position, gradYear: p.gradYear, gradMonth: p.gradMonth, gpa4: p.gpa4, major: p.major, video: p.videoLink, goals: p.goals, assists: p.assists, email: p.email, phone: p.phone, club: p.club },
+        profile: aiProfile(p),
         program: { university: target, division: email.division || null, coachName: email.coachName || null },
         hook: hk ? `${hk.label}: ${hk.text}` : "",
         facts: cleanMailFacts(facts),
@@ -5239,7 +5272,7 @@ function InternationalAthletesSection() {
       <p style={{ fontSize: 14, lineHeight: 1.6 }}>La buena noticia: <b>el SAT/ACT ya no es obligatorio</b> para la elegibilidad deportiva de la NCAA (se sacó en 2023). Pero cuidado — la universidad en sí, para la admisión académica (que es un trámite distinto), todavía puede pedirlo. Confirmá con cada universidad puntual.</p>
 
       <div className="rm-argentina-box">
-        <h4 className="rm-condensed" style={{ fontSize: 15.5, marginTop: 0 }}>🇦🇷 Específico para Argentina (de la guía oficial de la NCAA, edición 2025-26)</h4>
+        <h4 className="rm-condensed" style={{ fontSize: 15.5, marginTop: 0 }}>🇦🇷 Si estudiaste en Argentina (de la guía oficial de la NCAA, edición 2025-26)</h4>
         <p style={{ fontSize: 13.5, lineHeight: 1.6 }}>La NCAA tiene una ficha propia por país. Esto es exactamente lo que dice la de Argentina:</p>
         <p style={{ fontSize: 13.5, lineHeight: 1.6 }}><b>Certificados que SÍ te sirven como prueba de graduación:</b> Título de Bachiller · Bachillerato Especializado · Certificado de Técnico · Perito Mercantil · Certificado de Educación Polimodal.</p>
         <p style={{ fontSize: 13.5, lineHeight: 1.6 }}><b>Lo que NO te sirve como prueba de graduación:</b> solo haber completado el Ciclo Básico, solo haber completado 7° año, o el Título de Técnico Superior en Comercio Exterior por sí solo.</p>
@@ -5337,7 +5370,7 @@ function GuideBlock({ title, children, open }) {
 function ArgentinaEligibilityGuide() {
   return (
     <div style={{ marginTop: 28 }}>
-      <h3 className="rm-condensed" style={{ fontSize: 18 }}>Guía paso a paso para estudiantes argentinos</h3>
+      <h3 className="rm-condensed" style={{ fontSize: 18 }}>Guía paso a paso para estudiantes internacionales</h3>
       <p className="rm-hint">Montos y reglas vigentes a octubre de 2026. Cambian seguido: confirmalos siempre en eligibilitycenter.org y playnaia.org.</p>
       <p className="rm-hint"><a href="/guias/elegibilidad-ncaa-argentinos/" target="_blank" rel="noopener">Ver esta guía como página para compartir →</a></p>
       <GuideBlock title="¿En qué centro me registro?" open>
@@ -5352,18 +5385,18 @@ function ArgentinaEligibilityGuide() {
         <p><b>Profile Page (gratis):</b> empezá por acá. Te da tu <b>NCAA ID</b>, que conviene poner en cada mail a un coach.</p>
         <p><b>Cuenta académica y deportiva (USD 170 para internacionales):</b> la necesitás para D1 o D2. Hay que tenerla completa antes de hacer visitas oficiales o firmar. Pagala recién cuando un coach muestre interés real.</p>
         <p><b>Cuenta solo deportiva (USD 75):</b> para extranjeros que van a jugar en D3.</p>
-        <p>La exención de pago depende de beneficios del sistema de EE.UU., así que en la práctica un estudiante de colegio argentino no califica.</p>
+        <p>La exención de pago depende de beneficios del sistema de EE.UU., así que en la práctica un estudiante de un colegio fuera de EE.UU. no califica.</p>
       </GuideBlock>
-      <GuideBlock title="NAIA en tres pasos">
-        <p>1. Creá tu perfil en playnaia.org (unos 10 minutos). 2. Tu colegio envía tus documentos académicos al NAIA Eligibility Center. 3. Cuando un coach NAIA te pone en su lista de reclutamiento, tu caso se evalúa con prioridad. Con los documentos completos, suele resolverse en pocos días hábiles.</p>
+      <GuideBlock title="NAIA en cuatro pasos">
+        <p>1. Creá tu perfil en playnaia.org (unos 10 minutos). 2. Tu colegio envía tus documentos académicos al NAIA Eligibility Center. 3. Como internacional, comprás la evaluación de InCred (incredevals.org): solo cuenta lo que InCred verifica. 4. Cuando un coach NAIA te pone en su lista de reclutamiento, tu caso se evalúa con prioridad. Registro internacional: USD 170. Con todo completo, la revisión tarda unas 4 semanas (20 días hábiles).</p>
       </GuideBlock>
-      <GuideBlock title="Calendario si terminás la secundaria en Argentina">
-        <p>Acá la secundaria termina en diciembre y en EE.UU. las clases empiezan en agosto (o en enero, en el segundo semestre).</p>
+      <GuideBlock title="Calendario si terminás la secundaria en diciembre">
+        <p>En Argentina, Uruguay, Chile y Paraguay la secundaria termina en diciembre (en otros países, a mitad de año) y en EE.UU. las clases empiezan en agosto (o en enero, en el segundo semestre).</p>
         <p><b>Dos años antes de egresar:</b> creá la Profile Page (y el perfil NAIA si te interesa). <b>Un año y medio antes:</b> pedí en tu colegio el analítico o certificado de materias y notas, y averiguá la traducción oficial al inglés (vas a necesitar original y traducción). <b>Cuando un coach D1/D2 vaya en serio:</b> pasá a la cuenta paga y cargá los documentos. <b>Al egresar:</b> mandá el certificado final y la constancia de egreso; sin eso la evaluación no se cierra.</p>
         <p>Guardá tus boletines de todos los años y no dejes materias previas: se evalúa tu trayectoria completa. La NCAA convierte tus notas con su propia guía por país; el conversor de GPA de esta página es una estimación.</p>
       </GuideBlock>
-      <GuideBlock title="Amateurismo: donde más se complican los argentinos">
-        <p>La NCAA te hace un cuestionario sobre tu historia deportiva. En los clubes argentinos conviven inferiores y primera, así que prestá atención a: <b>contratos</b> firmados con un club; <b>pagos</b> por jugar más allá de viáticos o indumentaria; haber entrenado o jugado con un <b>plantel profesional</b>; y haber tenido <b>representante</b>.</p>
+      <GuideBlock title="Amateurismo: donde más se complican los latinoamericanos">
+        <p>La NCAA te hace un cuestionario sobre tu historia deportiva. En los clubes de Latinoamérica conviven inferiores y primera, así que prestá atención a: <b>contratos</b> firmados con un club; <b>pagos</b> por jugar más allá de viáticos o indumentaria; haber entrenado o jugado con un <b>plantel profesional</b>; y haber tenido <b>representante</b>.</p>
         <p>Respondé siempre con la verdad: una respuesta falsa es mucho más grave que una situación que se puede explicar. Si tenés dudas, consultá antes a la NCAA en on.ncaa.com/intlcontact.</p>
       </GuideBlock>
       <GuideBlock title="Errores que hay que evitar">
@@ -5390,7 +5423,7 @@ function VideoGuidePage() {
         <p>Agregá además un partido completo sin editar: muchos coaches lo piden después del highlight.</p>
       </GuideBlock>
       <GuideBlock title="Dónde subirlo y cómo mandarlo">
-        <p>Subilo a <b>YouTube</b> (como "No listado" si no querés que sea público), Hudl o Vimeo. Usá un título claro: "Nombre Apellido · Posición · Clase 2028 · Argentina".</p>
+        <p>Subilo a <b>YouTube</b> (como "No listado" si no querés que sea público), Hudl o Vimeo. Usá un título claro: "Nombre Apellido · Posición · Clase 2028 · País".</p>
         <p>Pegá el link en tu perfil de Smartrecruit: el generador de mails lo agrega solo. Revisá que el link abra sin pedir permisos.</p>
         <p>Actualizalo cada temporada: un video de hace dos años juega en contra.</p>
       </GuideBlock>
@@ -7091,7 +7124,7 @@ function ProfileForm({ onSubmit, initial }) {
             <datalist id="rm-paises">{["Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", "Ecuador", "España", "Guatemala", "México", "Panamá", "Paraguay", "Perú", "República Dominicana", "Uruguay", "Venezuela"].map((c) => <option key={c} value={c} />)}</datalist></div>
 
           <div className="rm-field"><label>Deporte</label>
-            <select value={p.sport} onChange={set("sport")}>{SPORTS.map((s) => <option key={s} value={s}>{s}{sportHasData(s) ? "" : " (próximamente)"}</option>)}</select>
+            <select value={p.sport} onChange={(e) => { const v = e.target.value; setP((q) => ({ ...q, sport: v, position: POSITION_SELECT[v] && !POSITION_SELECT[v].includes(q.position) ? "" : q.position })); }}>{SPORTS.map((s) => <option key={s} value={s}>{s}{sportHasData(s) ? "" : " (próximamente)"}</option>)}</select>
             {(() => { const cv = sportCoverage(p.sport, p.gender); const n = (x) => x.toLocaleString("es-AR");
               if (!cv.coaches && !cv.rosters) return <span style={{ fontSize: 12, color: "var(--flag)", marginTop: 2 }}>⚠ Próximamente: para este deporte y rama todavía no cargamos coaches ni planteles. Por ahora vas a ver solo las búsquedas que publican los coaches.</span>;
               if (!cv.rosters) return <span style={{ fontSize: 12, color: "var(--field-dark)", marginTop: 2 }}>✓ {n(cv.coaches)} programas con email de coaches. Todavía no hay planteles cargados: no podemos comparar tu nivel contra el equipo ni proyectar vacantes.</span>;
@@ -7627,7 +7660,7 @@ function OnboardingPanel({ profile, setStage }) {
     { id: "profile", n: 1, title: "Armá tu perfil", desc: "Deporte, posición, año de graduación y tu promedio. Es lo único que necesitás para arrancar — 2 minutos.", done: hasProfile, goto: "form", cta: hasProfile ? "Editar mi perfil" : "Empezar ahora →" },
     { id: "results", n: 2, title: "Mirá tus universidades y tu Recruit Score", desc: "Apenas cargás el perfil, ves con qué universidades tenés chances reales y por qué — explicado punto por punto.", done: hasProfile && favCount > 0, goto: hasProfile ? "results" : "form", cta: "Ver mis resultados →", locked: !hasProfile },
     { id: "list", n: 3, title: "Guardá tu lista corta", desc: "Marcá con la estrella ★ las universidades que te interesan. Después las comparás lado a lado y les hacés seguimiento.", done: favCount > 0, goto: "mylist", cta: "Ver mi lista →", locked: !hasProfile },
-    { id: "eligibility", n: 4, title: "Chequeá tu elegibilidad", desc: "Qué te pide la NCAA/NAIA como atleta internacional argentino: documentos, conversión de notas, traducciones. Todo explicado.", done: eligDone, goto: "eligibility", cta: "Ver requisitos →" },
+    { id: "eligibility", n: 4, title: "Chequeá tu elegibilidad", desc: "Qué te pide la NCAA/NAIA como atleta internacional: documentos, conversión de notas, traducciones. Todo explicado.", done: eligDone, goto: "eligibility", cta: "Ver requisitos →" },
     { id: "outreach", n: 5, title: "Escribile a un coach", desc: "Generá un email hiper-específico con los datos reales de esa universidad y mandáselo vos, desde tu cuenta. Sin intermediarios.", done: outreachCount > 0, goto: hasProfile ? "form" : "form", cta: "Generar mi primer email →", locked: !hasProfile },
   ];
 
