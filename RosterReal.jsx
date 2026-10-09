@@ -5528,7 +5528,7 @@ function EligibilityPage() {
       </div>
 
       <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 34 }}>Glosario real de reclutamiento (términos que van a usar los coaches)</h3>
-      <p className="rm-hint">Sacado directo de las reglas oficiales de reclutamiento de la NCAA — para que entiendas exactamente qué significa cuando un coach dice esto.</p>
+      <p className="rm-hint">Basado en la guía de reclutamiento de NCSA, que resume las reglas de la NCAA — para que entiendas qué significa cuando un coach dice esto.</p>
       <div className="rm-elig-list">
         {RECRUITING_GLOSSARY.map((g) => (
           <div className="rm-elig-item" key={g.term} style={{ cursor: "default" }}>
