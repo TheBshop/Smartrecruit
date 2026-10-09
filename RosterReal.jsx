@@ -1879,7 +1879,8 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 
 /* Ticker tipo scoreboard ESPN */
 .rm-ticker{ background:var(--navy); overflow:hidden; white-space:nowrap; border-bottom:2px solid var(--ink); position:relative; display:flex; align-items:center; }
-.rm-live-dot{ flex-shrink:0; display:flex; align-items:center; gap:6px; background:rgba(0,0,0,0.25); color:#fff; font-family:'Oswald',sans-serif; font-size:11px; font-weight:700; letter-spacing:.5px; padding:6px 12px; z-index:2; }
+.rm-live-dot{ flex-shrink:0; display:flex; align-items:center; gap:6px; background:#0b1a30; color:#fff; font-family:'Oswald',sans-serif; font-size:11px; font-weight:700; letter-spacing:.5px; padding:6px 12px; z-index:2; flex-shrink:0; border-right:2px solid #1f8b4c; }
+.rm-ticker-viewport{ flex:1 1 0; min-width:0; overflow:hidden; }
 .rm-live-dot span{ width:8px; height:8px; border-radius:50%; background:#fff; animation:rm-pulse 1.4s ease-in-out infinite; }
 @keyframes rm-pulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.4; transform:scale(0.7); } }
 .rm-ticker-track{ display:inline-flex; animation:rm-scroll 40s linear infinite; }
@@ -2191,9 +2192,9 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-compose > .rm-btn-ghost{ color:var(--navy); border-color:var(--navy); background:#fff; font-weight:600; }
 .rm-compose > .rm-btn-ghost:hover{ background:var(--paper-dim); }
 .rm-compose-box{ margin-top:12px; background:var(--paper-dim); border:2px solid var(--line); padding:16px; }
-.rm-compose-text{ width:100%; font-family:'Space Mono',monospace; font-size:12px; line-height:1.6; border:1px solid var(--line); padding:12px; background:#fff; resize:vertical; }
+.rm-compose-text{ width:100%; font-family:'Inter',sans-serif; font-size:14px; line-height:1.55; border:1px solid var(--line); padding:12px; background:#fff; resize:vertical; }
 .rm-compose-actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-.rm-compose-btn{ font-family:'Oswald',sans-serif; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.3px; padding:8px 14px; background:var(--navy); color:#fff; border:none; text-decoration:none; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
+.rm-compose-btn{ display:block; width:100%; box-sizing:border-box; text-align:center; font-family:'Oswald',sans-serif; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.3px; padding:10px 14px; margin-top:8px; background:var(--navy); color:#fff; border:none; text-decoration:none; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
 .rm-compose-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(18,42,78,0.3); }
 .rm-compose-btn:hover{ background:#1c3c6b; }
 .rm-periods{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px; }
@@ -6704,7 +6705,11 @@ function CalendarPage() {
       </p>
 
       <div className="rm-alert" style={{ marginTop: 16 }}>
-        <b>El dato más importante de toda esta página:</b> no importa la fecha ni el período — VOS podés escribirle a un coach cuando quieras. Hay dos reglas distintas y ninguna te impide escribir: (1) según tu año, desde cuándo el coach puede contestarte, llamarte u ofrecerte algo (en D1, en general el 15 de junio al terminar tu año sophomore; en D2, D3, NAIA y NJCAA, cuando quiera); (2) los "períodos" de este calendario, que solo limitan el contacto en persona, las visitas y las evaluaciones en torneos. En un período muerto el coach igual puede escribirte y llamarte; la única excepción es el "recruiting shutdown", unos pocos días al año en que no puede reclutar de ninguna forma.
+        <b>El dato más importante de esta página</b>
+        <p style={{ margin: "8px 0 0" }}>VOS podés escribirle a un coach cuando quieras. Ninguna regla te lo impide.</p>
+        <p style={{ margin: "8px 0 0" }}><b>1. Según tu año</b>, desde cuándo el coach puede contestarte, llamarte u ofrecerte algo. En D1, en general desde el 15 de junio al terminar tu año sophomore. En D2, D3, NAIA y NJCAA, cuando quieras.</p>
+        <p style={{ margin: "8px 0 0" }}><b>2. Los "períodos"</b> de este calendario solo limitan el contacto en persona, las visitas y las evaluaciones en torneos. En un período muerto el coach igual puede escribirte y llamarte.</p>
+        <p style={{ margin: "8px 0 0" }}>La única excepción es el "recruiting shutdown": unos pocos días al año en que no puede reclutar de ninguna forma.</p>
       </div>
 
       <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 30 }}>Elegí tu deporte</h3>
@@ -8724,10 +8729,12 @@ export default function App() {
           <button className="rm-topbar-burger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menú">☰</button>
           <div className="rm-ticker">
             <span className="rm-live-dot"><span></span>EN VIVO</span>
-            <div className="rm-ticker-track">
-              {[...NCAA_POINTS_LEADERS.slice(0, 12), ...NCAA_POINTS_LEADERS.slice(0, 12)].map((p, i) => (
-                <span className="rm-ticker-item" key={i}>#{p.rank} {p.player} ({p.school_short}) — {p.pts} PTS</span>
-              ))}
+            <div className="rm-ticker-viewport">
+              <div className="rm-ticker-track">
+                {[...NCAA_POINTS_LEADERS.slice(0, 12), ...NCAA_POINTS_LEADERS.slice(0, 12)].map((p, i) => (
+                  <span className="rm-ticker-item" key={i}>#{p.rank} {p.player} ({p.school_short}) — {p.pts} PTS</span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
