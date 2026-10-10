@@ -3319,12 +3319,20 @@ function useFavorites() {
 // Comparador lado a lado de 2-3 universidades — el paso que hace una agencia:
 // poner las candidatas enfrentadas fila por fila para decidir. Cada fila resalta
 // el "mejor" valor cuando se puede comparar numéricamente (verde).
+// Ingresos por carrera de la misma fuente que la ficha de la escuela (MAJOR_DATA_BY_SCHOOL). Formato: [carrera, valor, extra].
+function earningsForSchool(school) {
+  const raw = MAJOR_DATA_BY_SCHOOL[school];
+  if (!raw) return null;
+  const val = (r) => (Number.isFinite(r[2]) ? r[2] : Number.isFinite(r[1]) ? r[1] : null);
+  const list = [...raw].filter((r) => val(r) != null).map((r) => [CIP_NAMES[r[0]], val(r), r[3]]);
+  return list.length ? list : null;
+}
 function CompareTable({ schools, onOpenSchool }) {
   const data = schools.map((school) => {
     const prog = PROGRAMS_ALL_SPORTS.find((p) => p.School === school);
     const ficha = getSchoolFicha(school);
     const ncsa = SCHOOL_PROFILES_NCSA[school] || {};
-    return { school, prog, ficha, ncsa, hasRoster: ROSTER_LOADED_NAMES.has(school), contact: schoolHasCoachContact(school), needs: RECRUITING_NEEDS_GENERAL.filter((n) => n.school === school).length, earnings: SCORECARD_EARNINGS[school] };
+    return { school, prog, ficha, ncsa, hasRoster: ROSTER_LOADED_NAMES.has(school), contact: schoolHasCoachContact(school), needs: RECRUITING_NEEDS_GENERAL.filter((n) => n.school === school).length, earnings: earningsForSchool(school) };
   });
 
   const money = (v) => (v ? `USD ${Number(String(v).replace(/,/g, "")).toLocaleString("en")}` : "—");
@@ -3840,7 +3848,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
   // usaba una tabla vieja aparte (SCORECARD_EARNINGS) que no se cruzaba con esas dos — quedó unificado.
   const earningsRaw = MAJOR_DATA_BY_SCHOOL[school];
   const earnings = earningsRaw
-    ? [...earningsRaw].filter((r) => r[1] != null || r[2] != null).sort((a, b) => (b[2] || b[1] || 0) - (a[2] || a[1] || 0)).slice(0, 10).map((r) => [CIP_NAMES[r[0]], r[2] || r[1], r[3]])
+    ? [...earningsRaw].filter((r) => Number.isFinite(r[1]) || Number.isFinite(r[2])).sort((a, b) => (Number.isFinite(b[2]) ? b[2] : b[1] || 0) - (Number.isFinite(a[2]) ? a[2] : a[1] || 0)).slice(0, 10).map((r) => [CIP_NAMES[r[0]], Number.isFinite(r[2]) ? r[2] : r[1], r[3]])
     : null;
 
   const money = (v) => (v ? `USD ${Number(String(v).replace(/,/g, "")).toLocaleString("en")}` : null);
