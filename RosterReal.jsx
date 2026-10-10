@@ -4295,7 +4295,7 @@ function scheduleSync() {
   if (!syncUserId) return;
   clearTimeout(syncTimer);
   syncTimer = setTimeout(() => {
-    supabase.from("profiles").upsert({ id: syncUserId, data: snapshotLocal(), updated_at: new Date().toISOString() }).then(
+    supabase.from("user_profiles").upsert({ id: syncUserId, data: snapshotLocal(), updated_at: new Date().toISOString() }).then(
       ({ error }) => { try { if (error) localStorage.setItem("rr_sync_pending", "1"); else localStorage.removeItem("rr_sync_pending"); } catch (e) {} },
       () => { try { localStorage.setItem("rr_sync_pending", "1"); } catch (e) {} });
   }, 1500); // debounce: espera una pausa antes de subir, para no pegarle a la red en cada tecla
@@ -4343,7 +4343,7 @@ function BackupBox() {
 }
 async function pullFromCloud(userId) {
   try {
-    const { data, error } = await supabase.from("profiles").select("data").eq("id", userId).maybeSingle();
+    const { data, error } = await supabase.from("user_profiles").select("data").eq("id", userId).maybeSingle();
     if (error || !data) return false;
     const before = snapshotLocal();
     if (Object.keys(before).length) {
@@ -4353,7 +4353,7 @@ async function pullFromCloud(userId) {
   } catch (e) { return false; }
 }
 async function pushInitialSnapshot(userId) {
-  try { await supabase.from("profiles").upsert({ id: userId, data: snapshotLocal(), updated_at: new Date().toISOString() }); } catch (e) {}
+  try { await supabase.from("user_profiles").upsert({ id: userId, data: snapshotLocal(), updated_at: new Date().toISOString() }); } catch (e) {}
 }
 
 function readJSON(key, fallback) {
