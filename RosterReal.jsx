@@ -1735,6 +1735,7 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-card-more{ margin-top:10px; font-size:13px; }
 .rm-card-more summary{ cursor:pointer; color:var(--field-dark); font-weight:600; margin-bottom:8px; }
 .rm-today-backup{ margin-top:12px; font-size:13px; }
+.rm-account-sync{ font-size:12px; color:var(--ink-soft); margin-left:6px; }
 .rm-today-hero{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; background:#fff; border:2px solid var(--field); border-radius:12px; padding:16px 18px; margin:18px 0 14px; }
 .rm-today-hero-label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--field-dark); font-weight:700; }
 .rm-today-hero-title{ font-size:18px; font-weight:700; margin:2px 0; }
@@ -8626,6 +8627,13 @@ function ConsentFields({ value, onChange }) {
 
 function AccountMenu({ session }) {
   const [open, setOpen] = useState(false);
+  const [syncPending, setSyncPending] = useState(false);
+  useEffect(() => {
+    const check = () => { try { setSyncPending(localStorage.getItem("rr_sync_pending") === "1"); } catch (e) {} };
+    check();
+    const t = setInterval(check, 3000);
+    return () => clearInterval(t);
+  }, []);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null); // null | "sending" | "sent" | "error"
   const send = async () => {
@@ -8642,6 +8650,7 @@ function AccountMenu({ session }) {
     return (
       <div className="rm-account">
         <span className="rm-account-email" title={session.user.email}>{session.user.email}</span>
+        {syncPending && <span className="rm-account-sync" title="Hay cambios que todavía no se guardaron en la nube. Se reintenta solo.">· guardando…</span>}
         <button className="rm-account-link" onClick={signOut}>Cerrar sesión</button>
       </div>
     );
