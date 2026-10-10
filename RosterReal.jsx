@@ -1732,6 +1732,9 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-today-step{ display:flex; align-items:center; gap:8px; font-size:13px; padding:8px 12px; background:#fff; border:1px solid var(--line); border-radius:6px; }
 .rm-today-step.done{ border-color:#bcdcc4; background:#eef6f0; color:var(--field-dark); }
 .rm-today-step.todo{ border-color:var(--gold); background:#fff9e8; }
+.rm-card-more{ margin-top:10px; font-size:13px; }
+.rm-card-more summary{ cursor:pointer; color:var(--field-dark); font-weight:600; margin-bottom:8px; }
+.rm-today-backup{ margin-top:12px; font-size:13px; }
 .rm-today-hero{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; background:#fff; border:2px solid var(--field); border-radius:12px; padding:16px 18px; margin:18px 0 14px; }
 .rm-today-hero-label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--field-dark); font-weight:700; }
 .rm-today-hero-title{ font-size:18px; font-weight:700; margin:2px 0; }
@@ -4282,7 +4285,8 @@ function snapshotLocal() {
 }
 function restoreLocal(data) {
   if (!data) return;
-  for (const k of SYNC_KEYS) { if (data[k] != null) localStorage.setItem(k, data[k]); else localStorage.removeItem(k); }
+  // Solo pisa las claves que la nube trae; lo que solo existe en este navegador se conserva.
+  for (const k of SYNC_KEYS) { if (typeof data[k] === "string") localStorage.setItem(k, data[k]); }
 }
 let syncUserId = null; // seteado por App al iniciar/cerrar sesión — writeJSON lo lee para saber si hay que sincronizar
 let syncTimer = null;
@@ -4290,13 +4294,60 @@ function scheduleSync() {
   if (!syncUserId) return;
   clearTimeout(syncTimer);
   syncTimer = setTimeout(() => {
-    supabase.from("profiles").upsert({ id: syncUserId, data: snapshotLocal(), updated_at: new Date().toISOString() }).then(() => {}, () => {});
+    supabase.from("profiles").upsert({ id: syncUserId, data: snapshotLocal(), updated_at: new Date().toISOString() }).then(
+      ({ error }) => { try { if (error) localStorage.setItem("rr_sync_pending", "1"); else localStorage.removeItem("rr_sync_pending"); } catch (e) {} },
+      () => { try { localStorage.setItem("rr_sync_pending", "1"); } catch (e) {} });
   }, 1500); // debounce: espera una pausa antes de subir, para no pegarle a la red en cada tecla
+}
+if (typeof window !== "undefined") {
+  window.addEventListener("online", () => { try { if (localStorage.getItem("rr_sync_pending")) scheduleSync(); } catch (e) {} });
+}
+// Copia de seguridad en archivo: funciona sin cuenta y sin conexión, y permite pasar los datos a otro celular.
+function exportBackup() {
+  const payload = { app: "smartrecruit", version: 1, exported_at: new Date().toISOString(), data: snapshotLocal() };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload)], { type: "application/json" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = `smartrecruit-copia-${todayKey()}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+async function importBackup(file) {
+  const text = await file.text();
+  const parsed = JSON.parse(text);
+  if (!parsed || parsed.app !== "smartrecruit" || !parsed.data || typeof parsed.data !== "object") throw new Error("archivo no válido");
+  const safe = {};
+  for (const k of SYNC_KEYS) { if (typeof parsed.data[k] === "string") safe[k] = parsed.data[k]; }
+  if (!Object.keys(safe).length) throw new Error("copia vacía");
+  restoreLocal(safe);
+  return Object.keys(safe).length;
+}
+function BackupBox() {
+  const [msg, setMsg] = useState("");
+  const onFile = async (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    try { const n = await importBackup(f); setMsg(`Copia restaurada (${n} datos). Recargando…`); setTimeout(() => window.location.reload(), 800); }
+    catch (err) { setMsg("No pudimos leer ese archivo. Usá una copia exportada desde esta página."); }
+  };
+  return (
+    <div className="rm-today-backup">
+      <button className="rm-btn-inline" onClick={exportBackup}>💾 Guardar copia de mis datos</button>
+      <label className="rm-btn-inline" style={{ marginLeft: 14, cursor: "pointer" }}>
+        Restaurar una copia
+        <input type="file" accept="application/json,.json" onChange={onFile} style={{ display: "none" }} />
+      </label>
+      {msg && <div className="rm-today-note" style={{ marginTop: 6 }}>{msg}</div>}
+    </div>
+  );
 }
 async function pullFromCloud(userId) {
   try {
     const { data, error } = await supabase.from("profiles").select("data").eq("id", userId).maybeSingle();
     if (error || !data) return false;
+    const before = snapshotLocal();
+    if (Object.keys(before).length) {
+      try { localStorage.setItem("rr_backup_antes_de_login", JSON.stringify({ at: new Date().toISOString(), data: before })); } catch (e) {}
+    }
     restoreLocal(data.data); return true;
   } catch (e) { return false; }
 }
@@ -7290,21 +7341,20 @@ function ResultCard({ r, profile, onOpenSchool, isFav, toggleFav }) {
           </span>
         </div>
       )}
-      <FitScoreBlock r={r} profile={profile} />
-      <CoverageBlock r={r} profile={profile} />
-      <ul className="rm-reasons">{r.reasons.map((x, i) => <li key={i}>{x}</li>)}</ul>
-
-      <div className="rm-sch"><b>Beca típica en esta división:</b> {r.scholarship.tipo}. Banda estimada: {r.scholarship.banda}.</div>
-
-      {r.nationalityMatch === true && <div className="rm-nat">Hay jugadoras de tu misma nacionalidad en este plantel — buen punto de partida para el primer email.</div>}
-      {r.nationalityMatch === false && <div className="rm-missing">No hay jugadoras de tu nacionalidad en el roster cargado (no descarta nada, solo no suma este punto extra).</div>}
-
-      <div className="rm-missing">Falta para afinar: {r.missing.join(" · ")}.</div>
-
-      <SchoolProfileBlock university={r.university} />
-
       <CoachCard r={r} />
       <ComposeLinks profile={profile} r={r} />
+
+      <details className="rm-card-more">
+        <summary>Ver por qué y más datos</summary>
+        <FitScoreBlock r={r} profile={profile} />
+        <CoverageBlock r={r} profile={profile} />
+        <ul className="rm-reasons">{r.reasons.map((x, i) => <li key={i}>{x}</li>)}</ul>
+        <div className="rm-sch"><b>Beca típica en esta división:</b> {r.scholarship.tipo}. Banda estimada: {r.scholarship.banda}.</div>
+        {r.nationalityMatch === true && <div className="rm-nat">Hay jugadoras de tu misma nacionalidad en este plantel — buen punto de partida para el primer email.</div>}
+        {r.nationalityMatch === false && <div className="rm-missing">No hay jugadoras de tu nacionalidad en el roster cargado (no descarta nada, solo no suma este punto extra).</div>}
+        <div className="rm-missing">Falta para afinar: {r.missing.join(" · ")}.</div>
+        <SchoolProfileBlock university={r.university} />
+      </details>
       </div>
     </div>
   );
@@ -8316,6 +8366,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
         </section>
       )}
 
+      <BackupBox />
       <p className="rm-today-note" style={{ marginTop: 18 }}>
         {dataAsOf ? `Búsquedas actualizadas el ${formatLongDate(dataAsOf)}.` : `Datos incluidos en la versión del sitio del ${formatLongDate(SITE_BUILD_DATE + "T12:00:00")}.`} Tu progreso se guarda en este navegador.
       </p>
