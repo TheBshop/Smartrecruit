@@ -7692,11 +7692,11 @@ function OnboardingPanel({ profile, setStage }) {
   } catch (e) {}
 
   const steps = [
-    { id: "profile", n: 1, title: "Armá tu perfil", desc: "Deporte, posición, año de graduación y tu promedio. Es lo único que necesitás para arrancar — 2 minutos.", done: hasProfile, goto: "form", cta: hasProfile ? "Editar mi perfil" : "Empezar ahora →" },
-    { id: "results", n: 2, title: "Mirá tus universidades y tu Recruit Score", desc: "Apenas cargás el perfil, ves con qué universidades tenés chances reales y por qué — explicado punto por punto.", done: hasProfile && favCount > 0, goto: hasProfile ? "results" : "form", cta: "Ver mis resultados →", locked: !hasProfile },
-    { id: "list", n: 3, title: "Guardá tu lista corta", desc: "Marcá con la estrella ★ las universidades que te interesan. Después las comparás lado a lado y les hacés seguimiento.", done: favCount > 0, goto: "mylist", cta: "Ver mi lista →", locked: !hasProfile },
-    { id: "eligibility", n: 4, title: "Chequeá tu elegibilidad", desc: "Qué te pide la NCAA/NAIA como atleta internacional: documentos, conversión de notas, traducciones. Todo explicado.", done: eligDone, goto: "eligibility", cta: "Ver requisitos →" },
-    { id: "outreach", n: 5, title: "Escribile a un coach", desc: "Generá un email hiper-específico con los datos reales de esa universidad y mandáselo vos, desde tu cuenta. Sin intermediarios.", done: outreachCount > 0, goto: hasProfile ? "form" : "form", cta: "Generar mi primer email →", locked: !hasProfile },
+    { id: "profile", n: 1, title: "Armá tu perfil", desc: "Deporte, posición, año y promedio. 2 minutos.", done: hasProfile, goto: "form", cta: hasProfile ? "Editar mi perfil" : "Empezar ahora →" },
+    { id: "results", n: 2, title: "Mirá tus universidades y tu Recruit Score", desc: "Las universidades donde tenés chances reales, y por qué.", done: hasProfile && favCount > 0, goto: hasProfile ? "results" : "form", cta: "Ver mis resultados →", locked: !hasProfile },
+    { id: "list", n: 3, title: "Guardá tu lista corta", desc: "Marcá ★ las que te interesan y compáralas.", done: favCount > 0, goto: "mylist", cta: "Ver mi lista →", locked: !hasProfile },
+    { id: "eligibility", n: 4, title: "Chequeá tu elegibilidad", desc: "Qué documentos y notas te pide la NCAA/NAIA.", done: eligDone, goto: "eligibility", cta: "Ver requisitos →" },
+    { id: "outreach", n: 5, title: "Escribile a un coach", desc: "Un mail con datos reales de esa universidad, desde tu cuenta.", done: outreachCount > 0, goto: hasProfile ? "form" : "form", cta: "Generar mi primer email →", locked: !hasProfile },
   ];
 
   const doneCount = steps.filter((s) => s.done).length;
@@ -7712,7 +7712,7 @@ function OnboardingPanel({ profile, setStage }) {
           <div className="rm-onboard-head">
             <div>
               <h2 className="rm-condensed" style={{ fontSize: 22, margin: 0 }}>{allDone ? "¡Ya diste todos los primeros pasos! 🎉" : hasProfile ? "Seguí desde donde quedaste" : "Empezá acá — es gratis y no te tenés que registrar"}</h2>
-              <p style={{ fontSize: 13.5, color: "var(--ink-soft)", margin: "4px 0 0" }}>{allDone ? "Ahora es cuestión de sumar universidades a tu lista y escribirle a más coaches. Volvé cuando quieras." : "Cinco pasos concretos para arrancar tu proceso por cuenta propia. Nadie te evalúa ni te rechaza — el sistema te muestra tus opciones reales."}</p>
+              <p style={{ fontSize: 13.5, color: "var(--ink-soft)", margin: "4px 0 0" }}>{allDone ? "Ahora es cuestión de sumar universidades a tu lista y escribirle a más coaches. Volvé cuando quieras." : "Cinco pasos para arrancar por tu cuenta. Nadie te evalúa ni te rechaza."}</p>
             </div>
             <button className="rm-onboard-dismiss" onClick={() => { setDismissed(true); try { lsSetSynced("rr_onboarding_dismissed", "1"); } catch (e) {} }} title="Ocultar">✕</button>
           </div>
@@ -8013,8 +8013,8 @@ function OpportunitiesBoard({ profile }) {
   return (
     <div className="rm-section" id="rm-offers-board" style={{ borderTop: "none", paddingTop: 20 }}>
       <div className="rm-wrap">
-        <h2 className="rm-condensed" style={{ fontSize: 22, marginBottom: 4 }}>Oportunidades reales, publicadas por coaches ahora</h2>
-        <p className="rm-hint" style={{ marginBottom: 16 }}>{OFFERS_BOARD.length.toLocaleString("es")} búsquedas activas donde un coach dijo exactamente qué posición necesita y para qué año. Filtrá por lo tuyo — y después armá tu perfil para que te digamos a cuáles apuntar.</p>
+        <h2 className="rm-condensed" style={{ fontSize: 22, marginBottom: 4 }}>Coaches buscando jugadoras y jugadores ahora</h2>
+        <p className="rm-hint" style={{ marginBottom: 16 }}>{OFFERS_BOARD.length.toLocaleString("es")} búsquedas activas de coaches. Filtrá por tu posición.</p>
 
         {expanded && (
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
@@ -8803,7 +8803,7 @@ export default function App() {
           <div className="rm-hero">
             <div className="rm-wrap rm-hero-inner">
               <h1 className="rm-condensed">Conseguí tu beca <span>por tu propia cuenta</span>, con datos reales.</h1>
-              <p>Cruzamos necesidades reales que publican los coaches, tu nivel deportivo contra el plantel actual y las reglas reales de beca por división — y te decimos con qué universidades tenés más chances, explicado punto por punto.</p>
+              <p>Te mostramos qué universidades buscan tu posición y con cuáles tenés más chances.</p>
               <button className="rm-btn" onClick={() => setStage("form")}>Armar mi perfil →</button>
             </div>
           </div>
