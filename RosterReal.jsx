@@ -1732,6 +1732,11 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-today-step{ display:flex; align-items:center; gap:8px; font-size:13px; padding:8px 12px; background:#fff; border:1px solid var(--line); border-radius:6px; }
 .rm-today-step.done{ border-color:#bcdcc4; background:#eef6f0; color:var(--field-dark); }
 .rm-today-step.todo{ border-color:var(--gold); background:#fff9e8; }
+.rm-today-hero{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; background:#fff; border:2px solid var(--field); border-radius:12px; padding:16px 18px; margin:18px 0 14px; }
+.rm-today-hero-label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--field-dark); font-weight:700; }
+.rm-today-hero-title{ font-size:18px; font-weight:700; margin:2px 0; }
+.rm-today-why{ margin-top:6px; font-size:12.5px; }
+.rm-today-why summary{ cursor:pointer; color:var(--field-dark); }
 .rm-today-card{ background:#fff; border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:6px; padding:16px 18px; margin-bottom:16px; }
 .rm-today-card.urgent{ border-left-color:var(--flag); }
 .rm-today-card.ok{ border-left-color:var(--field); }
@@ -8174,6 +8179,14 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
   const doneCount = steps.filter((x) => x.done).length;
   const responded = entries.filter((e) => ["respondio", "visita", "oferta"].includes(e.status)).length;
 
+  const jumpTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const nextAction = due.length > 0
+    ? { title: `Seguí con ${due[0].university}`, why: "Ya pasó el tiempo de espera sin respuesta.", cta: "Ver el seguimiento", run: () => jumpTo("hoy-seguimiento") }
+    : checkinDue
+      ? { title: "Hacé tu check-in de la semana", why: "Tus próximos mails usan tus últimos números y video.", cta: "Actualizar", run: () => { setShowCheckin(true); jumpTo("hoy-checkin"); } }
+      : nextCoach
+        ? { title: `Escribile a ${nextCoach.university}`, why: "Es la próxima escuela de tu lista según tu perfil.", cta: "Ir al coach", run: () => jumpTo("hoy-coach") }
+        : { title: "Esta semana está al día", why: "Explorá escuelas nuevas o revisá tu hoja de ruta.", cta: "Ver escuelas", run: () => setStage("catalog") };
   const setStatus = (university, status) => {
     const next = withOutreachStatus(log, university, status);
     writeOutreachLog(next); setLog(next);
@@ -8200,6 +8213,15 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
         <div className="rm-today-streak">{streak} {streak === 1 ? "día seguido" : "días seguidos"}</div>
       </div>
 
+      <section className="rm-today-hero" aria-label="Tu próximo paso">
+        <div>
+          <div className="rm-today-hero-label">Tu próximo paso</div>
+          <div className="rm-today-hero-title">{nextAction.title}</div>
+          <div className="rm-today-note">{nextAction.why}</div>
+        </div>
+        <button className="rm-btn" onClick={nextAction.run}>{nextAction.cta} →</button>
+      </section>
+
       <div className="rm-today-progress" aria-label={`${doneCount} de 3 al día`}>
         {steps.map((x) => (
           <span key={x.id} className={`rm-today-step ${x.done ? "done" : "todo"}`}><b>{x.done ? "✓" : "○"}</b> {x.text}</span>
@@ -8208,7 +8230,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
 
       {/* 1 — Seguimientos vencidos */}
       {due.length > 0 ? (
-        <section className="rm-today-card urgent">
+        <section id="hoy-seguimiento" className="rm-today-card urgent">
           <h3 className="rm-condensed">Seguimientos pendientes ({due.length})</h3>
           <p className="rm-today-note">Ya pasó el tiempo de espera sin respuesta. Cada seguimiento trae un gancho distinto al del mail anterior, y después del tercero no se insiste más.</p>
           {due.slice(0, 3).map((e) => {
@@ -8240,13 +8262,13 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
       )}
 
       {/* 2 — Check-in semanal */}
-      <section className={`rm-today-card ${checkinDue ? "" : "ok"}`}>
+      <section id="hoy-checkin" className={`rm-today-card ${checkinDue ? "" : "ok"}`}>
         <h3 className="rm-condensed">Check-in semanal</h3>
         {savedMsg && <p className="rm-today-note" style={{ color: "var(--field-dark)", fontWeight: 600 }}>{savedMsg}</p>}
         <p className="rm-today-note">
           {lastCheckin ? `Último check-in: hace ${checkinDays === 0 ? "menos de un día" : `${checkinDays} día${checkinDays === 1 ? "" : "s"}`}.` : "Todavía no hiciste ninguno."}
-          {" "}Cada semana, pasá el link de tu último partido y tus números: los coaches contestan más a quien les muestra algo nuevo.
         </p>
+        <details className="rm-today-why"><summary>¿Por qué cada semana?</summary><p className="rm-today-note">Pasá el link de tu último partido y tus números. Los coaches contestan más a quien les muestra algo nuevo.</p></details>
         {!expandCheckin && <button className="rm-btn-inline" onClick={() => setShowCheckin(true)}>Actualizar de nuevo</button>}
         {expandCheckin && (
           <>
@@ -8265,7 +8287,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
       </section>
 
       {/* 3 — Próximo coach */}
-      <section className="rm-today-card">
+      <section id="hoy-coach" className="rm-today-card">
         <h3 className="rm-condensed">Tu próximo coach para escribirle</h3>
         {nextCoach ? (
           <>
