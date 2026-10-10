@@ -6574,13 +6574,14 @@ function ExamsPage({ setStage }) {
   );
 }
 
-function useSportCalendarStatus(sport) {
+function useSportCalendarStatus(sport, division) {
   const cal = SPORT_CALENDARS[sport];
   if (!cal) return null;
   const today = new Date();
   const toDate = (s) => new Date(s + "T00:00:00");
-  const active = cal.events.filter((e) => toDate(e.start) <= today && today <= new Date(e.end + "T23:59:59.999"));
-  const upcoming = cal.events
+  const events = division ? cal.events.filter((e) => e.div === division) : cal.events;
+  const active = events.filter((e) => toDate(e.start) <= today && today <= new Date(e.end + "T23:59:59.999"));
+  const upcoming = events
     .filter((e) => toDate(e.start) > today)
     .sort((a, b) => toDate(a.start) - toDate(b.start))[0];
   return { active, upcoming, cal };
@@ -6691,11 +6692,11 @@ function CalendarPage() {
   const me = useMemo(() => readStoredProfile(), []);
   const myKey = me ? sportCalendarKey(me.sport, me.gender) : null;
   const [sport, setSport] = useState(myKey || sports[0]);
-  const status = useSportCalendarStatus(sport);
   const cal = SPORT_CALENDARS[sport];
   const divisionsWithDates = useMemo(() => Array.from(new Set((cal?.events || []).map((e) => e.div))), [cal]);
   const [division, setDivision] = useState(divisionsWithDates[0] || "");
   useEffect(() => { setDivision(divisionsWithDates[0] || ""); }, [sport]);
+  const status = useSportCalendarStatus(sport, division);
 
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
