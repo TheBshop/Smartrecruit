@@ -544,7 +544,7 @@ function eadaSignals(university, sport, gender, profile) {
 }
 // Programas que no publicaron búsqueda ni tienen roster cargado, pero que según datos oficiales tienen el deporte
 // en la rama del atleta, dan becas deportivas y ofrecen su carrera. Se muestran aparte, con puntaje propio.
-function matchFromEada(profile, exclude) {
+function matchFromEada(profile, exclude, limit = 8) {
   const k = EADA_SPORT_KEY[profile.sport];
   if (!k) return [];
   const g = profile.gender;
@@ -584,7 +584,7 @@ function matchFromEada(profile, exclude) {
       missing: ["una búsqueda publicada por el coach", "el roster con año de clase y posición para proyectar la vacante"],
     });
   }
-  return out.map((r) => applyRealismCaps(r, profile)).sort((a, b) => b.score - a.score).slice(0, 8);
+  return out.map((r) => applyRealismCaps(r, profile)).sort((a, b) => b.score - a.score).slice(0, limit);
 }
 
 // Head coaches de fútbol masculino de la lista corta del arquero (webs oficiales, relevado el 29/9/2026).
@@ -1373,6 +1373,7 @@ function matchFromLoadedRosters(profile) {
     const partial = !!info.partial; // plantel parcial: solo estadísticas (sin clase, posición ni origen)
 
     let score = 0;
+    let athRatio = null; // (goles + asistencias de la atleta) / (promedio de goles + asistencias de las 3 máximas productoras del equipo en su posición); null = no comparable
     const reasons = [];
 
     // --- PRIORIDAD 1: afinidad nacional (pedido explícito: pesa fuerte en el ranking) ---
@@ -1479,6 +1480,11 @@ function matchFromLoadedRosters(profile) {
         const avgGoals = withData.reduce((s, p) => s + p.goals, 0) / withData.length;
         const avgAssists = withData.reduce((s, p) => s + (p.assists || 0), 0) / withData.length;
         const seasonNote = info.statsSeason ? ` de la temporada ${info.statsSeason}` : "";
+        // Para los grupos del ranking se compara contra las 3 máximas productoras del equipo (no contra el promedio, que incluye al banco).
+        const top3 = [...withData].sort((x, y) => ((y.goals || 0) + (y.assists || 0)) - ((x.goals || 0) + (x.assists || 0))).slice(0, 3);
+        const top3Avg = top3.reduce((t, p) => t + (p.goals || 0) + (p.assists || 0), 0) / top3.length;
+        // Si las 3 máximas productoras suman menos de 4 puntos promedio, las stats cargadas son parciales (temporada incompleta): no se compara.
+        if (top3Avg >= 4) athRatio = ((Number(profile.goals) || 0) + (Number(profile.assists) || 0)) / top3Avg;
         const where = partial ? `de sus 8 máximos productores${seasonNote} (el plantel parcial no trae posición)` : `real del plantel${seasonNote} en tu posición`;
         if (profile.goals >= avgGoals && profile.assists >= avgAssists) {
           score += 25;
@@ -1545,6 +1551,7 @@ function matchFromLoadedRosters(profile) {
       coachTitle: contact.title || null,
       coachPhone: contact.phone || null,
       nationalityMatch: compatriotas.length > 0,
+      athRatio,
       partialRoster: partial,
       vacancy: partial ? null : { confidence, baseSeason: proj.baseSeason, entrySeason: proj.entrySeason, known: proj.known, gone: proj.gone.length, stays: proj.stays.length, unknown: proj.unknown.length, postedExact, postedNear },
       needTitle: need && postedNear ? needTitle(need.row) : null,
@@ -1575,13 +1582,71 @@ function applyRealismCaps(r, profile) {
   return r;
 }
 
-function runMatch(profile) {
+// Lista completa ordenada por score (sin recortar). runMatch devuelve los 10 primeros: es lo que usan Inicio, el Recruit Score y el resto de la app.
+function runMatchAll(profile) {
   const a = matchFieldLevel(profile);
   const b = matchFromLoadedRosters(profile);
   // Si una universidad tiene roster cargado y además búsqueda publicada, queda una sola tarjeta:
   // la del roster, que ya incorpora la búsqueda (clase, posición y texto del coach).
   const withRoster = new Set(b.map((r) => r.university));
-  return [...b, ...a.filter((r) => !withRoster.has(r.university))].map((r) => applyRealismCaps(r, profile)).sort((x, y) => y.score - x.score).slice(0, 10);
+  return [...b, ...a.filter((r) => !withRoster.has(r.university))].map((r) => applyRealismCaps(r, profile)).sort((x, y) => y.score - x.score);
+}
+function runMatch(profile) { return runMatchAll(profile).slice(0, 10); }
+
+/* ---------------------------------------------------------------
+   Grupos del ranking: aspiracional / realista / alta probabilidad.
+   "Alta probabilidad" NO es una garantía: significa que, con los datos cargados, es donde más chances hay de que el coach conteste y haya
+   una oferta. Se decide sumando señales (cada una queda escrita en `why` para mostrarla): nivel vs. plantel, admisión, vacantes y plata.
+--------------------------------------------------------------- */
+const TIERS = {
+  aspiracional: { key: "aspiracional", label: "Aspiracional", emoji: "🚀", hint: "Más difícil: vale la pena escribirles, pero no dependas de estas." },
+  realista: { key: "realista", label: "Realista", emoji: "🎯", hint: "Tu nivel y tu promedio están dentro de lo que busca el programa." },
+  segura: { key: "segura", label: "Alta probabilidad", emoji: "✅", hint: "Donde más chances hay de respuesta y oferta. No es una garantía." },
+};
+function tierFor(r, profile) {
+  let sig = null;
+  try { sig = coverageAdmissionSignals(r.university, r.division, profile.sport, profile.gender, profile); } catch (e) { sig = null; }
+  const adm = sig && sig.adm ? sig.adm.level : "sin dato";
+  const gap = sig && sig.cov && sig.cov.status === "falta" ? sig.cov.gap : 0;
+  let pts = 0;
+  const why = [];
+  if (r.athRatio != null) {
+    if (r.athRatio >= 1) { pts += 1; why.push("tus números alcanzan o superan a las máximas productoras del equipo en tu posición"); }
+    else if (r.athRatio < 0.5) { pts -= 1; why.push("tus números están muy por debajo de las máximas productoras del equipo"); }
+    else why.push("tus números están entre el promedio del equipo y sus máximas productoras");
+  }
+  if (adm === "alta") { pts += 1; why.push("tu promedio alcanza para la admisión"); }
+  else if (adm === "baja") { pts -= 1; why.push("la admisión es exigente para tu promedio"); }
+  else if (adm === "muy baja") { pts -= 2; why.push("la admisión es muy difícil para tu promedio"); }
+  const v = r.vacancy;
+  if (r.postUrl || (v && v.postedNear)) { pts += 1; why.push("el coach publicó una búsqueda para tu clase"); }
+  else if (v && v.known > 0 && v.gone / v.known >= 0.35) { pts += 1; why.push("se van varias jugadoras de tu posición antes de tu ingreso"); }
+  if (gap > 5000) { pts -= 1; why.push(`faltarían unos USD ${Math.round(gap / 1000)}.000 por año de lo que tu familia puede pagar`); }
+  const key = pts >= 2 ? "segura" : pts <= -1 ? "aspiracional" : "realista";
+  return { ...TIERS[key], pts, why };
+}
+// Los 10 mejores, con una mezcla mínima: hasta 2 de cada grupo (si hay opciones con puntaje decente), el resto por puntaje.
+function pickTopTen(list) {
+  const MIN_SCORE = 35, N = 10;
+  const chosen = new Set();
+  for (const k of ["aspiracional", "realista", "segura"]) {
+    list.filter((r) => r.tier.key === k && r.score >= MIN_SCORE).slice(0, 2).forEach((r) => chosen.add(r));
+  }
+  for (const r of list) { if (chosen.size >= N) break; chosen.add(r); }
+  return list.filter((r) => chosen.has(r)).slice(0, N);
+}
+// Top 10 + hasta 20 más (30 en total). Las universidades que no dictan la carrera pedida solo entran al top si no hay otras.
+function buildTieredResults(profile) {
+  const base = runMatchAll(profile);
+  const extra = (() => { try { return matchFromEada(profile, new Set(base.map((r) => r.university)), 40); } catch (e) { return []; } })();
+  const pool = [...base, ...extra].sort((x, y) => y.score - x.score);
+  const noMajor = (r) => r.academicFit && (r.academicFit.status === "confirmado_no" || r.academicFit.status === "ipeds_no");
+  const ok = pool.filter((r) => !noMajor(r));
+  const list = (ok.length >= 10 ? ok : pool).slice(0, 30).map((r) => ({ ...r, tier: tierFor(r, profile) }));
+  const top = pickTopTen(list);
+  const topSet = new Set(top);
+  const more = list.filter((r) => !topSet.has(r));
+  return { top, more, total: list.length };
 }
 
 /* ---------------------------------------------------------------
@@ -1844,6 +1909,19 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-stat span{ font-size:12.5px; color:#B7C3D6; }
 .rm-section{ padding:40px 0; border-top:1px solid var(--line); }
 .rm-section h2{ font-family:'Oswald',sans-serif; font-size:26px; font-weight:600; text-transform:uppercase; margin:0 0 6px; color:var(--navy); }
+.rm-tier{ display:inline-block; font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.5px; font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; margin:0 6px 6px 0; }
+.rm-tier-aspiracional{ background:#C1442D1a; color:#C1442D; }
+.rm-tier-realista{ background:#E8AA1F26; color:#8A6208; }
+.rm-tier-segura{ background:#1F8B4C1a; color:#146138; }
+.rm-tier-legend{ margin-bottom:18px; }
+.rm-more-group{ margin-bottom:26px; }
+.rm-more-title{ font-size:20px; margin-bottom:4px; }
+.rm-more-row{ border:1px solid var(--line); border-radius:10px; background:#fff; margin-bottom:8px; overflow:hidden; }
+.rm-more-head{ display:grid; grid-template-columns:1fr auto; gap:2px 12px; width:100%; text-align:left; background:none; border:0; padding:12px 14px; cursor:pointer; font:inherit; color:inherit; }
+.rm-more-name{ font-weight:700; }
+.rm-more-meta{ font-family:'Space Mono',monospace; font-size:12px; color:var(--ink-soft); text-align:right; }
+.rm-more-line{ font-size:13px; color:var(--ink-soft); }
+.rm-more-toggle{ font-size:12px; color:var(--accent); text-align:right; }
 .rm-section .rm-hint{ color:var(--ink-soft); font-size:14px; margin-bottom:22px; max-width:640px; }
 .rm-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px 24px; }
 .rm-field{ display:flex; flex-direction:column; gap:6px; }
@@ -7684,38 +7762,93 @@ function BestOptionCard({ profile, results, onOpenSchool }) {
   );
 }
 
+function TierBadge({ tier }) {
+  if (!tier) return null;
+  return <span className={`rm-tier rm-tier-${tier.key}`} title={tier.hint}>{tier.emoji} {tier.label}</span>;
+}
+
+// Línea corta armada solo con los datos (sin IA): por qué está en la lista.
+function quickLine(r) {
+  const bits = [];
+  if (r.nationalityMatch) bits.push("🇦🇷 compatriotas en el plantel");
+  if (r.postUrl || (r.vacancy && r.vacancy.postedNear)) bits.push("búsqueda publicada");
+  else if (r.vacancy && r.vacancy.known > 0 && r.vacancy.gone > 0) bits.push(`${r.vacancy.gone} se van antes de tu ingreso`);
+  if (r.scholarship && r.scholarship.banda) bits.push(`ayuda: ${r.scholarship.banda}`);
+  if (r.tier && r.tier.why && r.tier.why.length) bits.push(r.tier.why[0]);
+  return bits.slice(0, 3).join(" · ");
+}
+
+function MoreRow({ r, profile, onOpenSchool, isFav, toggleFav }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rm-more-row">
+      <button className="rm-more-head" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="rm-more-name">{r.university}</span>
+        <span className="rm-more-meta">{r.division} · {r.score} pts</span>
+        <span className="rm-more-line">{quickLine(r)}</span>
+        <span className="rm-more-toggle">{open ? "Ocultar ▲" : "Ver por qué ▼"}</span>
+      </button>
+      {open && <ResultCard r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />}
+    </div>
+  );
+}
+
 function Results({ profile, onBack, onOpenSchool }) {
-  const results = useMemo(() => runMatch(profile), [profile]);
-  const extra = useMemo(() => { try { return matchFromEada(profile, new Set(results.map((r) => r.university))); } catch (e) { return []; } }, [profile, results]);
+  const tiered = useMemo(() => buildTieredResults(profile), [profile]);
+  const { top, more, total } = tiered;
+  const [showMore, setShowMore] = useState(false);
   const [favs, toggleFav, isFav] = useFavorites();
+  const counts = (list) => ["aspiracional", "realista", "segura"].map((k) => ({ ...TIERS[k], n: list.filter((r) => r.tier.key === k).length }));
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 40 }}>
       <button className="rm-back" onClick={onBack}>← Editar mi perfil</button>
       <h2 className="rm-condensed" style={{ fontSize: 26, marginBottom: 6 }}>
-        {results.length} universidades para {profile.name || "tu perfil"}, {profile.sport} {profile.gender === "F" ? "femenino" : "masculino"}, ingreso {getEntryYear(profile)}
+        Tus {top.length} mejores opciones para {profile.name || "tu perfil"}, {profile.sport} {profile.gender === "F" ? "femenino" : "masculino"}, ingreso {getEntryYear(profile)}
       </h2>
-      <p className="rm-hint" style={{ marginBottom: 20 }}>
+      <p className="rm-hint" style={{ marginBottom: 12 }}>
         Ordenadas por score explicado (necesidad real + nivel vs. plantel donde hay roster + realismo de beca por división). No son promesas — son puntos de partida para escribirle al coach.
       </p>
-      {results.length > 0 && <BestOptionCard profile={profile} results={results} onOpenSchool={onOpenSchool} />}
-      {results.length > 0 && <RecruitScoreCard profile={profile} results={results} />}
+      <div className="rm-tier-legend">
+        {counts(top).map((t) => <span key={t.key} className={`rm-tier rm-tier-${t.key}`} title={t.hint}>{t.emoji} {t.label}: {t.n}</span>)}
+      </div>
+      {top.length > 0 && <BestOptionCard profile={profile} results={top} onOpenSchool={onOpenSchool} />}
+      {top.length > 0 && <RecruitScoreCard profile={profile} results={top} />}
       <button className="rm-btn-ghost" style={{ margin: "26px 0", fontSize: 13 }} onClick={() => downloadWeeklyReminderICS(profile)}>
         📅 Descargar recordatorio semanal (.ics — Google/Outlook/Apple Calendar)
       </button>
-      {results.length === 0 && <p>No encontramos necesidades publicadas para esa combinación de deporte/género todavía. Probá otra posición o revisá el deporte elegido.</p>}
+      {top.length === 0 && <p>No encontramos necesidades publicadas para esa combinación de deporte/género todavía. Probá otra posición o revisá el deporte elegido.</p>}
       <div id="rm-full-results">
-        {results.map((r, i) => <ResultCard key={i} r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />)}
+        {top.map((r, i) => (
+          <div key={i}>
+            <div style={{ margin: "14px 0 -6px" }}><TierBadge tier={r.tier} /></div>
+            <ResultCard r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />
+          </div>
+        ))}
       </div>
-      {extra.length > 0 && (
-        <div id="rm-eada-results" style={{ marginTop: 40 }}>
-          <h2 className="rm-condensed" style={{ fontSize: 22, marginBottom: 6 }}>
-            También te conviene escribirles: {extra.length} programas sin búsqueda publicada
-          </h2>
-          <p className="rm-hint" style={{ marginBottom: 20 }}>
-            Tienen {profile.sport} {profile.gender === "F" ? "femenino" : "masculino"}, dan becas deportivas{profile.major ? ` y ofrecen ${profile.major}` : ""} según datos oficiales de EE.UU. (EADA 2024 e IPEDS 2024-25), incluidos junior colleges.
-            Todavía no publicaron una búsqueda ni tenemos su roster, por eso el puntaje es más bajo: el primer contacto lo iniciás vos.
-          </p>
-          {extra.map((r, i) => <ResultCard key={`e${i}`} r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />)}
+      {more.length > 0 && (
+        <div id="rm-more-results" style={{ marginTop: 40 }}>
+          <button className="rm-btn" onClick={() => setShowMore(!showMore)} aria-expanded={showMore}>
+            {showMore ? "Ocultar las otras opciones" : `Ver ${more.length} opciones más (hasta ${total} en total)`}
+          </button>
+          {showMore && (
+            <div style={{ marginTop: 22 }}>
+              <p className="rm-hint" style={{ marginBottom: 16 }}>
+                Agrupadas según qué tan cerca estás del nivel y del promedio de cada programa. Los programas sin roster cargado ni búsqueda publicada aparecen con datos oficiales de EE.UU. (EADA e IPEDS): el primer contacto lo iniciás vos. Tocá una para ver el detalle.
+              </p>
+              {["aspiracional", "realista", "segura"].map((k) => {
+                const rows = more.filter((r) => r.tier.key === k);
+                if (!rows.length) return null;
+                const t = TIERS[k];
+                return (
+                  <div key={k} className="rm-more-group">
+                    <h3 className="rm-condensed rm-more-title">{t.emoji} {t.label} ({rows.length})</h3>
+                    <p className="rm-hint" style={{ marginBottom: 10 }}>{t.hint}</p>
+                    {rows.map((r, i) => <MoreRow key={`${k}${i}`} r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />)}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
