@@ -1612,8 +1612,13 @@ function tierFor(r, profile) {
   const why = [];
   if (r.athRatio != null) {
     if (r.athRatio >= 1) { pts += 1; why.push("tus números alcanzan o superan a las máximas productoras del equipo en tu posición"); }
-    else if (r.athRatio < 0.5) { pts -= 1; why.push("tus números están muy por debajo de las máximas productoras del equipo"); }
+    else if (r.athRatio < 0.35) { pts -= 2; why.push("tus números están muy por debajo de las máximas productoras del equipo"); }
+    else if (r.athRatio < 0.5) { pts -= 1; why.push("tus números están por debajo de las máximas productoras del equipo"); }
     else why.push("tus números están entre el promedio del equipo y sus máximas productoras");
+  }
+  else if (/^NCAA D1$/.test(String(r.division || "")) && !isGoalkeeper(profile)) {
+    // Sin estadísticas comparables no se puede demostrar que tu nivel alcanza: en D1, el nivel más competitivo, queda como aspiracional.
+    pts -= 1; why.push("es D1, el nivel más competitivo, y no hay estadísticas del plantel para comparar tu nivel");
   }
   if (adm === "alta") { pts += 1; why.push("tu promedio alcanza para la admisión"); }
   else if (adm === "baja") { pts -= 1; why.push("la admisión es exigente para tu promedio"); }
@@ -1631,6 +1636,17 @@ function pickTopTen(list) {
   const chosen = new Set();
   for (const k of ["aspiracional", "realista", "segura"]) {
     list.filter((r) => r.tier.key === k && r.score >= MIN_SCORE).slice(0, 2).forEach((r) => chosen.add(r));
+  }
+  // El resto, por puntaje, pero sin que una sola división ocupe más de MAX_PER_DIV lugares mientras haya opciones decentes de otras:
+  // los programas con roster cargado son casi todos D1 y, sin este tope, todas las atletas veían la misma lista.
+  const MAX_PER_DIV = 6;
+  const divCount = {};
+  const divOf = (r) => String(r.division || "");
+  chosen.forEach((r) => { divCount[divOf(r)] = (divCount[divOf(r)] || 0) + 1; });
+  for (const r of list) {
+    if (chosen.size >= N) break;
+    if (chosen.has(r) || (divCount[divOf(r)] || 0) >= MAX_PER_DIV) continue;
+    chosen.add(r); divCount[divOf(r)] = (divCount[divOf(r)] || 0) + 1;
   }
   for (const r of list) { if (chosen.size >= N) break; chosen.add(r); }
   return list.filter((r) => chosen.has(r)).slice(0, N);
