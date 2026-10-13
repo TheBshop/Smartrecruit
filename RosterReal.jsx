@@ -1735,7 +1735,14 @@ function tierFor(r, profile) {
   if (r.postUrl || (v && v.postedNear)) { pts += 1; why.push("el coach publicó una búsqueda para tu clase"); }
   else if (v && v.known > 0 && v.gone / v.known >= 0.35) { pts += 1; why.push("se van varias jugadoras de tu posición antes de tu ingreso"); }
   if (gap > 5000) { pts -= 1; why.push(`faltarían unos USD ${Math.round(gap / 1000)}.000 por año de lo que tu familia puede pagar`); }
-  const key = pts >= 2 ? "segura" : pts <= -1 ? "aspiracional" : "realista";
+  let key = pts >= 2 ? "segura" : pts <= -1 ? "aspiracional" : "realista";
+  // "Alta probabilidad" exige evidencia deportiva: admisión y vacante solas no alcanzan. Si tus números quedan por debajo de las máximas
+  // productoras del equipo, o no hay estadísticas para compararlos (y el coach no publicó una búsqueda), el techo es "realista".
+  if (key === "segura") {
+    const posted = !!(r.postUrl || (v && v.postedNear));
+    if (r.athRatio != null && r.athRatio < 0.85) { key = "realista"; why.push("tus números quedan por debajo de las máximas productoras del equipo: es una opción realista, no de alta probabilidad"); }
+    else if (r.athRatio == null && !posted) { key = "realista"; why.push("sin estadísticas del plantel para comparar tu nivel no podemos asegurar alta probabilidad"); }
+  }
   return { ...TIERS[key], pts, why };
 }
 // Los 10 mejores, con una mezcla mínima: hasta 2 de cada grupo (si hay opciones con puntaje decente), el resto por puntaje.
