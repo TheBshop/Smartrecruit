@@ -9,7 +9,7 @@ a=src.index('STATES="'); b=src.index('out={};stats={}')
 exec(compile('import re,unicodedata\n'+src[a:b],'hb','exec'),globals())   # classify, parse_row, parse_txt, key, pos_n, cls_n
 D=json.load(open(SC+'/soc_D2M.json')); hosts=json.load(open(SC+'/d2m_hosts.json')); cat={'F':[],'M':[n for n,_ in json.load(open(SC+'/cat_d2.json'))['Soccer|M']]}
 res={f'{h}|M':ns[0] for h,ns in hosts.items()}
-ALIAS={}
+ALIAS={'hsujacks.com':'humboldtathletics.com','gocatawbaindians.com':'catawbaathletics.com','gobucsgo.com':'cbubucs.com','csmorediggers.com':'minesathletics.com','athletics.dyc.edu':'dyusaints.com','felicianathletics.com':'felicianuathletics.com','goleeflames.com':'leeuflames.com','nmhucowboys.com':'nmhuathletics.com','ngcrusaders.com':'www.nguathletics.com','nsuwolvesathletics.com':'nsuwolves.com','www.obubison.com':'obubison.com','pacesettersathletics.com':'paceuathletics.com','athletics.roberts.edu':'robertsredhawks.com','siutigerpride.com':'salemtigers.com','www.shawbears.com':'shawbears.com'}
 _unused={'hurricanesports.com':'miamihurricanes.com','icgaels.com':'ionagaels.com','omavs.com':'omahamavs.com','und.com':'fightingirish.com','texassports.com':'texaslonghorns.com','orugoldeneagles.com':'www.orugoldeneagles.com','kstatesports.com':'www.kstatesports.com','www.usctrojans.com':'usctrojans.com'}
 def getd(host):
     for h in (ALIAS.get(host),host,'www.'+host):
