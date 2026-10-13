@@ -2644,6 +2644,36 @@ h2.rm-condensed::before{ border:none; width:8px; height:26px; top:2px; backgroun
 .rm-tier-segura{ background:#12A15B; color:#fff; }
 .rm-es-title{ font-family:'Barlow Condensed','Oswald',sans-serif; font-weight:800; font-style:italic; text-transform:uppercase; font-size:clamp(34px,4.6vw,56px); line-height:1; letter-spacing:-.3px; }
 .rm-es-name{ font-family:'Barlow Condensed','Oswald',sans-serif; font-weight:800; font-size:21px; line-height:1.08; text-transform:uppercase; letter-spacing:.2px; }
+.rm-hist-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:20px; }
+.rm-hist-stat{ background:var(--navy); color:#fff; padding:14px 16px; border-left:4px solid var(--gold); }
+.rm-hist-stat b{ display:block; font-family:'Barlow Condensed','Oswald',sans-serif; font-size:44px; font-weight:800; font-style:italic; line-height:1; color:var(--gold); }
+.rm-hist-stat span{ font-size:13px; color:#C9D6E8; }
+.rm-hist-kinds{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:8px; margin-top:12px; }
+.rm-hist-kind{ position:relative; display:flex; align-items:baseline; justify-content:space-between; gap:10px; text-align:left; padding:11px 14px 14px; background:#fff; border:1px solid var(--line); cursor:pointer; font:inherit; color:var(--ink); overflow:hidden; }
+.rm-hist-kind b{ font-family:'Barlow Condensed','Oswald',sans-serif; font-size:24px; font-weight:800; }
+.rm-hist-kind i{ position:absolute; left:0; bottom:0; height:4px; background:var(--navy-mid); }
+.rm-hist-kind.on{ border-color:var(--navy); box-shadow:inset 0 0 0 1px var(--navy); }
+.rm-hist-kind.on i{ background:var(--gold); }
+.rm-hist-kind:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+.rm-hist-month-title{ font-family:'Barlow Condensed','Oswald',sans-serif; font-size:17px; font-weight:700; color:var(--ink-soft); margin:22px 0 8px; }
+.rm-hist-list{ list-style:none; margin:0; padding:0; border-left:3px solid var(--line); }
+.rm-hist-item{ display:flex; gap:16px; padding:12px 0 12px 16px; position:relative; border-bottom:1px solid var(--line); }
+.rm-hist-item::before{ content:""; position:absolute; left:-8px; top:18px; width:13px; height:13px; background:var(--gold); border:2px solid #fff; transform:skewX(-18deg); }
+.rm-hist-when{ flex:0 0 74px; }
+.rm-hist-when b{ display:block; font-family:'Barlow Condensed','Oswald',sans-serif; font-size:20px; font-weight:800; line-height:1.1; }
+.rm-hist-when span{ font-size:12px; color:var(--ink-soft); }
+.rm-hist-body{ flex:1; min-width:0; }
+.rm-hist-top{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+.rm-hist-school{ font-size:16px; color:var(--navy); }
+.rm-hist-type{ font-size:12px; font-weight:700; padding:3px 12px 3px 10px; background:var(--navy); color:#fff; clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%); }
+.rm-hist-type-first{ background:var(--navy-mid); }
+.rm-hist-type-followup{ background:var(--gold); color:var(--ink); }
+.rm-hist-type-reply, .rm-hist-type-thanks{ background:#12A15B; }
+.rm-hist-type-offer{ background:#0E7C46; }
+.rm-hist-type-close{ background:#6b7a8c; }
+.rm-hist-meta{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+.rm-hist-subject{ font-size:13.5px; font-style:italic; margin-top:4px; overflow-wrap:anywhere; }
+@media (max-width:560px){ .rm-hist-item{ flex-direction:column; gap:4px; } .rm-hist-when{ flex:none; display:flex; gap:8px; align-items:baseline; } }
 @media (prefers-reduced-motion:reduce){ .rm-hero h1{ animation:none; } }
 `;
 
@@ -7108,6 +7138,101 @@ function YourMoveSidebar() {
   );
 }
 
+/* ---------------------------------------------------------------
+   MIS ENVÍOS — historial de outreach: a cuántos coaches le escribiste, cuándo y con qué tipo de mail.
+   Lee rr_outreach_log (el mismo registro de "Mi correo"): cada envío es un mensaje { at, kind, hook, lang, ai, stage, subject }.
+--------------------------------------------------------------- */
+function OutreachHistoryPage({ profile, setStage }) {
+  const [log, setLog] = useState(() => readOutreachLog());
+  const [kindFilter, setKindFilter] = useState("all");
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => {
+    const refresh = () => setLog(readOutreachLog());
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, []);
+  const entries = Object.values(log);
+  const sends = [];
+  entries.forEach((e) => outreachMessages(e).forEach((m) => sends.push({ ...m, university: e.university, sport: e.sport, coachName: e.coachName, status: e.status })));
+  sends.sort((a, b) => new Date(b.at) - new Date(a.at));
+  const replied = entries.filter((e) => OUTREACH_REPLY_STATUSES.includes(e.status)).length;
+  const last7 = sends.filter((m) => daysSince(m.at) < 7).length;
+  const last30 = sends.filter((m) => daysSince(m.at) < 30).length;
+  const byKind = {};
+  sends.forEach((m) => { byKind[m.kind] = (byKind[m.kind] || 0) + 1; });
+  const maxKind = Math.max(1, ...Object.values(byKind));
+  const shown = kindFilter === "all" ? sends : sends.filter((m) => m.kind === kindFilter);
+  const monthOf = (iso) => { try { const t = new Date(iso).toLocaleDateString("es-AR", { month: "long", year: "numeric" }).replace(" de ", " "); return t.charAt(0).toUpperCase() + t.slice(1); } catch (e) { return ""; } };
+  const timeOf = (iso) => { try { return new Date(iso).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } };
+  const groups = [];
+  shown.forEach((m) => { const mo = monthOf(m.at); const g = groups[groups.length - 1]; if (g && g.month === mo) g.items.push(m); else groups.push({ month: mo, items: [m] }); });
+
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">Mis envíos</h2>
+      <p className="rm-hint">Todos los mails que registraste: a qué coach le escribiste, cuándo y de qué tipo. Se anota cuando tocás "Copiar texto" o "Gmail" en Mi correo; Smartrecruit no envía nada por vos.</p>
+
+      {entries.length === 0 ? (
+        <div className="rm-alert" style={{ marginTop: 16 }}>
+          Todavía no registraste ningún envío. Cuando le escribas al primer coach desde Mi correo, queda anotado acá.{" "}
+          <button className="rm-btn-inline" onClick={() => setStage(profile ? "outreach" : "form")}>{profile ? "Ir a Mi correo →" : "Armar mi perfil →"}</button>
+        </div>
+      ) : (
+        <>
+          <div className="rm-hist-stats">
+            <div className="rm-hist-stat"><b>{entries.length}</b><span>coach{entries.length === 1 ? "" : "es"} contactado{entries.length === 1 ? "" : "s"}</span></div>
+            <div className="rm-hist-stat"><b>{sends.length}</b><span>mail{sends.length === 1 ? "" : "s"} en total</span></div>
+            <div className="rm-hist-stat"><b>{last7}</b><span>en los últimos 7 días</span></div>
+            <div className="rm-hist-stat"><b>{last30}</b><span>en los últimos 30 días</span></div>
+            <div className="rm-hist-stat"><b>{replied}</b><span>respondieron{entries.length ? ` (${Math.round((replied / entries.length) * 100)}%)` : ""}</span></div>
+          </div>
+
+          <h3 className="rm-condensed" style={{ fontSize: 20, marginTop: 30 }}>Qué tipo de mails mandaste</h3>
+          <div className="rm-hist-kinds" role="group" aria-label="Filtrar por tipo de mail">
+            <button type="button" className={`rm-hist-kind ${kindFilter === "all" ? "on" : ""}`} onClick={() => setKindFilter("all")}>
+              <span className="rm-hist-kind-name">Todos</span><b>{sends.length}</b>
+              <i style={{ width: "100%" }} />
+            </button>
+            {Object.keys(MAIL_KINDS).filter((k) => byKind[k]).map((k) => (
+              <button type="button" key={k} className={`rm-hist-kind ${kindFilter === k ? "on" : ""}`} onClick={() => setKindFilter(kindFilter === k ? "all" : k)}>
+                <span className="rm-hist-kind-name">{MAIL_KINDS[k].label}</span><b>{byKind[k]}</b>
+                <i style={{ width: `${Math.round((byKind[k] / maxKind) * 100)}%` }} />
+              </button>
+            ))}
+          </div>
+
+          <h3 className="rm-condensed" style={{ fontSize: 20, marginTop: 30 }}>Historial</h3>
+          {groups.map((g) => (
+            <section key={g.month} className="rm-hist-month">
+              <h4 className="rm-hist-month-title">{g.month}</h4>
+              <ol className="rm-hist-list">
+                {g.items.map((m, i) => (
+                  <li key={`${m.university}-${m.at}-${i}`} className="rm-hist-item">
+                    <div className="rm-hist-when"><b>{shortDate(m.at)}</b><span>{m.legacy ? "" : timeOf(m.at)}</span></div>
+                    <div className="rm-hist-body">
+                      <div className="rm-hist-top">
+                        <b className="rm-hist-school">{m.university}</b>
+                        <span className={`rm-hist-type rm-hist-type-${m.kind}`}>{mailKindLabel(m.kind, m.stage)}</span>
+                      </div>
+                      <div className="rm-hist-meta">
+                        {[m.sport, m.coachName ? `Coach ${m.coachName}` : null, m.hook ? `Gancho: ${HOOK_LABELS[m.hook] || m.hook}` : null, m.lang ? (m.lang === "en" ? "En inglés" : "En español") : null, m.ai ? "Con IA" : null].filter(Boolean).join(" · ")}
+                      </div>
+                      {m.subject && <div className="rm-hist-subject">{m.subject}</div>}
+                      {m.legacy && <div className="rm-hist-meta">Registro anterior: la fecha es real, el tipo es estimado.</div>}
+                      <div className="rm-hist-meta">Estado: {OUTREACH_STATUS_LABELS[m.status] || OUTREACH_STATUS_LABELS.sin_respuesta}</div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))}
+          <p className="rm-today-note" style={{ marginTop: 20 }}>Para cambiar el estado de un coach o escribirle de nuevo, andá a <button className="rm-btn-inline" onClick={() => setStage(profile ? "outreach" : "form")}>Mi correo</button>. Si iniciaste sesión con "Guardar mi progreso", este historial se guarda en tu cuenta; si no, queda solo en este navegador.</p>
+        </>
+      )}
+    </div>
+  );
+}
+
 function CalendarPage() {
   const sports = Object.keys(SPORT_CALENDARS);
   const me = useMemo(() => readStoredProfile(), []);
@@ -9127,6 +9252,7 @@ export default function App() {
     { id: "catalog", label: "Universidades", icon: "🎓" },
     { id: "needs", label: "Recruiting Needs", icon: "📋" },
     { id: "calendar", label: "Calendario", icon: "📅" },
+    { id: "history", label: "Mis envíos", icon: "📨" },
     {
       id: "resources", label: "Recursos", icon: "📚",
       children: [
@@ -9279,6 +9405,7 @@ export default function App() {
       {stage === "video" && <VideoGuidePage />}
       {stage === "money" && <MoneyGuidePage />}
       {stage === "calendar" && <CalendarPage />}
+      {stage === "history" && <OutreachHistoryPage profile={profile} setStage={setStage} />}
       {stage === "exams" && <ExamsPage setStage={setStage} />}
       {stage === "gpa" && <GpaCalculatorPage />}
       {stage === "careers" && <CareerFinderPage profile={profile} onOpenSchool={openSchool} />}
