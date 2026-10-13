@@ -49,7 +49,7 @@ TO_CATALOG = {
   "Tennessee Tech": "Tennessee Technological University", "UTSA": "University of Texas – San Antonio", "Texas Southern": "Texas Southern University",
   "Green Bay": "University of Wisconsin – Green Bay", "Lindenwood": "Lindenwood University", "East Texas A&M": "Texas A&M University – Commerce",
   "St. Thomas": "University of St. Thomas – Minnesota", "South Carolina Upstate": "University of South Carolina – Upstate",
-  "Cal State Bakersfield": "California State University – Bakersfield", "Utah Tech": "Utah Tech University (Formerly Dixie State University)",
+  "Cal State Bakersfield": "California State University – Bakersfield", "Utah Tech": "Utah Tech University",
   "Long Island University": "Long Island University", "California": "University of California – Berkeley",
   "Pennsylvania": "University of Pennsylvania – Penn", "Jacksonville State": "Jacksonville State University",
 }
