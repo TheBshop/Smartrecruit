@@ -2560,6 +2560,12 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-kanban-card.stale { border-left: 4px solid #b3401a; }
 .rm-kanban-card b { display: block; line-height: 1.25; }
 .rm-kanban-card select { margin-top: 8px; width: 100%; padding: 5px; font-size: 12.5px; border: 1px solid var(--line); }
+.rm-kanban-col.over { background: #e6f2ea; outline: 2px dashed var(--field); outline-offset: -4px; }
+.rm-kanban-move { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 8px; }
+.rm-kanban-arrow { width: 32px; height: 32px; border: 1px solid var(--line); background: #fff; font-size: 18px; line-height: 1; cursor: pointer; border-radius: 6px; color: var(--navy); }
+.rm-kanban-arrow:disabled { opacity: .35; cursor: default; }
+.rm-kanban-arrow:not(:disabled):hover { border-color: var(--field); }
+.rm-kanban-stage { font-size: 12px; font-weight: 700; color: var(--navy); text-align: center; flex: 1; }
 .rm-kanban-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 4px; }
 .rm-kanban-flag { display: inline-block; margin-left: 6px; font-size: 10px; font-weight: 700; color: #b3401a; }
 /* ---- Métricas de mails ---- */
@@ -5323,6 +5329,7 @@ const KANBAN_COLUMNS = [
 
 function OutreachKanban({ log, favorites, onMove, onWrite }) {
   const [dragging, setDragging] = useState(null);
+  const [dropTarget, setDropTarget] = useState(null);
   const inLog = new Set(Object.keys(log));
   const cards = [
     ...favorites.filter((u) => !inLog.has(u)).map((u) => ({ university: u, status: "por_contactar" })),
@@ -5339,7 +5346,7 @@ function OutreachKanban({ log, favorites, onMove, onWrite }) {
   return (
     <div className="rm-kanban" role="list">
       {KANBAN_COLUMNS.map((c) => (
-        <div key={c.key} className="rm-kanban-col" onDragOver={(ev) => ev.preventDefault()} onDrop={() => drop(c.key)}>
+        <div key={c.key} className={`rm-kanban-col ${dropTarget === c.key ? "over" : ""}`} onDragOver={(ev) => { ev.preventDefault(); if (dropTarget !== c.key) setDropTarget(c.key); }} onDragLeave={() => setDropTarget((t) => (t === c.key ? null : t))} onDrop={() => { setDropTarget(null); drop(c.key); }}>
           <div className="rm-kanban-colhead" style={{ borderTopColor: c.color }}>{c.label} <span>{byCol[c.key].length}</span></div>
           {byCol[c.key].length === 0 && <div className="rm-kanban-empty">{c.key === "por_contactar" ? "Guardá universidades en Mi lista para verlas acá." : "—"}</div>}
           {byCol[c.key].map((x) => {
@@ -5355,9 +5362,24 @@ function OutreachKanban({ log, favorites, onMove, onWrite }) {
                 {x.status === "por_contactar" ? (
                   <button type="button" className="rm-btn-inline" onClick={() => onWrite(x.university)}>Escribir mail →</button>
                 ) : (
-                  <select aria-label={`Mover ${x.university}`} value={x.status} onChange={(ev) => onMove(x.university, ev.target.value)}>
-                    {KANBAN_COLUMNS.filter((k) => k.key !== "por_contactar").map((k) => <option key={k.key} value={k.key}>{k.label}</option>)}
-                  </select>
+                  <>
+                    <div className="rm-kanban-move">
+                      {(() => {
+                        const movable = KANBAN_COLUMNS.filter((k) => k.key !== "por_contactar");
+                        const i = movable.findIndex((k) => k.key === x.status);
+                        return (
+                          <>
+                            <button type="button" className="rm-kanban-arrow" aria-label={`Pasar ${x.university} a la etapa anterior`} disabled={i <= 0} onClick={() => onMove(x.university, movable[i - 1].key)}>‹</button>
+                            <span className="rm-kanban-stage">{movable[i] ? movable[i].label : ""}</span>
+                            <button type="button" className="rm-kanban-arrow" aria-label={`Pasar ${x.university} a la etapa siguiente`} disabled={i < 0 || i >= movable.length - 1} onClick={() => onMove(x.university, movable[i + 1].key)}>›</button>
+                          </>
+                        );
+                      })()}
+                    </div>
+                    <select aria-label={`Mover ${x.university}`} value={x.status} onChange={(ev) => onMove(x.university, ev.target.value)}>
+                      {KANBAN_COLUMNS.filter((k) => k.key !== "por_contactar").map((k) => <option key={k.key} value={k.key}>{k.label}</option>)}
+                    </select>
+                  </>
                 )}
               </div>
             );
