@@ -3397,7 +3397,7 @@ function trackOutreach(meta) {
   if (!meta || !meta.university) return;
   const stage = kind === "followup" ? Math.min(MAX_FOLLOWUPS, followupStage(existing)) : null;
   // Cada envío guarda su tipo, su gancho y su asunto: de ahí salen la rotación de ganchos, el próximo paso y las métricas.
-  const message = { at: now, kind, hook: meta.hook || null, lang: meta.lang || null, ai: !!meta.ai, stage, subject: meta.subject ? String(meta.subject).slice(0, 200) : null };
+  const message = { at: now, kind, hook: meta.hook || null, lang: meta.lang || null, ai: !!meta.ai, stage, subject: meta.subject ? String(meta.subject).slice(0, 200) : null, coachName: meta.coachName || null, coachEmail: meta.coachEmail || null };
   log[meta.university] = {
     ...(existing || {}),
     university: meta.university,
@@ -3478,41 +3478,34 @@ function contactWindowNote(profile) {
   return { ok: false, text: `Por tu año de ingreso (${c.entry}), los coaches de NCAA D1 recién pueden contestarte sobre reclutamiento desde el ${longDateEs(c.comm)}. Escribiles igual para entrar en su lista; los de D2, D3, NAIA y NJCAA pueden contestarte ya.` };
 }
 
+// Coaches a los que se puede escribir en este programa: el principal y sus asistentes (cada uno con su mail).
+function coachOptionsFor(university, sport, gender) {
+  const c = coachContactFor(university, sport, gender);
+  if (!c) return [];
+  const opts = [];
+  if (c.name) opts.push({ key: "head", name: c.name, title: c.title || null, email: c.email || getCoachEmail(university, sport, gender) || null });
+  (c.assistants || []).forEach((a, i) => { if (a && a.name) opts.push({ key: `asst-${i}`, name: a.name, title: "Asistente", email: a.email || null }); });
+  return opts;
+}
+
 function ComposeLinks({ profile, r }) {
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState(readEmailLang);
-  const base = composeEmail({ profile, university: r.university, r, kind: "first", lang });
-  const coachName = base.coachName;
-  const [ai, setAi] = useState(null); // { subject, body } generado por IA y editable
-  const [aiBusy, setAiBusy] = useState(false);
-  const [aiErr, setAiErr] = useState("");
-  const [tone, setTone] = useState("profesional");
-  const subject = ai ? ai.subject : base.subject;
-  const body = ai ? ai.body : base.body;
-  const genAI = async () => {
-    setAiBusy(true); setAiErr("");
-    try {
-      const p = profile || {};
-      const res = await fetch("/api/generate-email", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({
-        kind: "intro", tone, lang,
-        profile: aiProfile(p),
-        program: { university: r.university, division: r.division || r.Division || null, conference: r.conference || r.Conference || null, coachName },
-        baseDraft: `${base.subject}\n\n${base.body}`,
-      }) });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.subject) throw new Error((data.error || `No se pudo generar el mail (error ${res.status}).`) + (data.detail ? ` Detalle: ${data.detail}` : ""));
-      setAi({ subject: data.subject, body: data.body, todo: Array.isArray(data.todo) ? data.todo : [] });
-      try { window.posthog && window.posthog.capture("mail_generado_ia", { tone, lang }); } catch (e) {}
-    } catch (e) { setAiErr(String(e.message || e)); }
-    setAiBusy(false);
-  };
-  // email real del coach: el cargado en el sitio o el que la atleta guardó en Mi correo
-  const coachEmail = getCoachEmail(r.university, profile.sport, profile.gender);
-  const to = coachEmail;
+  const options = coachOptionsFor(r.university, profile.sport, profile.gender);
+  const [pick, setPick] = useState(0);
+  const idx = Math.min(pick, Math.max(0, options.length - 1));
+  const sel = options[idx] || null;
+  const selName = sel ? sel.name : null;
+  // El saludo y el mail cambian según el coach elegido.
+  const base = composeEmail({ profile, university: r.university, r: { ...r, coachName: selName || r.coachName }, kind: "first", lang });
+  const subject = base.subject;
+  const body = base.body;
+  // Sin lista de coaches, se usa el mail guardado para la universidad. Con lista, solo el de la persona elegida (nunca el de otro).
+  const to = sel ? (sel.email || "") : getCoachEmail(r.university, profile.sport, profile.gender);
   const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const outlookUrl = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const mailtoUrl = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  const track = () => trackOutreach({ university: r.university, sport: profile.sport, coachName, kind: "first", hook: base.hook, lang, ai: !!ai, subject });
+  const track = () => trackOutreach({ university: r.university, sport: profile.sport, coachName: selName, coachEmail: to || null, kind: "first", hook: base.hook, lang, ai: false, subject });
   const timing = contactWindowNote(profile);
 
   return (
@@ -3522,35 +3515,22 @@ function ComposeLinks({ profile, r }) {
       </button>
       {open && (
         <div className="rm-compose-box">
-          {coachEmail
-            ? <p style={{ fontSize: 12, color: "var(--field-dark)", margin: "0 0 8px", fontWeight: 600 }}>✓ Tenemos el email del coach: {coachEmail} — el botón lo completa solo.</p>
-            : <p style={{ fontSize: 12, color: "#9a6a12", margin: "0 0 8px", fontWeight: 600 }}>⚠ Todavía no tenemos el email de este coach cargado (pasa sobre todo con programas NAIA, junior college y USCAA). Copiá el texto y buscá su mail en la web oficial de la universidad (sección "Coaches" o "Staff Directory"){(r.coach_profile_url || r.post_url) ? <> o escribile directo por FieldLevel: <a href={r.coach_profile_url || r.post_url} target="_blank" rel="noopener noreferrer">ver el perfil del coach →</a></> : "."}</p>}
+          {options.length > 0 && (
+            <label style={{ fontSize: 13, display: "block", margin: "0 0 10px" }}>Escribirle a{" "}
+              <select value={idx} onChange={(e) => setPick(Number(e.target.value))} style={{ maxWidth: "100%" }}>
+                {options.map((o, i) => <option key={o.key} value={i}>{o.name}{o.title ? ` — ${o.title}` : ""}{o.email ? "" : " (sin mail cargado)"}</option>)}
+              </select>
+            </label>
+          )}
+          {to
+            ? <p style={{ fontSize: 12, color: "var(--field-dark)", margin: "0 0 8px", fontWeight: 600 }}>✓ Mail de {selName || "este coach"}: {to}</p>
+            : <p style={{ fontSize: 12, color: "#9a6a12", margin: "0 0 8px", fontWeight: 600 }}>⚠ {sel ? `No tenemos el mail de ${selName} cargado. ` : "Todavía no tenemos el email de este coach cargado. "}Buscalo en la web oficial de la universidad (sección "Coaches" o "Staff Directory"){(r.coach_profile_url || r.post_url) ? <> o escribile directo por FieldLevel: <a href={r.coach_profile_url || r.post_url} target="_blank" rel="noopener noreferrer">ver el perfil del coach →</a></> : "."}</p>}
           <div className="rm-seg" style={{ marginBottom: 10 }} role="group" aria-label="Idioma del mail">
             <button type="button" className={lang === "es" ? "on" : ""} onClick={() => { setLang("es"); writeEmailLang("es"); }}>Español</button>
             <button type="button" className={lang === "en" ? "on" : ""} onClick={() => { setLang("en"); writeEmailLang("en"); }}>English</button>
           </div>
           {timing && <p style={{ fontSize: 12, color: timing.ok ? "var(--field-dark)" : "#9a6a12", margin: "0 0 10px" }}>{timing.ok ? "🟢 " : "🟡 "}{timing.text}</p>}
-          <div className="rm-ai-bar">
-            <button type="button" className="rm-compose-btn" onClick={genAI} disabled={aiBusy}>{aiBusy ? "Generando…" : ai ? "Regenerar con IA" : "Generar con IA"}</button>
-            <label style={{ fontSize: 13 }}>Tono{" "}
-              <select value={tone} onChange={(e) => setTone(e.target.value)}>
-                <option value="profesional">Profesional</option>
-                <option value="cercano">Cercano</option>
-                <option value="breve">Más breve</option>
-              </select>
-            </label>
-            {ai && <button type="button" className="rm-btn-inline" style={{ fontSize: 12.5 }} onClick={() => setAi(null)}>Volver al borrador original</button>}
-          </div>
-          {aiErr && <p style={{ fontSize: 12, color: "#b3261e", margin: "0 0 8px" }}>⚠ {aiErr}</p>}
-          {ai && ai.todo && ai.todo.length > 0 && (
-            <div style={{ fontSize: 12.5, background: "#fff7e6", border: "1px solid #f0d49a", borderRadius: 6, padding: "8px 12px", margin: "0 0 8px" }}>
-              <b>Para completar o revisar antes de enviar:</b>
-              <ul style={{ margin: "4px 0 0", paddingLeft: 18 }}>{ai.todo.map((t, i) => <li key={i}>{t}</li>)}</ul>
-            </div>
-          )}
-          {ai && <p style={{ fontSize: 12, color: "var(--ink-soft)", margin: "0 0 8px" }}>Borrador generado con IA a partir de tus datos. Revisalo y editalo antes de mandarlo: vos firmás el mail.</p>}
-          <textarea className="rm-compose-text" readOnly={!ai} value={`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`} rows={12}
-            onChange={(e) => { const t = e.target.value; const m = t.match(/^(?:Subject|Asunto):\s*(.*)\n\n?([\s\S]*)$/); const todo = ai && ai.todo ? ai.todo : []; setAi(m ? { subject: m[1], body: m[2], todo } : { subject, body: t, todo }); }} />
+          <textarea className="rm-compose-text" readOnly value={`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`} rows={12} />
           <div className="rm-compose-actions">
             <a className="rm-compose-btn" href={gmailUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Gmail</a>
             <a className="rm-compose-btn" href={outlookUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Outlook</a>
@@ -3558,16 +3538,17 @@ function ComposeLinks({ profile, r }) {
             <button className="rm-compose-btn" onClick={() => { navigator.clipboard.writeText(`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`); track(); }}>Copiar texto</button>
           </div>
           <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--line)" }}>
-            <button className="rm-btn-inline" style={{ fontSize: 12.5 }} onClick={() => downloadFollowUpICS(profile, r, coachName)}>
+            <button className="rm-btn-inline" style={{ fontSize: 12.5 }} onClick={() => downloadFollowUpICS(profile, r, selName)}>
               📅 Agendar recordatorio para reescribirle a este coach en 10 días
             </button>
           </div>
-          <p style={{ fontSize: 11.5, color: "var(--ink-soft)", marginTop: 8 }}>Se abre en tu propio cliente de mail — lo mandás vos, con tu cuenta. Nunca vemos ni guardamos tu contraseña. Este envío queda anotado en Mi correo.</p>
+          <p style={{ fontSize: 11.5, color: "var(--ink-soft)", marginTop: 8 }}>Se abre en tu propio cliente de mail — lo mandás vos, con tu cuenta. Nunca vemos ni guardamos tu contraseña. Este envío queda anotado en Mi correo, con el coach al que le escribiste y la fecha.</p>
         </div>
       )}
     </div>
   );
 }
+
 
 
 function downloadWeeklyReminderICS(profile) {
@@ -3998,7 +3979,7 @@ function SchoolCard({ p, progs, onOpen, isFav, toggleFav, profile }) {
           ? <>{[p.Division, branches(p.sport).replace(/^./, (c) => c.toUpperCase()) || null].filter(Boolean).join(" · ")}{p.Conference && <span className="rm-es-conf"> · {p.Conference}</span>}</>
           : <>{p.Division}<span className="rm-es-conf"> · {sportsHere.map((sp) => `${CONTACT_SPORT_ES[sp] || sp}${branches(sp) ? ` (${branches(sp).replace("femenino y masculino", "F y M").replace("femenino", "F").replace("masculino", "M")})` : ""}`).join(" · ")}</span></>}
         {rosterState && <div><span className="rm-es-roster">{rosterState === "partial" ? "Stats cargadas" : "Roster cargado"}</span></div>}
-        {fit && <div className={`rm-fit rm-fit-${fit.score >= 85 ? "hi" : fit.score >= 70 ? "ok" : fit.score >= 50 ? "mid" : "lo"}`} title={fit.tip}><b>{fit.score}% Fit</b> · {fit.label}{fit.partial ? " (con datos parciales)" : ""}<div className="rm-fit-tip">{fit.tip}</div></div>}
+        {fit && <div className={`rm-fit rm-fit-${fit.score >= 85 ? "hi" : fit.score >= 70 ? "ok" : fit.score >= 50 ? "mid" : "lo"}`} title={fit.tip}><b>{fit.score}% Fit</b> · {fit.label}<div className="rm-fit-tip">{fit.tip}</div></div>}
       </div>
     </article>
   );
@@ -7153,7 +7134,7 @@ function OutreachHistoryPage({ profile, setStage }) {
   }, []);
   const entries = Object.values(log);
   const sends = [];
-  entries.forEach((e) => outreachMessages(e).forEach((m) => sends.push({ ...m, university: e.university, sport: e.sport, coachName: e.coachName, status: e.status })));
+  entries.forEach((e) => outreachMessages(e).forEach((m) => sends.push({ ...m, university: e.university, sport: e.sport, coachName: m.coachName || e.coachName, status: e.status })));
   sends.sort((a, b) => new Date(b.at) - new Date(a.at));
   const replied = entries.filter((e) => OUTREACH_REPLY_STATUSES.includes(e.status)).length;
   const last7 = sends.filter((m) => daysSince(m.at) < 7).length;
@@ -7215,7 +7196,7 @@ function OutreachHistoryPage({ profile, setStage }) {
                         <span className={`rm-hist-type rm-hist-type-${m.kind}`}>{mailKindLabel(m.kind, m.stage)}</span>
                       </div>
                       <div className="rm-hist-meta">
-                        {[m.sport, m.coachName ? `Coach ${m.coachName}` : null, m.hook ? `Gancho: ${HOOK_LABELS[m.hook] || m.hook}` : null, m.lang ? (m.lang === "en" ? "En inglés" : "En español") : null, m.ai ? "Con IA" : null].filter(Boolean).join(" · ")}
+                        {[m.sport, m.coachName ? `Coach ${m.coachName}${m.coachEmail ? ` (${m.coachEmail})` : ""}` : null, m.hook ? `Gancho: ${HOOK_LABELS[m.hook] || m.hook}` : null, m.lang ? (m.lang === "en" ? "En inglés" : "En español") : null, m.ai ? "Con IA" : null].filter(Boolean).join(" · ")}
                       </div>
                       {m.subject && <div className="rm-hist-subject">{m.subject}</div>}
                       {m.legacy && <div className="rm-hist-meta">Registro anterior: la fecha es real, el tipo es estimado.</div>}
