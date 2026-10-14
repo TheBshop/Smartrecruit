@@ -3496,12 +3496,23 @@ function ComposeLinks({ profile, r }) {
   const idx = Math.min(pick, Math.max(0, options.length - 1));
   const sel = options[idx] || null;
   const selName = sel ? sel.name : null;
+  // Mail del coach elegido: el guardado a mano para esa persona, o el que trae el directorio.
+  const ovKey = selName ? `${r.university}|${selName}` : null;
+  const savedOv = ovKey ? (readJSON("rr_coach_emails", {})[ovKey] || "") : "";
+  const [emailDraft, setEmailDraft] = useState("");
+  useEffect(() => { setEmailDraft(savedOv || (sel && sel.email) || ""); }, [ovKey, savedOv, sel && sel.email]);
   // El saludo y el mail cambian según el coach elegido.
   const base = composeEmail({ profile, university: r.university, r: { ...r, coachName: selName || r.coachName }, kind: "first", lang });
   const subject = base.subject;
   const body = base.body;
-  // Sin lista de coaches, se usa el mail guardado para la universidad. Con lista, solo el de la persona elegida (nunca el de otro).
-  const to = sel ? (sel.email || "") : getCoachEmail(r.university, profile.sport, profile.gender);
+  // Con lista de coaches, el mail es el de la persona elegida (nunca el de otra). Sin lista, el guardado para la universidad.
+  const to = sel ? emailDraft.trim() : getCoachEmail(r.university, profile.sport, profile.gender);
+  const saveOv = () => {
+    if (!ovKey) return;
+    const map = readJSON("rr_coach_emails", {});
+    if (emailDraft.trim()) map[ovKey] = emailDraft.trim(); else delete map[ovKey];
+    writeJSON("rr_coach_emails", map);
+  };
   const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const outlookUrl = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const mailtoUrl = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -3520,6 +3531,12 @@ function ComposeLinks({ profile, r }) {
               <select value={idx} onChange={(e) => setPick(Number(e.target.value))} style={{ maxWidth: "100%" }}>
                 {options.map((o, i) => <option key={o.key} value={i}>{o.name}{o.title ? ` — ${o.title}` : ""}{o.email ? "" : " (sin mail cargado)"}</option>)}
               </select>
+            </label>
+          )}
+          {sel && (
+            <label style={{ fontSize: 12.5, display: "block", margin: "0 0 8px" }}>Mail de {selName}{" "}
+              <input type="email" value={emailDraft} onChange={(e) => setEmailDraft(e.target.value)} placeholder="coach@universidad.edu" style={{ maxWidth: "100%", width: 260 }} />{" "}
+              <button type="button" className="rm-btn-inline" onClick={saveOv}>Guardar</button>
             </label>
           )}
           {to
