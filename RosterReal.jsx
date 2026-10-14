@@ -4621,6 +4621,59 @@ const ELIGIBILITY_CHECKLISTS = {
   ],
 };
 
+// Checklist por año de ingreso, con casillas marcables. Se guarda en "rr_checklist_done" (se sincroniza con la cuenta).
+function YearChecklistInteractive() {
+  const [done, setDone] = useState({});
+  useEffect(() => {
+    try { setDone(JSON.parse(localStorage.getItem("rr_checklist_done") || "{}")); } catch (e) { /* modo privado */ }
+  }, []);
+  const toggle = (key) => {
+    setDone((prev) => {
+      const next = { ...prev, [key]: !prev[key] };
+      try { lsSetSynced("rr_checklist_done", JSON.stringify(next)); } catch (e) { /* sin almacenamiento */ }
+      return next;
+    });
+  };
+  const total = CHECKLIST.reduce((s, c) => s + c.items.length, 0);
+  const doneCount = Object.values(done).filter(Boolean).length;
+  const pct = total ? Math.round((doneCount / total) * 100) : 0;
+  return (
+    <div>
+      <div className="rm-resource-block" style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ flex: 1, height: 10, background: "var(--paper-dim)", borderRadius: 5, overflow: "hidden" }}>
+          <div style={{ width: `${pct}%`, height: "100%", background: "var(--field)", transition: "width .3s" }} />
+        </div>
+        <b style={{ fontSize: 14, whiteSpace: "nowrap" }}>{doneCount} de {total} listos</b>
+      </div>
+      {CHECKLIST.map((c, ci) => {
+        const yearDone = c.items.filter((_, i) => done[`${ci}|${i}`]).length;
+        return (
+          <div key={c.year} className="rm-resource-block">
+            <h3 className="rm-condensed" style={{ fontSize: 17, display: "flex", justifyContent: "space-between", gap: 10 }}>
+              {c.year}
+              <span style={{ fontSize: 13, color: "var(--ink-soft)", fontWeight: 600 }}>{yearDone}/{c.items.length}</span>
+            </h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+              {c.items.map((it, i) => {
+                const key = `${ci}|${i}`;
+                const on = !!done[key];
+                return (
+                  <li key={i} style={{ margin: "0 0 8px" }}>
+                    <label style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer", fontSize: 14.5, lineHeight: 1.5, color: on ? "var(--ink-soft)" : "#222", textDecoration: on ? "line-through" : "none" }}>
+                      <input type="checkbox" checked={on} onChange={() => toggle(key)} style={{ marginTop: 4, width: 18, height: 18, flexShrink: 0 }} />
+                      <span>{it}</span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function useEligibilityChecklist(division) {
   const [checked, setChecked] = useState({});
   useEffect(() => {
@@ -4652,7 +4705,7 @@ function useEligibilityChecklist(division) {
 const SUPABASE_URL = "https://dliayalkzvaugukhxmcb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsaWF5YWxrenZhdWd1a2h4bWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzkwOTMsImV4cCI6MjA4ODExNTA5M30.vGBprr8FKBxTayS6Q6ZbWIxUZKItY4avgMJbUGgQC1E";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts"];
+const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts"];
 function snapshotLocal() {
   const out = {};
   for (const k of SYNC_KEYS) { const v = localStorage.getItem(k); if (v != null) out[k] = v; }
@@ -6034,16 +6087,7 @@ function ResourcesPage() {
         <button className={`rm-tab ${tab === "email" ? "active" : ""}`} onClick={() => setTab("email")}>Plantilla de email</button>
       </div>
 
-      {tab === "checklist" && (
-        <div>
-          {CHECKLIST.map((c) => (
-            <div key={c.year} className="rm-resource-block">
-              <h3 className="rm-condensed" style={{ fontSize: 17 }}>{c.year}</h3>
-              <ul className="rm-reasons">{c.items.map((it, i) => <li key={i}>{it}</li>)}</ul>
-            </div>
-          ))}
-        </div>
-      )}
+      {tab === "checklist" && <YearChecklistInteractive />}
 
       {tab === "glosario" && (
         <div>
