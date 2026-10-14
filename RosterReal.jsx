@@ -5066,17 +5066,6 @@ function MailComposer({ profile, log, pick, onTracked }) {
             </label>
             {notice && <p className="rm-today-note" style={{ color: "var(--field-dark)", fontWeight: 600 }}>{notice}</p>}
 
-            <div className="rm-ai-bar" style={{ marginTop: 14 }}>
-              <button type="button" className="rm-compose-btn" onClick={genAI} disabled={aiBusy}>{aiBusy ? "Generando…" : kind === "reply" ? (aiUsed ? "Regenerar respuesta con IA" : "Responder con IA") : (aiUsed ? "Regenerar con IA" : "Mejorar con IA")}</button>
-              <label style={{ fontSize: 13 }}>Tono{" "}
-                <select value={tone} onChange={(e) => setTone(e.target.value)}>
-                  <option value="profesional">Profesional</option>
-                  <option value="cercano">Cercano</option>
-                  <option value="breve">Más breve</option>
-                </select>
-              </label>
-              {aiUsed && <button type="button" className="rm-btn-inline" style={{ fontSize: 12.5 }} onClick={() => { setDraft({ subject: email.subject, body: email.body }); setAiUsed(false); setAiTodo([]); }}>Volver al borrador original</button>}
-            </div>
             {aiErr && <p className="rm-today-note" style={{ color: "#b3261e" }}>⚠ {aiErr}</p>}
             {aiUsed && <p className="rm-today-note">Borrador escrito con IA a partir de tus datos{kind === "reply" ? " y del mensaje del coach" : ""}, con el gancho y el tipo de mail elegidos. Revisalo antes de mandarlo: vos firmás el mail.</p>}
             {aiTodo.length > 0 && (
