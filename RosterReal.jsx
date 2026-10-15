@@ -2418,6 +2418,9 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-onboard-steps{ display:flex; flex-direction:column; gap:2px; }
 .rm-onboard-step{ display:flex; gap:14px; padding:14px 12px; border-radius:8px; align-items:flex-start; }
 .rm-onboard-step.done{ opacity:.62; }
+.rm-onboard-step.current{ background:#f1f8f4; border-left:4px solid var(--field); padding-left:10px; }
+.rm-onboard-step:not(.current) .rm-onboard-body p{ display:none; }
+.rm-onboard-step:not(.current) .rm-onboard-body h3{ font-size:15px; }
 .rm-onboard-step:hover:not(.locked){ background:var(--paper-dim); }
 .rm-onboard-check{ width:30px; height:30px; border-radius:50%; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; font-family:'Space Mono',monospace; }
 .rm-onboard-step.done .rm-onboard-check{ background:var(--field); }
@@ -8367,7 +8370,7 @@ function OnboardingPanel({ profile, setStage }) {
 
           <div className="rm-onboard-steps">
             {steps.map((s) => (
-              <div className={`rm-onboard-step${s.done ? " done" : ""}${s.locked ? " locked" : ""}`} key={s.id}>
+              <div className={`rm-onboard-step${s.done ? " done" : ""}${s.locked ? " locked" : ""}${!s.done && !s.locked && s === steps.find((x) => !x.done && !x.locked) ? " current" : ""}`} key={s.id}>
                 <div className="rm-onboard-check">{s.done ? "✓" : s.n}</div>
                 <div className="rm-onboard-body">
                   <h3 className="rm-condensed">{s.title}</h3>
