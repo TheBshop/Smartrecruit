@@ -5624,7 +5624,12 @@ function computeReadiness(profile, checklist, manual) {
   const overdue = due.filter((it) => !isDone(it));
   const label = score >= 75 ? "Al día" : score >= 50 ? "En camino" : "Atrasado";
   const color = score >= 75 ? "#1f7a3f" : score >= 50 ? "#8a5a00" : "#b3401a";
-  return { score, label, color, monthsLeft: m, overdue, doneAll, total: all.length, isDone };
+  const parts = [
+    { key: "Al día", value: Math.round(duePart), max: 60, hint: due.length ? `${doneDue} de ${due.length} tareas que ya te tocan` : "Nada que te toque todavía" },
+    { key: "Perfil", value: Math.round(profilePart), max: 25, hint: `${profileFields} de 7 datos cargados` },
+    { key: "Adelantado", value: Math.round(aheadPart), max: 15, hint: `${doneAll} de ${all.length} tareas del camino` },
+  ];
+  return { score, label, color, monthsLeft: m, overdue, doneAll, total: all.length, isDone, parts };
 }
 
 function YearChecklist({ profile, setStage }) {
@@ -5647,6 +5652,20 @@ function YearChecklist({ profile, setStage }) {
           {" "}Mide qué tan al día estás con lo que ya te toca hacer (60%), qué tan completo está tu perfil (25%) y cuánto adelantaste de lo que viene (15%).
           {rd.overdue.length > 0 && <><br /><b>Lo que ya te toca y falta:</b> {rd.overdue.slice(0, 4).map((x) => x.label.replace(/ \(.*\)$/, "")).join(" · ")}{rd.overdue.length > 4 ? ` y ${rd.overdue.length - 4} más` : ""}.</>}
         </p>
+      </div>
+      <div style={{ display: "grid", gap: 10, margin: "12px 0 4px" }}>
+        {rd.parts.map((pt) => (
+          <div key={pt.key} style={{ display: "grid", gridTemplateColumns: "110px 1fr 52px", gap: 10, alignItems: "center", fontSize: 13 }}>
+            <span style={{ fontWeight: 700 }}>{pt.key}</span>
+            <div>
+              <div style={{ height: 8, background: "var(--paper-dim)", borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ width: `${(pt.value / pt.max) * 100}%`, height: "100%", background: rd.color, transition: "width .3s" }} />
+              </div>
+              <small style={{ color: "var(--ink-soft)" }}>{pt.hint}</small>
+            </div>
+            <span style={{ textAlign: "right", fontWeight: 700 }}>{pt.value}/{pt.max}</span>
+          </div>
+        ))}
       </div>
       {checklist.map((st) => {
         const state = m > st.from ? "futuro" : "actual";
