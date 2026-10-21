@@ -1790,9 +1790,9 @@ function runMatch(profile) { return runMatchAll(profile).slice(0, 10); }
    una oferta. Se decide sumando señales (cada una queda escrita en `why` para mostrarla): nivel vs. plantel, admisión, vacantes y plata.
 --------------------------------------------------------------- */
 const TIERS = {
-  aspiracional: { key: "aspiracional", label: "Aspiracional", emoji: "🚀", hint: "Más difícil: vale la pena escribirles, pero no dependas de estas." },
-  realista: { key: "realista", label: "Realista", emoji: "🎯", hint: "Tu nivel y tu promedio están dentro de lo que busca el programa." },
-  segura: { key: "segura", label: "Alta probabilidad", emoji: "✅", hint: "Donde más chances hay de respuesta y oferta. No es una garantía." },
+  aspiracional: { key: "aspiracional", label: "Menos probable", emoji: "🚀", hint: "Menos probable: vale la pena escribirles, pero no dependas de estas." },
+  realista: { key: "realista", label: "Posible", emoji: "🎯", hint: "Posible: tu nivel y tu promedio están dentro de lo que busca el programa." },
+  segura: { key: "segura", label: "Más probable", emoji: "✅", hint: "Más probable: donde más chances hay de respuesta y oferta. No es una garantía." },
 };
 function tierFor(r, profile) {
   let sig = null;
@@ -1849,14 +1849,15 @@ function pickTopTen(list) {
   for (const r of list) { if (chosen.size >= N) break; chosen.add(r); }
   return list.filter((r) => chosen.has(r)).slice(0, N);
 }
-// Top 10 + hasta 20 más (30 en total). Las universidades que no dictan la carrera pedida solo entran al top si no hay otras.
+// Top 10 destacadas + hasta 150 en total, agrupadas en 3 niveles (más probable / posible / menos probable).
+// Las universidades que no dictan la carrera pedida solo entran al top si no hay otras.
 function buildTieredResults(profile) {
   const base = runMatchAll(profile);
-  const extra = (() => { try { return matchFromEada(profile, new Set(base.map((r) => r.university)), 40); } catch (e) { return []; } })();
+  const extra = (() => { try { return matchFromEada(profile, new Set(base.map((r) => r.university)), 150); } catch (e) { return []; } })();
   const pool = [...base, ...extra].sort((x, y) => y.score - x.score);
   const noMajor = (r) => r.academicFit && (r.academicFit.status === "confirmado_no" || r.academicFit.status === "ipeds_no");
   const ok = pool.filter((r) => !noMajor(r));
-  const list = (ok.length >= 10 ? ok : pool).slice(0, 30).map((r) => ({ ...r, tier: tierFor(r, profile) }));
+  const list = (ok.length >= 10 ? ok : pool).slice(0, 150).map((r) => ({ ...r, tier: tierFor(r, profile) }));
   const top = pickTopTen(list);
   const topSet = new Set(top);
   const more = list.filter((r) => !topSet.has(r));
@@ -7833,7 +7834,7 @@ function ProfileForm({ onSubmit, initial }) {
         <ConsentFields value={p.consent} onChange={(c) => setP({ ...p, consent: c })} />
         <div className="rm-actions">
           <button className="rm-btn" disabled={!consentIsValid(p.consent)} style={consentIsValid(p.consent) ? undefined : { opacity: 0.5, cursor: "not-allowed" }}
-            onClick={() => { if (consentIsValid(p.consent)) onSubmit({ ...p, consent: { ...p.consent, version: LEGAL_VERSION, acceptedAt: (p.consent && p.consent.version === LEGAL_VERSION && p.consent.acceptedAt) || new Date().toISOString() } }); }}>Ver mis 10 universidades →</button>
+            onClick={() => { if (consentIsValid(p.consent)) onSubmit({ ...p, consent: { ...p.consent, version: LEGAL_VERSION, acceptedAt: (p.consent && p.consent.version === LEGAL_VERSION && p.consent.acceptedAt) || new Date().toISOString() } }); }}>Ver mis 150 universidades →</button>
           {!consentIsValid(p.consent) && <p className="rm-today-note" style={{ marginTop: 8 }}>Para seguir, contestá si sos mayor de edad y aceptá los Términos y la Política de Privacidad{p.consent && p.consent.minor ? ", con los datos y la conformidad de tu madre, padre o tutor" : ""}.</p>}
         </div>
         </>)}
