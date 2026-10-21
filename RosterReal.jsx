@@ -4265,7 +4265,6 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
             {!ncsa?.website && eada?.web && <a href={/^https?:/.test(eada.web) ? eada.web : `https://${eada.web}`} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: "var(--accent)", fontWeight: 600 }}>Sitio oficial →</a>}
             {ncsa?.website && <a href={ncsa.website} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: "var(--accent)", fontWeight: 600 }}>Sitio oficial →</a>}
             {ncsa?.phone && <span style={{ fontSize: 12.5, color: "var(--ink-soft)", marginLeft: 10 }}>· {ncsa.phone}</span>}
-            {rosters.map((r) => <span key={`${r.sport}`} className={r.partial ? "rm-badge-partial" : "rm-badge-ok"} style={{ marginTop: 6, marginRight: 6, display: "inline-block" }}>{r.partial ? `ESTADÍSTICAS ${String(r.statsSeason || "2025").split(" ")[0]} CARGADAS` : "ROSTER REAL CARGADO"} · {r.sport} ({r.roster.length} {r.partial ? "jugadores" : "atletas"})</span>)}
           </div>
         </div>
 
