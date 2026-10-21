@@ -6034,6 +6034,19 @@ function EligibilityPage() {
         <b>Dato clave:</b> el SAT/ACT ya NO es obligatorio para la elegibilidad inicial de la NCAA (se sacó en enero 2023) — pero universidades particulares pueden seguir pidiéndolo para admisión. Son dos trámites distintos: elegibilidad deportiva (NCAA/NAIA) y admisión académica (la universidad).
       </div>
 
+      <div className="rm-card" style={{ marginTop: 20, padding: 18 }}>
+        <h3 className="rm-condensed" style={{ fontSize: 17, marginTop: 0 }}>Orden de pasos, de principio a fin</h3>
+        <ol style={{ paddingLeft: 20, fontSize: 14, lineHeight: 1.6 }}>
+          <li>Elegí deporte, posición y edad.</li>
+          <li>Armá tu perfil (video, estadísticas, notas, inglés).</li>
+          <li>Registrate en el NCAA Eligibility Center (D1 y D2) y subí tus documentos.</li>
+          <li>Hacé una lista de 15 a 25 escuelas de tu nivel.</li>
+          <li>Escribí a los entrenadores y hacé seguimiento a los 7 días.</li>
+        </ol>
+        <p style={{ fontSize: 13.5, marginBottom: 0 }}><b>Dales tu NCAA ID</b> a cada entrenador que te interese: sin ese número no pueden pedir tu evaluación.</p>
+        <p style={{ fontSize: 13.5, marginBottom: 0 }}><b>Cuidado con las estafas:</b> ninguna escuela cobra por presentarte a entrenadores. Si alguien te pide dinero por enviar tu perfil o por "garantizar" una beca, desconfiá.</p>
+      </div>
+
       <InternationalAthletesSection />
 
       <ArgentinaEligibilityGuide />
