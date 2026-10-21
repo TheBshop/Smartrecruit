@@ -1198,6 +1198,47 @@ SOCCER_ROSTER_OVERRIDES.forEach((o) => {
   if (!cur) return;
   ROSTERS_LOADED[key] = { ...cur, roster: o.players.map((p) => ({ ...p, games_played: null, goals: null, assists: null, points: null })), season: o.season, source: o.source, sourceUrl: o.source_url, partial: false };
 });
+// Limpieza de planteles scrapeados: nombres con número de camiseta o repetidos ("Cody 17Holbert, Cody Holbert")
+// y posiciones pegadas con peso o duplicadas ("forwardforward190lbs17c"). Es idempotente: no toca datos ya limpios.
+function cleanRosterName(raw) {
+  if (!raw) return raw;
+  let t = String(raw).replace(/\s+/g, " ").trim();
+  const i = t.indexOf(",");
+  if (i > 0) {
+    const left = t.slice(0, i).trim(), right = t.slice(i + 1).trim();
+    if (/^(jr|sr|ii|iii|iv|v)\.?$/i.test(right)) t = `${left} ${right}`;
+    else if (/\d/.test(left) && right && !/\d/.test(right)) t = right;
+    else if (!/\d/.test(left) && /^[A-Za-zÀ-ÿ'’. -]+$/.test(right) && right.split(" ").length === 1) t = `${right} ${left}`;
+  }
+  if (/\d/.test(t) && t.includes(",")) t = t.slice(t.lastIndexOf(",") + 1).trim();
+  return t.replace(/^\d+\s+/, "").replace(/\s+/g, " ").trim();
+}
+function cleanRosterPosition(raw) {
+  if (!raw || typeof raw !== "string") return raw;
+  if (!(/\d|lbs/i.test(raw) || /^[a-z]+$/.test(raw))) return raw; // solo las cadenas claramente corruptas
+  const low = raw.toLowerCase();
+  const abbr = { cb: "D", rb: "D", lb: "D", fb: "D", sw: "D", wb: "D", cm: "M", cdm: "M", cam: "M", dm: "M", am: "M", md: "M", mf: "M", w: "F", winger: "F", st: "F", cf: "F", lw: "F", rw: "F", fw: "F", fwd: "F", for: "F" };
+  if (abbr[low]) return abbr[low];
+  // Posición abreviada seguida del peso o la camiseta ("m165lbs", "M/fm/f175lbs", "f190lbs10c"): se queda con la parte previa al peso.
+  const wm = /^([a-z/]+?)\d{2,3}lbs/.exec(low);
+  if (wm) {
+    const head = wm[1];
+    const half = head.length % 2 === 0 && head.slice(0, head.length / 2) === head.slice(head.length / 2) ? head.slice(0, head.length / 2) : head;
+    const parts = half.split("/").map((c) => ({ b: "D", d: "D", m: "M", f: "F", g: "GK", gk: "GK" }[c])).filter(Boolean);
+    if (parts.length) return Array.from(new Set(parts)).join("/");
+    const one = { b: "D", d: "D", m: "M", f: "F", ff: "F", g: "GK", gk: "GK" }[head.replace(/\//g, "")];
+    if (one) return one;
+  }
+  const kinds = [["GK", /goalkeeper|goalie|^gk/], ["D", /defen|^back|^def/], ["M", /midfield|^mf|^mid/], ["F", /forward|striker|attack|^fwd/], ["C", /^center/], ["G", /^guard/]];
+  let best = null;
+  kinds.forEach(([code, re]) => { const m = re.exec(low); if (m && (best === null || m.index < best.i)) best = { code, i: m.index }; });
+  return best ? best.code : raw;
+}
+Object.keys(ROSTERS_LOADED).forEach((key) => {
+  const cur = ROSTERS_LOADED[key];
+  if (!cur || !Array.isArray(cur.roster)) return;
+  cur.roster = cur.roster.map((p) => ({ ...p, player_name: cleanRosterName(p.player_name), position: cleanRosterPosition(p.position) }));
+});
 const ROSTER_BASE_SEASON = 2026;
 const MONTHS_ES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
