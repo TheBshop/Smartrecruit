@@ -3654,7 +3654,7 @@ function RecruitingNeedsPage() {
               <b>{needPosEs(n.sport, null, n.position)}</b>
               <span className="rm-needs-when">{n.datePosted}</span>
             </div>
-            <div className="rm-needs-school">{n.school || "(universidad sin identificar en el scrape)"} — {n.sport}</div>
+            <div className="rm-needs-school">{n.school || "Universidad no identificada"} — {n.sport}</div>
             <div className="rm-needs-meta">{n.division}{n.place ? ` en ${n.place}` : ""}</div>
             {n.description && <div className="rm-needs-desc">“{n.description}”</div>}
             <div className="rm-needs-links">
@@ -7363,7 +7363,7 @@ function CalendarPage() {
           {status.active.length > 0 ? (
             status.active.map((e, i) => (
               <div key={i} className="rm-alert" style={{ marginBottom: 8 }}>
-                <b>Hoy estás en: {PERIOD_TYPE_LABEL[e.type] || e.label} ({e.div})</b> — hasta el {e.end}. {e.label}.
+                <b>Hoy estás en: {PERIOD_TYPE_LABEL[e.type] || e.label} ({e.div})</b> — hasta el {e.end}.{String(PERIOD_TYPE_LABEL[e.type] || e.label).toLowerCase() === String(e.label).toLowerCase() ? "" : ` ${e.label}.`}
               </div>
             ))
           ) : (
