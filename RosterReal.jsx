@@ -9294,12 +9294,37 @@ function AccountMenu({ session }) {
   );
 }
 
+// Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
+const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "profile", "resources", "results"];
+const stageFromPath = () => {
+  try {
+    const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
+    if (p === "privacidad") return "privacy";
+    if (p === "terminos") return "terms";
+    if (PATH_STAGES.includes(p)) return p;
+  } catch (e) {}
+  return "landing";
+};
+
 export default function App() {
-  const [stage, setStage] = useState(() => {
-    // Direcciones públicas de las páginas legales (las pide Google para verificar la app).
-    try { const p = window.location.pathname.replace(/\/+$/, ""); if (p === "/privacidad") return "privacy"; if (p === "/terminos") return "terms"; } catch (e) {}
-    return "landing";
-  });
+  const [stage, setStageRaw] = useState(stageFromPath);
+  // Cambiar de sección agrega una entrada al historial, así el botón "atrás" del navegador funciona.
+  const setStage = (next) => {
+    setStageRaw(next);
+    try {
+      if (PATH_STAGES.includes(next) && next !== "school") {
+        const target = `/${next}`;
+        if (window.location.pathname !== target) window.history.pushState({ stage: next }, "", target);
+      } else if (next === "landing" && window.location.pathname !== "/") {
+        window.history.pushState({ stage: next }, "", "/");
+      }
+    } catch (e) {}
+  };
+  useEffect(() => {
+    const onPop = () => setStageRaw(stageFromPath());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
   const [dataVersion, setDataVersion] = useState(0);
   const [dataAsOf, setDataAsOf] = useState(null);
   useEffect(() => {
