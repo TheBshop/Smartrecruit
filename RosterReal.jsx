@@ -1613,7 +1613,7 @@ function matchFromLoadedRosters(profile) {
 
     if (proj.known > 0) {
       const stayText = proj.stays.length > 0
-        ? ` Seguirían: ${proj.stays.slice(0, 4).map((p) => `${p.player_name} (${p.class_year}${info.statsLoaded && p.goals != null ? `, ${p.goals}/${p.assists}` : ""})`).join(", ")}${proj.stays.length > 4 ? " y otras" : ""}.`
+        ? ` Seguirían ${proj.stays.length} jugadora${proj.stays.length === 1 ? "" : "s"} en tu posición.`
         : " No seguiría nadie de ese grupo: el lugar se renueva por completo.";
       const clampText = proj.clamped ? ` (tu ingreso, ${proj.requested}, es anterior a lo que el plantel cargado permite proyectar; proyectamos desde ${proj.entrySeason})` : "";
       reasons.push(`Proyección a tu ingreso (temporada ${entryLabel}${clampText}): de ${proj.known} jugador(a/es) en ${posLabel} del plantel ${baseLabel}, ${proj.gone.length} ya no estarían (terminan su elegibilidad antes) y ${proj.stays.length} seguirían.${stayText}`);
@@ -4308,7 +4308,8 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
-      {rosters.filter((r) => !r.partial).map((r) => {
+      {/* Los planteles y estadísticas alimentan el matching, pero no se muestran a los usuarios. */}
+      {SHOW_ROSTER_TABLES && rosters.filter((r) => !r.partial).map((r) => {
         const hasStats = r.roster.some((p) => p.games_played != null || p.goals != null || p.points != null);
         const yr = (c) => { const k = String(c || "").toLowerCase(); return k.startsWith("fr") ? 1 : k.startsWith("so") ? 2 : k.startsWith("jr") ? 3 : k.startsWith("sr") ? 4 : (k.startsWith("gr") || k.startsWith("5")) ? 5 : 9; };
         const v = (x) => (x == null || x === "" ? "—" : x);
@@ -9303,6 +9304,8 @@ function AccountMenu({ session }) {
 }
 
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
+// false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
+const SHOW_ROSTER_TABLES = false;
 const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "profile", "resources", "results"];
 const stageFromPath = () => {
   try {
@@ -9494,13 +9497,6 @@ export default function App() {
           <button className="rm-topbar-burger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menú">☰</button>
           <div className="rm-ticker">
             <span className="rm-live-dot"><span></span>EN VIVO</span>
-            <div className="rm-ticker-viewport">
-              <div className="rm-ticker-track">
-                {[...NCAA_POINTS_LEADERS.slice(0, 12), ...NCAA_POINTS_LEADERS.slice(0, 12)].map((p, i) => (
-                  <span className="rm-ticker-item" key={i}>#{p.rank} {p.player} ({p.school_short}) — {p.pts} PTS</span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
