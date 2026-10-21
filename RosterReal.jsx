@@ -7336,6 +7336,10 @@ function CalendarPage() {
         <p style={{ margin: "8px 0 0" }}>La única excepción es el "recruiting shutdown": unos pocos días al año en que no puede reclutar de ninguna forma.</p>
       </div>
 
+      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 30 }}>Tu checklist por año</h3>
+      <p className="rm-hint" style={{ marginBottom: 8 }}>Lo que tildás acá se guarda en tu navegador y, si iniciaste sesión, en tu cuenta. Es el mismo checklist de Recursos.</p>
+      <YearChecklistInteractive />
+
       <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 30 }}>Elegí tu deporte</h3>
       <select value={sport} onChange={(e) => setSport(e.target.value)} style={{ padding: "10px 12px", fontSize: 15, border: "2px solid var(--line)", marginBottom: 20 }}>
         {sports.map((s) => <option key={s} value={s}>{s}</option>)}
