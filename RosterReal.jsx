@@ -1790,9 +1790,9 @@ function runMatch(profile) { return runMatchAll(profile).slice(0, 10); }
    una oferta. Se decide sumando señales (cada una queda escrita en `why` para mostrarla): nivel vs. plantel, admisión, vacantes y plata.
 --------------------------------------------------------------- */
 const TIERS = {
-  aspiracional: { key: "aspiracional", label: "Menos probable", emoji: "🚀", hint: "Menos probable: vale la pena escribirles, pero no dependas de estas." },
-  realista: { key: "realista", label: "Posible", emoji: "🎯", hint: "Posible: tu nivel y tu promedio están dentro de lo que busca el programa." },
-  segura: { key: "segura", label: "Más probable", emoji: "✅", hint: "Más probable: donde más chances hay de respuesta y oferta. No es una garantía." },
+  aspiracional: { key: "aspiracional", label: "Aspiracional", emoji: "🚀", hint: "Más difícil: vale la pena escribirles, pero no dependas de estas." },
+  realista: { key: "realista", label: "Realista", emoji: "🎯", hint: "Tu nivel y tu promedio están dentro de lo que busca el programa." },
+  segura: { key: "segura", label: "Alta probabilidad", emoji: "✅", hint: "Donde más chances hay de respuesta y oferta. No es una garantía." },
 };
 function tierFor(r, profile) {
   let sig = null;
