@@ -1387,6 +1387,7 @@ function rosterPosMatch(sport, rosterPos, profilePos) {
   return rp.includes(pp[0]);
 }
 
+const BEYOND_HORIZON_OPEN_SHARE = 0.3;
 function projectRosterForProfile(info, profile) {
   const roster = activeRoster(info);
   const team = roster.filter((p) => rosterPosMatch(info.sport, p.position, profile.position));
@@ -1400,10 +1401,16 @@ function projectRosterForProfile(info, profile) {
   // Se estima cada camada faltante como el promedio de las que sí se ven, para no inflar la vacante.
   const missingClasses = Math.max(0, ROSTER_BASE_SEASON - baseSeason);
   const estimated = missingClasses > 0 && missingClasses < 4 ? (known * missingClasses) / (4 - missingClasses) : 0;
+  // Más allá de 3 temporadas del plantel cargado el modelo se satura: todos terminan su elegibilidad (100 % "se van") y cualquier
+  // ingreso lejano parecía el de mayor vacante, con el mismo resultado para 2030 que para 2035. Ahí no se afirma nada sobre la
+  // vacante: se usa la rotación anual típica (~30 %, con transferencias) y la confianza queda en "baja".
+  const beyondHorizon = known > 0 && entrySeason - baseSeason >= 3;
+  const openShare = !known ? null : beyondHorizon ? BEYOND_HORIZON_OPEN_SHARE : gone.length / (known + estimated);
   return {
+    beyondHorizon,
     pool, positionMatched: team.length > 0, baseSeason, requested, entrySeason, clamped: requested < entrySeason,
     gone, stays, unknown, known, stale: missingClasses > 0, seasonLabel: rosterSeasonLabel(info),
-    openShare: known ? gone.length / (known + estimated) : null,
+    openShare,
   };
 }
 
@@ -1856,7 +1863,7 @@ function matchFromLoadedRosters(profile) {
       nationalityMatch: compatriotas.length > 0,
       athRatio,
       partialRoster: partial,
-      vacancy: partial ? null : { confidence, baseSeason: proj.baseSeason, entrySeason: proj.entrySeason, known: proj.known, gone: proj.gone.length, stays: proj.stays.length, unknown: proj.unknown.length, postedExact, postedNear },
+      vacancy: partial ? null : { confidence, beyondHorizon: proj.beyondHorizon, baseSeason: proj.baseSeason, entrySeason: proj.entrySeason, known: proj.known, gone: proj.gone.length, stays: proj.stays.length, unknown: proj.unknown.length, postedExact, postedNear },
       needTitle: need && postedNear ? needTitle(need.row) : null,
       needText: need && postedNear ? (need.row.description || null) : null,
       postUrl: need && postedNear ? (need.row.post_url || null) : null,
@@ -1928,7 +1935,7 @@ function tierFor(r, profile) {
   else if (adm === "muy baja") { pts -= 2; why.push("la admisión es muy difícil para tu promedio"); }
   const v = r.vacancy;
   if (r.postUrl || (v && v.postedNear)) { pts += 1; why.push("el coach publicó una búsqueda para tu clase"); }
-  else if (v && v.known > 0 && v.gone / v.known >= 0.35) { pts += 1; why.push("se van varias jugadoras de tu posición antes de tu ingreso"); }
+  else if (v && !v.beyondHorizon && v.known > 0 && v.gone / v.known >= 0.35) { pts += 1; why.push("se van varias jugadoras de tu posición antes de tu ingreso"); }
   if (gap > 5000) { pts -= 1; why.push(`faltarían unos USD ${Math.round(gap / 1000)}.000 por año de lo que tu familia puede pagar`); }
   let key = pts >= 2 ? "segura" : pts <= -1 ? "aspiracional" : "realista";
   // "Alta probabilidad" exige evidencia deportiva: admisión y vacante solas no alcanzan. Si tus números quedan por debajo de las máximas
@@ -1961,6 +1968,22 @@ function pickTopTen(list) {
   for (const r of list) { if (chosen.size >= N) break; chosen.add(r); }
   return list.filter((r) => chosen.has(r)).slice(0, N);
 }
+function diversifyByDivision(sorted, n) {
+  const isD1 = (r) => /^NCAA D1$/.test(String(r.division || ""));
+  const maxFam = Math.ceil(n * 0.6);
+  const d1 = sorted.filter(isD1), rest = sorted.filter((r) => !isD1(r));
+  const takeD1 = Math.min(d1.length, Math.max(maxFam, n - rest.length));
+  const takeRest = Math.min(rest.length, Math.max(maxFam, n - d1.length));
+  const chosen = new Set();
+  let a = 0, b = 0;
+  // Se recorre por puntaje respetando el tope de cada familia.
+  for (const r of sorted) {
+    if (chosen.size >= n) break;
+    if (isD1(r)) { if (a < takeD1) { chosen.add(r); a += 1; } }
+    else if (b < takeRest) { chosen.add(r); b += 1; }
+  }
+  return sorted.filter((r) => chosen.has(r));
+}
 // Top 10 destacadas + hasta 150 en total, agrupadas en 3 niveles (más probable / posible / menos probable).
 // Las universidades que no dictan la carrera pedida solo entran al top si no hay otras.
 function buildTieredResults(profile) {
@@ -1977,7 +2000,10 @@ function buildTieredResults(profile) {
   const pool = [...base, ...extra].sort((x, y) => y.score - x.score);
   const noMajor = (r) => r.academicFit && (r.academicFit.status === "confirmado_no" || r.academicFit.status === "ipeds_no");
   const ok = pool.filter((r) => !noMajor(r));
-  const list = (ok.length >= 10 ? ok : pool).slice(0, 150).map((r) => ({ ...r, tier: tierFor(r, profile) }));
+  // Sin tope por división, las ~100 universidades D1 con roster cargado (que suman puntos por compatriotas, vacante y nivel) llenan
+  // las 150 plazas y D2, D3, NAIA y NJCAA no aparecían ni al final. Ninguna familia (D1 / resto) puede pasar de 60 % de la lista
+  // mientras haya opciones de la otra; el orden dentro de la lista sigue siendo por puntaje.
+  const list = diversifyByDivision(ok.length >= 10 ? ok : pool, 150).map((r) => ({ ...r, tier: tierFor(r, profile) }));
   const top = pickTopTen(list);
   const topSet = new Set(top);
   const more = list.filter((r) => !topSet.has(r));
@@ -8213,7 +8239,9 @@ function ResultCard({ r, profile, onOpenSchool, isFav, toggleFav }) {
         <div className="rm-vacancy">
           <span className={`rm-vacancy-chip ${r.vacancy.confidence}`}>Vacante proyectada: {r.vacancy.confidence}</span>
           <span>
-            {r.vacancy.known > 0
+            {r.vacancy.beyondHorizon
+              ? `Temporada ${r.vacancy.entrySeason} · queda lejos del plantel cargado (${r.vacancy.baseSeason}): no se proyecta la vacante`
+              : r.vacancy.known > 0
               ? `Temporada ${r.vacancy.entrySeason} · ${r.vacancy.gone} de ${r.vacancy.known} en tu posición ya no estarían · ${r.vacancy.stays} seguirían`
               : `Temporada ${r.vacancy.entrySeason} · sin año de clase en el roster para proyectar`}
           </span>
@@ -8571,7 +8599,7 @@ function quickLine(r) {
   const bits = [];
   if (r.nationalityMatch) bits.push("🇦🇷 compatriotas en el plantel");
   if (r.postUrl || (r.vacancy && r.vacancy.postedNear)) bits.push("búsqueda publicada");
-  else if (r.vacancy && r.vacancy.known > 0 && r.vacancy.gone > 0) bits.push(`${r.vacancy.gone} se van antes de tu ingreso`);
+  else if (r.vacancy && !r.vacancy.beyondHorizon && r.vacancy.known > 0 && r.vacancy.gone > 0) bits.push(`${r.vacancy.gone} se van antes de tu ingreso`);
   if (r.scholarship && r.scholarship.banda) bits.push(`ayuda: ${r.scholarship.banda}`);
   if (r.tier && r.tier.why && r.tier.why.length) bits.push(r.tier.why[0]);
   return bits.slice(0, 3).join(" · ");
@@ -9278,7 +9306,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
             {nextCoach.vacancy && (
               <div className="rm-vacancy">
                 <span className={`rm-vacancy-chip ${nextCoach.vacancy.confidence}`}>Vacante proyectada: {nextCoach.vacancy.confidence}</span>
-                <span>Temporada {nextCoach.vacancy.entrySeason}{nextCoach.vacancy.known > 0 ? ` · ${nextCoach.vacancy.gone} de ${nextCoach.vacancy.known} en tu posición ya no estarían` : ""}</span>
+                <span>Temporada {nextCoach.vacancy.entrySeason}{nextCoach.vacancy.known > 0 && !nextCoach.vacancy.beyondHorizon ? ` · ${nextCoach.vacancy.gone} de ${nextCoach.vacancy.known} en tu posición ya no estarían` : ""}</span>
               </div>
             )}
             <p className="rm-today-note">{nextCoach.reasons[0]}</p>
