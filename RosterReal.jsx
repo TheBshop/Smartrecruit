@@ -713,7 +713,10 @@ function matchFromEada(profile, exclude, limit = 8) {
     const university = EADA_DISPLAY_NAME.get(e.u) || e.n;
     if (exclude && exclude.has(university)) continue;
     const fit = checkAcademicFit(university, profile.major);
-    if (profile.major && fit.status !== "confirmado_si") continue;
+    // Antes se descartaba toda universidad cuya carrera no estuviera confirmada: con carreras específicas (ingeniería, arquitectura,
+    // medicina) vóley masculino quedaba en ~26 opciones y hockey en ~60. Ahora solo se descartan las que se sabe que no la dictan
+    // (confirmado_no / ipeds_no, que además filtra buildTieredResults); las no confirmadas entran sin bonus y detrás de las confirmadas.
+    if (profile.major && (fit.status === "confirmado_no" || fit.status === "ipeds_no")) continue;
     let score = 8;
     const reasons = [`Todavía no hay una búsqueda publicada ni un roster cargado para esta universidad: aparece por datos oficiales de EE.UU. Conviene escribirle al coach sin esperar a que publique.`];
     if (fit.status === "confirmado_si") {
@@ -722,6 +725,7 @@ function matchFromEada(profile, exclude, limit = 8) {
       else if (fit.cds) reasons.push(`Confirmado por fuente oficial: ${university} ofrece "${profile.major}".`);
       else if (fit.scorecard) reasons.push(`Según College Scorecard, ${university} tuvo egresados recientes en "${fit.scorecard.name}".`);
     }
+    else if (profile.major && fit.status !== "confirmado_si") reasons.push(`No pudimos confirmar que ofrezca "${profile.major}": consultalo en el sitio de la universidad antes de escribirle al coach.`);
     const sig = eadaSignals(university, profile.sport, g, profile);
     if (sig) { score += (sig.aidPct || 0) * 16 + sig.intlBonus * 2 + Math.min(e.intl || 0, 0.3) * 10; reasons.push(...sig.reasons); }
     const staffSig = staffCompatriotSignal(university, profile.sport, g, profile);
@@ -8635,6 +8639,11 @@ function Results({ profile, onBack, onOpenSchool }) {
       <p className="rm-hint" style={{ marginBottom: 12 }}>
         Ordenadas por score explicado (necesidad real + nivel vs. plantel donde hay roster + realismo de beca por división). No son promesas — son puntos de partida para escribirle al coach.
       </p>
+      {profile.major && total < 60 && (
+        <p className="rm-hint" style={{ marginBottom: 12, padding: "10px 12px", border: "1px solid var(--line)", borderRadius: 8, background: "#fff" }}>
+          <b>Pocas opciones por tu carrera.</b> Solo {total} universidades con {profile.sport.toLowerCase()} {profile.gender === "F" ? "femenino" : "masculino"} figuran en nuestros datos oficiales como que dictan o podrían dictar "{profile.major}". Si te interesa ver más, probá una carrera afín más general (por ejemplo Ingeniería en general, Química o Ciencias) en tu perfil.
+        </p>
+      )}
       <div className="rm-tier-legend">
         {counts(top).map((t) => <span key={t.key} className={`rm-tier rm-tier-${t.key}`} title={t.hint}>{t.emoji} {t.label}: {t.n}</span>)}
       </div>
