@@ -9334,7 +9334,13 @@ export default function App() {
       if (!mounted) return;
       setSession(sess);
       syncUserId = sess ? sess.user.id : null;
-      if (event === "SIGNED_IN" && sess) {
+      // Supabase también dispara SIGNED_IN al recargar la página con una sesión ya guardada.
+      // Sin este chequeo, cada recarga dispara otra recarga (bucle). Solo se procesa un login por cuenta en este navegador.
+      let handled = null;
+      try { handled = localStorage.getItem("rr_login_handled_uid"); } catch (e) {}
+      if (event === "SIGNED_OUT") { try { localStorage.removeItem("rr_login_handled_uid"); } catch (e) {} }
+      if (event === "SIGNED_IN" && sess && handled !== sess.user.id) {
+        try { localStorage.setItem("rr_login_handled_uid", sess.user.id); } catch (e) {}
         const hadRemote = await pullFromCloud(sess.user.id);
         if (!hadRemote) await pushInitialSnapshot(sess.user.id); // primera vez de esta cuenta: sube lo que ya había en este navegador
         window.location.reload(); // recarga simple: todo el sitio lee su estado inicial de localStorage, así queda consistente en un solo lugar
