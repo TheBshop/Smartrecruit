@@ -5594,23 +5594,24 @@ function buildYearChecklist(profile) {
     { from: 28, title: "Video y lista de universidades", items: [
       { id: "y-video", label: "Video de highlights cargado en tu perfil", auto: !!p.videoLink, goto: "form" },
       { id: "y-list", label: `Lista de 30 a 50 programas guardada (${favs} en Mi lista)`, auto: favs >= 30, goto: "catalog" },
-      { id: "y-english-diag", label: "Rendiste un examen de inglés de diagnóstico (Duolingo sirve)" },
+      { id: "y-english-diag", label: "Rendiste un examen de inglés de diagnóstico" },
     ] },
     { from: 24, title: "Primer contacto con coaches", items: [
       { id: "y-first10", label: `Primer mail a al menos 10 coaches (${contacted} contactados)`, auto: contacted >= 10, goto: "outreach" },
+      { id: "y-ncaaid", label: "Le diste tu NCAA ID a cada coach: sin eso la universidad no puede iniciar tu caso en el Eligibility Center" },
       { id: "y-exampractice", label: "Practicaste en la sección Exámenes", auto: practiced, goto: "exams" },
       { id: "y-camps", label: "Averiguaste camps o torneos donde vayan los coaches de tu lista" },
     ] },
     { from: 12, title: "Seguimiento y examen definitivo", items: [
       { id: "y-30", label: `Mail a 30 coaches o más (${contacted} contactados)`, auto: contacted >= 30, goto: "outreach" },
       { id: "y-reply", label: `Al menos un coach te respondió (${replied} respuestas)`, auto: replied > 0, goto: "outreach" },
-      { id: "y-english", label: "Rendiste el examen de inglés definitivo (vale 2 años)" },
+      { id: "y-english", label: "Rendiste el examen de inglés que pide la universidad (confirmá con ellos qué test y qué vigencia aceptan)" },
       { id: "y-sat", label: "SAT o ACT, solo si tus universidades lo piden o buscás becas por mérito" },
     ] },
     { from: 8, title: "Ofertas y decisión", items: [
       { id: "y-offer", label: `Recibiste al menos una oferta (${offers} en el tablero)`, auto: offers > 0, goto: "outreach" },
       { id: "y-compare", label: "Comparaste cada oferta contra el costo real antes de responder" },
-      { id: "y-amateur", label: "Pediste la certificación final de amateurismo (desde el 1° de abril; D1/D2, y D3 si estudiaste fuera de EE.UU.)" },
+      { id: "y-amateur", label: "Pediste la certificación final de amateurismo en tu cuenta del Eligibility Center (D1, D2 y D3)" },
     ] },
     { from: 5, title: `Firma, visa y viaje${entry ? ` (agosto de ${entry})` : ""}`, items: [
       { id: "y-sign", label: "Firmaste el acuerdo de beca por escrito" },
