@@ -7324,9 +7324,6 @@ function CalendarPage() {
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
       <h2 className="rm-condensed">Calendario y elegibilidad</h2>
-      <p className="rm-hint">
-        Basado en el calendario oficial que publica NCSA (<a href="https://www.ncsasports.org/ncaa-eligibility-center/recruiting-rules/recruiting-calendar" target="_blank" rel="noreferrer">ncsasports.org/.../recruiting-calendar</a>), a su vez tomado del reglamento de la NCAA. Consultado el 11/9/2026. Las fechas exactas cambian de ciclo a ciclo — para el detalle 100% oficial y actualizado de tu deporte, la fuente primaria es siempre <a href="https://ncaaorg.s3.amazonaws.com/" target="_blank" rel="noreferrer">ncaaorg.s3.amazonaws.com/compliance/recruiting/calendar</a>.
-      </p>
 
       <div className="rm-alert" style={{ marginTop: 16 }}>
         <b>El dato más importante de esta página</b>
