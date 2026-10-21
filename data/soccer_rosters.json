@@ -1,0 +1,392 @@
+[
+  {
+    "school": "Southern New Hampshire University",
+    "gender": "M",
+    "season": 2026,
+    "source": "Sitio oficial de SNHU Athletics (snhupenmen.com), plantel 2026",
+    "source_url": "https://snhupenmen.com/sports/msoc/roster",
+    "players": [
+      {
+        "player_name": "William Paganini",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Derry, NH"
+      },
+      {
+        "player_name": "Alvaro Garcia",
+        "position": "GK",
+        "class_year": "5th",
+        "hometown": "Barcelona, Spain"
+      },
+      {
+        "player_name": "Alex Pons",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Castellón, Spain"
+      },
+      {
+        "player_name": "Eduardo Maia",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Rio de Janeiro, Brazil"
+      },
+      {
+        "player_name": "Christian O'Hara",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Sea Cliff, NY"
+      },
+      {
+        "player_name": "Gabriel Castro",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "León, Spain"
+      },
+      {
+        "player_name": "David Fernandez",
+        "position": "M",
+        "class_year": "5th",
+        "hometown": "Madrid, Spain"
+      },
+      {
+        "player_name": "Inigo Burusco",
+        "position": "F",
+        "class_year": "5th",
+        "hometown": "Pamplona, Spain"
+      },
+      {
+        "player_name": "Tyler Kraft",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Londonderry, NH"
+      },
+      {
+        "player_name": "Felipe di Paola",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Mar del Plata, Argentina"
+      },
+      {
+        "player_name": "Dani Bujanda",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Pamplona, Spain"
+      },
+      {
+        "player_name": "Gabi Barroso",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "A Coruña, Spain"
+      },
+      {
+        "player_name": "Kal Laslie",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Ellsworth, ME"
+      },
+      {
+        "player_name": "Salvatore Taddeo",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Rumson, NJ"
+      },
+      {
+        "player_name": "Inigo Iriarte",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Pamplona, Spain"
+      },
+      {
+        "player_name": "Sean Correia",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "West Warwick, RI"
+      },
+      {
+        "player_name": "Zak Mishcon",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "London, United Kingdom"
+      },
+      {
+        "player_name": "Charlie Preus",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "London, United Kingdom"
+      },
+      {
+        "player_name": "Eduard Fandunyan",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Manchester, NH"
+      },
+      {
+        "player_name": "Sergio Lopez",
+        "position": "M",
+        "class_year": "5th",
+        "hometown": "Pamplona, Spain"
+      },
+      {
+        "player_name": "Brady Lewis",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Merrimac, MA"
+      },
+      {
+        "player_name": "Alejo Caceres",
+        "position": "M",
+        "class_year": "5th",
+        "hometown": "Córdoba, Argentina"
+      },
+      {
+        "player_name": "Jack Toolin",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Bedford, NH"
+      },
+      {
+        "player_name": "Miguel Gimeno",
+        "position": "M",
+        "class_year": "5th",
+        "hometown": "Pamplona, Spain"
+      },
+      {
+        "player_name": "Ian Goulet",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Cumberland, RI"
+      },
+      {
+        "player_name": "Nathaniel Pi-Sunyer",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Mountain View, CA"
+      },
+      {
+        "player_name": "Joel Morrison",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Sanford, ME"
+      },
+      {
+        "player_name": "Cooper Foster",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Ashby, MA"
+      },
+      {
+        "player_name": "Vigo Frank",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Rijeka, Croatia"
+      },
+      {
+        "player_name": "Noah Lakhdari",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Concord, NH"
+      },
+      {
+        "player_name": "Franco Miura Velazquez",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Riverview, FL"
+      },
+      {
+        "player_name": "Josh Hancock",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Windham, ME"
+      },
+      {
+        "player_name": "Tucker Gleaton",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Anchorage, AK"
+      },
+      {
+        "player_name": "Logan Crosby",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Rochester, NH"
+      },
+      {
+        "player_name": "Julian Ramirez",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Indian Trail, NC"
+      }
+    ]
+  },
+  {
+    "school": "Slippery Rock University",
+    "gender": "M",
+    "season": 2026,
+    "source": "Sitio oficial de Slippery Rock Athletics (rockathletics.com), plantel 2026",
+    "source_url": "https://rockathletics.com/sports/mens-soccer/roster",
+    "players": [
+      {
+        "player_name": "Troy Nine",
+        "position": "GK",
+        "class_year": "Jr.",
+        "hometown": "Lansdale, PA"
+      },
+      {
+        "player_name": "Kristian Mazar",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Mentor, OH"
+      },
+      {
+        "player_name": "Dylan Bliss",
+        "position": "GK",
+        "class_year": "Jr.",
+        "hometown": "Lancaster, PA"
+      },
+      {
+        "player_name": "Dylan Greggs",
+        "position": "D",
+        "class_year": "5th",
+        "hometown": "Monaca, PA"
+      },
+      {
+        "player_name": "Gabin Lonjard",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Dijon, France"
+      },
+      {
+        "player_name": "Jonathan Anthony",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Chesterland, OH"
+      },
+      {
+        "player_name": "Patrick Tierney",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Chester, England"
+      },
+      {
+        "player_name": "Gerard Lopez Marti",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Burriana, Spain"
+      },
+      {
+        "player_name": "Thomas Uckert",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Clarion, PA"
+      },
+      {
+        "player_name": "Ryan Hanes",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Tarentum, PA"
+      },
+      {
+        "player_name": "Caleb Alldredge",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Huntsville, AL"
+      },
+      {
+        "player_name": "Kaden Reynolds",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Mount Albert, Ontario"
+      },
+      {
+        "player_name": "Tom Roantree",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Maidstone, England"
+      },
+      {
+        "player_name": "Boele Zwartele",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Amsterdam, Netherlands"
+      },
+      {
+        "player_name": "Patryk Strzelak",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "London, England"
+      },
+      {
+        "player_name": "Jimmy Irani",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Grove City, PA"
+      },
+      {
+        "player_name": "Christopher Merrill",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Virginia Beach, VA"
+      },
+      {
+        "player_name": "Michael Vandersmissen",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Noordwijk, Netherlands"
+      },
+      {
+        "player_name": "Plamedi Warsinsky",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Gastonia, NC"
+      },
+      {
+        "player_name": "Zsombor Retfalvi",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Székesfehérvár, Hungary"
+      },
+      {
+        "player_name": "Massimo Cuda",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Stoney Creek, Ontario"
+      },
+      {
+        "player_name": "Sie Parker",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Baton Rouge, LA"
+      },
+      {
+        "player_name": "Dalton DeShong",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Harrisonville, PA"
+      },
+      {
+        "player_name": "Aashi Pandher",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Brampton, Ontario"
+      },
+      {
+        "player_name": "Xavier Jackson",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Bethel Park, PA"
+      },
+      {
+        "player_name": "Javier Garrido Burgos",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Plasencia, Spain"
+      },
+      {
+        "player_name": "Fynn Uebele",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Ulm, Germany"
+      }
+    ]
+  }
+]
