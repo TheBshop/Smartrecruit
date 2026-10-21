@@ -3035,7 +3035,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   const last = coachName ? ((contact && contact.name === coachName && contact.lastName) || coachLastName(coachName)) : null;
   const to = getCoachEmail(university, profile.sport, profile.gender);
   const entry = getEntryYear(profile);
-  const name = profile.name || T("[tu nombre]", "[your name]");
+  const name = profile.name ? profile.name.trim().split(/\s+/).map((w) => w.charAt(0).toLocaleUpperCase("es") + w.slice(1).toLocaleLowerCase("es")).join(" ") : T("[tu nombre]", "[your name]");
   const labels = profileStatLabels(profile, lang);
   const sch = scholarshipInfo(division, profile.sport, profile.gender);
   const first = kind === "first";
@@ -3058,8 +3058,8 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   // ---- Apertura, según la ocasión
   if (first) {
     add("intro", "Presentación", "Tu perfil",
-      T(`Soy ${name}, de ${profile.country}, ${posEs.phrase} de ${profile.sport}. Termino la secundaria en ${graduationText(profile, "es")} y busco empezar a jugar en la temporada ${entry}.`,
-        `My name is ${name} and I'm from ${profile.country}. I play ${profile.sport}${posEn.mapped ? ` as ${articleEn} ${posEn.phrase}` : ` (${posEn.phrase})`}. I finish high school in ${graduationText(profile, "en")} and I'm looking to start playing in the ${entry} season.`), null, true);
+      T(`Soy ${name}, de ${profile.country}, ${posEs.phrase ? `${posEs.phrase} de ` : "practico "}${profile.sport}. Termino la secundaria en ${graduationText(profile, "es")} y busco empezar a jugar en la temporada ${entry}.`,
+        `My name is ${name} and I'm from ${profile.country}. I play ${profile.sport}${posEn.mapped ? ` as ${articleEn} ${posEn.phrase}` : posEn.phrase ? ` (${posEn.phrase})` : ""}. I finish high school in ${graduationText(profile, "en")} and I'm looking to start playing in the ${entry} season.`), null, true);
   } else if (followup && stage === 1) {
     const days = contactEntry && contactEntry.lastContact ? daysSince(contactEntry.lastContact) : null;
     add("fu_intro", "Retomar el contacto", "Tu registro de envíos",
@@ -3360,10 +3360,11 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   const firstWord = (t) => String(t || "").split(/[ (]/)[0].toLowerCase();
   const statBit = (Number(profile.goals) || Number(profile.assists)) ? `${profile.goals} ${firstWord(statLabels.goals)}, ${profile.assists} ${firstWord(statLabels.assists)}` : "";
   const videoBit = profile.videoLink ? T(" | Video", " | Video") : "";
-  const idBit = T(`${name} | Clase de ${entry} | ${profile.position}`, `${name} | Class of ${entry} | ${profile.position}`);
+  const posShort = String(profile.position || "").trim();
+  const idBit = [name, T(`Clase de ${entry}`, `Class of ${entry}`), posShort].filter(Boolean).join(" | ");
   const thread = (messages.find((m) => m.subject) || {}).subject || null;
   let subject;
-  if (first) subject = T(`${name} | ${profile.position} | Clase de ${entry}${statBit ? ` | ${statBit}` : ""}${videoBit}`, `${name} | ${profile.position} | Class of ${entry}${statBit ? ` | ${statBit}` : ""}${videoBit}`);
+  if (first) subject = [name, posShort, T(`Clase de ${entry}`, `Class of ${entry}`), statBit || null].filter(Boolean).join(" | ") + videoBit;
   else if (thread) subject = /^re:/i.test(thread) ? thread : `Re: ${thread}`;
   else if (followup) subject = `${T("Seguimiento", "Following up")} | ${idBit}${videoBit}`;
   else if (kind === "update") subject = `${T("Novedad", "Update")} | ${idBit}${videoBit}`;
