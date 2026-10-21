@@ -8058,9 +8058,46 @@ function readPlanState() {
 function writePlanState(next) {
   try { lsSetSynced(PLAN_KEY, JSON.stringify(next)); } catch (e) {}
 }
-function planTasksFor(profile) {
+// ---- Etapas de la secundaria ----
+// Quien arranca en 2.º o 3.º año usa el sitio 3 o 4 años. Lo que toca hacer cambia con los meses que faltan para el ingreso
+// (1 de agosto del año de ingreso): al principio se arma la base y se explora; el último año se responde, se compara y se decide.
+const PLAN_STAGES = [
+  { key: "base", label: "Base", emoji: "🌱", focus: "Cuidá tus notas, entrená, aprendé cómo funciona el sistema y empezá a mirar universidades. No hay apuro por escribir a muchos coaches." },
+  { key: "visibilidad", label: "Visibilidad", emoji: "🎥", focus: "Mostrate: video y estadísticas al día, lista corta de universidades y los primeros mails a coaches." },
+  { key: "contacto", label: "Contacto", emoji: "✉️", focus: "Se abren los contactos de D1: escribí seguido, hacé seguimiento y mirá cómo cambian tus resultados." },
+  { key: "decision", label: "Decisión", emoji: "🎯", focus: "Respondé a cada coach, compará ofertas y costos y dejá los documentos listos." },
+];
+function planMonthsLeft(profile, now = new Date()) {
+  const entry = new Date(getEntryYear(profile), 7, 1);
+  return (entry.getFullYear() - now.getFullYear()) * 12 + (entry.getMonth() - now.getMonth());
+}
+function planStageFor(profile, now = new Date()) {
+  const m = planMonthsLeft(profile, now);
+  // "Contacto" empieza cuando los coaches de D1 pueden escribirte (fecha según tu deporte y tu año de ingreso); sin ese dato, 24 meses antes.
+  let d1Open = m <= 24;
+  try { const c = profile && profile.sport ? contactStartFor(profile, "NCAA D1", now) : null; if (c && c.comm) d1Open = c.comm <= now; } catch (e) {}
+  const key = m > 36 ? "base" : m > 12 ? (d1Open ? "contacto" : "visibilidad") : m > 0 ? "decision" : "ingreso";
+  const info = PLAN_STAGES.find((x) => x.key === key) || { key: "ingreso", label: "Ingreso", emoji: "🛬", focus: "Ya empieza tu primera temporada: visa, viaje y pretemporada con tu coach." };
+  return { ...info, monthsLeft: m, index: PLAN_STAGES.findIndex((x) => x.key === key) };
+}
+function weekKey(d = new Date()) {
+  const x = new Date(d); x.setHours(12, 0, 0, 0);
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); // lunes de esa semana
+  return x.toLocaleDateString("en-CA");
+}
+// Los pasos "p-..." (de la semana, del mes o del año) llevan el período en el id: si se hicieron en cualquier día de ese período, quedan hechos.
+function planDoneSet(state, today) {
+  const set = new Set(((state.doneByDay || {})[today]) || []);
+  Object.values(state.doneByDay || {}).forEach((ids) => (ids || []).forEach((id) => { if (String(id).startsWith("p-")) set.add(id); }));
+  return set;
+}
+function planTasksFor(profile, now = new Date()) {
   const p = profile || {};
   const tasks = [];
+  const stage = planStageFor(p, now);
+  const mk = now.toLocaleDateString("en-CA").slice(0, 7);
+  const wk = weekKey(now);
+  const month = now.getMonth() + 1;
   if (!p.name || !p.email) tasks.push({ id: "gap-contact", title: "Completá tu nombre y email en tu perfil", go: "form" });
   if (!p.videoLink) tasks.push({ id: "gap-video", title: "Subí el link de tu video de highlights", go: "form" });
   if (!p.position || !p.major) tasks.push({ id: "gap-pos", title: "Completá posición y carrera en tu perfil", go: "form" });
@@ -8069,7 +8106,7 @@ function planTasksFor(profile) {
   const calKey = p.sport ? sportCalendarKey(p.sport, p.gender) : null;
   const cal = calKey ? SPORT_CALENDARS[calKey] : null;
   if (cal) {
-    const t0 = todayKey();
+    const t0 = now.toLocaleDateString("en-CA");
     (cal.events || []).forEach((ev) => {
       const startIn = Math.round((new Date(ev.start) - new Date(t0)) / 86400000);
       const endIn = Math.round((new Date(ev.end) - new Date(t0)) / 86400000);
@@ -8077,8 +8114,17 @@ function planTasksFor(profile) {
       else if (startIn > 0 && startIn <= 30) tasks.push({ id: `cal-soon-${ev.div}-${ev.start}`, title: `En ${startIn} día${startIn === 1 ? "" : "s"}: empieza ${ev.label} (${ev.div}). Dejá listos tus mails antes.`, go: "calendar" });
     });
   }
-  // Revisión semanal de tu cuenta de NCAA (lunes).
-  if (new Date().getDay() === 1) tasks.push({ id: "weekly-ncaa", title: "Revisá tu cuenta de NCAA Eligibility Center: documentos pendientes o pedidos de la universidad", go: "eligibility" });
+  // Fecha en que los coaches de D1 pueden empezar a contestarte (depende de tu año de ingreso).
+  try {
+    const c = p.sport ? contactStartFor(p, "NCAA D1", now) : null;
+    if (c && c.comm) {
+      const inDays = Math.round((c.comm - now) / 86400000);
+      if (inDays > 0 && inDays <= 60) tasks.push({ id: `p-d1-open-${c.comm.getFullYear()}`, title: `El ${longDateEs(c.comm)} se abre el contacto con los coaches de D1 (en ${inDays} días). Dejá tu perfil, tu video y tus mails listos.`, go: "eligibility" });
+      else if (inDays <= 0 && inDays >= -30) tasks.push({ id: `p-d1-opened-${c.comm.getFullYear()}`, title: "Ya se abrió el contacto con los coaches de D1: es el momento de escribirles y de contestar lo que te manden.", go: "catalog" });
+    }
+  } catch (e) {}
+  // Revisión semanal de tu cuenta de NCAA (lunes): desde que se abre el contacto.
+  if (now.getDay() === 1 && (stage.key === "contacto" || stage.key === "decision" || stage.key === "ingreso")) tasks.push({ id: "weekly-ncaa", title: "Revisá tu cuenta de NCAA Eligibility Center: documentos pendientes o pedidos de la universidad", go: "eligibility" });
 
   let log = {};
   try { log = readOutreachLog() || {}; } catch (e) {}
@@ -8089,9 +8135,52 @@ function planTasksFor(profile) {
   try { checked = JSON.parse(localStorage.getItem("rr_eligibility_checklist") || "{}") || {}; } catch (e) {}
   const elig = ELIGIBILITY_CHECKLISTS[Object.keys(ELIGIBILITY_CHECKLISTS)[0]] || [];
   const pending = elig.filter((i) => !checked[i.id]);
-  if (pending.length) tasks.push({ id: "elig-next", title: `Elegibilidad: ${pending[0].title}`, go: "eligibility" });
-  tasks.push({ id: "outreach-today", title: "Escribí a un entrenador nuevo de tu lista", go: "catalog" });
+  if (stage.key !== "base" && pending.length) tasks.push({ id: "elig-next", title: `Elegibilidad: ${pending[0].title}`, go: "eligibility" });
+
+  // Pasos propios de la etapa. Cada uno se repite por semana o por mes, no todos los días.
+  const termEnd = [6, 9, 12].includes(month);
+  const newYear = [2, 3].includes(month);
+  if (newYear) tasks.push({ id: `p-y-${now.getFullYear()}`, title: "Empezó un nuevo año escolar: revisá tu perfil completo (altura, peso, posición, año de egreso, video).", go: "form" });
+  if (termEnd && stage.key !== "ingreso") tasks.push({ id: `p-m-grades-${mk}`, title: "Cerró el trimestre: cargá tu promedio actualizado en el perfil. Las notas abren o cierran puertas.", go: "form" });
+  if (stage.key === "base") {
+    if (pending.length) tasks.push({ id: "p-base-guide", title: "Leé la guía de elegibilidad de principio a fin: te evita errores que cuestan años.", go: "eligibility" });
+    tasks.push({ id: `p-w-explore-${wk}`, title: "Esta semana: mirá 2 universidades de tu deporte y guardá las que te gusten en tu lista.", go: "catalog" });
+    tasks.push({ id: `p-m-d23-${mk}`, title: "Este mes: escribile a 2 coaches de D2, D3 o NAIA. Pueden contestarte ya y no hace falta apurarse.", go: "catalog" });
+    tasks.push({ id: `p-m-english-${mk}`, title: "Este mes: seguí con tu inglés (el examen se rinde en los últimos años). Mirá cuál te conviene.", go: "exams" });
+  } else if (stage.key === "visibilidad") {
+    tasks.push({ id: `p-m-stats-${mk}`, title: "Este mes: actualizá tus estadísticas y sumá lo último de la temporada a tu video.", go: "form" });
+    tasks.push({ id: `p-m-list-${mk}`, title: "Este mes: revisá tu lista corta. Que queden entre 10 y 15 universidades.", go: "mylist" });
+    tasks.push({ id: `p-w-outreach2-${wk}`, title: "Esta semana: escribile a 2 coaches nuevos de tu lista.", go: "catalog" });
+    tasks.push({ id: `p-m-english-${mk}`, title: "Este mes: avanzá con el examen de inglés (elegí fecha o repasá).", go: "exams" });
+  } else if (stage.key === "contacto") {
+    tasks.push({ id: `p-w-outreach3-${wk}`, title: "Esta semana: escribile a 3 coaches (D1, D2, D3 o NAIA, según tu lista).", go: "catalog" });
+    tasks.push({ id: `p-m-results-${mk}`, title: "Este mes: volvé a mirar tus resultados. Cambian cuando los coaches publican búsquedas.", go: "results" });
+    tasks.push({ id: `p-m-stats-${mk}`, title: "Este mes: actualizá estadísticas y video para que tus mails lleven lo último.", go: "form" });
+  } else if (stage.key === "decision") {
+    tasks.push({ id: `p-w-reply-${wk}`, title: "Esta semana: contestá a cada coach que te escribió y anotá los avances en Mis envíos.", go: "history" });
+    tasks.push({ id: `p-m-money-${mk}`, title: "Este mes: compará cuánto cubriría cada oferta con lo que tu familia puede pagar.", go: "money" });
+    tasks.push({ id: `p-m-docs-${mk}`, title: "Este mes: dejá al día tus documentos (pasaporte, certificados de estudios traducidos, examen de inglés).", go: "eligibility" });
+    tasks.push({ id: `p-w-outreach3-${wk}`, title: "Esta semana: sumá 2 o 3 coaches más a tu lista si todavía no tenés ofertas.", go: "catalog" });
+  } else {
+    tasks.push({ id: `p-m-arrival-${mk}`, title: "Preparar la llegada: visa de estudiante, fechas de pretemporada y documentos con tu coach.", go: "eligibility" });
+  }
   return tasks;
+}
+// Semanas seguidas con al menos un paso hecho: a lo largo de 3 o 4 años pedir un paso por día cansa; la constancia se mide por semana.
+function planWeekStreak(doneByDay, now = new Date()) {
+  const weeks = new Set(Object.entries(doneByDay || {}).filter(([, ids]) => (ids || []).length).map(([k]) => weekKey(new Date(k + "T12:00:00"))));
+  const d = new Date(now); d.setHours(12, 0, 0, 0);
+  if (!weeks.has(weekKey(d))) d.setDate(d.getDate() - 7); // esta semana todavía cuenta desde la anterior
+  let n = 0;
+  while (weeks.has(weekKey(d)) && n < 400) { n++; d.setDate(d.getDate() - 7); }
+  return n;
+}
+function planSinceText(startDate, now = new Date()) {
+  if (!startDate) return "Hoy empezás";
+  const days = Math.max(1, Math.round((now - new Date(startDate + "T12:00:00")) / 86400000) + 1);
+  if (days < 60) return `${days} día${days === 1 ? "" : "s"}`;
+  const months = Math.floor(days / 30.4);
+  return months < 24 ? `${months} meses` : `${(months / 12).toFixed(1).replace(".0", "")} años`;
 }
 function planStreak(doneByDay) {
   const d = new Date();
@@ -8113,9 +8202,10 @@ function usePlanReminder() {
         const now = new Date();
         const today = todayKey();
         if (now.getHours() !== (s.reminderHour ?? 19) || s.lastNotifiedDay === today) return;
+        if ((s.reminderMode || "weekly") === "weekly" && now.getDay() !== 0) return; // por defecto, un aviso por semana (domingo)
         const prof = JSON.parse(localStorage.getItem("rr_profile") || "null");
-        const doneToday = (s.doneByDay || {})[today] || [];
-        const open = planTasksFor(prof).filter((t) => !doneToday.includes(t.id));
+        const doneSet = planDoneSet(s, today);
+        const open = planTasksFor(prof).filter((t) => !doneSet.has(t.id));
         if (!open.length) return;
         new Notification("Smartrecruit: tu plan de hoy", { body: `Tenés ${open.length} paso${open.length === 1 ? "" : "s"} pendiente${open.length === 1 ? "" : "s"}. Entrá para completarlos.`, tag: "plan-diario" });
         writePlanState({ ...s, lastNotifiedDay: today });
@@ -8128,15 +8218,26 @@ function PlanPage({ profile, setStage }) {
   const [state, setState] = useState(readPlanState);
   const today = todayKey();
   const tasks = planTasksFor(profile);
-  const doneToday = (state.doneByDay && state.doneByDay[today]) || [];
+  const doneSet = planDoneSet(state, today);
+  const stage = planStageFor(profile);
   const toggle = (id) => {
-    const nextDay = doneToday.includes(id) ? doneToday.filter((x) => x !== id) : [...doneToday, id];
-    const next = { ...state, startDate: state.startDate || today, doneByDay: { ...(state.doneByDay || {}), [today]: nextDay } };
+    const days = { ...(state.doneByDay || {}) };
+    if (doneSet.has(id)) Object.keys(days).forEach((k) => { days[k] = (days[k] || []).filter((x) => x !== id); }); // se desmarca en el día en que se hizo
+    else days[today] = [...(days[today] || []), id];
+    const next = { ...state, startDate: state.startDate || today, doneByDay: days };
     setState(next); writePlanState(next);
   };
-  const streak = planStreak(state.doneByDay || {});
-  const dayNum = state.startDate ? Math.max(1, Math.round((new Date(today) - new Date(state.startDate)) / 86400000) + 1) : 1;
-  const sorted = [...tasks].sort((a, b) => Number(doneToday.includes(a.id)) - Number(doneToday.includes(b.id)));
+  const weekStreak = planWeekStreak(state.doneByDay || {});
+  const since = planSinceText(state.startDate);
+  const sorted = [...tasks].sort((a, b) => Number(doneSet.has(a.id)) - Number(doneSet.has(b.id)));
+  const doneCount = tasks.filter((t) => doneSet.has(t.id)).length;
+  const monthDone = Object.entries(state.doneByDay || {}).filter(([k]) => k.slice(0, 7) === today.slice(0, 7)).reduce((n, [, ids]) => n + (ids || []).length, 0);
+  const [copied, setCopied] = useState(false);
+  const familySummary = () => {
+    const open = tasks.filter((t) => !doneSet.has(t.id)).slice(0, 4).map((t) => `- ${t.title}`).join("\n");
+    const txt = `Resumen de ${profile.name || "mi"} en Smartrecruit (${today}):\nEtapa: ${stage.label}${stage.monthsLeft > 0 ? ` · faltan unos ${stage.monthsLeft} meses para el ingreso` : ""}.\nPasos hechos este mes: ${monthDone}. Semanas seguidas: ${weekStreak}.\nLo que sigue:\n${open || "- Nada pendiente."}`;
+    try { navigator.clipboard.writeText(txt).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }); } catch (e) {}
+  };
   const hasNotif = typeof window !== "undefined" && "Notification" in window;
   const perm = hasNotif ? Notification.permission : "unsupported";
 
@@ -8152,19 +8253,31 @@ function PlanPage({ profile, setStage }) {
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
       <h2 className="rm-condensed">Tu plan de hoy</h2>
-      <p className="rm-hint">Lo que tenés que hacer para conseguir la beca, día por día. La lista se actualiza sola con tu perfil, tus envíos y tus fechas.</p>
+      <p className="rm-hint">Lo que tenés que hacer para conseguir la beca, paso a paso. La lista cambia sola con tu etapa de la secundaria, tu perfil, tus envíos y tus fechas.</p>
 
-      <div className="rm-grid" style={{ marginTop: 16 }}>
-        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Día</div><b style={{ fontSize: 22 }}>{dayNum}</b></div>
-        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Racha</div><b style={{ fontSize: 22 }}>{streak} día{streak === 1 ? "" : "s"}</b></div>
-        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Hechos hoy</div><b style={{ fontSize: 22 }}>{doneToday.filter((id) => tasks.some((t) => t.id === id)).length}/{tasks.length}</b></div>
+      <div className="rm-card" style={{ padding: 14, marginTop: 14 }}>
+        <div style={{ fontSize: 12, color: "var(--ink-soft)", marginBottom: 8 }}>Tu recorrido hasta la beca{stage.monthsLeft > 0 ? ` · faltan unos ${stage.monthsLeft} meses para tu ingreso (agosto de ${getEntryYear(profile)})` : ""}</div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {PLAN_STAGES.map((st, i) => (
+            <span key={st.key} style={{ padding: "6px 10px", borderRadius: 999, fontSize: 13, border: "1px solid var(--line)", background: i === stage.index ? "var(--navy)" : i < stage.index ? "var(--paper-dim)" : "#fff", color: i === stage.index ? "#fff" : "var(--ink)", opacity: i > stage.index ? 0.7 : 1 }}>
+              {i < stage.index ? "✓ " : ""}{st.emoji} {st.label}
+            </span>
+          ))}
+        </div>
+        <p style={{ margin: "10px 0 0", fontSize: 14 }}><b>Ahora: {stage.emoji} {stage.label}.</b> {stage.focus}</p>
       </div>
 
-      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 26 }}>Pasos de hoy</h3>
-      {sorted.length === 0 && <p className="rm-hint">Nada pendiente hoy. Volvé mañana.</p>}
+      <div className="rm-grid" style={{ marginTop: 16 }}>
+        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Usando Smartrecruit</div><b style={{ fontSize: 22 }}>{since}</b></div>
+        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Semanas seguidas</div><b style={{ fontSize: 22 }}>{weekStreak}</b></div>
+        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Hechos ahora</div><b style={{ fontSize: 22 }}>{doneCount}/{tasks.length}</b></div>
+      </div>
+
+      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 26 }}>Pasos de esta etapa</h3>
+      {sorted.length === 0 && <p className="rm-hint">Nada pendiente. Volvé la semana que viene.</p>}
       <div className="rm-elig-list">
         {sorted.map((t) => {
-          const isDone = doneToday.includes(t.id);
+          const isDone = doneSet.has(t.id);
           return (
             <div className="rm-elig-item" key={t.id} style={{ justifyContent: "space-between", alignItems: "center" }}>
               <label style={{ display: "flex", gap: 10, alignItems: "flex-start", flex: 1, cursor: "pointer" }}>
@@ -8177,19 +8290,28 @@ function PlanPage({ profile, setStage }) {
         })}
       </div>
 
+      <div style={{ marginTop: 18 }}>
+        <button className="rm-btn-ghost" style={{ fontSize: 13 }} onClick={familySummary}>{copied ? "✓ Copiado: pegalo en WhatsApp o un mail" : "👪 Copiar resumen para mi familia"}</button>
+      </div>
+
       <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 30 }}>Avisos</h3>
       {!hasNotif && <p className="rm-hint">Tu navegador no soporta notificaciones. Igual vas a ver el plan al entrar.</p>}
       {hasNotif && perm !== "granted" && perm !== "denied" && <button className="rm-btn" onClick={activate}>Activar avisos del día</button>}
       {hasNotif && perm === "denied" && <p className="rm-hint">Los avisos están bloqueados en el navegador. Podés habilitarlos desde la configuración del sitio.</p>}
       {hasNotif && perm === "granted" && (
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          <span style={{ fontSize: 14 }}>Te aviso a las</span>
+          <span style={{ fontSize: 14 }}>Te aviso</span>
+          <select value={state.reminderMode || "weekly"} onChange={(e) => { const next = { ...state, reminderMode: e.target.value }; setState(next); writePlanState(next); }}>
+            <option value="weekly">los domingos</option>
+            <option value="daily">todos los días</option>
+          </select>
+          <span style={{ fontSize: 14 }}>a las</span>
           <select value={state.reminderHour ?? 19} onChange={(e) => setHour(parseInt(e.target.value, 10))}>
             {Array.from({ length: 16 }, (_, i) => i + 7).map((h) => <option key={h} value={h}>{String(h).padStart(2, "0")}:00</option>)}
           </select>
         </div>
       )}
-      <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 10 }}>Los avisos llegan mientras la página esté abierta en tu navegador o en un celular con el sitio abierto. Si cerrás todo, el plan igual te espera cuando vuelvas.</p>
+      <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 10 }}>Pensado para varios años: un aviso por semana alcanza para no perder el ritmo sin cansarte. Los avisos llegan mientras la página esté abierta en tu navegador o en un celular con el sitio abierto. Si cerrás todo, el plan igual te espera cuando vuelvas.</p>
     </div>
   );
 }
