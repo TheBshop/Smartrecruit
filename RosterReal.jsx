@@ -742,6 +742,42 @@ function matchFromEada(profile, exclude, limit = 8) {
   return out.map((r) => applyRealismCaps(r, profile)).sort((a, b) => b.score - a.score).slice(0, limit);
 }
 
+// Programas del catálogo propio (rugby, atletismo, gimnasia) que EADA no cubre: sin esto, esos deportes daban lista vacía
+// aunque hubiera programas y coaches cargados. Entran como "sin búsqueda publicada" y se ordenan por contacto y compatriotas.
+function matchFromCatalog(profile, exclude, limit = 150) {
+  const g = profile.gender;
+  const out = [];
+  const seen = new Set();
+  for (const pr of PROGRAMS_ALL_SPORTS) {
+    if (pr.sport !== profile.sport || pr.Gender !== g) continue;
+    const university = pr.School;
+    if (seen.has(university) || (exclude && exclude.has(university))) continue;
+    seen.add(university);
+    let fit = { status: "sin_dato" };
+    try { fit = checkAcademicFit(university, profile.major) || fit; } catch (e) {}
+    let score = 14;
+    const reasons = ["Todavía no hay una búsqueda publicada ni un roster cargado para esta universidad: aparece por el catálogo del deporte. Conviene escribirle al coach sin esperar a que publique."];
+    const contact = coachContactFor(university, profile.sport, g) || {};
+    if (contact.contactUrl) { score += 10; reasons.push("Tenemos el contacto del coach."); }
+    if (fit.status === "confirmado_si") { score += 8; reasons.push(`Confirmado por fuente oficial: ${university} ofrece "${profile.major}".`); }
+    let staffSig = null;
+    try { staffSig = staffCompatriotSignal(university, profile.sport, g, profile); } catch (e) {}
+    if (staffSig) { score += staffSig.delta; reasons.push(staffSig.reason); }
+    const division = pr.Division || "";
+    let sch = null;
+    try { sch = scholarshipInfo(division, profile.sport, g); } catch (e) {}
+    out.push({
+      university, division, place: [pr.City, pr.State].filter(Boolean).join(", "),
+      source: `Catálogo del deporte${pr.source ? ` (${pr.source})` : ""} (sin búsqueda publicada)`,
+      score: Math.max(0, Math.min(100, Math.round(score))), reasons,
+      coachContact: contact.contactUrl || null, coachLabel: contact.label || null, coachName: contact.name || null, coachTitle: contact.title || null,
+      nationalityMatch: null, scholarship: sch, academicFit: fit, eadaOnly: true,
+      missing: ["una búsqueda publicada por el coach", "el roster con año de clase y posición para proyectar la vacante"],
+    });
+  }
+  return out.map((r) => applyRealismCaps(r, profile)).sort((a, b) => b.score - a.score).slice(0, limit);
+}
+
 // Head coaches de fútbol masculino de la lista corta del arquero (webs oficiales, relevado el 29/9/2026).
 // Contactos de coaches por PROGRAMA (universidad | deporte | rama). Es la fuente que crece con el relevamiento a escala:
 // cada lote del panel de Claude en Chrome se agrega acá. Campos: name, title, email, generic (mail del programa, no personal),
@@ -1910,7 +1946,15 @@ function pickTopTen(list) {
 // Las universidades que no dictan la carrera pedida solo entran al top si no hay otras.
 function buildTieredResults(profile) {
   const base = runMatchAll(profile);
-  const extra = (() => { try { return matchFromEada(profile, new Set(base.map((r) => r.university)), 150); } catch (e) { return []; } })();
+  const extra = (() => {
+    const excl = new Set(base.map((r) => r.university));
+    let e1 = [];
+    try { e1 = matchFromEada(profile, excl, 150); } catch (e) { e1 = []; }
+    if (e1.length >= 150) return e1;
+    let e2 = [];
+    try { e2 = matchFromCatalog(profile, new Set([...excl, ...e1.map((r) => r.university)]), 150 - e1.length); } catch (e) { e2 = []; }
+    return [...e1, ...e2];
+  })();
   const pool = [...base, ...extra].sort((x, y) => y.score - x.score);
   const noMajor = (r) => r.academicFit && (r.academicFit.status === "confirmado_no" || r.academicFit.status === "ipeds_no");
   const ok = pool.filter((r) => !noMajor(r));
