@@ -318,5 +318,309 @@
         "hometown": "Crofton, Md."
       }
     ]
+  },
+  {
+    "school": "Towson University",
+    "season": 2026,
+    "source": "Sitio oficial de Towson Athletics (towsontigers.com), plantel 2026",
+    "source_url": "https://www.towsontigers.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Grace Goodman",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Downingtown, Pa."
+      },
+      {
+        "player_name": "Ava McConnell",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Mountain Top, Pa."
+      },
+      {
+        "player_name": "Stevie Schultz",
+        "position": "B",
+        "class_year": "Fr.",
+        "hometown": "Westminster, Md."
+      },
+      {
+        "player_name": "Ella Jefferson",
+        "position": "M/F",
+        "class_year": "So.",
+        "hometown": "Ocean View, N.J."
+      },
+      {
+        "player_name": "Jillian LaBar",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Phillipsburg, N.J."
+      },
+      {
+        "player_name": "Skylar Santucci",
+        "position": "F",
+        "class_year": "Gr.",
+        "hometown": "Medford, N.J."
+      },
+      {
+        "player_name": "Ann Njoroge",
+        "position": "B",
+        "class_year": "Fr.",
+        "hometown": "Edimburgo, Escocia",
+        "country": "Escocia"
+      },
+      {
+        "player_name": "Lily Ippolito",
+        "position": "M/B",
+        "class_year": "Fr.",
+        "hometown": "Chester Springs, Pa."
+      },
+      {
+        "player_name": "Else Wismans",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Deventer, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Gianna Tripodi",
+        "position": "M",
+        "class_year": "R-Jr.",
+        "hometown": "Nazareth, Pa."
+      },
+      {
+        "player_name": "Bailey Masten",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Milford, Del."
+      },
+      {
+        "player_name": "Katie Compton",
+        "position": "B",
+        "class_year": "Fr.",
+        "hometown": "Hackettstown, N.J."
+      },
+      {
+        "player_name": "Lydia Bennett",
+        "position": "B",
+        "class_year": "Sr.",
+        "hometown": "Maryland Line, Md."
+      },
+      {
+        "player_name": "Olivia Thunnissen",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Apeldoorn, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Maddie Patton",
+        "position": "F/M",
+        "class_year": "So.",
+        "hometown": "Fredericksburg, Va."
+      },
+      {
+        "player_name": "Alaina Lomonaco",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Mullica Hill, N.J."
+      },
+      {
+        "player_name": "Pien van der Horst",
+        "position": "B",
+        "class_year": "Fr.",
+        "hometown": "Oisterwijk, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Gianna Yordanopoulos",
+        "position": "F",
+        "class_year": "R-Jr.",
+        "hometown": "Upton, Mass."
+      },
+      {
+        "player_name": "Josefina Sayal Aguirre",
+        "position": "B",
+        "class_year": "Jr.",
+        "hometown": "Buenos Aires, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Anouk Westerink",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Ede, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Olivia Miller",
+        "position": "M/F",
+        "class_year": "Jr.",
+        "hometown": "State College, Pa."
+      },
+      {
+        "player_name": "Grace Conklin",
+        "position": "M/F",
+        "class_year": "Jr.",
+        "hometown": "Bel Air, Md."
+      },
+      {
+        "player_name": "Olivia Handelong",
+        "position": "B",
+        "class_year": "Sr.",
+        "hometown": "Tannersville, Pa."
+      },
+      {
+        "player_name": "Delfina Larripa",
+        "position": "F",
+        "class_year": "Gr.",
+        "hometown": "Buenos Aires, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Riley Redding",
+        "position": "GK",
+        "class_year": "R-Fr.",
+        "hometown": "Newark, Del."
+      }
+    ]
+  },
+  {
+    "school": "Saint Louis University",
+    "season": 2026,
+    "source": "Sitio oficial de Saint Louis Athletics (slubillikens.com), plantel 2026",
+    "source_url": "https://slubillikens.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Dawson Packwood",
+        "position": "F/M",
+        "class_year": "R-Fr.",
+        "hometown": "Louisville, Ky."
+      },
+      {
+        "player_name": "Naomi Fields",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Louisville, Ky."
+      },
+      {
+        "player_name": "Evelyn Melograna",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Wyomissing, Pa."
+      },
+      {
+        "player_name": "Dylan Breckenridge",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Ella Kappesser",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Louisville, Ky."
+      },
+      {
+        "player_name": "Ella Brinka",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Glen Ellyn, Ill."
+      },
+      {
+        "player_name": "Macy Budd",
+        "position": "F/M",
+        "class_year": "So.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Ella Etherington",
+        "position": "MF",
+        "class_year": "Jr.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Josie Naeger",
+        "position": "F/M",
+        "class_year": "Jr.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Abby Schalow",
+        "position": "G",
+        "class_year": "Jr.",
+        "hometown": "Newport Beach, Calif."
+      },
+      {
+        "player_name": "Brynn Newborn",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Drums, Pa."
+      },
+      {
+        "player_name": "Ida Tharandt",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Königstein, Alemania",
+        "country": "Alemania"
+      },
+      {
+        "player_name": "Sierra Larson",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "North Vancouver, Columbia Británica",
+        "country": "Canadá"
+      },
+      {
+        "player_name": "Hazel Merry",
+        "position": "B",
+        "class_year": "So.",
+        "hometown": "Londres, Inglaterra",
+        "country": "Inglaterra"
+      },
+      {
+        "player_name": "Lauren Reed",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "River Forest, Ill."
+      },
+      {
+        "player_name": "Maddie Croghan",
+        "position": "F/M",
+        "class_year": "Fr.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Evie Harris",
+        "position": "F/M",
+        "class_year": "Fr.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "RB McGowan",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Penny Dirou",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "Burley, Inglaterra",
+        "country": "Inglaterra"
+      },
+      {
+        "player_name": "Ignacia Manriquez",
+        "position": "M/D",
+        "class_year": "Jr.",
+        "hometown": "Viña del Mar, Chile",
+        "country": "Chile"
+      },
+      {
+        "player_name": "Kerri O'Donnell",
+        "position": "G",
+        "class_year": "Sr.",
+        "hometown": "Hillsborough, N.J."
+      }
+    ]
   }
 ]
