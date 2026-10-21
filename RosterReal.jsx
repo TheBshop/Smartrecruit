@@ -2624,7 +2624,7 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 /* ===== TEMA DEPORTIVO (13/10/2026): misma identidad azul y dorado, más contraste, tipografía condensada pesada, cortes en diagonal ===== */
 .rm-root{ --navy:#0C2340; --navy-mid:#1F62C9; --accent:#1F62C9; --ink:#0B1B2E; --paper:#F3F6FA; --paper-dim:#E6ECF4; --line:#D5DDE8; --gold:#FFB81C; --ink-soft:#506179; background-color:#F3F6FA; }
 .rm-bg-blur{ display:none; }
-.rm-hero{ background:linear-gradient(120deg,#071a33 0%,#0C2340 55%,#0f2f5e 100%); clip-path:polygon(0 0,100% 0,100% 90%,0 100%); padding-top:72px; }
+.rm-hero{ background:linear-gradient(120deg,rgba(7,26,51,.86) 0%,rgba(12,35,64,.8) 55%,rgba(15,47,94,.86) 100%),url(/img/hero-campus.jpg) center/cover no-repeat,#0C2340; clip-path:polygon(0 0,100% 0,100% 90%,0 100%); padding-top:72px; }
 .rm-hero::after{ content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 96px); }
 .rm-hero h1{ font-style:italic; font-weight:800; font-size:clamp(46px,7.4vw,92px); line-height:.94; letter-spacing:-.4px; max-width:780px; animation:rm-h1-in .55s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes rm-h1-in{ from{ opacity:0; transform:translateX(-28px) skewX(-6deg); } to{ opacity:1; transform:none; } }
