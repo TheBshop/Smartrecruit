@@ -5985,7 +5985,7 @@ function MoneyGuidePage() {
       <GuideBlock title="Becas deportivas por división" open>
         <p><b>NCAA D1:</b> desde 2025 los programas tienen límites de plantel en lugar de topes de becas, y cada universidad decide cuántas da. En los deportes más grandes puede haber becas completas, pero son muy competidas.</p>
         <p><b>NCAA D2 y NAIA:</b> casi siempre son <b>becas parciales</b>. El coach reparte un monto total entre todo el plantel (por ejemplo, en field hockey D2 el tope equivale a unas 6 becas completas para todo el equipo).</p>
-        <p><b>NCAA D3:</b> <b>no da becas deportivas</b>. La ayuda llega por mérito académico o por la propia universidad, y puede ser generosa.</p>
+        <p><b>NCAA D3:</b> <b>no da becas deportivas</b>, pero la ayuda por mérito académico o institucional puede cubrir el costo total para un estudiante con buen promedio. Es una categoría más para buscar, igual que D1 y D2.</p>
         <p><b>Junior college:</b> son más baratos y algunos dan becas; muchos atletas pasan después a una universidad de cuatro años.</p>
       </GuideBlock>
       <GuideBlock title="Lo que no aplica a extranjeros">
