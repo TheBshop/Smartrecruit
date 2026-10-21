@@ -388,5 +388,548 @@
         "hometown": "Ulm, Germany"
       }
     ]
+  },
+  {
+    "school": "Bentley University",
+    "gender": "M",
+    "season": 2026,
+    "source": "Sitio oficial de Bentley Athletics (bentleyfalcons.com), plantel 2026",
+    "source_url": "https://bentleyfalcons.com/sports/mens-soccer/roster",
+    "players": [
+      {
+        "player_name": "William Jebejian",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Bronxville, NY"
+      },
+      {
+        "player_name": "Alessandro Bizzini",
+        "position": "GK",
+        "class_year": "Gr.",
+        "hometown": "Imola, Italy"
+      },
+      {
+        "player_name": "Owen MacKinnon",
+        "position": "M/D",
+        "class_year": "Jr.",
+        "hometown": "Kingston, MA"
+      },
+      {
+        "player_name": "Filippo Perini",
+        "position": "D",
+        "class_year": "Gr.",
+        "hometown": "Ancona, Italy"
+      },
+      {
+        "player_name": "Wynn Hammond",
+        "position": "D",
+        "class_year": "Gr.",
+        "hometown": "Pawcatuck, CT"
+      },
+      {
+        "player_name": "Kevi Sulollari",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Cheshire, CT"
+      },
+      {
+        "player_name": "Logan Veloria",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Phoenix, AZ"
+      },
+      {
+        "player_name": "Michael Gouvin",
+        "position": "M/D",
+        "class_year": "Sr.",
+        "hometown": "Monson, MA"
+      },
+      {
+        "player_name": "Wil McManus",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Pembroke, MA"
+      },
+      {
+        "player_name": "Antonio Santos",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Dorado, PR"
+      },
+      {
+        "player_name": "Zach Spitznagle",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Williston, VT"
+      },
+      {
+        "player_name": "Garrett Burns",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Southborough, MA"
+      },
+      {
+        "player_name": "Michael Cagno",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Medford, MA"
+      },
+      {
+        "player_name": "Juan Manuel Paredes",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Quito, Ecuador"
+      },
+      {
+        "player_name": "Luke Churchill",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "North Easton, MA"
+      },
+      {
+        "player_name": "Jose Ortiz Rivas",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Bayamon, Puerto Rico"
+      },
+      {
+        "player_name": "Lucas Monteiro",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Avon, CT"
+      },
+      {
+        "player_name": "Antonio Di Gaudio",
+        "position": "F",
+        "class_year": "Gr.",
+        "hometown": "Firenze, Italy"
+      },
+      {
+        "player_name": "Enzo Botta",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Ludlow, MA"
+      },
+      {
+        "player_name": "Finn Bride",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Westwood, MA"
+      },
+      {
+        "player_name": "Tyler Keeney",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "North Grafton, MA"
+      },
+      {
+        "player_name": "Jake Moulton",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Essex, MA"
+      },
+      {
+        "player_name": "Mathieu Page",
+        "position": "D",
+        "class_year": "Gr.",
+        "hometown": "Beauvais, France"
+      },
+      {
+        "player_name": "Matty Smalarz",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Acton, MA"
+      },
+      {
+        "player_name": "Jackson Denham",
+        "position": "M",
+        "class_year": "Gr.",
+        "hometown": "Lexington, MA"
+      },
+      {
+        "player_name": "William Vasquezi",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Waltham, MA"
+      },
+      {
+        "player_name": "Jamo Velez",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Concord, MA"
+      },
+      {
+        "player_name": "Tommy Fitzgerald",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Glastonbury, CT"
+      },
+      {
+        "player_name": "Gamaliel Ortiz Rivas",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Bayamon, Puerto Rico"
+      },
+      {
+        "player_name": "Zuwa Abhulimen",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Berwyn, PA"
+      },
+      {
+        "player_name": "Salvatore Alessio",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Pawcatuck, CT"
+      },
+      {
+        "player_name": "Pano Haseotes",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Halifax, MA"
+      },
+      {
+        "player_name": "Matt McAuliffe",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Pembroke, MA"
+      }
+    ]
+  },
+  {
+    "school": "Millersville University of Pennsylvania",
+    "gender": "M",
+    "season": 2026,
+    "source": "Sitio oficial de Millersville Athletics (millersvilleathletics.com), plantel 2026",
+    "source_url": "https://millersvilleathletics.com/sports/mens-soccer/roster",
+    "players": [
+      {
+        "player_name": "Kieran Finegan",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Camp Hill, PA"
+      },
+      {
+        "player_name": "Logan Kratz",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Lancaster, PA"
+      },
+      {
+        "player_name": "Nick Woodfill",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "East Petersburg, PA"
+      },
+      {
+        "player_name": "Nolan McCarty",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Lancaster, PA"
+      },
+      {
+        "player_name": "Zach Richwine",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Carlisle, PA"
+      },
+      {
+        "player_name": "David Zea",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Downingtown, PA"
+      },
+      {
+        "player_name": "Matias Schmidt",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Santiago, Chile"
+      },
+      {
+        "player_name": "Aidan Thomas",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Cannes, France"
+      },
+      {
+        "player_name": "Drew Jones",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Lancaster, PA"
+      },
+      {
+        "player_name": "Alex Delavan",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Camp Hill, PA"
+      },
+      {
+        "player_name": "Brian O'Neill",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Jenkintown, PA"
+      },
+      {
+        "player_name": "Travis Hemphill",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Winslow, NJ"
+      },
+      {
+        "player_name": "Braeden Brownholtz",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Abington, PA"
+      },
+      {
+        "player_name": "Haven Thomas",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Walkersville, MD"
+      },
+      {
+        "player_name": "Antonio Siravo",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Jenkintown, PA"
+      },
+      {
+        "player_name": "Omar Warthen",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Ridley, PA"
+      },
+      {
+        "player_name": "Juan Ortiz Escobar",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "El Salvador"
+      },
+      {
+        "player_name": "Zander Leik",
+        "position": "F",
+        "class_year": "5th year",
+        "hometown": "Dallastown, PA"
+      },
+      {
+        "player_name": "John Fiorillo",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Howell, NJ"
+      },
+      {
+        "player_name": "Townsend Neher",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Charleston, SC"
+      },
+      {
+        "player_name": "Roy Parkyn",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Broadstairs, England"
+      },
+      {
+        "player_name": "Kehmar Green",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Philadelphia, PA"
+      },
+      {
+        "player_name": "Abass Ndiaye",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Shrewsberry, PA"
+      },
+      {
+        "player_name": "Louis Wright",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Burntwood, England"
+      },
+      {
+        "player_name": "Gavin Massimi",
+        "position": "GK",
+        "class_year": "Jr.",
+        "hometown": "Coatesville, PA"
+      }
+    ]
+  },
+  {
+    "school": "Shippensburg University of Pennsylvania",
+    "gender": "M",
+    "season": 2026,
+    "source": "Sitio oficial de Shippensburg Athletics (shipraiders.com), plantel 2026",
+    "source_url": "https://shipraiders.com/sports/mens-soccer/roster",
+    "players": [
+      {
+        "player_name": "Carl Robinson",
+        "position": "GK",
+        "class_year": "R-Fr.",
+        "hometown": "Norristown, PA"
+      },
+      {
+        "player_name": "Jack McCann",
+        "position": "GK",
+        "class_year": "R-Jr.",
+        "hometown": "Lincoln University, PA"
+      },
+      {
+        "player_name": "Nate Herb",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Fleetwood, PA"
+      },
+      {
+        "player_name": "Pat McNamara",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Phoenixville, PA"
+      },
+      {
+        "player_name": "Hasan Mirasyedi",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Clarksville, MD"
+      },
+      {
+        "player_name": "Coy Rush",
+        "position": "M",
+        "class_year": "R-So.",
+        "hometown": "Carlisle, PA"
+      },
+      {
+        "player_name": "Julius Dogan",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Paderborn, Germany"
+      },
+      {
+        "player_name": "Kyle Ganley",
+        "position": "M/F",
+        "class_year": "Jr.",
+        "hometown": "Mechanicsville, MD"
+      },
+      {
+        "player_name": "Evan Brandt",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Voorhees, NJ"
+      },
+      {
+        "player_name": "Cam Henry",
+        "position": "M/F",
+        "class_year": "Sr.",
+        "hometown": "Douglassville, PA"
+      },
+      {
+        "player_name": "Aidan Moses",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Huntingtown, MD"
+      },
+      {
+        "player_name": "Maddox Davies",
+        "position": "M",
+        "class_year": "R-Jr.",
+        "hometown": "Dillsburg, PA"
+      },
+      {
+        "player_name": "Vincent Pollifrone",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Marlboro, NJ"
+      },
+      {
+        "player_name": "Mathieu Barbirati",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Aix-les-Bains, France"
+      },
+      {
+        "player_name": "Brody White",
+        "position": "F",
+        "class_year": "R-Fr.",
+        "hometown": "Phoenixville, PA"
+      },
+      {
+        "player_name": "Love Thoren",
+        "position": "D",
+        "class_year": "R-Jr.",
+        "hometown": "Stockholm, Sweden"
+      },
+      {
+        "player_name": "Zachary Haynie",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Gulph Mills, PA"
+      },
+      {
+        "player_name": "Anthony Weekley",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "York, PA"
+      },
+      {
+        "player_name": "Zac Slevin",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Mechanicsburg, PA"
+      },
+      {
+        "player_name": "Cody Klym",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Shamong Township, NJ"
+      },
+      {
+        "player_name": "John Trigg",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Lanzarote, Canary Islands"
+      },
+      {
+        "player_name": "Conway Brown II",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Carlisle, PA"
+      },
+      {
+        "player_name": "Ethan Omondi",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Nairobi, Kenya"
+      },
+      {
+        "player_name": "Braedon Johnson",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Mechanicsburg, PA"
+      },
+      {
+        "player_name": "Tanner Horvath",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Bethlehem, PA"
+      },
+      {
+        "player_name": "Carter Collier",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Lancaster, PA"
+      },
+      {
+        "player_name": "Ryan Krumenacker",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Cranberry Township, PA"
+      },
+      {
+        "player_name": "Connor Detamore",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Fallston, MD"
+      }
+    ]
   }
 ]
