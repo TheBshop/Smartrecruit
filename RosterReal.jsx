@@ -7811,6 +7811,8 @@ function ProfileForm({ onSubmit, initial }) {
             )}
             {POSITION_SELECT[p.sport] && <span style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 2 }}>Solo ves posiciones de {p.sport === "Soccer" ? "fútbol" : p.sport === "Basketball" ? "básquet" : p.sport === "Volleyball" ? "vóley" : p.sport === "Field Hockey" ? "hockey" : p.sport === "Rugby" ? "rugby" : p.sport}. Los coaches publican sus búsquedas con la sigla en inglés (por ejemplo, {(() => { const c = POSITION_SELECT[p.sport][POSITION_SELECT[p.sport].length - 1]; const e = (POSITION_NAMES[p.sport] || {})[c] || [c, c]; return `${c} = ${e[p.gender === "M" ? 1 : 0]}`; })()}); en Smartrecruit siempre te mostramos la traducción al lado.</span>}
           </div>
+          <div className="rm-field"><label>Altura (cm, opcional)</label><input type="number" min="0" value={p.heightCm ?? ""} placeholder="ej: 172" onChange={(e) => setP({ ...p, heightCm: e.target.value === "" ? "" : parseFloat(e.target.value) })} /></div>
+          <div className="rm-field"><label>Peso (kg, opcional)</label><input type="number" min="0" value={p.weightKg ?? ""} placeholder="ej: 62" onChange={(e) => setP({ ...p, weightKg: e.target.value === "" ? "" : parseFloat(e.target.value) })} /></div>
           </>)}
           {step === 2 && (<>
           <div className="rm-field"><label>Año de graduación de secundaria</label><input type="number" value={p.gradYear} onChange={setNum("gradYear")} /></div>
@@ -7833,6 +7835,16 @@ function ProfileForm({ onSubmit, initial }) {
             <select value={p.gpaScale} onChange={set("gpaScale")}>{Object.entries(GPA_SCALES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select>
           </div>
           <div className="rm-field"><label>Tu promedio, en tu escala</label><input type="number" step="0.1" value={p.gpaRaw} onChange={setNum("gpaRaw")} /></div>
+
+          <div className="rm-field"><label>Examen de inglés (si ya lo rendiste)</label>
+            <select value={p.englishTest || ""} onChange={set("englishTest")}>
+              <option value="">Todavía no lo rendí</option>
+              <option value="Duolingo">Duolingo English Test</option>
+              <option value="TOEFL">TOEFL iBT</option>
+              <option value="IELTS">IELTS</option>
+            </select>
+          </div>
+          <div className="rm-field"><label>Puntaje del examen de inglés</label><input type="number" min="0" value={p.englishScore ?? ""} placeholder="ej: 110" onChange={(e) => setP({ ...p, englishScore: e.target.value === "" ? "" : parseFloat(e.target.value) })} /></div>
 
           <div className="rm-field rm-full"><label>Carrera que querés estudiar</label><input value={p.major} onChange={set("major")} /></div>
 
@@ -7862,6 +7874,22 @@ function ProfileForm({ onSubmit, initial }) {
         </div>
 
         {step === 5 && (<>
+        {(() => {
+          const falta = [];
+          if (!p.name || !p.name.trim()) falta.push("Nombre");
+          if (!p.email) falta.push("Email (para que el coach te responda)");
+          if (!p.videoLink) falta.push("Link a tu video: es lo que más mira un coach");
+          if (!p.position) falta.push("Posición");
+          if (!p.major) falta.push("Carrera");
+          if (!(typeof p.gpa4 === "number" && p.gpa4 > 0) && !(p.gpaRaw > 0)) falta.push("Promedio académico");
+          if (!p.englishTest) falta.push("Examen de inglés (o marcá que todavía no lo rendiste)");
+          return falta.length ? (
+            <div className="rm-alert" style={{ marginBottom: 16 }}>
+              <b>Antes de escribir a coaches, te falta:</b>
+              <ul style={{ margin: "8px 0 0", paddingLeft: 20 }}>{falta.map((f) => <li key={f}>{f}</li>)}</ul>
+            </div>
+          ) : <div className="rm-alert" style={{ marginBottom: 16 }}><b>Tu perfil está completo.</b> Podés seguir.</div>;
+        })()}
         <ConsentFields value={p.consent} onChange={(c) => setP({ ...p, consent: c })} />
         <div className="rm-actions">
           <button className="rm-btn" disabled={!consentIsValid(p.consent)} style={consentIsValid(p.consent) ? undefined : { opacity: 0.5, cursor: "not-allowed" }}
