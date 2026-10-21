@@ -7421,7 +7421,7 @@ function CalendarPage() {
             ))}
           </div>
           <p style={{ fontSize: 12.5, color: "var(--ink-soft)", marginTop: 10 }}>
-            Fuente: <a href={cal.source} target="_blank" rel="noreferrer">{cal.source}</a>. Lo que no aparece en esta lista se trata como período de contacto normal.
+            Lo que no aparece en esta lista se trata como período de contacto normal.
           </p>
         </>
       )}
