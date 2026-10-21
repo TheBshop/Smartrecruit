@@ -4726,7 +4726,7 @@ function useEligibilityChecklist(division) {
 const SUPABASE_URL = "https://dliayalkzvaugukhxmcb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsaWF5YWxrenZhdWd1a2h4bWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzkwOTMsImV4cCI6MjA4ODExNTA5M30.vGBprr8FKBxTayS6Q6ZbWIxUZKItY4avgMJbUGgQC1E";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts"];
+const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts", "rr_plan_state"];
 function snapshotLocal() {
   const out = {};
   for (const k of SYNC_KEYS) { const v = localStorage.getItem(k); if (v != null) out[k] = v; }
@@ -7902,6 +7902,135 @@ function ProfileForm({ onSubmit, initial }) {
   );
 }
 
+// ---- Plan diario: lo que toca hacer hoy, con racha y avisos ----
+const PLAN_KEY = "rr_plan_state";
+function readPlanState() {
+  try { return JSON.parse(localStorage.getItem(PLAN_KEY) || "null") || {}; } catch (e) { return {}; }
+}
+function writePlanState(next) {
+  try { lsSetSynced(PLAN_KEY, JSON.stringify(next)); } catch (e) {}
+}
+function planTasksFor(profile) {
+  const p = profile || {};
+  const tasks = [];
+  if (!p.name || !p.email) tasks.push({ id: "gap-contact", title: "Completá tu nombre y email en tu perfil", go: "form" });
+  if (!p.videoLink) tasks.push({ id: "gap-video", title: "Subí el link de tu video de highlights", go: "form" });
+  if (!p.position || !p.major) tasks.push({ id: "gap-pos", title: "Completá posición y carrera en tu perfil", go: "form" });
+  if (!p.englishTest) tasks.push({ id: "gap-english", title: "Cargá tu examen de inglés (o marcá que todavía no lo rendiste)", go: "form" });
+  let log = {};
+  try { log = readOutreachLog() || {}; } catch (e) {}
+  Object.values(log).forEach((e) => {
+    if (e && followUpDue(e)) tasks.push({ id: `fu-${e.university}`, title: `Seguimiento a ${e.university}: ${nextOutreachStep(e).text}`, go: "history" });
+  });
+  let checked = {};
+  try { checked = JSON.parse(localStorage.getItem("rr_eligibility_checklist") || "{}") || {}; } catch (e) {}
+  const elig = ELIGIBILITY_CHECKLISTS[Object.keys(ELIGIBILITY_CHECKLISTS)[0]] || [];
+  const pending = elig.filter((i) => !checked[i.id]);
+  if (pending.length) tasks.push({ id: "elig-next", title: `Elegibilidad: ${pending[0].title}`, go: "eligibility" });
+  tasks.push({ id: "outreach-today", title: "Escribí a un entrenador nuevo de tu lista", go: "catalog" });
+  return tasks;
+}
+function planStreak(doneByDay) {
+  const d = new Date();
+  if (!((doneByDay[todayKey()] || []).length)) d.setDate(d.getDate() - 1); // hoy todavía cuenta desde ayer
+  let n = 0;
+  for (let i = 0; i < 3650; i++) {
+    const k = d.toLocaleDateString("en-CA");
+    if (!((doneByDay[k] || []).length)) break;
+    n++; d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+function usePlanReminder() {
+  useEffect(() => {
+    const id = setInterval(() => {
+      try {
+        const s = readPlanState();
+        if (!s.notifyOn || !("Notification" in window) || Notification.permission !== "granted") return;
+        const now = new Date();
+        const today = todayKey();
+        if (now.getHours() !== (s.reminderHour ?? 19) || s.lastNotifiedDay === today) return;
+        const prof = JSON.parse(localStorage.getItem("rr_profile") || "null");
+        const doneToday = (s.doneByDay || {})[today] || [];
+        const open = planTasksFor(prof).filter((t) => !doneToday.includes(t.id));
+        if (!open.length) return;
+        new Notification("Smartrecruit: tu plan de hoy", { body: `Tenés ${open.length} paso${open.length === 1 ? "" : "s"} pendiente${open.length === 1 ? "" : "s"}. Entrá para completarlos.`, tag: "plan-diario" });
+        writePlanState({ ...s, lastNotifiedDay: today });
+      } catch (e) { /* sin permiso o sin soporte: se ignora */ }
+    }, 60000);
+    return () => clearInterval(id);
+  }, []);
+}
+function PlanPage({ profile, setStage }) {
+  const [state, setState] = useState(readPlanState);
+  const today = todayKey();
+  const tasks = planTasksFor(profile);
+  const doneToday = (state.doneByDay && state.doneByDay[today]) || [];
+  const toggle = (id) => {
+    const nextDay = doneToday.includes(id) ? doneToday.filter((x) => x !== id) : [...doneToday, id];
+    const next = { ...state, startDate: state.startDate || today, doneByDay: { ...(state.doneByDay || {}), [today]: nextDay } };
+    setState(next); writePlanState(next);
+  };
+  const streak = planStreak(state.doneByDay || {});
+  const dayNum = state.startDate ? Math.max(1, Math.round((new Date(today) - new Date(state.startDate)) / 86400000) + 1) : 1;
+  const sorted = [...tasks].sort((a, b) => Number(doneToday.includes(a.id)) - Number(doneToday.includes(b.id)));
+  const hasNotif = typeof window !== "undefined" && "Notification" in window;
+  const perm = hasNotif ? Notification.permission : "unsupported";
+
+  const activate = () => {
+    if (!hasNotif) return;
+    Notification.requestPermission().then((res) => {
+      if (res === "granted") { const next = { ...readPlanState(), notifyOn: true, reminderHour: state.reminderHour ?? 19 }; writePlanState(next); setState(next); }
+      else setState((s) => ({ ...s }));
+    });
+  };
+  const setHour = (h) => { const next = { ...state, reminderHour: h }; setState(next); writePlanState(next); };
+
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">Tu plan de hoy</h2>
+      <p className="rm-hint">Lo que tenés que hacer para conseguir la beca, día por día. La lista se actualiza sola con tu perfil, tus envíos y tus fechas.</p>
+
+      <div className="rm-grid" style={{ marginTop: 16 }}>
+        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Día</div><b style={{ fontSize: 22 }}>{dayNum}</b></div>
+        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Racha</div><b style={{ fontSize: 22 }}>{streak} día{streak === 1 ? "" : "s"}</b></div>
+        <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Hechos hoy</div><b style={{ fontSize: 22 }}>{doneToday.filter((id) => tasks.some((t) => t.id === id)).length}/{tasks.length}</b></div>
+      </div>
+
+      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 26 }}>Pasos de hoy</h3>
+      {sorted.length === 0 && <p className="rm-hint">Nada pendiente hoy. Volvé mañana.</p>}
+      <div className="rm-elig-list">
+        {sorted.map((t) => {
+          const isDone = doneToday.includes(t.id);
+          return (
+            <div className="rm-elig-item" key={t.id} style={{ justifyContent: "space-between", alignItems: "center" }}>
+              <label style={{ display: "flex", gap: 10, alignItems: "flex-start", flex: 1, cursor: "pointer" }}>
+                <input type="checkbox" checked={isDone} onChange={() => toggle(t.id)} />
+                <span style={{ textDecoration: isDone ? "line-through" : "none", opacity: isDone ? 0.6 : 1 }}>{t.title}</span>
+              </label>
+              <button className="rm-btn-inline" onClick={() => setStage(t.go)}>Ir →</button>
+            </div>
+          );
+        })}
+      </div>
+
+      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 30 }}>Avisos</h3>
+      {!hasNotif && <p className="rm-hint">Tu navegador no soporta notificaciones. Igual vas a ver el plan al entrar.</p>}
+      {hasNotif && perm !== "granted" && perm !== "denied" && <button className="rm-btn" onClick={activate}>Activar avisos del día</button>}
+      {hasNotif && perm === "denied" && <p className="rm-hint">Los avisos están bloqueados en el navegador. Podés habilitarlos desde la configuración del sitio.</p>}
+      {hasNotif && perm === "granted" && (
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ fontSize: 14 }}>Te aviso a las</span>
+          <select value={state.reminderHour ?? 19} onChange={(e) => setHour(parseInt(e.target.value, 10))}>
+            {Array.from({ length: 16 }, (_, i) => i + 7).map((h) => <option key={h} value={h}>{String(h).padStart(2, "0")}:00</option>)}
+          </select>
+        </div>
+      )}
+      <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 10 }}>Los avisos llegan mientras la página esté abierta en tu navegador o en un celular con el sitio abierto. Si cerrás todo, el plan igual te espera cuando vuelvas.</p>
+    </div>
+  );
+}
+
 function CoachCard({ r }) {
   if (!r.coachContact) {
     // Roster cargado pero todavía sin contacto del coach: no se muestra un botón vacío.
@@ -9356,7 +9485,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "profile", "resources", "results"];
+const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -9407,6 +9536,7 @@ export default function App() {
     setProfile(normalized);
     writeJSON("rr_profile", normalized);
   };
+  usePlanReminder();
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -9441,6 +9571,7 @@ export default function App() {
     { id: "landing", label: "Inicio", icon: "🏠" },
     { id: "catalog", label: "Universidades", icon: "🎓" },
     { id: "needs", label: "Recruiting Needs", icon: "📋" },
+    { id: "plan", label: "Mi plan de hoy", icon: "✅" },
     { id: "calendar", label: "Calendario", icon: "📅" },
     { id: "history", label: "Mis envíos", icon: "📨" },
     {
@@ -9587,6 +9718,7 @@ export default function App() {
       {stage === "eligibility" && <EligibilityPage />}
       {stage === "video" && <VideoGuidePage />}
       {stage === "money" && <MoneyGuidePage />}
+      {stage === "plan" && <PlanPage profile={profile} setStage={setStage} />}
       {stage === "calendar" && <CalendarPage />}
       {stage === "history" && <OutreachHistoryPage profile={profile} setStage={setStage} />}
       {stage === "exams" && <ExamsPage setStage={setStage} />}
