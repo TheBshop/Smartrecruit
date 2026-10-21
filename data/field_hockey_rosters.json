@@ -5,32 +5,318 @@
     "source": "Sitio oficial de Hofstra Athletics (gohofstra.com), plantel 2026",
     "source_url": "https://gohofstra.com/sports/field-hockey/roster/2026",
     "players": [
-      {"player_name": "Kalyn Fluker", "position": "F", "class_year": "So.", "hometown": "Chesapeake, VA"},
-      {"player_name": "Hannah Garzancich", "position": "M/D", "class_year": "So.", "hometown": "Norwalk, CT"},
-      {"player_name": "Greta Krimmel", "position": "M/F", "class_year": "Fr.", "hometown": "Factoryville, PA"},
-      {"player_name": "Sophia Gahagan", "position": "M/D", "class_year": "Fr.", "hometown": "Point Pleasant, NJ"},
-      {"player_name": "Rosalie Hoekstra", "position": "D", "class_year": "Fr.", "hometown": "Lunteren, Países Bajos", "country": "Países Bajos"},
-      {"player_name": "Malena Bertone", "position": "D", "class_year": "Fr.", "hometown": "Santa Fe, Argentina", "country": "Argentina"},
-      {"player_name": "Kesia Richardson", "position": "D", "class_year": "Sr.", "hometown": "Marlow, Inglaterra", "country": "Inglaterra"},
-      {"player_name": "Gabriella Seifert", "position": "F/M", "class_year": "So.", "hometown": "Virginia Beach, VA"},
-      {"player_name": "Tess Satterfield", "position": "F/M", "class_year": "Sr.", "hometown": "Vienna, VA"},
-      {"player_name": "Julia Böcker", "position": "F", "class_year": "Jr.", "hometown": "Utrecht, Países Bajos", "country": "Países Bajos"},
-      {"player_name": "Lisa Ebbinkhuijsen", "position": "F", "class_year": "Fr.", "hometown": "Landsmeer, Países Bajos", "country": "Países Bajos"},
-      {"player_name": "Sarah Smalley", "position": "F", "class_year": "Sr.", "hometown": "East Islip, NY"},
-      {"player_name": "Cara Zapach", "position": "F", "class_year": "Fr.", "hometown": "New Freedom, PA"},
-      {"player_name": "Alexandra Geiger", "position": "M", "class_year": "Fr.", "hometown": "Mountain Top, PA"},
-      {"player_name": "Camryn Stewart", "position": "M", "class_year": "Sr.", "hometown": "Abington, PA"},
-      {"player_name": "Gwenn van Dijk", "position": "M", "class_year": "So.", "hometown": "Almere, Países Bajos", "country": "Países Bajos"},
-      {"player_name": "Caitlin Lozano", "position": "M", "class_year": "Jr.", "hometown": "Dresher, PA"},
-      {"player_name": "Juana Laskowski", "position": "M", "class_year": "5th Year", "hometown": "Buenos Aires, Argentina", "country": "Argentina"},
-      {"player_name": "Tati Boyd", "position": "F/D", "class_year": "Sr.", "hometown": "Chula Vista, CA"},
-      {"player_name": "Kelly Levengood", "position": "F", "class_year": "Sr.", "hometown": "West Deptford, NJ"},
-      {"player_name": "Alex Gordon", "position": "D", "class_year": "Sr.", "hometown": "Virginia Beach, VA"},
-      {"player_name": "Clara Cañas", "position": "D", "class_year": "Fr.", "hometown": "Entre Ríos, Argentina", "country": "Argentina"},
-      {"player_name": "Victoria Nazar", "position": "M/D", "class_year": "5th Year", "hometown": "Yerba Buena, Argentina", "country": "Argentina"},
-      {"player_name": "Luci Hollister", "position": "G", "class_year": "So.", "hometown": "Auckland, Nueva Zelanda", "country": "Nueva Zelanda"},
-      {"player_name": "Madison Geiger", "position": "GK", "class_year": "Fr.", "hometown": "Mountain Top, PA"},
-      {"player_name": "Tessa Lambright", "position": "G", "class_year": "Jr.", "hometown": "Mission Hills, KS"}
+      {
+        "player_name": "Kalyn Fluker",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Chesapeake, VA"
+      },
+      {
+        "player_name": "Hannah Garzancich",
+        "position": "M/D",
+        "class_year": "So.",
+        "hometown": "Norwalk, CT"
+      },
+      {
+        "player_name": "Greta Krimmel",
+        "position": "M/F",
+        "class_year": "Fr.",
+        "hometown": "Factoryville, PA"
+      },
+      {
+        "player_name": "Sophia Gahagan",
+        "position": "M/D",
+        "class_year": "Fr.",
+        "hometown": "Point Pleasant, NJ"
+      },
+      {
+        "player_name": "Rosalie Hoekstra",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Lunteren, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Malena Bertone",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Santa Fe, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Kesia Richardson",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Marlow, Inglaterra",
+        "country": "Inglaterra"
+      },
+      {
+        "player_name": "Gabriella Seifert",
+        "position": "F/M",
+        "class_year": "So.",
+        "hometown": "Virginia Beach, VA"
+      },
+      {
+        "player_name": "Tess Satterfield",
+        "position": "F/M",
+        "class_year": "Sr.",
+        "hometown": "Vienna, VA"
+      },
+      {
+        "player_name": "Julia Böcker",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Utrecht, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Lisa Ebbinkhuijsen",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Landsmeer, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Sarah Smalley",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "East Islip, NY"
+      },
+      {
+        "player_name": "Cara Zapach",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "New Freedom, PA"
+      },
+      {
+        "player_name": "Alexandra Geiger",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Mountain Top, PA"
+      },
+      {
+        "player_name": "Camryn Stewart",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Abington, PA"
+      },
+      {
+        "player_name": "Gwenn van Dijk",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Almere, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Caitlin Lozano",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Dresher, PA"
+      },
+      {
+        "player_name": "Juana Laskowski",
+        "position": "M",
+        "class_year": "5th Year",
+        "hometown": "Buenos Aires, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Tati Boyd",
+        "position": "F/D",
+        "class_year": "Sr.",
+        "hometown": "Chula Vista, CA"
+      },
+      {
+        "player_name": "Kelly Levengood",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "West Deptford, NJ"
+      },
+      {
+        "player_name": "Alex Gordon",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Virginia Beach, VA"
+      },
+      {
+        "player_name": "Clara Cañas",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Entre Ríos, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Victoria Nazar",
+        "position": "M/D",
+        "class_year": "5th Year",
+        "hometown": "Yerba Buena, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Luci Hollister",
+        "position": "G",
+        "class_year": "So.",
+        "hometown": "Auckland, Nueva Zelanda",
+        "country": "Nueva Zelanda"
+      },
+      {
+        "player_name": "Madison Geiger",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Mountain Top, PA"
+      },
+      {
+        "player_name": "Tessa Lambright",
+        "position": "G",
+        "class_year": "Jr.",
+        "hometown": "Mission Hills, KS"
+      }
+    ]
+  },
+  {
+    "school": "University of Pennsylvania – Penn",
+    "season": 2026,
+    "source": "Sitio oficial de Penn Athletics (pennathletics.com), plantel 2026",
+    "source_url": "https://pennathletics.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Samira Rafide",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Santiago, Chile",
+        "country": "Chile"
+      },
+      {
+        "player_name": "Reese Czajkowski",
+        "position": "F/M",
+        "class_year": "Jr.",
+        "hometown": "Berwyn, Pa."
+      },
+      {
+        "player_name": "Sarah Ding",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "St. Louis, Mo."
+      },
+      {
+        "player_name": "Ellie Almeida",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Kennett Square, Pa."
+      },
+      {
+        "player_name": "Anna Fisher",
+        "position": "D/M",
+        "class_year": "Fr.",
+        "hometown": "Lancaster, Pa."
+      },
+      {
+        "player_name": "Honor Roberts",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Winnetka, Ill."
+      },
+      {
+        "player_name": "Sydney Mandato",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Gwynedd Valley, Pa."
+      },
+      {
+        "player_name": "Zola Piekarski",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Concord, Mass."
+      },
+      {
+        "player_name": "Bebe Smith",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Columbus, Ohio"
+      },
+      {
+        "player_name": "Beau Lilly Barrington-Hibbert",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Suffolk, Inglaterra",
+        "country": "Inglaterra"
+      },
+      {
+        "player_name": "Leah Foltyn",
+        "position": "M/F",
+        "class_year": "Fr.",
+        "hometown": "Bel Air, Md."
+      },
+      {
+        "player_name": "Riley Thomson",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Perth, Escocia",
+        "country": "Escocia"
+      },
+      {
+        "player_name": "Victoria Manzur",
+        "position": "M/D",
+        "class_year": "Fr.",
+        "hometown": "Mareil-Marly, Francia",
+        "country": "Francia"
+      },
+      {
+        "player_name": "Emma Nahon",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Westport, Conn."
+      },
+      {
+        "player_name": "Megan Frank",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Ellicott City, Md."
+      },
+      {
+        "player_name": "Maggie Koo",
+        "position": "M/D",
+        "class_year": "Fr.",
+        "hometown": "Los Ángeles, Calif."
+      },
+      {
+        "player_name": "Naomi Esterowitz",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Rockville, Md."
+      },
+      {
+        "player_name": "Lucy Mangat",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Wimbledon, Inglaterra",
+        "country": "Inglaterra"
+      },
+      {
+        "player_name": "Maxi Aranowitz",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Roseland, N.J."
+      },
+      {
+        "player_name": "Darcey Chapman",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Summit, N.J."
+      },
+      {
+        "player_name": "Jazmin Borensztein",
+        "position": "D/M",
+        "class_year": "So.",
+        "hometown": "Buenos Aires, Argentina",
+        "country": "Argentina"
+      },
+      {
+        "player_name": "Ruby de Frees",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Crofton, Md."
+      }
     ]
   }
 ]
