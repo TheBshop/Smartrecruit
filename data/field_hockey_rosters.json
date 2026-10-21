@@ -622,5 +622,222 @@
         "hometown": "Hillsborough, N.J."
       }
     ]
+  },
+  {
+    "school": "Newberry College",
+    "season": 2026,
+    "source": "Sitio oficial de Newberry Athletics (newberrywolves.com), plantel 2026",
+    "source_url": "https://newberrywolves.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Graysen Wright",
+        "position": null,
+        "class_year": "So.",
+        "hometown": "Princess Anne, MD"
+      },
+      {
+        "player_name": "Mia Pancoast",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Upper Township, N.J."
+      },
+      {
+        "player_name": "Emma Swatski",
+        "position": "M/D",
+        "class_year": "Jr.",
+        "hometown": "New Holland, Pa."
+      },
+      {
+        "player_name": "Charlee Thompson",
+        "position": "M/F",
+        "class_year": "So.",
+        "hometown": "White Plains, MD"
+      },
+      {
+        "player_name": "Philine Kuipers",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Loenen aan de Vecht, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Faye Siekmann",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Den Haag, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Olivia Schrecker",
+        "position": "M/F",
+        "class_year": "Jr.",
+        "hometown": "Crestwood, KY"
+      },
+      {
+        "player_name": "Finet Heemskerk",
+        "position": "M/F",
+        "class_year": "Jr.",
+        "hometown": "Ede, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Halle Tarbox",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Belfast, ME"
+      },
+      {
+        "player_name": "Eileen O'Brien",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Oceanside, CA"
+      },
+      {
+        "player_name": "Amber Tozana",
+        "position": null,
+        "class_year": "Fr.",
+        "hometown": "Bulawayo, Zimbabue",
+        "country": "Zimbabue"
+      },
+      {
+        "player_name": "Loeke Verwijmeren",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Heemstede, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Payton Keeler",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Bridgeville, DE"
+      },
+      {
+        "player_name": "Wibien Dahmen",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Bavel, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Parker Keeler",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Bridgeville, DE"
+      },
+      {
+        "player_name": "Georgia Langley",
+        "position": null,
+        "class_year": "Fr.",
+        "hometown": "Melbourne, Australia",
+        "country": "Australia"
+      },
+      {
+        "player_name": "Abby Langlois",
+        "position": null,
+        "class_year": "Sr.",
+        "hometown": "Reading, PA"
+      },
+      {
+        "player_name": "Reagan Street",
+        "position": null,
+        "class_year": "Fr.",
+        "hometown": null
+      },
+      {
+        "player_name": "Cassandra Mauck",
+        "position": null,
+        "class_year": "Fr.",
+        "hometown": null
+      },
+      {
+        "player_name": "Katie Sharron",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Unity, NH"
+      },
+      {
+        "player_name": "Elise Santhagen",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Ambacht, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Zoe Barker",
+        "position": null,
+        "class_year": "Jr.",
+        "hometown": "Chesterfield, VA"
+      },
+      {
+        "player_name": "Ella Weinhold",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Rindge, NH"
+      },
+      {
+        "player_name": "Karlijn Frenken",
+        "position": null,
+        "class_year": "Fr.",
+        "hometown": "Haarlem, Países Bajos",
+        "country": "Países Bajos"
+      },
+      {
+        "player_name": "Olivia Smith",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": null
+      },
+      {
+        "player_name": "Emma Ray",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "West Babylon, NY"
+      },
+      {
+        "player_name": "Emme Beck",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Manahawkin, NJ"
+      },
+      {
+        "player_name": "Rosie Migounoff",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Auckland, Nueva Zelanda",
+        "country": "Nueva Zelanda"
+      },
+      {
+        "player_name": "Madison Schiffbauer",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Cape May, NJ"
+      },
+      {
+        "player_name": "Savana Lippe",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "West Babylon, NY"
+      },
+      {
+        "player_name": "Kensley Harris",
+        "position": "G",
+        "class_year": "So.",
+        "hometown": "Hampton Falls, NH"
+      },
+      {
+        "player_name": "Ayanda Mangenah",
+        "position": "G",
+        "class_year": "Fr.",
+        "hometown": "Marondera, Zimbabue",
+        "country": "Zimbabue"
+      },
+      {
+        "player_name": "Cayla Wiggins",
+        "position": "G",
+        "class_year": "So.",
+        "hometown": "Bloomfield, MI"
+      }
+    ]
   }
 ]
