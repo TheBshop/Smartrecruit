@@ -3511,6 +3511,7 @@ function ComposeLinks({ profile, r }) {
   const ovKey = selName ? `${r.university}|${selName}` : null;
   const savedOv = ovKey ? (readJSON("rr_coach_emails", {})[ovKey] || "") : "";
   const [emailDraft, setEmailDraft] = useState("");
+  const [markedSent, setMarkedSent] = useState(false);
   useEffect(() => { setEmailDraft(savedOv || (sel && sel.email) || ""); }, [ovKey, savedOv, sel && sel.email]);
   // El saludo y el mail cambian según el coach elegido.
   const base = composeEmail({ profile, university: r.university, r: { ...r, coachName: selName || r.coachName }, kind: "first", lang });
@@ -3527,7 +3528,8 @@ function ComposeLinks({ profile, r }) {
   const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const outlookUrl = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const mailtoUrl = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  const track = () => trackOutreach({ university: r.university, sport: profile.sport, coachName: selName, coachEmail: to || null, kind: "first", hook: base.hook, lang, ai: false, subject });
+  // Se anota solo cuando el usuario marca "Ya lo envié": copiar o abrir el mail no cuenta como envío.
+  const track = () => { trackOutreach({ university: r.university, sport: profile.sport, coachName: selName, coachEmail: to || null, kind: "first", hook: base.hook, lang, ai: false, subject }); setMarkedSent(true); };
   const timing = contactWindowNote(profile);
 
   return (
@@ -3560,11 +3562,15 @@ function ComposeLinks({ profile, r }) {
           {timing && <p style={{ fontSize: 12, color: timing.ok ? "var(--field-dark)" : "#9a6a12", margin: "0 0 10px" }}>{timing.ok ? "🟢 " : "🟡 "}{timing.text}</p>}
           <textarea className="rm-compose-text" readOnly value={`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`} rows={12} />
           <div className="rm-compose-actions">
-            <a className="rm-compose-btn" href={gmailUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Gmail</a>
-            <a className="rm-compose-btn" href={outlookUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Outlook</a>
-            <a className="rm-compose-btn" href={mailtoUrl} onClick={track}>Abrir en Mail (iCloud/Apple/otro)</a>
-            <button className="rm-compose-btn" onClick={() => { navigator.clipboard.writeText(`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`); track(); }}>Copiar texto</button>
+            <a className="rm-compose-btn" href={gmailUrl} target="_blank" rel="noreferrer">Abrir en Gmail</a>
+            <a className="rm-compose-btn" href={outlookUrl} target="_blank" rel="noreferrer">Abrir en Outlook</a>
+            <a className="rm-compose-btn" href={mailtoUrl}>Abrir en Mail (iCloud/Apple/otro)</a>
+            <button className="rm-compose-btn" onClick={() => { try { navigator.clipboard.writeText(`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`); } catch (e) { /* sin portapapeles */ } }}>Copiar texto</button>
           </div>
+          <p style={{ fontSize: 12.5, color: "var(--ink-soft)", margin: "10px 0 6px" }}>Copiá o abrí el mail, envialo desde tu cuenta y, cuando lo hayas mandado, marcalo acá.</p>
+          {markedSent
+            ? <p style={{ fontSize: 13, color: "var(--field-dark)", margin: 0 }}>✓ Anotado en Mis envíos.</p>
+            : <button className="rm-btn-inline" style={{ fontSize: 13 }} onClick={track}>✓ Ya lo envié</button>}
           <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--line)" }}>
             <button className="rm-btn-inline" style={{ fontSize: 12.5 }} onClick={() => downloadFollowUpICS(profile, r, selName)}>
               📅 Agendar recordatorio para reescribirle a este coach en 10 días
@@ -7247,7 +7253,7 @@ function OutreachHistoryPage({ profile, setStage }) {
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
       <h2 className="rm-condensed">Mis envíos</h2>
-      <p className="rm-hint">Todos los mails que registraste: a qué coach le escribiste, cuándo y de qué tipo. Se anota cuando tocás "Copiar texto" o "Gmail" en Mi correo; Smartrecruit no envía nada por vos.</p>
+      <p className="rm-hint">Todos los mails que registraste: a qué coach le escribiste, cuándo y de qué tipo. Se anota cuando marcás "Ya lo envié" en Mi correo; Smartrecruit no envía nada por vos.</p>
 
       {entries.length === 0 ? (
         <div className="rm-alert" style={{ marginTop: 16 }}>
