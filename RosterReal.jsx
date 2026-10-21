@@ -8746,7 +8746,6 @@ function OpportunitiesBoard({ profile }) {
    check-in semanal (video + números), el próximo coach para escribirle y las búsquedas
    nuevas para su clase. Todo sale de datos que ya tiene el sitio.
 --------------------------------------------------------------- */
-const SITE_BUILD_DATE = "2026-09-20";
 
 function todayKey() { return new Date().toLocaleDateString("en-CA"); }
 // Guarda en el navegador y, si hay sesión iniciada, programa la sincronización con la cuenta.
@@ -8988,7 +8987,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
 
       <BackupBox />
       <p className="rm-today-note" style={{ marginTop: 18 }}>
-        {dataAsOf ? `Búsquedas actualizadas el ${formatLongDate(dataAsOf)}.` : `Datos incluidos en la versión del sitio del ${formatLongDate(SITE_BUILD_DATE + "T12:00:00")}.`} Tu progreso se guarda en este navegador.
+        {dataAsOf ? `Búsquedas actualizadas el ${formatLongDate(dataAsOf)}. ` : ""}Tu progreso se guarda en este navegador.
       </p>
     </div>
   );
