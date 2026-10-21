@@ -7917,6 +7917,21 @@ function planTasksFor(profile) {
   if (!p.videoLink) tasks.push({ id: "gap-video", title: "Subí el link de tu video de highlights", go: "form" });
   if (!p.position || !p.major) tasks.push({ id: "gap-pos", title: "Completá posición y carrera en tu perfil", go: "form" });
   if (!p.englishTest) tasks.push({ id: "gap-english", title: "Cargá tu examen de inglés (o marcá que todavía no lo rendiste)", go: "form" });
+  // Fechas del calendario de tu deporte: lo que pasa hoy o en los próximos 30 días.
+  const calKey = p.sport ? sportCalendarKey(p.sport, p.gender) : null;
+  const cal = calKey ? SPORT_CALENDARS[calKey] : null;
+  if (cal) {
+    const t0 = todayKey();
+    (cal.events || []).forEach((ev) => {
+      const startIn = Math.round((new Date(ev.start) - new Date(t0)) / 86400000);
+      const endIn = Math.round((new Date(ev.end) - new Date(t0)) / 86400000);
+      if (startIn <= 0 && endIn >= 0) tasks.push({ id: `cal-now-${ev.div}-${ev.start}`, title: `Ahora: ${ev.label} (${ev.div}) hasta el ${ev.end}. El período limita visitas y contacto en persona.`, go: "calendar" });
+      else if (startIn > 0 && startIn <= 30) tasks.push({ id: `cal-soon-${ev.div}-${ev.start}`, title: `En ${startIn} día${startIn === 1 ? "" : "s"}: empieza ${ev.label} (${ev.div}). Dejá listos tus mails antes.`, go: "calendar" });
+    });
+  }
+  // Revisión semanal de tu cuenta de NCAA (lunes).
+  if (new Date().getDay() === 1) tasks.push({ id: "weekly-ncaa", title: "Revisá tu cuenta de NCAA Eligibility Center: documentos pendientes o pedidos de la universidad", go: "eligibility" });
+
   let log = {};
   try { log = readOutreachLog() || {}; } catch (e) {}
   Object.values(log).forEach((e) => {
