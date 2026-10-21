@@ -1064,6 +1064,7 @@ RUGBY_NCR_PROGRAMS.forEach(([School, Division, Conference, City, State]) => {
 const RUGBY_WOMEN_COACH = {};
 RUGBY_WOMEN_PROGRAMS.forEach((r) => {
   RUGBY_WOMEN_COACH[r.School] = r.Coach;
+  if (r.Email) COACH_CONTACTS_BY_PROGRAM[`${r.School}|Rugby|F`] = { name: r.Coach, title: r.Title || "Head Coach", email: r.Email, generic: false, updated: "2026-10-21", assistants: [], source: r.Source };
   if (PROGRAMS_ALL_SPORTS.some((p) => p.School === r.School && p.sport === "Rugby" && p.Gender === "F")) return;
   PROGRAMS_ALL_SPORTS.push({ School: r.School, City: "", State: "", Conference: r.Conference, Division: r.Division, sport: "Rugby", Gender: "F", source: "The Rugby Breakdown" });
 });
