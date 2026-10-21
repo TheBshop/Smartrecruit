@@ -1569,5 +1569,157 @@
         "hometown": "Pine Township, PA"
       }
     ]
+  },
+  {
+    "school": "Saint Anselm College",
+    "season": 2026,
+    "source": "Sitio oficial de Saint Anselm Athletics (saintanselmhawks.com), plantel 2026",
+    "source_url": "https://saintanselmhawks.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Layla Cameron",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "East Greenwich, RI"
+      },
+      {
+        "player_name": "Eliza Doyon",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Biddeford, ME"
+      },
+      {
+        "player_name": "Meghan Carey",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "South Hadley, MA"
+      },
+      {
+        "player_name": "Olivia Baran",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Swampscott, MA"
+      },
+      {
+        "player_name": "Leila Härtel",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Mannheim, Germany"
+      },
+      {
+        "player_name": "Riley Lombard",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Newburyport, MA"
+      },
+      {
+        "player_name": "Sophie Smith",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Yarmouth, ME"
+      },
+      {
+        "player_name": "Alexa Garthee",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Marstons Mills, MA"
+      },
+      {
+        "player_name": "Colleen Stankiewicz",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Manchester, NH"
+      },
+      {
+        "player_name": "Lindsay Ducharme",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Brentwood, NH"
+      },
+      {
+        "player_name": "Lia Arevalo",
+        "position": "F/M",
+        "class_year": "Fr.",
+        "hometown": "Westford, MA"
+      },
+      {
+        "player_name": "Alison Chambers",
+        "position": "M/D",
+        "class_year": "Fr.",
+        "hometown": "Hooksett, NH"
+      },
+      {
+        "player_name": "Brooke Waters",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Swampscott, MA"
+      },
+      {
+        "player_name": "Maggie McCready",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Canton, MA"
+      },
+      {
+        "player_name": "Ruby Reid",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Fitchburg, MA"
+      },
+      {
+        "player_name": "Kelly Holmes",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Norfolk, MA"
+      },
+      {
+        "player_name": "Eva Thomson",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Medfield, MA"
+      },
+      {
+        "player_name": "Laurentien van den Akker",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Geldrop, Netherlands"
+      },
+      {
+        "player_name": "Brooke Fallon",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Amherst, NH"
+      },
+      {
+        "player_name": "Khloe Schultz",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Sandwich, MA"
+      },
+      {
+        "player_name": "Avery Duteau",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Gardner, MA"
+      },
+      {
+        "player_name": "Meghan Smith",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Uxbridge, MA"
+      },
+      {
+        "player_name": "Bella DiFiore",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Andover, MA"
+      },
+      {
+        "player_name": "Mackenzie Wehrum",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Garden City, NY"
+      }
+    ]
   }
 ]
