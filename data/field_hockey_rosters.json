@@ -1156,5 +1156,418 @@
         "hometown": "Haddonfield, N.J."
       }
     ]
+  },
+  {
+    "school": "Adelphi University",
+    "season": 2026,
+    "source": "Sitio oficial de Adelphi Athletics (aupanthers.com), plantel 2026",
+    "source_url": "https://aupanthers.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Sydney Flores",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "East Moriches, NY"
+      },
+      {
+        "player_name": "Izzy Leclair",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Foxboro, MA"
+      },
+      {
+        "player_name": "Lana Mignon De Wet",
+        "position": "M/D",
+        "class_year": "Sr.",
+        "hometown": "Pretoria, South Africa"
+      },
+      {
+        "player_name": "Parris Duenas",
+        "position": "F/M",
+        "class_year": "So.",
+        "hometown": "East Northport, NY"
+      },
+      {
+        "player_name": "Jody Van Aardt",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Plettenberg Bay, South Africa"
+      },
+      {
+        "player_name": "Marta Alvarez Auguet",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Terrassa, Spain"
+      },
+      {
+        "player_name": "Giulia Francese",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Miller Place, NY"
+      },
+      {
+        "player_name": "Alexis Huntington",
+        "position": "D/M",
+        "class_year": "Sr.",
+        "hometown": "Greenlawn, NY"
+      },
+      {
+        "player_name": "Jena Geels",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Hilversum, Netherlands"
+      },
+      {
+        "player_name": "Olivia Docyk",
+        "position": "D/M",
+        "class_year": "Sr.",
+        "hometown": "Carle Place, NY"
+      },
+      {
+        "player_name": "Hadasah Roa",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Carle Place, NY"
+      },
+      {
+        "player_name": "Mieke van Antwerpen",
+        "position": "F/M/D",
+        "class_year": "Fr.",
+        "hometown": "Pretoria, South Africa"
+      },
+      {
+        "player_name": "Ashlynn Gartland",
+        "position": "M/D",
+        "class_year": "Fr.",
+        "hometown": "Port Jefferson Station, NY"
+      },
+      {
+        "player_name": "Caroline Beakes",
+        "position": "F/M",
+        "class_year": "Sr.",
+        "hometown": "Westminster, MD"
+      },
+      {
+        "player_name": "Kristi Santos",
+        "position": "F/M",
+        "class_year": "Sr.",
+        "hometown": "Lindenhurst, NY"
+      },
+      {
+        "player_name": "Emily Souke",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "East Sandwich, MA"
+      },
+      {
+        "player_name": "Julia Smith",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "North Attleboro, MA"
+      },
+      {
+        "player_name": "Madison DeLeon",
+        "position": "F/M",
+        "class_year": "Fr.",
+        "hometown": "Westbury, NY"
+      },
+      {
+        "player_name": "Nina Corbett",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Northport, NY"
+      },
+      {
+        "player_name": "Tayla Szmak",
+        "position": "GK",
+        "class_year": "Jr.",
+        "hometown": "Boonton, NJ"
+      },
+      {
+        "player_name": "Olivia Zummo",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "East Setauket, NY"
+      },
+      {
+        "player_name": "Allison Gregory",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Glen Allen, VA"
+      }
+    ]
+  },
+  {
+    "school": "Converse University",
+    "season": 2026,
+    "source": "Sitio oficial de Converse Athletics (govalkyries.com), plantel 2026",
+    "source_url": "https://govalkyries.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Brooke Burgin",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Asheville, NC"
+      },
+      {
+        "player_name": "Autumn Kern",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Lusby, MD"
+      },
+      {
+        "player_name": "Isabella Massafra",
+        "position": "M/F",
+        "class_year": "So.",
+        "hometown": "Morgantown, PA"
+      },
+      {
+        "player_name": "Haleigh Dowling",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Egg Harbor, NJ"
+      },
+      {
+        "player_name": "Sol Garcia Berro",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Buenos Aires, Argentina"
+      },
+      {
+        "player_name": "Zelda Pretorius",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Benoni, South Africa"
+      },
+      {
+        "player_name": "Ashley Shoffner",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Fredericksburg, VA"
+      },
+      {
+        "player_name": "Emma Hicks",
+        "position": "D/M",
+        "class_year": "Fr.",
+        "hometown": "Fredericksburg, VA"
+      },
+      {
+        "player_name": "Edith Swaan",
+        "position": "F/M/D",
+        "class_year": "Jr.",
+        "hometown": "Leidschendam, Netherlands"
+      },
+      {
+        "player_name": "Vania Toranzo",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Lima, Peru"
+      },
+      {
+        "player_name": "Mady Ryan",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Fredericksburg, VA"
+      },
+      {
+        "player_name": "Carmen Heisterkamp",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Brasschaat, Belgium"
+      },
+      {
+        "player_name": "Cameran Huyett",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "West Lawn, PA"
+      },
+      {
+        "player_name": "Chelsy Bunse",
+        "position": "M/D",
+        "class_year": "Sr.",
+        "hometown": "Oberhausen, Germany"
+      },
+      {
+        "player_name": "Camille Hordies",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Virginal, Belgium"
+      },
+      {
+        "player_name": "Alina Puentes",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "King George, VA"
+      }
+    ]
+  },
+  {
+    "school": "Indiana University of Pennsylvania",
+    "season": 2026,
+    "source": "Sitio oficial de IUP Athletics (iupathletics.com), plantel 2026",
+    "source_url": "https://iupathletics.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Elsa Parsons",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Perkasie, PA"
+      },
+      {
+        "player_name": "Lauren Horning",
+        "position": "ATK",
+        "class_year": "Sr.",
+        "hometown": "New Holland, PA"
+      },
+      {
+        "player_name": "Kayla Mullin",
+        "position": "ATK",
+        "class_year": "So.",
+        "hometown": "Ambler, PA"
+      },
+      {
+        "player_name": "Nina Stanich",
+        "class_year": "Fr.",
+        "hometown": "Cape Town, South Africa"
+      },
+      {
+        "player_name": "Kasey Rieger",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Langhorne, PA"
+      },
+      {
+        "player_name": "Kenzie Rutledge",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Gainesville, VA"
+      },
+      {
+        "player_name": "Sydney Schmouder",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Selinsgrove, PA"
+      },
+      {
+        "player_name": "Maddy Shtino",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Langhorne, PA"
+      },
+      {
+        "player_name": "Maura van de Plas",
+        "position": "ATK",
+        "class_year": "Jr.",
+        "hometown": "Netherlands"
+      },
+      {
+        "player_name": "Naomi Dawe",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "Toronto, Ontario, Canada"
+      },
+      {
+        "player_name": "Paige Garner",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Manheim, PA"
+      },
+      {
+        "player_name": "Hayven Mumma",
+        "position": "ATK",
+        "class_year": "So.",
+        "hometown": "Mechanicsburg, PA"
+      },
+      {
+        "player_name": "Leah Stuck",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Newport, PA"
+      },
+      {
+        "player_name": "Mia Gerick",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Hamburg, Germany"
+      },
+      {
+        "player_name": "Ella Talladay",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Milan, MI"
+      },
+      {
+        "player_name": "Kaydon Brandt",
+        "position": "M",
+        "class_year": "Fr.",
+        "hometown": "Duncannon, PA"
+      },
+      {
+        "player_name": "Grace McGeehan",
+        "position": "M",
+        "class_year": "Jr.",
+        "hometown": "Lansdale, PA"
+      },
+      {
+        "player_name": "Lucia Cisilino",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Tandil, Argentina"
+      },
+      {
+        "player_name": "Alyvia Herrold",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Selinsgrove, PA"
+      },
+      {
+        "player_name": "Amira Lux",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Berlin, Germany"
+      },
+      {
+        "player_name": "Kylee Hager",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Holland, PA"
+      },
+      {
+        "player_name": "Lilly Fringer",
+        "position": "M",
+        "class_year": "Sr.",
+        "hometown": "Dillsburg, PA"
+      },
+      {
+        "player_name": "Celeste Gorria Rial",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Buenos Aires, Argentina"
+      },
+      {
+        "player_name": "Alaina Tarnoci",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Mechanicsburg, PA"
+      },
+      {
+        "player_name": "Celeste Pagliaroli",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Yorktown Heights, NY"
+      },
+      {
+        "player_name": "Meghan Fritter",
+        "position": "GK",
+        "class_year": "Jr.",
+        "hometown": "Edgewater, MD"
+      },
+      {
+        "player_name": "Kaelin Koehler",
+        "position": "GK",
+        "class_year": "Fr.",
+        "hometown": "Pine Township, PA"
+      }
+    ]
   }
 ]
