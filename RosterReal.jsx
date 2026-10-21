@@ -725,7 +725,7 @@ function matchFromEada(profile, exclude, limit = 8) {
     const division = eadaDivision(e.cls);
     const sch = scholarshipInfo(division, profile.sport, g);
     const covSig = coverageAdmissionSignals(university, division, profile.sport, g, profile);
-    if (!(e.aid[i] > 0) && !["cubierto", "cerca"].includes(covSig.cov.status)) continue;
+    // Sin ayuda financiera ni cobertura, la opción igual entra: tierFor la baja a "Aspiracional" y lo explica en `why`.
     score += covSig.delta; reasons.push(...covSig.reasons);
     out.push({
       university, division, place: `${e.city || ""}${e.city ? ", " : ""}${e.st}`,
@@ -8289,7 +8289,7 @@ function Results({ profile, onBack, onOpenSchool }) {
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 40 }}>
       <button className="rm-back" onClick={onBack}>← Editar mi perfil</button>
       <h2 className="rm-condensed" style={{ fontSize: 26, marginBottom: 6 }}>
-        Tus {top.length} mejores opciones para {profile.name || "tu perfil"}, {profile.sport} {profile.gender === "F" ? "femenino" : "masculino"}, ingreso {getEntryYear(profile)}
+        Tus {total} opciones para {profile.name || "tu perfil"}, {profile.sport} {profile.gender === "F" ? "femenino" : "masculino"}, ingreso {getEntryYear(profile)} ({top.length} destacadas)
       </h2>
       <p className="rm-hint" style={{ marginBottom: 12 }}>
         Ordenadas por score explicado (necesidad real + nivel vs. plantel donde hay roster + realismo de beca por división). No son promesas — son puntos de partida para escribirle al coach.
