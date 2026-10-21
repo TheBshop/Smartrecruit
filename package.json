@@ -2,8 +2,14 @@
   "name": "smartrecruit",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp -r public/. dist/ && esbuild main.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV=\\\"production\\\" --outfile=dist/assets/index.js"
+    "build": "rm -rf dist && mkdir -p dist && cp -r public/. dist/ && esbuild main.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV=\\\"production\\\" --outfile=dist/assets/index.js && V=$(date +%s) && for f in dist/index.html dist/privacidad/index.html dist/terminos/index.html; do sed -i \"s/?v=[0-9a-z]*/?v=$V/g\" \"$f\"; done"
   },
-  "dependencies": { "react": "^19.0.0", "react-dom": "^19.0.0", "@supabase/supabase-js": "^2.45.0" },
-  "devDependencies": { "esbuild": "^0.24.0" }
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
 }
