@@ -839,5 +839,322 @@
         "hometown": "Bloomfield, MI"
       }
     ]
+  },
+  {
+    "school": "Bentley University",
+    "season": 2026,
+    "source": "Sitio oficial de Bentley Athletics (bentleyfalcons.com), plantel 2026",
+    "source_url": "https://bentleyfalcons.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Sophie Manchester",
+        "position": "F/MF",
+        "class_year": "So.",
+        "hometown": "Windham, N.H."
+      },
+      {
+        "player_name": "Mia Gallinelli",
+        "position": "MF/F",
+        "class_year": "Jr.",
+        "hometown": "Windham, N.H."
+      },
+      {
+        "player_name": "Sheila Mullins",
+        "position": "D/MF",
+        "class_year": "Sr.",
+        "hometown": "Garden City, N.Y."
+      },
+      {
+        "player_name": "Emily Stagnone",
+        "position": "MF/F",
+        "class_year": "Sr.",
+        "hometown": "Chelmsford, Mass."
+      },
+      {
+        "player_name": "Makenzie Dutch",
+        "position": "D/MF",
+        "class_year": "So.",
+        "hometown": "Mullica Hill, N.J."
+      },
+      {
+        "player_name": "Cora Bolduc",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "Saco, Maine"
+      },
+      {
+        "player_name": "Emily Spadorcia",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Norwood, Mass."
+      },
+      {
+        "player_name": "Ava Lamacchia",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Watertown, Mass."
+      },
+      {
+        "player_name": "Amelia Felicetti",
+        "position": "MF",
+        "class_year": "So.",
+        "hometown": "Worcester, Mass."
+      },
+      {
+        "player_name": "Alli Hovsepian",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Waltham, Mass."
+      },
+      {
+        "player_name": "Shannon Paul",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Andover, Mass."
+      },
+      {
+        "player_name": "Tess Denault",
+        "position": "M",
+        "class_year": "So.",
+        "hometown": "East Longmeadow, Mass."
+      },
+      {
+        "player_name": "Elizabeth van Meeteren",
+        "position": "M/D",
+        "class_year": "So.",
+        "hometown": "East Greenwich, R.I."
+      },
+      {
+        "player_name": "Lindsey Jacobs",
+        "position": "MF",
+        "class_year": "Sr.",
+        "hometown": "Walpole, Mass."
+      },
+      {
+        "player_name": "Abby Lowe",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Salem, Mass."
+      },
+      {
+        "player_name": "Nina Husak",
+        "position": "D/MF",
+        "class_year": "Sr.",
+        "hometown": "Boxford, Mass."
+      },
+      {
+        "player_name": "Nicole Hartz",
+        "position": "MF/D",
+        "class_year": "Jr.",
+        "hometown": "Wall, N.J."
+      },
+      {
+        "player_name": "Eveline Ronzoni",
+        "position": "F/MF",
+        "class_year": "Jr.",
+        "hometown": "Cohasset, Mass."
+      },
+      {
+        "player_name": "Layla Conway",
+        "position": "F/MF",
+        "class_year": "Jr.",
+        "hometown": "Skowhegan, Maine"
+      },
+      {
+        "player_name": "Isabella Tuccio",
+        "position": "MF",
+        "class_year": "Sr.",
+        "hometown": "Ridgefield, Conn."
+      },
+      {
+        "player_name": "Madeline Krepelka",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Arlington, Mass."
+      },
+      {
+        "player_name": "Avery Frommer",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Lancaster, Mass."
+      },
+      {
+        "player_name": "Kaitie Ryan",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "Scituate, Mass."
+      },
+      {
+        "player_name": "Kiara Russell",
+        "position": "D",
+        "class_year": "So.",
+        "hometown": "Boca Raton, Fla."
+      },
+      {
+        "player_name": "Lilly Cook",
+        "position": "F/MF",
+        "class_year": "So.",
+        "hometown": "Marion, Mass."
+      },
+      {
+        "player_name": "Elena Foresta",
+        "position": "D",
+        "class_year": "Sr.",
+        "hometown": "Wilmington, Del."
+      },
+      {
+        "player_name": "Jamie McLaren",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Bridgewater, Mass."
+      },
+      {
+        "player_name": "Olivia Heryla",
+        "position": "GK",
+        "class_year": "So.",
+        "hometown": "Easton, Pa."
+      },
+      {
+        "player_name": "Annie Lorenz",
+        "position": "GK",
+        "class_year": "Sr.",
+        "hometown": "Powell, Ohio"
+      }
+    ]
+  },
+  {
+    "school": "Wingate University",
+    "season": 2026,
+    "source": "Sitio oficial de Wingate Athletics (wingatebulldogs.com), plantel 2026",
+    "source_url": "https://wingatebulldogs.com/sports/field-hockey/roster",
+    "players": [
+      {
+        "player_name": "Colleen Emanuele",
+        "position": "G",
+        "class_year": "Jr.",
+        "hometown": "Massapequa, N.Y."
+      },
+      {
+        "player_name": "Addison Arnold",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "Whitehall, Md."
+      },
+      {
+        "player_name": "Ellie Berry",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Mooresville, N.C."
+      },
+      {
+        "player_name": "Alex Bevan-Xenelis",
+        "position": "MF",
+        "class_year": "Sr.",
+        "hometown": "Quakertown, Pa."
+      },
+      {
+        "player_name": "Grace Gerner",
+        "position": "MF",
+        "class_year": "Jr.",
+        "hometown": "Millersville, Pa."
+      },
+      {
+        "player_name": "Nyah Romão",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Portugal",
+        "country": "Portugal"
+      },
+      {
+        "player_name": "Samantha Pearson",
+        "position": "MF",
+        "class_year": "Sr.",
+        "hometown": "Johannesburgo, Sudáfrica"
+      },
+      {
+        "player_name": "Abby Cormier",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Freeport, Maine"
+      },
+      {
+        "player_name": "Jordyn Bunting",
+        "position": "MF",
+        "class_year": "Jr.",
+        "hometown": "Delmar, Md."
+      },
+      {
+        "player_name": "Ella Peterson",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Dagsboro, Del."
+      },
+      {
+        "player_name": "Jenna Derouaux",
+        "position": "F",
+        "class_year": "Sr.",
+        "hometown": "Red Lion, Pa."
+      },
+      {
+        "player_name": "Ella Stonehouse",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Windsor, N.Y."
+      },
+      {
+        "player_name": "Ava Stunder",
+        "position": "D",
+        "class_year": "Jr.",
+        "hometown": "Farmingville, N.Y."
+      },
+      {
+        "player_name": "Suzy Brown",
+        "position": "D",
+        "class_year": "Fr.",
+        "hometown": "Charlotte, N.C."
+      },
+      {
+        "player_name": "Kaitlyn Beltran",
+        "position": "F",
+        "class_year": "Fr.",
+        "hometown": "Middletown, Md."
+      },
+      {
+        "player_name": "Leyre Campo",
+        "position": "MF",
+        "class_year": "Fr.",
+        "hometown": "España"
+      },
+      {
+        "player_name": "Charne Steyn",
+        "position": "MF",
+        "class_year": "Sr.",
+        "hometown": "Benoni, Sudáfrica"
+      },
+      {
+        "player_name": "Emily Nunemaker",
+        "position": "F",
+        "class_year": "So.",
+        "hometown": "Gettysburg, Pa."
+      },
+      {
+        "player_name": "Amy Rossam",
+        "position": "F",
+        "class_year": "Jr.",
+        "hometown": "Johannesburgo, Sudáfrica"
+      },
+      {
+        "player_name": "Joanna Nesbitt",
+        "position": "MF",
+        "class_year": "Jr.",
+        "hometown": "Belfast, Irlanda del Norte"
+      },
+      {
+        "player_name": "Ava Fasolo",
+        "position": "G",
+        "class_year": "So.",
+        "hometown": "Haddonfield, N.J."
+      }
+    ]
   }
 ]

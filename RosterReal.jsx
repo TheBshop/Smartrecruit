@@ -336,14 +336,6 @@ Object.entries(PSAC_FH_STATS).forEach(([school, d]) => {
   ROSTERS_LOADED[key] = { school, sport: 'Field Hockey', gender: 'F', division: 'NCAA D2', statsLoaded: true, statsSeason: d.season, partial: !d.full, place: d.place, roster: d.roster };
 });
 
-// Planteles verificados en la web oficial de cada programa (data/field_hockey_rosters.json): reemplazan al roster anterior
-// y guardan su fuente. Así cada plantel muestra de dónde salió y con año de clase y posición.
-FH_ROSTER_OVERRIDES.forEach((o) => {
-  const key = ROSTERS_LOADED[`${o.school}::Field Hockey`] ? `${o.school}::Field Hockey` : o.school;
-  const cur = ROSTERS_LOADED[key];
-  if (!cur) return;
-  ROSTERS_LOADED[key] = { ...cur, roster: o.players.map((p) => ({ ...p, games_played: null, goals: null, assists: null, points: null })), season: o.season, source: o.source, sourceUrl: o.source_url, partial: false };
-});
 // Hockey sobre césped D2 — estadísticas individuales 2026 (temporada en curso, hasta el 12/10/2026) de 24 programas que no tenían plantel cargado.
 // Fuente: páginas oficiales de estadísticas y de plantel de cada universidad (Sidearm). Cada fila: [jugadora, PJ, titular, minutos, goles, asistencias, puntos, tiros, tiros al arco];
 // incluye arqueras (sin goles). Posición, clase y origen salen de la página de plantel. Entran como planteles PARCIALES; los programas que ya tenían plantel (PSAC) no se tocan.
@@ -1191,6 +1183,14 @@ function hoursLabel(h) {
 // Temporada a la que corresponden los rosters cargados (2026 = temporada 2026-27). El
 // básquet está confirmado como 2026-27; para el resto se asume la misma. Si se recarga un
 // roster de otra temporada, se cambia acá.
+// Planteles verificados en la web oficial de cada programa (data/field_hockey_rosters.json): reemplazan al roster anterior
+// y guardan su fuente. Así cada plantel muestra de dónde salió y con año de clase y posición.
+FH_ROSTER_OVERRIDES.forEach((o) => {
+  const key = ROSTERS_LOADED[`${o.school}::Field Hockey`] ? `${o.school}::Field Hockey` : o.school;
+  const cur = ROSTERS_LOADED[key];
+  if (!cur) return;
+  ROSTERS_LOADED[key] = { ...cur, roster: o.players.map((p) => ({ ...p, games_played: null, goals: null, assists: null, points: null })), season: o.season, source: o.source, sourceUrl: o.source_url, partial: false };
+});
 const ROSTER_BASE_SEASON = 2026;
 const MONTHS_ES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
