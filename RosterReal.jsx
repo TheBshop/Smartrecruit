@@ -7733,6 +7733,8 @@ function GpaCalculatorPage({ onUseInProfile }) {
 
 function ProfileForm({ onSubmit, initial }) {
   const [p, setP] = useState(initial ? { gradMonth: 12, ...initial } : emptyProfile);
+  const [step, setStep] = useState(0);
+  const STEP_LABELS = ["Vos", "Deporte", "Año y estadísticas", "Estudios y carrera", "Ayuda y familia", "Consentimiento"];
   const set = (k) => (e) => setP({ ...p, [k]: e.target.value });
   const setNum = (k) => (e) => setP({ ...p, [k]: parseFloat(e.target.value) || 0 });
 
@@ -7743,6 +7745,7 @@ function ProfileForm({ onSubmit, initial }) {
         <p className="rm-hint">Con esto cruzamos necesidades reales de coaches, reglas de beca por división y — donde ya tenemos roster cargado — tu nivel real contra el plantel.</p>
 
         <div className="rm-grid">
+          {step === 0 && (<>
           <div className="rm-field"><label>Nombre</label><input value={p.name} onChange={set("name")} placeholder="Para personalizar tus emails" /></div>
           <div className="rm-field"><label>Tu email (para enviar desde ahí)</label><input type="email" value={p.email} onChange={set("email")} placeholder="tu@email.com" /></div>
           <div className="rm-field"><label>Tu teléfono (opcional, va en la firma del email)</label><input type="tel" value={p.phone} onChange={set("phone")} placeholder="+54 9 11 xxxx-xxxx" /></div>
@@ -7750,6 +7753,8 @@ function ProfileForm({ onSubmit, initial }) {
           <div className="rm-field"><label>País de origen</label><input value={p.country} onChange={set("country")} list="rm-paises" autoComplete="country-name" />
             <datalist id="rm-paises">{["Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", "Ecuador", "España", "Guatemala", "México", "Panamá", "Paraguay", "Perú", "República Dominicana", "Uruguay", "Venezuela"].map((c) => <option key={c} value={c} />)}</datalist></div>
 
+          </>)}
+          {step === 1 && (<>
           <div className="rm-field"><label>Deporte</label>
             <select value={p.sport} onChange={(e) => { const v = e.target.value; setP((q) => ({ ...q, sport: v, position: POSITION_SELECT[v] && !POSITION_SELECT[v].includes(q.position) ? "" : q.position })); }}>{SPORTS.map((s) => <option key={s} value={s}>{s}{sportHasData(s) ? "" : " (próximamente)"}</option>)}</select>
             {(() => { const cv = sportCoverage(p.sport, p.gender); const n = (x) => x.toLocaleString("es-AR");
@@ -7773,6 +7778,8 @@ function ProfileForm({ onSubmit, initial }) {
             )}
             {POSITION_SELECT[p.sport] && <span style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 2 }}>Solo ves posiciones de {p.sport === "Soccer" ? "fútbol" : p.sport === "Basketball" ? "básquet" : p.sport === "Volleyball" ? "vóley" : p.sport === "Field Hockey" ? "hockey" : p.sport === "Rugby" ? "rugby" : p.sport}. Los coaches publican sus búsquedas con la sigla en inglés (por ejemplo, {(() => { const c = POSITION_SELECT[p.sport][POSITION_SELECT[p.sport].length - 1]; const e = (POSITION_NAMES[p.sport] || {})[c] || [c, c]; return `${c} = ${e[p.gender === "M" ? 1 : 0]}`; })()}); en Smartrecruit siempre te mostramos la traducción al lado.</span>}
           </div>
+          </>)}
+          {step === 2 && (<>
           <div className="rm-field"><label>Año de graduación de secundaria</label><input type="number" value={p.gradYear} onChange={setNum("gradYear")} /></div>
           <div className="rm-field"><label>Mes de graduación de secundaria</label>
             <select value={p.gradMonth || 12} onChange={(e) => setP({ ...p, gradMonth: parseInt(e.target.value, 10) })}>
@@ -7787,6 +7794,8 @@ function ProfileForm({ onSubmit, initial }) {
           <div className="rm-field"><label>{STAT_LABELS[p.sport] || isGoalkeeper(p) ? profileStatLabels(p, "es").assists : "Estadística clave #2 (por temporada)"}</label><input type="number" step="0.1" value={p.assists} onChange={setNum("assists")} /></div>
           {isGoalkeeper(p) && <div className="rm-field"><label>{GK_STAT_LABELS.es.gaa}</label><input type="number" step="0.01" min="0" value={p.gaa ?? ""} placeholder="ej: 0.85" onChange={(e) => setP({ ...p, gaa: e.target.value === "" ? "" : parseFloat(e.target.value) })} /></div>}
 
+          </>)}
+          {step === 3 && (<>
           <div className="rm-field"><label>Escala de tu promedio académico</label>
             <select value={p.gpaScale} onChange={set("gpaScale")}>{Object.entries(GPA_SCALES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select>
           </div>
@@ -7794,6 +7803,8 @@ function ProfileForm({ onSubmit, initial }) {
 
           <div className="rm-field rm-full"><label>Carrera que querés estudiar</label><input value={p.major} onChange={set("major")} /></div>
 
+          </>)}
+          {step === 4 && (<>
           <div className="rm-field rm-full"><label>¿Qué tipo de ayuda buscás?</label>
             <select value={p.goal} onChange={set("goal")}>
               <option value="completa">Que cubra todo el costo (beca deportiva, académica y ayuda financiera combinadas)</option>
@@ -7806,14 +7817,25 @@ function ProfileForm({ onSubmit, initial }) {
             <select value={p.familyIncome || ""} onChange={set("familyIncome")}>{INCOME_RANGES.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
           </div>
           <p className="rm-hint rm-full" style={{ margin: 0 }}>Con esto calculamos si cada universidad podría cubrir todo el costo combinando beca deportiva, académica y ayuda por necesidad. Incluí lo que puedan aportar entre toda la familia. Solo se usa para el cálculo.</p>
+          </>)}
         </div>
 
+        <div className="rm-wizard-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginTop: 18, flexWrap: "wrap" }}>
+          <button type="button" className="rm-btn-ghost" disabled={step === 0} style={{ opacity: step === 0 ? 0.4 : 1 }} onClick={() => { setStep(step - 1); window.scrollTo(0, 0); }}>← Anterior</button>
+          <span style={{ fontSize: 13, color: "var(--ink-soft)" }}>Paso {step + 1} de 6 · {STEP_LABELS[step]}</span>
+          {step < 5
+            ? <button type="button" className="rm-btn" disabled={step === 0 && !p.name.trim()} style={step === 0 && !p.name.trim() ? { opacity: 0.5, cursor: "not-allowed" } : undefined} onClick={() => { setStep(step + 1); window.scrollTo(0, 0); }}>Siguiente →</button>
+            : <span />}
+        </div>
+
+        {step === 5 && (<>
         <ConsentFields value={p.consent} onChange={(c) => setP({ ...p, consent: c })} />
         <div className="rm-actions">
           <button className="rm-btn" disabled={!consentIsValid(p.consent)} style={consentIsValid(p.consent) ? undefined : { opacity: 0.5, cursor: "not-allowed" }}
             onClick={() => { if (consentIsValid(p.consent)) onSubmit({ ...p, consent: { ...p.consent, version: LEGAL_VERSION, acceptedAt: (p.consent && p.consent.version === LEGAL_VERSION && p.consent.acceptedAt) || new Date().toISOString() } }); }}>Ver mis 10 universidades →</button>
           {!consentIsValid(p.consent) && <p className="rm-today-note" style={{ marginTop: 8 }}>Para seguir, contestá si sos mayor de edad y aceptá los Términos y la Política de Privacidad{p.consent && p.consent.minor ? ", con los datos y la conformidad de tu madre, padre o tutor" : ""}.</p>}
         </div>
+        </>)}
       </div>
     </div>
   );
