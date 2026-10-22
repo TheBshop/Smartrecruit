@@ -1,0 +1,665 @@
+{
+ "Adams State University": {
+  "name": "Nic Cantrell",
+  "title": "Head Coach",
+  "email": "ncantrell@adams.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Bianca Gutierrez",
+    "email": "bgutierrez@adams.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Albany State University": {
+  "name": "Todd Triplett",
+  "title": "Head Coach",
+  "email": "todd.triplett@asurams.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Yasmine Fairchild",
+    "email": "yasmine.fairchild@asurams.edu"
+   },
+   {
+    "name": "Sylvester Patterson",
+    "email": "sylvester.patterson@asurams.edu"
+   },
+   {
+    "name": "Ty'Janae Brown",
+    "email": "tyjanae.brown@asurams.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "American International College": {
+  "name": "Kristen Hutchison",
+  "title": "Head Coach",
+  "email": "Kristen.Hutchison@aic.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Destine Perry",
+    "email": "Destine.Perry@aic.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Angelo State University": {
+  "name": "Alesha Ellis",
+  "title": "Head Coach",
+  "email": "alesha.ellis@angelo.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Andy Ellis",
+    "email": "andrew.ellis@angelo.edu"
+   },
+   {
+    "name": "Stephanie Ruiz",
+    "email": "sruiz25@angelo.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Arkansas Tech University": {
+  "name": "Daryl Fimple",
+  "title": "Head Coach",
+  "email": "dfimple1@atu.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Assumption University": {
+  "name": "Kerry Phayre",
+  "title": "Head Coach",
+  "email": "kphayre@assumption.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Sue Cahill",
+    "email": "scahill@assumption.edu"
+   },
+   {
+    "name": "Franchesca Hammond"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Auburn University – Montgomery": {
+  "name": "Ashlee' Phillips",
+  "title": "Head Coach",
+  "email": "aphill36@aum.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Markus Black",
+    "email": "mblack10@aum.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Augusta University": {
+  "name": "Celeste Stewart",
+  "title": "Head Coach",
+  "email": "cestewart@augusta.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Mone Florence",
+    "email": "moflorence@augusta.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Augustana University – South Dakota": {
+  "name": "Nate Vogel",
+  "title": "Head Coach",
+  "email": "nate.vogel@augie.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Azusa Pacific University": {
+  "name": "Dan Ploog",
+  "title": "Head Coach",
+  "email": "dploog@apu.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Paige Uyehara",
+    "email": "puyehara@apu.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Barry University": {
+  "name": "Allison Bustamante",
+  "title": "Head Coach",
+  "email": "abustamante@barry.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Bria Brown",
+    "email": "bribrown@barry.edu"
+   },
+   {
+    "name": "Michael Spiliopoulos",
+    "email": "mspiliopoulos@barry.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Barton College": {
+  "name": "Eileen Van Horn",
+  "title": "Head Coach",
+  "email": "evanhorn@barton.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Shelby Wilbanks",
+    "email": "snwilbanks@barton.edu"
+   },
+   {
+    "name": "Kayla Byrne",
+    "email": "kbyrne@barton.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Bemidji State University": {
+  "name": "Madison McKeever",
+  "title": "Head Coach",
+  "email": "madison.mckeever@bemidjistate.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Erica Gartner",
+    "email": "erica.gartner@bemidjistate.edu"
+   },
+   {
+    "name": "Bodie Hadenfeldt"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Biola University": {
+  "name": "Mike Simonson",
+  "title": "Head Coach",
+  "email": "mike.simonson@biola.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Maya Duchesne",
+    "email": "maya.duchesne@biola.edu"
+   },
+   {
+    "name": "Sydney Burns",
+    "email": "sydney.burns@biola.edu"
+   },
+   {
+    "name": "Katie Simonson",
+    "email": "katie.simonson@biola.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Black Hills State University": {
+  "name": "Kelly Kruger",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Adam Schorzmann",
+    "email": "Adam.Schorzmann@bhsu.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Bluefield State University": {
+  "name": "Porsha Graves",
+  "title": "Head Coach",
+  "email": "pgraves@bluefieldstate.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Byron Brown",
+    "email": "bbrown@bluefieldstate.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Bowie State University": {
+  "name": "Shadae Swan",
+  "title": "Head Coach",
+  "email": "sswan@bowiestate.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State Polytechnic University – Pomona": {
+  "name": "Danelle Bishop",
+  "title": "Head Coach",
+  "email": "dmbishop@cpp.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Cassandra Lacey",
+    "email": "cmlacey@cpp.edu"
+   },
+   {
+    "name": "Sabrina White",
+    "email": "sawhite@cpp.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – Chico": {
+  "name": "Brian Fogel",
+  "title": "Head Coach",
+  "email": "bfogel@csuchico.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – Dominguez Hills": {
+  "name": "Nautica Morrow",
+  "title": "Interim Head Coach",
+  "email": "nmorrow3@csudh.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – East Bay": {
+  "name": "Jenny Thigpin",
+  "title": "Head Coach",
+  "email": "jenny.thigpin@csueastbay.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Miles Brookins",
+    "email": "miles.brookins@csueastbay.edu"
+   },
+   {
+    "name": "Jordyn Jackson"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – Los Angeles": {
+  "name": "Torino Johnson",
+  "title": "Head Coach",
+  "email": "tjohns70@calstatela.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Kameron McClinton",
+    "email": "kmcclin3@calstatela.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – Monterey Bay": {
+  "name": "Sarah Hopkins-Chery",
+  "title": "Head Coach",
+  "email": "shopkinschery@csumb.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Hillary Drinovsky",
+    "email": "hdrinovsky@csumb.edu"
+   },
+   {
+    "name": "Megan Kritscher",
+    "email": "mkritscher@csumb.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – San Bernardino": {
+  "name": "Dario Frias",
+  "title": "Head Coach",
+  "email": "dario.frias@csusb.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – San Marcos": {
+  "name": "Britinee Yasukochi",
+  "title": "Head Coach",
+  "email": "byasukochi@csusm.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State University – Stanislaus": {
+  "name": "Riley Holladay",
+  "title": "Interim Head Coach",
+  "email": "rholladay@csustan.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Cameron University": {
+  "name": "Jeff Mahoney",
+  "title": "Head Coach",
+  "email": "jmahoney@cameron.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "UV Williamson"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Carson-Newman University": {
+  "name": "Mike Mincey",
+  "title": "Head Coach",
+  "email": "mmincey@cn.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Dusty Nickles",
+    "email": "dnickles@cn.edu"
+   },
+   {
+    "name": "Braelyn Wykle",
+    "email": "bgwykle@cn.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Catawba College": {
+  "name": "Terence McCutcheon",
+  "title": "Head Coach",
+  "email": "tmccutch18@catawba.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Jordan Chavis",
+    "email": "jchavis@catawba.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Cedarville University": {
+  "name": "Addy Miller",
+  "title": "Head Coach",
+  "email": "addymiller@cedarville.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Kevin Obungu",
+    "email": "kobungu@cedarville.edu"
+   },
+   {
+    "name": "Janae Saunders",
+    "email": "janaesaunders@cedarville.edu"
+   },
+   {
+    "name": "Stephen Buettell",
+    "email": "stephenbuettell@cedarville.edu"
+   },
+   {
+    "name": "Colton Lino",
+    "email": "coltonlino@cedarville.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Central Washington University": {
+  "name": "Randi Richardson",
+  "title": "Head Coach",
+  "email": "RandiR@cwu.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Sam Bowman",
+    "email": "Samantha.Bowman@cwu.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Chadron State College": {
+  "name": "Jalen Little",
+  "title": "Head Coach",
+  "email": "jlittle@csc.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Chaminade University of Honolulu": {
+  "name": "Travis Brewster",
+  "title": "Head Coach",
+  "email": "wbasketball@chaminade.edu",
+  "generic": true,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Claflin University": {
+  "name": "Terrence Jenkins",
+  "title": "Head Coach",
+  "email": "terrence.jenkins@claflin.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Michael Bland",
+    "email": "mbland@claflin.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Clayton State University": {
+  "name": "Kaleena Coleman",
+  "title": "Head Coach",
+  "email": "KaleenaColeman@Clayton.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Colorado Christian University": {
+  "name": "Carissa Ratliff",
+  "title": "Head Coach",
+  "email": "cjratliff@ccu.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Colorado Mesa University": {
+  "name": "Taylor Wagner",
+  "title": "Head Coach",
+  "email": "twagner@coloradomesa.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Hannah Pollart",
+    "email": "hpollart@coloradomesa.edu"
+   },
+   {
+    "name": "Riley Hayes",
+    "email": "rhayes@coloradomesa.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Colorado School of Mines": {
+  "name": "Brittany Simpson",
+  "title": "Head Coach",
+  "email": "bsimpson@mines.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Taylor Harris",
+    "email": "taylor.harris@mines.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Colorado State University – Pueblo": {
+  "name": "Tommie Johnson",
+  "title": "Head Coach",
+  "email": "tommie.johnson@csupueblo.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Taylor Proctor",
+    "email": "taylor.proctor@csupueblo.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Columbus State University": {
+  "name": "Matt Houser",
+  "title": "Head Coach",
+  "email": "houser_matt@columbusstate.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Jada Walton",
+    "email": "walton_jada1@columbusstate.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Concord University": {
+  "name": "Tesla Southcott",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Morgan Mitchell",
+    "email": "mmitchell@concord.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Converse University": {
+  "name": "Kevin Lyons",
+  "title": "Head Coach",
+  "email": "kevin.lyons@converse.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Ami Yezman",
+    "email": "ami.yezman@converse.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Daemen University": {
+  "name": "Nate Beutel",
+  "title": "Head Coach",
+  "email": "nbeutel@daemen.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Davenport University": {
+  "name": "Shonda Sanders",
+  "title": "Head Coach",
+  "email": "shonda.sanders@davenport.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Dominique McBride",
+    "email": "dominique.mcbride@davenport.edu"
+   },
+   {
+    "name": "Jordyn Roberts",
+    "email": "jroberts57@davenport.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Dominican University of California": {
+  "name": "Tim LaKose",
+  "title": "Head Coach",
+  "email": "tim.lakose@dominican.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Kim Schmelz",
+    "email": "kim.schmelz@dominican.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Drury University": {
+  "name": "Kaci Bailey",
+  "title": "Head Coach",
+  "email": "kbailey012@drury.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Destiny Smith",
+    "email": "dsmith060@drury.edu"
+   },
+   {
+    "name": "Payton Richards",
+    "email": "prichards003@drury.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Adelphi University": {
+  "name": "Sade Jackson",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Anthony Angotti",
+    "email": "aangotti@adelphi.edu"
+   },
+   {
+    "name": "Zhaneia Thybulle",
+    "email": "zthybulle@adelphi.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Commonwealth University of Pennsylvania": {
+  "name": "Alison Tagliaferri",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Alyssa Carsia"
+   },
+   {
+    "name": "Maddie LaFrance"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Cal Poly Humboldt": {
+  "name": "Michelle Bento-Jackson",
+  "title": "Head Coach",
+  "email": "michelle.bento-jackson@humboldt.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Guillermo Blas Jr.",
+    "email": "gb923@humboldt.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "California State Polytechnic University, Humboldt": {
+  "name": "Michelle Bento-Jackson",
+  "title": "Head Coach",
+  "email": "michelle.bento-jackson@humboldt.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Guillermo Blas Jr.",
+    "email": "gb923@humboldt.edu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ }
+}
