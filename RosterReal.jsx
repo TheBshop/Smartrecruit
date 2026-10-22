@@ -8165,7 +8165,8 @@ function planTasksRaw(profile, now = new Date()) {
     tasks.push({ id: `p-m-results-${mk}`, title: "Este mes: volvé a mirar tus resultados. Cambian cuando los coaches publican búsquedas.", go: "results" });
     tasks.push({ id: `p-m-stats-${mk}`, title: "Este mes: actualizá estadísticas y video para que tus mails lleven lo último.", go: "form" });
   } else if (stage.key === "decision") {
-    tasks.push({ id: `p-w-reply-${wk}`, title: "Esta semana: contestá a cada coach que te escribió y anotá los avances en Mis envíos.", go: "history" });
+    // Solo si algún coach ya te contestó (si nadie respondió todavía, no hay a quién contestar).
+    if (Object.values(log).some((e) => e && ["respondio", "visita", "oferta"].includes(e.status))) tasks.push({ id: `p-w-reply-${wk}`, title: "Esta semana: contestá a cada coach que te escribió y anotá los avances en Mis envíos.", go: "history" });
     tasks.push({ id: `p-m-money-${mk}`, title: "Este mes: compará cuánto cubriría cada oferta con lo que tu familia puede pagar.", go: "money" });
     tasks.push({ id: `p-m-docs-${mk}`, title: "Este mes: dejá al día tus documentos (pasaporte, certificados de estudios traducidos, examen de inglés).", go: "eligibility" });
     tasks.push({ id: `p-w-outreach3-${wk}`, title: "Esta semana: sumá 2 o 3 coaches más a tu lista si todavía no tenés ofertas.", go: "catalog" });
