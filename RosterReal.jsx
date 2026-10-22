@@ -8349,18 +8349,10 @@ function planSinceText(startDate, now = new Date()) {
   const months = Math.floor(days / 30.4);
   return months < 24 ? `${months} meses` : `${(months / 12).toFixed(1).replace(".0", "")} años`;
 }
-function planStreak(doneByDay) {
-  const d = new Date();
-  if (!((doneByDay[todayKey()] || []).length)) d.setDate(d.getDate() - 1); // hoy todavía cuenta desde ayer
-  let n = 0;
-  for (let i = 0; i < 3650; i++) {
-    const k = d.toLocaleDateString("en-CA");
-    if (!((doneByDay[k] || []).length)) break;
-    n++; d.setDate(d.getDate() - 1);
-  }
-  return n;
-}
 // ---- Recordatorio semanal por email (Resend, desde una función de Supabase) ----
+// Pasar a true recién cuando la tabla email_reminders y la función send-weekly-reminders estén creadas en Supabase
+// (ver supabase/LEEME-recordatorios.md). Mientras sea false, el sitio no muestra ni consulta nada de esto.
+const EMAIL_REMINDERS_LIVE = false;
 // El sitio guarda un resumen corto (etapa, próxima acción, semana) para que el mail del domingo lo use.
 function reminderDigest(profile, now = new Date()) {
   const state = readPlanState();
@@ -8381,7 +8373,7 @@ function reminderDigest(profile, now = new Date()) {
 // Si la persona ya activó el recordatorio, se renueva el resumen cada vez que entra. Sin cuenta o sin la tabla: no hace nada.
 async function syncReminderDigest(profile) {
   try {
-    if (!profile) return;
+    if (!profile || !EMAIL_REMINDERS_LIVE) return;
     const { data } = await supabase.auth.getSession();
     const uid = data && data.session && data.session.user && data.session.user.id;
     if (!uid) return;
@@ -8400,7 +8392,7 @@ function ReminderEmailBox({ profile }) {
   }, []);
   const uid = session && session.user && session.user.id;
   useEffect(() => {
-    if (!uid) { setRow(undefined); return undefined; }
+    if (!uid || !EMAIL_REMINDERS_LIVE) { setRow(undefined); return undefined; }
     let alive = true;
     supabase.from("email_reminders").select("enabled").eq("user_id", uid).maybeSingle().then(
       ({ data, error }) => { if (alive) setRow(error ? false : (data || null)); },
@@ -8422,7 +8414,7 @@ function ReminderEmailBox({ profile }) {
     setRow({ enabled: next });
     setMsg(next ? "Listo: el próximo domingo te llega el primero." : "Listo: no te mandamos más recordatorios.");
   };
-  if (row === false) return null; // la tabla todavía no existe: no se muestra nada roto
+  if (!EMAIL_REMINDERS_LIVE || row === false) return null; // todavía no está activado o la tabla no existe: no se muestra nada roto
   return (
     <div style={{ marginTop: 18 }}>
       <h4 style={{ margin: "0 0 6px", fontSize: 15 }}>Recordatorio por email</h4>

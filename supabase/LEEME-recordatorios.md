@@ -19,14 +19,17 @@ Todo el código ya está en el repo. Falta lo que solo puede hacer el titular de
    - `CRON_SECRET` = una clave larga inventada (por ejemplo 40 letras y números al azar)
    - opcional: `REMINDER_FROM` (por defecto `Smartrecruit <recordatorios@smartrecruit.com.ar>`) y `REPLY_TO` (por defecto `contactosmartrecruit@gmail.com`).
 
-## 4. Probar antes de programar
+## 4. Activar en el sitio
+En `RosterReal.jsx`, cambiar `const EMAIL_REMINDERS_LIVE = false;` a `true` y publicar. Hasta entonces el tilde no aparece (a propósito, para no mostrar algo que todavía no funciona).
+
+## 5. Probar antes de programar
 1. En el sitio, con tu cuenta iniciada, activar el tilde en "Mi plan de hoy".
 2. Prueba en seco (no manda nada, solo muestra cuántos mails correspondería mandar):
    `curl -X POST "https://dliayalkzvaugukhxmcb.supabase.co/functions/v1/send-weekly-reminders?dry=1" -H "Authorization: Bearer <clave anon del sitio>" -H "x-cron-secret: <tu CRON_SECRET>"`
 3. Envío real de prueba a vos (ignora el "uno por semana"): lo mismo con `?force=1` en vez de `?dry=1`.
 4. Revisar el mail recibido y probar el link "Darme de baja".
 
-## 5. Programar el envío
+## 6. Programar el envío
 Correr el bloque comentado al final de `email_reminders.sql` (quitando los `--` y poniendo tu `CRON_SECRET`). Manda todos los domingos a las 19 h de Argentina.
 
 ## Cómo está protegido

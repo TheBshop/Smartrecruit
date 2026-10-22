@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /baja
 
 Sitemap: https://smartrecruit.com.ar/sitemap.xml

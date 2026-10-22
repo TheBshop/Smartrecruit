@@ -44,7 +44,8 @@ create policy "reminders_update_own" on public.email_reminders
 revoke all on public.email_reminders from anon, authenticated;
 grant select on public.email_reminders to authenticated;
 grant insert (user_id, email, enabled, consent_at, digest, updated_at) on public.email_reminders to authenticated;
-grant update (email, enabled, consent_at, digest, updated_at) on public.email_reminders to authenticated;
+-- user_id va en la lista porque el alta/actualización del sitio (upsert) lo incluye; la regla de arriba impide cambiarlo a otro usuario.
+grant update (user_id, email, enabled, consent_at, digest, updated_at) on public.email_reminders to authenticated;
 
 -- Baja con un clic desde el link del mail (no hace falta iniciar sesión: el token viaja en el link).
 create or replace function public.unsubscribe_reminders(p_token uuid)
