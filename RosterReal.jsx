@@ -8091,7 +8091,7 @@ function planDoneSet(state, today) {
   Object.values(state.doneByDay || {}).forEach((ids) => (ids || []).forEach((id) => { if (String(id).startsWith("p-")) set.add(id); }));
   return set;
 }
-function planTasksFor(profile, now = new Date()) {
+function planTasksRaw(profile, now = new Date()) {
   const p = profile || {};
   const tasks = [];
   const stage = planStageFor(p, now);
@@ -8166,6 +8166,85 @@ function planTasksFor(profile, now = new Date()) {
   }
   return tasks;
 }
+// Cada paso dice cuándo toca, si es obligatorio y de qué regla sale (calendario NCAA, Eligibility Center, división...).
+function planTaskMeta(t, now = new Date()) {
+  const id = String(t.id);
+  const cap = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+  let when = "Ahora", required = false, rule = null;
+  if (id.startsWith("p-w-")) { const m = new Date(weekKey(now) + "T12:00:00"); when = `Semana del ${m.getDate()} de ${MONTHS_ES[m.getMonth()]}`; }
+  else if (id.startsWith("p-m-")) when = cap(MONTHS_ES[now.getMonth()]);
+  else if (id.startsWith("p-y-")) when = `Año escolar ${now.getFullYear()}`;
+  else if (id.startsWith("p-base-")) when = "Esta etapa";
+  else if (id.startsWith("cal-soon-")) { const d = new Date(id.slice(-10) + "T12:00:00"); if (!isNaN(d)) when = `Desde el ${d.getDate()} de ${MONTHS_ES[d.getMonth()]}`; }
+  else if (id.startsWith("fu-")) when = "Vencido";
+  if (id.startsWith("cal-")) { rule = "Calendario de reclutamiento de la NCAA"; required = id.startsWith("cal-now-"); }
+  else if (id.startsWith("p-d1-")) { rule = "Regla NCAA D1: fecha según tu año de ingreso"; required = true; }
+  else if (id === "weekly-ncaa" || id === "elig-next" || id === "p-base-guide" || id.startsWith("p-m-docs-")) { rule = "NCAA Eligibility Center"; required = id !== "p-base-guide"; }
+  else if (id.startsWith("p-m-grades-")) { rule = "Elegibilidad: tu promedio cuenta"; required = true; }
+  else if (id.startsWith("p-m-english-")) rule = "Admisión: examen de inglés";
+  else if (id.startsWith("p-m-d23-")) rule = "D2, D3 y NAIA: podés escribir cuando quieras";
+  else if (id.startsWith("fu-")) { rule = "Seguimiento a coaches"; required = true; }
+  else if (id === "gap-contact") required = true;
+  else if (id.startsWith("p-w-reply-") || id.startsWith("p-m-arrival-")) required = true;
+  return { when, required, rule };
+}
+function planTasksFor(profile, now = new Date()) {
+  return planTasksRaw(profile, now).map((t) => ({ ...t, ...planTaskMeta(t, now) }));
+}
+// Orden de la lista: lo pendiente antes que lo hecho, y lo obligatorio antes que lo opcional.
+function planSortTasks(tasks, doneSet) {
+  return tasks.map((t, i) => ({ t, i })).sort((a, b) => (Number(doneSet.has(a.t.id)) - Number(doneSet.has(b.t.id))) || (Number(!!b.t.required) - Number(!!a.t.required)) || (a.i - b.i)).map((x) => x.t);
+}
+// La única acción que mostramos primero: lo obligatorio pendiente; si no hay, lo primero que falte.
+function planNextTask(tasks, doneSet, requiredOnly = false) {
+  const open = tasks.filter((t) => !doneSet.has(t.id));
+  return open.find((t) => t.required) || (requiredOnly ? null : open[0]) || null;
+}
+// Cuándo cambia de etapa (la próxima que viene), para que la persona sepa qué sigue y en cuántos meses.
+function planNextStage(profile, now = new Date()) {
+  const cur = planStageFor(profile, now);
+  if (cur.key === "ingreso") return null;
+  const entry = getEntryYear(profile);
+  let contactoDate = new Date(entry - 2, 7, 1);
+  try { const c = profile && profile.sport ? contactStartFor(profile, "NCAA D1", now) : null; if (c && c.comm) contactoDate = c.comm; } catch (e) {}
+  const decisionDate = new Date(entry - 1, 7, 1);
+  if (contactoDate >= decisionDate) contactoDate = new Date(decisionDate);
+  const cands = [
+    { key: "visibilidad", index: 1, label: "Visibilidad", date: new Date(entry - 3, 7, 1) },
+    { key: "contacto", index: 2, label: "Contacto", date: contactoDate },
+    { key: "decision", index: 3, label: "Decisión", date: decisionDate },
+    { key: "ingreso", index: 4, label: "Ingreso", date: new Date(entry, 7, 1) },
+  ].filter((c) => c.index > cur.index && c.date > now).sort((a, b) => a.date - b.date);
+  const n = cands[0];
+  if (!n) return null;
+  return { ...n, months: Math.max(1, Math.round((n.date - now) / (30.44 * 86400000))) };
+}
+// ---- Tu semana: qué se movió (pasos, mails, respuestas, check-ins) en una semana de lunes a domingo ----
+function planWeekReview(state, log, checkins, now = new Date(), offset = 0) {
+  const start = new Date(weekKey(now) + "T00:00:00"); start.setDate(start.getDate() + 7 * offset);
+  const end = new Date(start); end.setDate(end.getDate() + 7);
+  const inW = (iso) => { const t = new Date(iso).getTime(); return t >= start.getTime() && t < end.getTime(); };
+  let steps = 0;
+  Object.entries((state && state.doneByDay) || {}).forEach(([k, ids]) => { if (inW(k + "T12:00:00")) steps += (ids || []).length; });
+  let mails = 0, replies = 0;
+  Object.values(log || {}).forEach((e) => {
+    outreachMessages(e).forEach((m) => { if (m && m.at && inW(m.at)) mails++; });
+    if (e && e.repliedAt && inW(e.repliedAt)) replies++;
+  });
+  const checks = (checkins || []).filter((c) => c && c.date && inW(c.date)).length;
+  const total = steps + mails + replies + checks;
+  return { key: start.toLocaleDateString("en-CA"), start, end, steps, mails, replies, checkins: checks, total, active: total > 0 };
+}
+function planWeekLine(r, current = true) {
+  if (!r.active) return current ? "Todavía no hiciste nada esta semana. Un solo paso alcanza para mantener la racha." : "Semana sin movimiento.";
+  const pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const parts = [];
+  if (r.steps) parts.push(pl(r.steps, "paso del plan", "pasos del plan"));
+  if (r.mails) parts.push(pl(r.mails, "mail a coaches", "mails a coaches"));
+  if (r.replies) parts.push(pl(r.replies, "respuesta de un coach", "respuestas de coaches"));
+  if (r.checkins) parts.push("check-in hecho");
+  return `${current ? "Esta semana llevás" : "Hiciste"}: ${parts.join(", ")}.`;
+}
 // Semanas seguidas con al menos un paso hecho: a lo largo de 3 o 4 años pedir un paso por día cansa; la constancia se mide por semana.
 function planWeekStreak(doneByDay, now = new Date()) {
   const weeks = new Set(Object.entries(doneByDay || {}).filter(([, ids]) => (ids || []).length).map(([k]) => weekKey(new Date(k + "T12:00:00"))));
@@ -8207,7 +8286,10 @@ function usePlanReminder() {
         const doneSet = planDoneSet(s, today);
         const open = planTasksFor(prof).filter((t) => !doneSet.has(t.id));
         if (!open.length) return;
-        new Notification("Smartrecruit: tu plan de hoy", { body: `Tenés ${open.length} paso${open.length === 1 ? "" : "s"} pendiente${open.length === 1 ? "" : "s"}. Entrá para completarlos.`, tag: "plan-diario" });
+        const weekly = (s.reminderMode || "weekly") === "weekly";
+        const wr = planWeekReview(s, readOutreachLog(), readJSON("rr_checkins", []), now, 0);
+        const first = planNextTask(planTasksFor(prof), doneSet);
+        new Notification(weekly ? "Smartrecruit: tu semana" : "Smartrecruit: tu plan de hoy", { body: weekly ? `${planWeekLine(wr, true)} Tu próxima acción: ${first ? first.title : "entrá a ver tu plan"}` : `Tenés ${open.length} paso${open.length === 1 ? "" : "s"} pendiente${open.length === 1 ? "" : "s"}. Entrá para completarlos.`, tag: "plan-diario" });
         writePlanState({ ...s, lastNotifiedDay: today });
       } catch (e) { /* sin permiso o sin soporte: se ignora */ }
     }, 60000);
@@ -8229,13 +8311,21 @@ function PlanPage({ profile, setStage }) {
   };
   const weekStreak = planWeekStreak(state.doneByDay || {});
   const since = planSinceText(state.startDate);
-  const sorted = [...tasks].sort((a, b) => Number(doneSet.has(a.id)) - Number(doneSet.has(b.id)));
+  const sorted = planSortTasks(tasks, doneSet);
+  const nextTask = planNextTask(tasks, doneSet);
+  const nextStage = planNextStage(profile);
   const doneCount = tasks.filter((t) => doneSet.has(t.id)).length;
+  const reqOpen = tasks.filter((t) => t.required && !doneSet.has(t.id)).length;
+  const outLog = readOutreachLog();
+  const checkinList = readJSON("rr_checkins", []);
+  const wkNow = planWeekReview(state, outLog, checkinList, new Date(), 0);
+  const wkPast = [-1, -2, -3, -4].map((o) => planWeekReview(state, outLog, checkinList, new Date(), o));
+  const wkMax = Math.max(1, wkNow.total, ...wkPast.map((w) => w.total));
   const monthDone = Object.entries(state.doneByDay || {}).filter(([k]) => k.slice(0, 7) === today.slice(0, 7)).reduce((n, [, ids]) => n + (ids || []).length, 0);
   const [copied, setCopied] = useState(false);
   const familySummary = () => {
     const open = tasks.filter((t) => !doneSet.has(t.id)).slice(0, 4).map((t) => `- ${t.title}`).join("\n");
-    const txt = `Resumen de ${profile.name || "mi"} en Smartrecruit (${today}):\nEtapa: ${stage.label}${stage.monthsLeft > 0 ? ` · faltan unos ${stage.monthsLeft} meses para el ingreso` : ""}.\nPasos hechos este mes: ${monthDone}. Semanas seguidas: ${weekStreak}.\nLo que sigue:\n${open || "- Nada pendiente."}`;
+    const txt = `Resumen de ${profile.name || "mi"} en Smartrecruit (${today}):\nEtapa: ${stage.label}${stage.monthsLeft > 0 ? ` · faltan unos ${stage.monthsLeft} meses para el ingreso` : ""}.\nPasos hechos este mes: ${monthDone}. Semanas seguidas: ${weekStreak}.\n${planWeekLine(wkNow, true)}\nLo que sigue:\n${open || "- Nada pendiente."}`;
     try { navigator.clipboard.writeText(txt).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }); } catch (e) {}
   };
   const hasNotif = typeof window !== "undefined" && "Notification" in window;
@@ -8265,7 +8355,29 @@ function PlanPage({ profile, setStage }) {
           ))}
         </div>
         <p style={{ margin: "10px 0 0", fontSize: 14 }}><b>Ahora: {stage.emoji} {stage.label}.</b> {stage.focus}</p>
+        {nextStage && <p style={{ margin: "8px 0 0", fontSize: 13, color: "var(--ink-soft)" }}>Lo que sigue: <b>{nextStage.label}</b>, desde el {longDateEs(nextStage.date)} (en unos {nextStage.months} {nextStage.months === 1 ? "mes" : "meses"}).</p>}
       </div>
+
+      <section className="rm-today-hero" aria-label="Tu próxima acción" style={{ marginTop: 16 }}>
+        <div>
+          <div className="rm-today-hero-label">Tu próxima acción</div>
+          {nextTask ? (
+            <>
+              <div className="rm-today-hero-title">{nextTask.title}</div>
+              <div className="rm-today-note">{nextTask.when}{nextTask.rule ? ` · ${nextTask.rule}` : ""}{nextTask.required ? " · Obligatoria" : ""}</div>
+            </>
+          ) : (
+            <>
+              <div className="rm-today-hero-title">Todo al día por ahora</div>
+              <div className="rm-today-note">Volvé la semana que viene: el plan se renueva solo.</div>
+            </>
+          )}
+        </div>
+        {nextTask && <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button className="rm-btn" onClick={() => setStage(nextTask.go)}>Ir →</button>
+          <button className="rm-btn-ghost" onClick={() => toggle(nextTask.id)}>Ya lo hice</button>
+        </div>}
+      </section>
 
       <div className="rm-grid" style={{ marginTop: 16 }}>
         <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Usando Smartrecruit</div><b style={{ fontSize: 22 }}>{since}</b></div>
@@ -8273,7 +8385,7 @@ function PlanPage({ profile, setStage }) {
         <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Hechos ahora</div><b style={{ fontSize: 22 }}>{doneCount}/{tasks.length}</b></div>
       </div>
 
-      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 26 }}>Pasos de esta etapa</h3>
+      <h3 className="rm-condensed" style={{ fontSize: 18, marginTop: 26 }}>Pasos de esta etapa{reqOpen > 0 ? ` · ${reqOpen} obligatoria${reqOpen === 1 ? "" : "s"} pendiente${reqOpen === 1 ? "" : "s"}` : ""}</h3>
       {sorted.length === 0 && <p className="rm-hint">Nada pendiente. Volvé la semana que viene.</p>}
       <div className="rm-elig-list">
         {sorted.map((t) => {
@@ -8282,12 +8394,38 @@ function PlanPage({ profile, setStage }) {
             <div className="rm-elig-item" key={t.id} style={{ justifyContent: "space-between", alignItems: "center" }}>
               <label style={{ display: "flex", gap: 10, alignItems: "flex-start", flex: 1, cursor: "pointer" }}>
                 <input type="checkbox" checked={isDone} onChange={() => toggle(t.id)} />
-                <span style={{ textDecoration: isDone ? "line-through" : "none", opacity: isDone ? 0.6 : 1 }}>{t.title}</span>
+                <span style={{ opacity: isDone ? 0.6 : 1 }}>
+                  <span style={{ textDecoration: isDone ? "line-through" : "none" }}>{t.title}</span>
+                  <span style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 5 }}>
+                    <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "var(--paper-dim)", color: "var(--ink-soft)" }}>{t.when}</span>
+                    {t.required && <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "var(--navy)", color: "#fff" }}>Obligatoria</span>}
+                    {t.rule && <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, border: "1px solid var(--line)", color: "var(--ink-soft)" }}>{t.rule}</span>}
+                  </span>
+                </span>
               </label>
               <button className="rm-btn-inline" onClick={() => setStage(t.go)}>Ir →</button>
             </div>
           );
         })}
+      </div>
+
+      <h3 className="rm-condensed" id="plan-semana" style={{ fontSize: 18, marginTop: 30 }}>Tu semana</h3>
+      <div className="rm-card" style={{ padding: 14 }}>
+        <div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Semana del {wkNow.start.getDate()} de {MONTHS_ES[wkNow.start.getMonth()]}</div>
+        <p style={{ margin: "6px 0 0", fontSize: 14 }}><b>{planWeekLine(wkNow, true)}</b></p>
+        {!wkNow.active && nextTask && <p style={{ margin: "6px 0 0", fontSize: 13, color: "var(--ink-soft)" }}>Tu próxima acción te espera arriba.</p>}
+        <div style={{ display: "flex", gap: 8, alignItems: "flex-end", marginTop: 14 }} aria-label="Actividad de las últimas semanas">
+          {[...wkPast].reverse().concat([wkNow]).map((w, i, arr) => (
+            <div key={w.key} style={{ flex: 1, textAlign: "center", fontSize: 11.5, color: "var(--ink-soft)" }}>
+              <div style={{ height: 52, display: "flex", alignItems: "flex-end" }}>
+                <div style={{ width: "100%", height: `${Math.max(w.total ? 12 : 4, Math.round((w.total / wkMax) * 52))}px`, borderRadius: 4, background: i === arr.length - 1 ? "var(--navy)" : "var(--paper-dim)", border: "1px solid var(--line)" }} />
+              </div>
+              <div style={{ marginTop: 4 }}>{w.total}</div>
+              <div>{i === arr.length - 1 ? "Esta" : `-${arr.length - 1 - i}`}</div>
+            </div>
+          ))}
+        </div>
+        <p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--ink-soft)" }}>Cuenta pasos del plan, mails a coaches, respuestas y check-ins. La semana pasada: {planWeekLine(wkPast[0], false).toLowerCase()}</p>
       </div>
 
       <div style={{ marginTop: 18 }}>
@@ -9329,13 +9467,31 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
   const responded = entries.filter((e) => ["respondio", "visita", "oferta"].includes(e.status)).length;
 
   const jumpTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  // Una sola acción: seguimientos vencidos, check-in, lo obligatorio del plan, el próximo coach, y después lo demás del plan.
+  const [planState, setPlanState] = useState(readPlanState);
+  const planTasks = planTasksFor(profile);
+  const planDone = planDoneSet(planState, today);
+  const planReq = planNextTask(planTasks, planDone, true);
+  const planAny = planNextTask(planTasks.filter((t) => !String(t.id).startsWith("fu-")), planDone);
+  const markPlanDone = (id) => {
+    const days = { ...(planState.doneByDay || {}) };
+    days[today] = [...(days[today] || []), id];
+    const next = { ...planState, startDate: planState.startDate || today, doneByDay: days };
+    setPlanState(next); writePlanState(next);
+  };
+  const planAction = (t) => ({ title: t.title, why: `${t.when}${t.rule ? ` · ${t.rule}` : ""}${t.required ? " · Obligatoria" : ""}`, cta: "Ir", run: () => setStage(t.go), alt: { label: "Ya lo hice", run: () => markPlanDone(t.id) } });
   const nextAction = due.length > 0
     ? { title: `Seguí con ${due[0].university}`, why: "Ya pasó el tiempo de espera sin respuesta.", cta: "Ver el seguimiento", run: () => jumpTo("hoy-seguimiento") }
     : checkinDue
       ? { title: "Hacé tu check-in de la semana", why: "Tus próximos mails usan tus últimos números y video.", cta: "Actualizar", run: () => { setShowCheckin(true); jumpTo("hoy-checkin"); } }
-      : nextCoach
-        ? { title: `Escribile a ${nextCoach.university}`, why: "Es la próxima escuela de tu lista según tu perfil.", cta: "Ir al coach", run: () => jumpTo("hoy-coach") }
-        : { title: "Esta semana está al día", why: "Explorá escuelas nuevas o revisá tu hoja de ruta.", cta: "Ver escuelas", run: () => setStage("catalog") };
+      : planReq && !String(planReq.id).startsWith("fu-")
+        ? planAction(planReq)
+        : nextCoach
+          ? { title: `Escribile a ${nextCoach.university}`, why: "Es la próxima escuela de tu lista según tu perfil.", cta: "Ir al coach", run: () => jumpTo("hoy-coach") }
+          : planAny
+            ? planAction(planAny)
+            : { title: "Esta semana está al día", why: "Explorá escuelas nuevas o revisá tu hoja de ruta.", cta: "Ver escuelas", run: () => setStage("catalog") };
+  const wkReview = planWeekReview(planState, log, checkins, new Date(), 0);
   const setStatus = (university, status) => {
     const next = withOutreachStatus(log, university, status);
     writeOutreachLog(next); setLog(next);
@@ -9368,8 +9524,12 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
           <div className="rm-today-hero-title">{nextAction.title}</div>
           <div className="rm-today-note">{nextAction.why}</div>
         </div>
-        <button className="rm-btn" onClick={nextAction.run}>{nextAction.cta} →</button>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button className="rm-btn" onClick={nextAction.run}>{nextAction.cta} →</button>
+          {nextAction.alt && <button className="rm-btn-ghost" onClick={nextAction.alt.run}>{nextAction.alt.label}</button>}
+        </div>
       </section>
+      <p className="rm-today-note" style={{ margin: "10px 2px 0" }}>{planWeekLine(wkReview, true)} <button className="rm-btn-inline" onClick={() => { setStage("plan"); setTimeout(() => { const el = document.getElementById("plan-semana"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 60); }}>Ver tu semana →</button></p>
 
       <div className="rm-today-progress" aria-label={`${doneCount} de 3 al día`}>
         {steps.map((x) => (
