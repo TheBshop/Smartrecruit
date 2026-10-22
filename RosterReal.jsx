@@ -8360,6 +8360,114 @@ function planStreak(doneByDay) {
   }
   return n;
 }
+// ---- Recordatorio semanal por email (Resend, desde una función de Supabase) ----
+// El sitio guarda un resumen corto (etapa, próxima acción, semana) para que el mail del domingo lo use.
+function reminderDigest(profile, now = new Date()) {
+  const state = readPlanState();
+  const tasks = planTasksFor(profile, now);
+  const ctx = planCtx();
+  const today = now.toLocaleDateString("en-CA");
+  const done = planEffectiveDone(state, today, tasks, ctx, now).done;
+  const next = planNextTask(tasks, done);
+  const st = planStageFor(profile, now);
+  const wk = planWeekReview(state, ctx.log, ctx.checkins, now, 0);
+  return {
+    stage: st.label, monthsLeft: st.monthsLeft,
+    next: next ? { title: next.title, when: next.when, required: !!next.required } : null,
+    week: planWeekLine(wk, true), reqOpen: tasks.filter((t) => t.required && !done.has(t.id)).length,
+    updated: now.toISOString(),
+  };
+}
+// Si la persona ya activó el recordatorio, se renueva el resumen cada vez que entra. Sin cuenta o sin la tabla: no hace nada.
+async function syncReminderDigest(profile) {
+  try {
+    if (!profile) return;
+    const { data } = await supabase.auth.getSession();
+    const uid = data && data.session && data.session.user && data.session.user.id;
+    if (!uid) return;
+    await supabase.from("email_reminders").update({ digest: reminderDigest(profile), updated_at: new Date().toISOString() }).eq("user_id", uid);
+  } catch (e) { /* sin red o sin tabla: se ignora */ }
+}
+function ReminderEmailBox({ profile }) {
+  const [session, setSession] = useState(null);
+  const [row, setRow] = useState(undefined); // undefined = cargando, null = sin fila, false = no disponible
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+  useEffect(() => {
+    let alive = true;
+    supabase.auth.getSession().then(({ data }) => { if (alive) setSession((data && data.session) || null); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+  const uid = session && session.user && session.user.id;
+  useEffect(() => {
+    if (!uid) { setRow(undefined); return undefined; }
+    let alive = true;
+    supabase.from("email_reminders").select("enabled").eq("user_id", uid).maybeSingle().then(
+      ({ data, error }) => { if (alive) setRow(error ? false : (data || null)); },
+      () => { if (alive) setRow(false); });
+    return () => { alive = false; };
+  }, [uid]);
+  const c = (profile && profile.consent) || {};
+  const minorBlocked = !!(c.minor && !consentIsValid(c));
+  const enabled = !!(row && row.enabled);
+  const toggle = async () => {
+    if (!uid || busy) return;
+    setBusy(true); setMsg("");
+    const next = !enabled;
+    const { error } = await supabase.from("email_reminders").upsert(
+      { user_id: uid, email: session.user.email, enabled: next, consent_at: next ? new Date().toISOString() : null, digest: reminderDigest(profile), updated_at: new Date().toISOString() },
+      { onConflict: "user_id" });
+    setBusy(false);
+    if (error) { setMsg("No pudimos guardarlo ahora. Probá de nuevo en un rato."); return; }
+    setRow({ enabled: next });
+    setMsg(next ? "Listo: el próximo domingo te llega el primero." : "Listo: no te mandamos más recordatorios.");
+  };
+  if (row === false) return null; // la tabla todavía no existe: no se muestra nada roto
+  return (
+    <div style={{ marginTop: 18 }}>
+      <h4 style={{ margin: "0 0 6px", fontSize: 15 }}>Recordatorio por email</h4>
+      {!session && <p className="rm-hint" style={{ margin: 0 }}>Para recibir un email por semana, primero guardá tu progreso con tu correo (menú "Guardar mi progreso"). Así el recordatorio te llega aunque no tengas el sitio abierto.</p>}
+      {session && minorBlocked && <p className="rm-hint" style={{ margin: 0 }}>Para activarlo necesitamos la conformidad de tu madre, padre o tutor en tu perfil.</p>}
+      {session && !minorBlocked && (
+        <>
+          <label style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: busy ? "wait" : "pointer", fontSize: 14 }}>
+            <input type="checkbox" checked={enabled} disabled={busy || row === undefined} onChange={toggle} />
+            <span>Mandarme un email por semana (domingos, 19 h) a <b>{session.user.email}</b> con mi próxima acción y el resumen de mi semana.</span>
+          </label>
+          <p style={{ fontSize: 12, color: "var(--ink-soft)", margin: "6px 0 0" }}>Un solo mail por semana, nunca publicidad. Lo enviamos con Resend. Podés darte de baja desde este tilde o desde el link de cada mail.</p>
+        </>
+      )}
+      {msg && <p className="rm-today-note" style={{ margin: "6px 0 0" }}>{msg}</p>}
+    </div>
+  );
+}
+// Página de baja: el link del mail trae /baja?token=...; hay que confirmar con un botón (así los escáneres de links no dan de baja a nadie).
+function BajaPage({ setStage }) {
+  const token = (() => { try { return new URLSearchParams(window.location.search).get("token") || ""; } catch (e) { return ""; } })();
+  const valid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token);
+  const [state, setState] = useState("idle"); // idle | busy | done | fail
+  const confirm = async () => {
+    setState("busy");
+    try {
+      const { data, error } = await supabase.rpc("unsubscribe_reminders", { p_token: token });
+      setState(!error && data ? "done" : "fail");
+    } catch (e) { setState("fail"); }
+  };
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">Darme de baja de los recordatorios</h2>
+      {!valid && <p className="rm-hint">Este link no es válido. Podés desactivar los recordatorios desde "Mi plan de hoy" o escribirnos a {LEGAL_INFO.email}.</p>}
+      {valid && state === "idle" && (<>
+        <p className="rm-hint">Dejamos de mandarte el recordatorio semanal. Tu perfil y tu plan siguen igual.</p>
+        <button className="rm-btn" onClick={confirm}>Confirmar baja</button>
+      </>)}
+      {state === "busy" && <p className="rm-hint">Un momento…</p>}
+      {state === "done" && <p className="rm-hint"><b>Listo.</b> No vas a recibir más recordatorios. Si cambiás de idea, los podés volver a activar desde "Mi plan de hoy".</p>}
+      {state === "fail" && <p className="rm-hint">No pudimos procesar la baja. Escribinos a {LEGAL_INFO.email} y la hacemos a mano.</p>}
+      <div style={{ marginTop: 16 }}><button className="rm-btn-ghost" onClick={() => setStage("plan")}>Ir a mi plan</button></div>
+    </div>
+  );
+}
 function usePlanReminder() {
   useEffect(() => {
     const id = setInterval(() => {
@@ -8412,6 +8520,7 @@ function PlanPage({ profile, setStage }) {
   const wkMax = Math.max(1, wkNow.total, ...wkPast.map((w) => w.total));
   const monthDone = Object.entries(state.doneByDay || {}).filter(([k]) => k.slice(0, 7) === today.slice(0, 7)).reduce((n, [, ids]) => n + (ids || []).length, 0);
   const [copied, setCopied] = useState(false);
+  useEffect(() => { syncReminderDigest(profile); }, [profile]);
   const familySummary = () => {
     const open = tasks.filter((t) => !doneSet.has(t.id)).slice(0, 4).map((t) => `- ${t.title}`).join("\n");
     const txt = `Resumen de ${profile.name || "mi"} en Smartrecruit (${today}):\nEtapa: ${stage.label}${stage.monthsLeft > 0 ? ` · faltan unos ${stage.monthsLeft} meses para el ingreso` : ""}.\nPasos hechos este mes: ${monthDone}. Semanas seguidas: ${weekStreak}.\n${planWeekLine(wkNow, true)}\nLo que sigue:\n${open || "- Nada pendiente."}`;
@@ -8543,6 +8652,7 @@ function PlanPage({ profile, setStage }) {
           </select>
         </div>
       )}
+      <ReminderEmailBox profile={profile} />
       <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 10 }}>Pensado para varios años: un aviso por semana alcanza para no perder el ritmo sin cansarte. Los avisos llegan mientras la página esté abierta en tu navegador o en un celular con el sitio abierto. Si cerrás todo, el plan igual te espera cuando vuelvas.</p>
     </div>
   );
@@ -9586,6 +9696,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
             ? planAction(planAny)
             : { title: "Esta semana está al día", why: "Explorá escuelas nuevas o revisá tu hoja de ruta.", cta: "Ver escuelas", run: () => setStage("catalog") };
   const wkReview = planWeekReview(planState, log, checkins, new Date(), 0);
+  useEffect(() => { syncReminderDigest(profile); }, [profile]);
   const setStatus = (university, status) => {
     const next = withOutreachStatus(log, university, status);
     writeOutreachLog(next); setLog(next);
@@ -9732,15 +9843,15 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
    Los datos entre corchetes los completa el responsable del sitio antes de publicar
    (ver LEGAL_INFO). Borrador pendiente de revisión por un abogado argentino.
 --------------------------------------------------------------- */
-const LEGAL_VERSION = "2026-09-29";
+const LEGAL_VERSION = "2026-10-22";
 const LEGAL_INFO = {
   owner: "Valentino Ruberto",
   taxId: "DNI 44.151.926",
   address: "Buenos Aires 464, E3100 Paraná, Entre Ríos, Argentina",
   email: "contactosmartrecruit@gmail.com",
   jurisdiction: "la ciudad de Paraná, provincia de Entre Ríos",
-  providers: "Netlify (alojamiento del sitio y funciones de servidor), Supabase (base de datos de cuentas), PostHog (analítica de uso, solo si el usuario la acepta), Anthropic (redacción de borradores con inteligencia artificial) y Google (envío de correos, solo si el usuario conecta su cuenta)",
-  updated: "5 de octubre de 2026",
+  providers: "Netlify (alojamiento del sitio y funciones de servidor), Supabase (base de datos de cuentas), PostHog (analítica de uso, solo si el usuario la acepta), Anthropic (redacción de borradores con inteligencia artificial) y Google (envío de correos, solo si el usuario conecta su cuenta) y Resend (envío de los recordatorios semanales por correo, solo si el usuario los activa)",
+  updated: "22 de octubre de 2026",
 };
 const SHORT_DISCLAIMER = "Smartrecruit es una herramienta educativa que orienta el proceso de autorreclutamiento deportivo universitario en Estados Unidos. No es un agente ni un intermediario, no garantiza becas ni admisiones y no cobra por su uso. No está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.";
 
@@ -9886,8 +9997,10 @@ function PrivacyPage() {
           <li>Generar borradores de correos personalizados.</li>
           <li>Organizar el calendario, los seguimientos y la preparación de exámenes.</li>
           <li>Guardar el progreso en la cuenta del usuario, si decide crearla.</li>
+          <li>Enviar un recordatorio semanal por correo, solo si el usuario lo activa.</li>
         </ol>
         <p>No vendemos datos ni los usamos para publicidad de terceros.</p>
+        <p><b>Recordatorio semanal por correo.</b> Es opcional y se activa desde "Mi plan de hoy", con una cuenta iniciada. Enviamos un correo por semana, siempre a la dirección con la que el usuario inició sesión, con su próxima acción y el resumen de su semana; no incluye publicidad. Para enviarlo usamos Resend, que recibe esa dirección y el texto del mensaje. El usuario puede darse de baja en cualquier momento desde el tilde de "Mi plan de hoy" o desde el enlace de baja de cada correo. Si es menor de 18 años, el recordatorio solo se envía si tiene cargada la conformidad de su madre, padre o tutor.</p>
       </LegalSection>
       <LegalSection n="4" title="Consentimiento">
         <p>Tratamos los datos con el consentimiento libre, expreso e informado del usuario, que se presta al guardar el perfil. El usuario puede retirarlo en cualquier momento, sin efecto retroactivo.</p>
@@ -10031,7 +10144,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results"];
+const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -10265,6 +10378,7 @@ export default function App() {
       {stage === "video" && <VideoGuidePage />}
       {stage === "money" && <MoneyGuidePage />}
       {stage === "plan" && <PlanPage profile={profile} setStage={setStage} />}
+      {stage === "baja" && <BajaPage setStage={setStage} />}
       {stage === "calendar" && <CalendarPage />}
       {stage === "history" && <OutreachHistoryPage profile={profile} setStage={setStage} />}
       {stage === "exams" && <ExamsPage setStage={setStage} />}
