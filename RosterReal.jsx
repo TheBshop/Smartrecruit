@@ -8131,6 +8131,14 @@ function planTasksRaw(profile, now = new Date()) {
   Object.values(log).forEach((e) => {
     if (e && followUpDue(e)) tasks.push({ id: `fu-${e.university}`, title: `Seguimiento a ${e.university}: ${nextOutreachStep(e).text}`, go: "history" });
   });
+  // Coaches que ya te contestaron: si pasa un mes sin que les escribas, el vínculo se enfría.
+  Object.values(log).forEach((e) => {
+    if (!e || !["respondio", "visita", "oferta"].includes(e.status)) return;
+    const last = outreachMessages(e).map((m) => m && m.at).filter(Boolean).sort().pop();
+    if (!last) return;
+    const days = Math.floor((now - new Date(last)) / 86400000);
+    if (days >= 30) tasks.push({ id: `warm-${e.university}`, title: `Hace ${days} días que no le escribís a ${e.university}: mandale una novedad corta (un partido, tus números, un video nuevo).`, go: "history", when: `Hace ${days} días`, rule: "Mantener el vínculo con coaches que ya te contestaron" });
+  });
   let checked = {};
   try { checked = JSON.parse(localStorage.getItem("rr_eligibility_checklist") || "{}") || {}; } catch (e) {}
   const elig = ELIGIBILITY_CHECKLISTS[Object.keys(ELIGIBILITY_CHECKLISTS)[0]] || [];
@@ -8189,7 +8197,7 @@ function planTaskMeta(t, now = new Date()) {
   return { when, required, rule };
 }
 function planTasksFor(profile, now = new Date()) {
-  return planTasksRaw(profile, now).map((t) => ({ ...t, ...planTaskMeta(t, now) }));
+  return planTasksRaw(profile, now).map((t) => ({ ...planTaskMeta(t, now), ...t }));
 }
 // Orden de la lista: lo pendiente antes que lo hecho, y lo obligatorio antes que lo opcional.
 function planSortTasks(tasks, doneSet) {
@@ -8245,6 +8253,85 @@ function planWeekLine(r, current = true) {
   if (r.checkins) parts.push("check-in hecho");
   return `${current ? "Esta semana llevás" : "Hiciste"}: ${parts.join(", ")}.`;
 }
+// ---- Pasos que se completan solos con lo que ya hiciste en el sitio (se pueden deshacer) ----
+function planAutoSet(tasks, ctx, now = new Date()) {
+  const log = (ctx && ctx.log) || {}, checkins = (ctx && ctx.checkins) || [], favs = (ctx && ctx.favorites) || [];
+  const wk = new Date(weekKey(now) + "T00:00:00"), wkEnd = new Date(wk); wkEnd.setDate(wkEnd.getDate() + 7);
+  const inWeek = (iso) => { const t = new Date(iso).getTime(); return t >= wk.getTime() && t < wkEnd.getTime(); };
+  const inMonth = (iso) => { const d = new Date(iso); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(); };
+  const entries = Object.values(log).filter((e) => e && e.firstContact);
+  const newThisWeek = entries.filter((e) => inWeek(e.firstContact)).length;
+  const d23ThisMonth = entries.filter((e) => inMonth(e.firstContact) && /D2|D3|NAIA|NJCAA/.test(String(outreachDivision(e.university)))).length;
+  const checkMonth = checkins.some((c) => c && c.date && inMonth(c.date));
+  const withReply = entries.filter((e) => ["respondio", "visita", "oferta"].includes(e.status));
+  const replyDue = entries.some((e) => { const st = nextOutreachStep(e); return st.due && ["reply", "thanks", "offer"].includes(st.kind); });
+  const out = new Set();
+  tasks.forEach((t) => {
+    const id = String(t.id);
+    if (id.startsWith("p-w-outreach2-") && newThisWeek >= 2) out.add(id);
+    else if (id.startsWith("p-w-outreach3-") && newThisWeek >= 3) out.add(id);
+    else if (id.startsWith("p-m-d23-") && d23ThisMonth >= 2) out.add(id);
+    else if (id.startsWith("p-m-stats-") && checkMonth) out.add(id);
+    else if (id.startsWith("p-m-list-") && favs.length >= 10 && favs.length <= 15) out.add(id);
+    else if (id.startsWith("p-w-reply-") && withReply.length > 0 && !replyDue) out.add(id);
+  });
+  return out;
+}
+function planCtx() {
+  let log = {}, checkins = [], favorites = [];
+  try { log = readOutreachLog() || {}; } catch (e) {}
+  try { checkins = readJSON("rr_checkins", []) || []; } catch (e) {}
+  try { favorites = readFavorites() || []; } catch (e) {}
+  return { log, checkins, favorites };
+}
+// Hechos = lo que marcó la persona + lo que se completó solo (menos lo que deshizo). "auto" = solo lo automático que sigue vigente.
+function planEffectiveDone(state, today, tasks, ctx, now = new Date()) {
+  const manual = planDoneSet(state, today);
+  const off = (state && state.autoOff) || {};
+  const auto = new Set([...planAutoSet(tasks, ctx, now)].filter((id) => !off[id] && !manual.has(id)));
+  return { done: new Set([...manual, ...auto]), auto, manual };
+}
+function planToggle(state, id, today, autoRaw) {
+  const days = { ...((state && state.doneByDay) || {}) };
+  const off = { ...((state && state.autoOff) || {}) };
+  const manual = planDoneSet(state || {}, today).has(id);
+  const isAuto = autoRaw.has(id);
+  if (manual) {
+    Object.keys(days).forEach((k) => { days[k] = (days[k] || []).filter((x) => x !== id); });
+    if (isAuto && !off[id]) off[id] = true;
+  } else if (isAuto && !off[id]) off[id] = true;
+  else if (isAuto && off[id]) delete off[id];
+  else days[today] = [...(days[today] || []), id];
+  return { ...(state || {}), startDate: (state && state.startDate) || today, doneByDay: days, autoOff: off };
+}
+// ---- Un paso del plan al calendario (.ics): evento de día completo en la fecha que corresponde ----
+function planTaskDueDate(t, now = new Date()) {
+  const id = String(t.id);
+  if (id.startsWith("cal-soon-")) { const d = new Date(id.slice(-10) + "T12:00:00"); if (!isNaN(d)) return d; }
+  if (id.startsWith("p-w-")) { const m = new Date(weekKey(now) + "T12:00:00"); m.setDate(m.getDate() + 6); return m; }
+  if (id.startsWith("p-m-")) return new Date(now.getFullYear(), now.getMonth() + 1, 0, 12);
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
+}
+function planTaskIcs(t, now = new Date()) {
+  const pad = (n) => String(n).padStart(2, "0");
+  const ymd = (d) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+  const esc = (x) => String(x).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const due = planTaskDueDate(t, now);
+  const next = new Date(due); next.setDate(next.getDate() + 1);
+  const stamp = new Date(now).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const uid = `${String(t.id).replace(/[^A-Za-z0-9-]/g, "")}-${ymd(due)}@smartrecruit`;
+  const desc = [t.rule, t.required ? "Obligatoria" : null, "Smartrecruit: https://smartrecruit.com.ar/plan"].filter(Boolean).join(" · ");
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//SmartRecruit//Plan//ES", "BEGIN:VEVENT", `UID:${uid}`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${ymd(due)}`, `DTEND;VALUE=DATE:${ymd(next)}`, `SUMMARY:${esc("Smartrecruit: " + t.title).slice(0, 180)}`, `DESCRIPTION:${esc(desc)}`, "BEGIN:VALARM", "TRIGGER:-PT15H", "ACTION:DISPLAY", "DESCRIPTION:Smartrecruit", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+}
+function downloadTaskICS(t) {
+  try {
+    const blob = new Blob([planTaskIcs(t)], { type: "text/calendar" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `smartrecruit-${String(t.id).replace(/[^A-Za-z0-9-]/g, "").slice(0, 40)}.ics`;
+    a.click(); URL.revokeObjectURL(url);
+  } catch (e) {}
+}
 // Semanas seguidas con al menos un paso hecho: a lo largo de 3 o 4 años pedir un paso por día cansa; la constancia se mide por semana.
 function planWeekStreak(doneByDay, now = new Date()) {
   const weeks = new Set(Object.entries(doneByDay || {}).filter(([, ids]) => (ids || []).length).map(([k]) => weekKey(new Date(k + "T12:00:00"))));
@@ -8283,12 +8370,13 @@ function usePlanReminder() {
         if (now.getHours() !== (s.reminderHour ?? 19) || s.lastNotifiedDay === today) return;
         if ((s.reminderMode || "weekly") === "weekly" && now.getDay() !== 0) return; // por defecto, un aviso por semana (domingo)
         const prof = JSON.parse(localStorage.getItem("rr_profile") || "null");
-        const doneSet = planDoneSet(s, today);
-        const open = planTasksFor(prof).filter((t) => !doneSet.has(t.id));
+        const allTasks = planTasksFor(prof);
+        const doneSet = planEffectiveDone(s, today, allTasks, planCtx()).done;
+        const open = allTasks.filter((t) => !doneSet.has(t.id));
         if (!open.length) return;
         const weekly = (s.reminderMode || "weekly") === "weekly";
         const wr = planWeekReview(s, readOutreachLog(), readJSON("rr_checkins", []), now, 0);
-        const first = planNextTask(planTasksFor(prof), doneSet);
+        const first = planNextTask(allTasks, doneSet);
         new Notification(weekly ? "Smartrecruit: tu semana" : "Smartrecruit: tu plan de hoy", { body: weekly ? `${planWeekLine(wr, true)} Tu próxima acción: ${first ? first.title : "entrá a ver tu plan"}` : `Tenés ${open.length} paso${open.length === 1 ? "" : "s"} pendiente${open.length === 1 ? "" : "s"}. Entrá para completarlos.`, tag: "plan-diario" });
         writePlanState({ ...s, lastNotifiedDay: today });
       } catch (e) { /* sin permiso o sin soporte: se ignora */ }
@@ -8300,13 +8388,13 @@ function PlanPage({ profile, setStage }) {
   const [state, setState] = useState(readPlanState);
   const today = todayKey();
   const tasks = planTasksFor(profile);
-  const doneSet = planDoneSet(state, today);
+  const ctx = planCtx();
+  const eff = planEffectiveDone(state, today, tasks, ctx);
+  const doneSet = eff.done;
+  const autoRaw = planAutoSet(tasks, ctx);
   const stage = planStageFor(profile);
   const toggle = (id) => {
-    const days = { ...(state.doneByDay || {}) };
-    if (doneSet.has(id)) Object.keys(days).forEach((k) => { days[k] = (days[k] || []).filter((x) => x !== id); }); // se desmarca en el día en que se hizo
-    else days[today] = [...(days[today] || []), id];
-    const next = { ...state, startDate: state.startDate || today, doneByDay: days };
+    const next = planToggle(state, id, today, autoRaw);
     setState(next); writePlanState(next);
   };
   const weekStreak = planWeekStreak(state.doneByDay || {});
@@ -8316,8 +8404,8 @@ function PlanPage({ profile, setStage }) {
   const nextStage = planNextStage(profile);
   const doneCount = tasks.filter((t) => doneSet.has(t.id)).length;
   const reqOpen = tasks.filter((t) => t.required && !doneSet.has(t.id)).length;
-  const outLog = readOutreachLog();
-  const checkinList = readJSON("rr_checkins", []);
+  const outLog = ctx.log;
+  const checkinList = ctx.checkins;
   const wkNow = planWeekReview(state, outLog, checkinList, new Date(), 0);
   const wkPast = [-1, -2, -3, -4].map((o) => planWeekReview(state, outLog, checkinList, new Date(), o));
   const wkMax = Math.max(1, wkNow.total, ...wkPast.map((w) => w.total));
@@ -8400,10 +8488,15 @@ function PlanPage({ profile, setStage }) {
                     <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "var(--paper-dim)", color: "var(--ink-soft)" }}>{t.when}</span>
                     {t.required && <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "var(--navy)", color: "#fff" }}>Obligatoria</span>}
                     {t.rule && <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, border: "1px solid var(--line)", color: "var(--ink-soft)" }}>{t.rule}</span>}
+                    {eff.auto.has(t.id) && <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "#e8f5ec", color: "#1f6b3a" }}>Hecho solo, con lo que ya hiciste</span>}
                   </span>
                 </span>
               </label>
-              <button className="rm-btn-inline" onClick={() => setStage(t.go)}>Ir →</button>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                {eff.auto.has(t.id) && <button className="rm-btn-inline" onClick={() => toggle(t.id)}>Deshacer</button>}
+                {!isDone && <button className="rm-btn-inline" onClick={() => downloadTaskICS(t)} title="Agregar este paso a tu calendario" aria-label="Agregar al calendario">📅</button>}
+                <button className="rm-btn-inline" onClick={() => setStage(t.go)}>Ir →</button>
+              </div>
             </div>
           );
         })}
@@ -9470,7 +9563,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
   // Una sola acción: seguimientos vencidos, check-in, lo obligatorio del plan, el próximo coach, y después lo demás del plan.
   const [planState, setPlanState] = useState(readPlanState);
   const planTasks = planTasksFor(profile);
-  const planDone = planDoneSet(planState, today);
+  const planDone = planEffectiveDone(planState, today, planTasks, { log, checkins, favorites: readFavorites() }).done;
   const planReq = planNextTask(planTasks, planDone, true);
   const planAny = planNextTask(planTasks.filter((t) => !String(t.id).startsWith("fu-")), planDone);
   const markPlanDone = (id) => {
