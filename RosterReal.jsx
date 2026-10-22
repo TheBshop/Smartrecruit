@@ -8784,9 +8784,10 @@ const UPSIDE_BY_YEARS_REMAINING = [15, 35, 60, 85, 100];
 // Clasifica un match puntual como Reach/Target/Safety según su score de compatibilidad —
 // misma lógica que "Target School Alignment" de NextCommit, aplicada a cada universidad.
 function classifyFit(score) {
-  if (score >= 65) return { label: "Safety", color: "#1f7a3f" };
-  if (score >= 35) return { label: "Target", color: "#2f6fb3" };
-  return { label: "Reach", color: "#b3401a" };
+  // En inglés: Safety / Target / Reach. Acá se muestran en español; `key` es el nombre interno.
+  if (score >= 65) return { key: "Safety", label: "Segura", color: "#1f7a3f" };
+  if (score >= 35) return { key: "Target", label: "Realista", color: "#2f6fb3" };
+  return { key: "Reach", label: "Ambiciosa", color: "#b3401a" };
 }
 
 function computeRecruitScore(profile, results) {
@@ -8847,16 +8848,16 @@ function computeRecruitScore(profile, results) {
   const readinessScore = talent;
   const upsideScore = UPSIDE_BY_YEARS_REMAINING[yearsRemaining] ?? 50;
 
-  // Alineación de la lista: cuántos de los matches del pool son Reach/Target/Safety.
+  // Alineación de la lista: cuántos de los matches del pool son Reach/Target/Safety (internamente; en pantalla: ambiciosas, realistas y seguras).
   const fitCounts = { Reach: 0, Target: 0, Safety: 0 };
-  pool.forEach((r) => { fitCounts[classifyFit(r.score).label]++; });
+  pool.forEach((r) => { fitCounts[classifyFit(r.score).key]++; });
 
   // Gaps concretos — solo se listan los que de verdad aplican, nada relleno.
   const gaps = [];
   if (academicScore < 40) gaps.push(`Tu GPA (${gpa4.toFixed(2)}/4.0) está por debajo del piso realista de ${divisions[0] || "la división que estás apuntando"} (${academicBenchmark.toFixed(1)}) — es lo primero que filtra a un coach antes de mirar tu video.`);
   if (!profile.videoLink) gaps.push("No tenés un link de video de highlights cargado en tu perfil — es el primer filtro que aplica casi cualquier coach.");
   if (outreachCount === 0) gaps.push("Todavía no le escribiste a ningún coach — el score de Recruiting Momentum queda en el piso hasta que generes el primer email real.");
-  if (fitCounts.Reach > fitCounts.Target + fitCounts.Safety) gaps.push(`De tus universidades con match, ${fitCounts.Reach} son Reach y solo ${fitCounts.Target + fitCounts.Safety} son Target/Safety — conviene sumar algunas más realistas a tu lista antes de escribir.`);
+  if (fitCounts.Reach > fitCounts.Target + fitCounts.Safety) gaps.push(`De tus universidades con match, ${fitCounts.Reach} son ambiciosas y solo ${fitCounts.Target + fitCounts.Safety} son realistas o seguras — conviene sumar algunas más realistas a tu lista antes de escribir.`);
 
   return {
     talent, matchTalent, yearsRemaining, projectedDivision, low, high, exposure, outreachCount, natMatches, pool,
@@ -8958,9 +8959,9 @@ function RecruitScoreCard({ profile, results }) {
 
       {rs.pool.length > 0 && (
         <div className="rm-recruit-fit-summary">
-          <span className="rm-fit-chip" style={{ background: "#fdeceb", color: "#b3401a" }}>{rs.fitCounts.Reach} Reach</span>
-          <span className="rm-fit-chip" style={{ background: "#eaf1fa", color: "#2f6fb3" }}>{rs.fitCounts.Target} Target</span>
-          <span className="rm-fit-chip" style={{ background: "#eaf6ee", color: "#1f7a3f" }}>{rs.fitCounts.Safety} Safety</span>
+          <span className="rm-fit-chip" style={{ background: "#fdeceb", color: "#b3401a" }}>{rs.fitCounts.Reach} ambiciosas</span>
+          <span className="rm-fit-chip" style={{ background: "#eaf1fa", color: "#2f6fb3" }}>{rs.fitCounts.Target} realistas</span>
+          <span className="rm-fit-chip" style={{ background: "#eaf6ee", color: "#1f7a3f" }}>{rs.fitCounts.Safety} seguras</span>
           <span style={{ fontSize: 12, color: "var(--ink-soft)" }}>— así se reparte tu lista de matches. Cada resultado abajo muestra su propia etiqueta.</span>
         </div>
       )}
