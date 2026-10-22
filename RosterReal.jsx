@@ -9850,7 +9850,7 @@ const LEGAL_INFO = {
   address: "Buenos Aires 464, E3100 Paraná, Entre Ríos, Argentina",
   email: "contactosmartrecruit@gmail.com",
   jurisdiction: "la ciudad de Paraná, provincia de Entre Ríos",
-  providers: "Netlify (alojamiento del sitio y funciones de servidor), Supabase (base de datos de cuentas), PostHog (analítica de uso, solo si el usuario la acepta), Anthropic (redacción de borradores con inteligencia artificial) y Google (envío de correos, solo si el usuario conecta su cuenta) y Resend (envío de los recordatorios semanales por correo, solo si el usuario los activa)",
+  providers: "Cloudflare (alojamiento del sitio y funciones de servidor), Supabase (base de datos de cuentas), PostHog (analítica de uso, solo si el usuario la acepta), Anthropic (redacción de borradores con inteligencia artificial) y Google (envío de correos, solo si el usuario conecta su cuenta) y Resend (envío de los recordatorios semanales por correo, solo si el usuario los activa)",
   updated: "22 de octubre de 2026",
 };
 const SHORT_DISCLAIMER = "Smartrecruit es una herramienta educativa que orienta el proceso de autorreclutamiento deportivo universitario en Estados Unidos. No es un agente ni un intermediario, no garantiza becas ni admisiones y no cobra por su uso. No está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.";

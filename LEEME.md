@@ -5,12 +5,12 @@
 - `public/`: se copia tal cual al sitio. Incluye `index.html` (con PostHog, SEO e ícono), `assets/analytics.js` (PostHog + aviso de cookies), `robots.txt` y `sitemap.xml`.
 - `analytics-src/entry.js`: código legible de la analítica (solo hace falta si se cambia).
 
-Compilar: `npm install` y después `npm run build`. El resultado queda en `dist/`, que es la carpeta que se sube a Netlify.
+Compilar: `npm install` y después `npm run build`. El resultado queda en `dist/`, que es la carpeta que publica Cloudflare Pages.
 
 
-## Funciones de servidor (Netlify)
-- `netlify/functions/generate-email.mjs`: genera mails con Claude en `/api/generate-email`. Necesita la variable de entorno `ANTHROPIC_API_KEY` en Netlify (opcional: `ANTHROPIC_MODEL`).
-- `netlify.toml`: comando de build, carpeta `dist` y carpeta de funciones.
+## Funciones de servidor (Cloudflare Pages)
+- `functions/api/generate-email.js`: genera mails con Claude en `/api/generate-email`. Necesita el secreto `ANTHROPIC_API_KEY` en Cloudflare Pages (Settings → Variables and Secrets; opcional: `ANTHROPIC_MODEL`).
+- Cloudflare Pages: comando de build `npm run build`, carpeta de salida `dist`; la carpeta `functions/` se despliega sola.
 
 ## Mails: tipos, ganchos y registro (octubre 2026)
 - `MAIL_KINDS`: los 7 tipos de mail (primer contacto, seguimiento, novedad, respuesta, post-llamada, oferta, cierre). `composeEmail` arma cada uno.

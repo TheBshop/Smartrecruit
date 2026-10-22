@@ -1,7 +1,7 @@
-// Smartrecruit · Generador de mails con IA (Netlify Function).
+// Smartrecruit · Generador de mails con IA (Cloudflare Pages Function, /functions/api/generate-email.js).
 // La clave vive en la variable de entorno ANTHROPIC_API_KEY: nunca llega al navegador.
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
-const ALLOWED = [/^https:\/\/(www\.)?smartrecruit\.com\.ar$/, /^https:\/\/[a-z0-9-]+--smartrecruitt\.netlify\.app$/, /^https:\/\/smartrecruitt\.netlify\.app$/, /^http:\/\/localhost(:\d+)?$/];
+const DEFAULT_MODEL = "claude-sonnet-5-5";
+const ALLOWED = [/^https:\/\/(www\.)?smartrecruit\.com\.ar$/, /^https:\/\/([a-z0-9-]+\.)?smartrecruit[a-z0-9-]*\.pages\.dev$/, /^http:\/\/localhost(:\d+)?$/];
 // Un tipo por cada ocasión del armador de mails del sitio (MAIL_KINDS en RosterReal.jsx), con su objetivo y su largo.
 const KINDS = {
   first: "FIRST CONTACT. Goal: get the coach to watch the video and answer. Structure: who I am (position, graduation year, country, club) → the hook (the concrete reason for writing to THIS program, if given) → key numbers (only those given) → video link → one concrete closing question. 120-180 words.",
@@ -63,14 +63,15 @@ function parseDraft(text) {
   return null;
 }
 
-export default async (req) => {
+async function handle(req, env) {
+  const MODEL = env.ANTHROPIC_MODEL || DEFAULT_MODEL;
   const origin = req.headers.get("origin") || "";
   const okOrigin = ALLOWED.some((re) => re.test(origin));
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: {
     "access-control-allow-origin": okOrigin ? origin : "null", "access-control-allow-methods": "POST", "access-control-allow-headers": "content-type" } });
   if (req.method !== "POST") return json({ error: "method" }, 405);
   if (!okOrigin) return json({ error: "origin" }, 403);
-  if (!process.env.ANTHROPIC_API_KEY) return json({ error: "La clave de la API no está configurada en Netlify." }, 500, origin);
+  if (!env.ANTHROPIC_API_KEY) return json({ error: "La clave de la API no está configurada en el servidor." }, 500, origin);
 
   let input;
   try { input = await req.json(); } catch { return json({ error: "json" }, 400, origin); }
@@ -93,7 +94,7 @@ ${String(input.baseDraft || "").slice(0, 4000)}`;
   try {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+      headers: { "content-type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({ model: MODEL, max_tokens: 2500, system: SYSTEM, messages: [{ role: "user", content: user }] }),
     });
     const data = await r.json();
@@ -118,6 +119,6 @@ ${String(input.baseDraft || "").slice(0, 4000)}`;
   } catch (e) {
     return json({ error: "No se pudo generar el mail. Probá de nuevo.", detail: String(e && e.message || e).slice(0, 300) }, 502, origin);
   }
-};
+}
 
-export const config = { path: "/api/generate-email" };
+export const onRequest = (ctx) => handle(ctx.request, ctx.env);
