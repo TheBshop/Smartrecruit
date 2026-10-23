@@ -680,7 +680,7 @@
  "Bentley University": {
   "name": "C White",
   "title": "Head Coach",
-  "email": null,
+  "email": "cwhite@bentley.edu",
   "generic": false,
   "assistants": [
    {
@@ -761,7 +761,7 @@
  "Anderson University – South Carolina": {
   "name": "Jonathon Barbaree",
   "title": "Head Coach",
-  "email": null,
+  "email": "jbarbaree@andersonuniversity.edu",
   "generic": false,
   "assistants": [
    {
@@ -832,7 +832,7 @@
  "Edward Waters University": {
   "name": "Eric Jackson Jr.",
   "title": "Head Coach",
-  "email": null,
+  "email": "e.jackson2@ew.edu",
   "generic": false,
   "assistants": [
    {
@@ -845,14 +845,6 @@
     "name": "Jordan Jackson"
    }
   ],
-  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
- },
- "Elizabeth City State University": {
-  "name": "Ebony Tanner",
-  "title": "Head Coach",
-  "email": null,
-  "generic": false,
-  "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
  },
  "Embry-Riddle Aeronautical University": {
@@ -1121,7 +1113,7 @@
  "King University – Tennessee": {
   "name": "Josh Thompson",
   "title": "Head Coach",
-  "email": null,
+  "email": "jlthompson@king.edu",
   "generic": false,
   "assistants": [
    {
@@ -1148,7 +1140,7 @@
  "Lake Superior State University": {
   "name": "Grace Howrigon",
   "title": "Head Coach",
-  "email": null,
+  "email": "ghowrigon@lssu.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1231,7 +1223,7 @@
  "Livingstone College": {
   "name": "Queen Smith",
   "title": "Head Coach",
-  "email": null,
+  "email": "qsmith@livingstone.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1666,7 +1658,7 @@
  "Saint Anselm College": {
   "name": "Century McCartney",
   "title": "Interim Head Coach",
-  "email": null,
+  "email": "cmccartney@anselm.edu",
   "generic": false,
   "assistants": [
    {
@@ -1690,7 +1682,7 @@
  "San Francisco State University": {
   "name": "Moné Peoples",
   "title": "Head Coach",
-  "email": null,
+  "email": "coachmo@sfsu.edu",
   "generic": false,
   "assistants": [
    {
@@ -1714,7 +1706,7 @@
  "Shepherd University": {
   "name": "Julie Kaufman",
   "title": "Head Coach",
-  "email": null,
+  "email": "jkaufman@shepherd.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1722,7 +1714,7 @@
  "Savannah State University": {
   "name": "Phillip Wallace Jr.",
   "title": "Head Coach",
-  "email": null,
+  "email": "wallacep@savannahstate.edu",
   "generic": false,
   "assistants": [
    {
@@ -1737,7 +1729,7 @@
  "Shorter University": {
   "name": "Marcus Hunt",
   "title": "Head Coach",
-  "email": null,
+  "email": "mhunt@shorter.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1745,7 +1737,7 @@
  "Simon Fraser University": {
   "name": "Shae Dheensaw",
   "title": "Head Coach",
-  "email": null,
+  "email": "shae_dheensaw@sfu.ca",
   "generic": false,
   "assistants": [
    {
@@ -1768,7 +1760,7 @@
  "South Dakota Mines": {
   "name": "Kyley Bachand",
   "title": "Head Coach",
-  "email": null,
+  "email": "Kyley.Bachand@sdsmt.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1776,7 +1768,7 @@
  "South Dakota School of Mines & Technology": {
   "name": "Kyley Bachand",
   "title": "Head Coach",
-  "email": null,
+  "email": "Kyley.Bachand@sdsmt.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1784,7 +1776,7 @@
  "Southern Arkansas University": {
   "name": "Darrick Matthews",
   "title": "Head Coach",
-  "email": null,
+  "email": "dlmatthews@saumag.edu",
   "generic": false,
   "assistants": [
    {
@@ -1796,7 +1788,7 @@
  "Southwest Minnesota State University": {
   "name": "Tom Webb",
   "title": "Head Coach",
-  "email": null,
+  "email": "tom.webb@smsu.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -1805,6 +1797,14 @@
   "name": "Lori Fish",
   "title": "Head Coach",
   "email": "llfish@stcloudstate.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Shaw University": {
+  "name": "Ebony Tanner",
+  "title": "Head Coach",
+  "email": "ebonytanner@shawu.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
