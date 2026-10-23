@@ -1603,5 +1603,210 @@
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Pittsburg State University": {
+  "name": "Amanda Davied",
+  "title": "Head Coach",
+  "email": "addavied@pittstate.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Regis University": {
+  "name": "Jason Kohler",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Landon Lopez"
+   },
+   {
+    "name": "Erin Fry"
+   },
+   {
+    "name": "Kaylin Venick"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Rockhurst University": {
+  "name": "Larry Park",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Mike Park"
+   },
+   {
+    "name": "Brian Moeller"
+   },
+   {
+    "name": "Brooke Shull"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Rogers State University": {
+  "name": "Heather Davis",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Shillalie Jones"
+   },
+   {
+    "name": "Tyler O'Connor"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Saint Anselm College": {
+  "name": "Century McCartney",
+  "title": "Interim Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Hannah Nelson"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Saint Michael's College": {
+  "name": "Shannon Bollhardt",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Andrea Lozeau"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "San Francisco State University": {
+  "name": "Moné Peoples",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Daron Sims"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Seton Hill University": {
+  "name": "Nick Volchok",
+  "title": "Head Coach",
+  "email": "nvolchok@setonhill.edu",
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Christiane Frye"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Shepherd University": {
+  "name": "Julie Kaufman",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Savannah State University": {
+  "name": "Phillip Wallace Jr.",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Jackie Britt"
+   },
+   {
+    "name": "Andrew Okorodudu"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Shorter University": {
+  "name": "Marcus Hunt",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Simon Fraser University": {
+  "name": "Shae Dheensaw",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Daniel Ferguson"
+   },
+   {
+    "name": "Makenna Gardner"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Sonoma State University": {
+  "name": "Des Abeyta",
+  "title": "Head Coach",
+  "email": "abeytade@sonoma.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "South Dakota Mines": {
+  "name": "Kyley Bachand",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "South Dakota School of Mines & Technology": {
+  "name": "Kyley Bachand",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Southern Arkansas University": {
+  "name": "Darrick Matthews",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Sirena Matthews"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Southwest Minnesota State University": {
+  "name": "Tom Webb",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "St. Cloud State University": {
+  "name": "Lori Fish",
+  "title": "Head Coach",
+  "email": "llfish@stcloudstate.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
  }
 }
