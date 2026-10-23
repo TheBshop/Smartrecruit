@@ -8424,11 +8424,10 @@ function ReminderEmailBox({ profile }) {
     setRow({ enabled: next });
     setMsg(next ? "Listo: el próximo domingo te llega el primero." : "Listo: no te mandamos más recordatorios.");
   };
-  if (!EMAIL_REMINDERS_LIVE || row === false) return null; // todavía no está activado o la tabla no existe: no se muestra nada roto
+  if (!EMAIL_REMINDERS_LIVE || row === false || !session) return null; // sin sesión, sin flag o sin tabla: no se muestra nada (el tilde aparece solo al iniciar sesión)
   return (
     <div style={{ marginTop: 18 }}>
       <h4 style={{ margin: "0 0 6px", fontSize: 15 }}>Recordatorio por email</h4>
-      {!session && <p className="rm-hint" style={{ margin: 0 }}>Para recibir un email por semana, primero guardá tu progreso con tu correo (menú "Guardar mi progreso"). Así el recordatorio te llega aunque no tengas el sitio abierto.</p>}
       {session && minorBlocked && <p className="rm-hint" style={{ margin: 0 }}>Para activarlo necesitamos la conformidad de tu madre, padre o tutor en tu perfil.</p>}
       {session && !minorBlocked && (
         <>
