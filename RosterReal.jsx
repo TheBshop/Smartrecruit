@@ -10132,6 +10132,18 @@ function AccountMenu({ session }) {
   }, []);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null); // null | "sending" | "sent" | "error"
+  const [code, setCode] = useState("");
+  const [codeStatus, setCodeStatus] = useState(null); // null | "checking" | "error"
+  // Alternativa al link: el mismo mail trae un código de 6 dígitos que se escribe acá (sirve aunque el link falle o se abra en otro navegador).
+  const verifyCode = async () => {
+    const t = String(code || "").replace(/\D/g, "");
+    if (t.length < 6) return;
+    setCodeStatus("checking");
+    try {
+      const { error } = await supabase.auth.verifyOtp({ email, token: t, type: "email" });
+      if (error) setCodeStatus("error"); else setCodeStatus(null);
+    } catch (e) { setCodeStatus("error"); }
+  };
   const send = async () => {
     if (!email || !email.includes("@")) return;
     setStatus("sending");
@@ -10159,7 +10171,13 @@ function AccountMenu({ session }) {
           <span className="rm-sidebar-label">Guardar mi progreso</span>
         </button>
       ) : status === "sent" ? (
-        <p className="rm-account-note">Te mandamos un link a {email}. Abrilo desde este mismo dispositivo o desde cualquier otro — tu progreso te va a estar esperando ahí.</p>
+        <div className="rm-account-form">
+          <p className="rm-account-note">Te mandamos un mail a {email}. Tocá el link que trae, o escribí acá el código de 6 números que aparece en el mismo mail. Si no lo ves, revisá spam o promociones.</p>
+          <input inputMode="numeric" autoComplete="one-time-code" maxLength={8} placeholder="Código de 6 números" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verifyCode()} />
+          <button className="rm-btn-inline" disabled={codeStatus === "checking"} onClick={verifyCode}>{codeStatus === "checking" ? "Verificando…" : "Entrar con el código →"}</button>
+          {codeStatus === "error" && <p className="rm-account-note" style={{ color: "#b23b3b" }}>Ese código no es válido o ya venció. Pedí uno nuevo.</p>}
+          <button className="rm-account-link" onClick={() => { setStatus(null); setCode(""); setCodeStatus(null); }}>Pedir otro mail</button>
+        </div>
       ) : (
         <div className="rm-account-form">
           <input type="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} />
