@@ -5457,7 +5457,7 @@ function MailPage({ profile, setStage, embedded }) {
           </div>
         </>
       ))}
-      <p className="rm-today-note" style={{ marginTop: 20 }}>Si iniciaste sesión con "Guardar mi progreso", el registro se guarda en tu cuenta y lo ves desde cualquier dispositivo; si no, queda solo en este navegador. "Quitar del registro" es para los mails que abriste pero no mandaste.</p>
+      <p className="rm-today-note" style={{ marginTop: 20 }}>Si iniciaste sesión con tu cuenta, el registro se guarda en tu cuenta y lo ves desde cualquier dispositivo; si no, queda solo en este navegador. "Quitar del registro" es para los mails que abriste pero no mandaste.</p>
     </div>
   );
 }
@@ -7493,7 +7493,7 @@ function OutreachHistoryPage({ profile, setStage }) {
               </ol>
             </section>
           ))}
-          <p className="rm-today-note" style={{ marginTop: 20 }}>Para cambiar el estado de un coach o escribirle de nuevo, andá a <button className="rm-btn-inline" onClick={() => setStage(profile ? "outreach" : "form")}>Mi correo</button>. Si iniciaste sesión con "Guardar mi progreso", este historial se guarda en tu cuenta; si no, queda solo en este navegador.</p>
+          <p className="rm-today-note" style={{ marginTop: 20 }}>Para cambiar el estado de un coach o escribirle de nuevo, andá a <button className="rm-btn-inline" onClick={() => setStage(profile ? "outreach" : "form")}>Mi correo</button>. Si iniciaste sesión con tu cuenta, este historial se guarda en tu cuenta; si no, queda solo en este navegador.</p>
         </>
       )}
     </div>
@@ -10130,27 +10130,72 @@ function AccountMenu({ session }) {
     const t = setInterval(check, 3000);
     return () => clearInterval(t);
   }, []);
+  // mode: login | signup | forgot (olvidé mi contraseña) | otp (entrar solo con código). step: form | code
+  const [mode, setMode] = useState("login");
+  const [step, setStep] = useState("form");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState(null); // null | "sending" | "sent" | "error"
+  const [pass, setPass] = useState("");
   const [code, setCode] = useState("");
-  const [codeStatus, setCodeStatus] = useState(null); // null | "checking" | "error"
-  // Alternativa al link: el mismo mail trae un código de 6 dígitos que se escribe acá (sirve aunque el link falle o se abra en otro navegador).
-  const verifyCode = async () => {
-    const t = String(code || "").replace(/\D/g, "");
-    if (t.length < 6) return;
-    setCodeStatus("checking");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const [info, setInfo] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [needNew, setNeedNew] = useState(() => { try { return localStorage.getItem("rr_need_new_password") === "1"; } catch (e) { return false; } });
+  const codeType = mode === "signup" ? "signup" : mode === "forgot" ? "recovery" : "email";
+  const reset = (m) => { setMode(m); setStep("form"); setErr(""); setInfo(""); setCode(""); };
+  const okEmail = !!email && /.+@.+\..+/.test(email.trim());
+  const sendCode = async () => {
+    setBusy(true); setErr(""); setInfo("");
     try {
-      const { error } = await supabase.auth.verifyOtp({ email, token: t, type: "email" });
-      if (error) setCodeStatus("error"); else setCodeStatus(null);
-    } catch (e) { setCodeStatus("error"); }
+      let res;
+      if (mode === "forgot") res = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin });
+      else res = await supabase.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: window.location.origin } });
+      if (res.error) setErr("No se pudo enviar el mail. Probá de nuevo en un momento."); else setStep("code");
+    } catch (e) { setErr("No se pudo enviar el mail. Probá de nuevo en un momento."); }
+    setBusy(false);
   };
-  const send = async () => {
-    if (!email || !email.includes("@")) return;
-    setStatus("sending");
+  const submit = async () => {
+    if (!okEmail || busy) return;
+    if (mode === "forgot" || mode === "otp") return sendCode();
+    if (pass.length < 8) { setErr("La contraseña tiene que tener al menos 8 caracteres."); return; }
+    setBusy(true); setErr(""); setInfo("");
     try {
-      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin } });
-      setStatus(error ? "error" : "sent");
-    } catch (e) { setStatus("error"); }
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pass });
+        if (error) {
+          if (/not confirmed/i.test(error.message || "")) {
+            await supabase.auth.resend({ type: "signup", email: email.trim() });
+            setMode("signup"); setStep("code"); setInfo("Tu cuenta todavía no está confirmada. Te mandamos un código al mail.");
+          } else setErr("El mail o la contraseña no coinciden. Si no te acordás, tocá \"Olvidé mi contraseña\".");
+        }
+      } else {
+        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: pass, options: { emailRedirectTo: window.location.origin } });
+        if (error) setErr(/registered|exists/i.test(error.message || "") ? "Ese mail ya tiene cuenta. Iniciá sesión." : "No se pudo crear la cuenta. Revisá el mail y probá de nuevo.");
+        else if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) setErr("Ese mail ya tiene cuenta. Iniciá sesión o tocá \"Olvidé mi contraseña\".");
+        else if (!(data && data.session)) { setStep("code"); setInfo("Te mandamos un código de confirmación al mail."); }
+      }
+    } catch (e) { setErr("Algo falló. Probá de nuevo en un momento."); }
+    setBusy(false);
+  };
+  const verify = async () => {
+    const t = String(code || "").replace(/\D/g, "");
+    if (t.length < 6 || busy) return;
+    setBusy(true); setErr("");
+    try {
+      if (mode === "forgot") { try { localStorage.setItem("rr_need_new_password", "1"); } catch (e) {} }
+      const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: t, type: codeType });
+      if (error) { try { localStorage.removeItem("rr_need_new_password"); } catch (e) {} setErr("Ese código no es válido o ya venció. Pedí uno nuevo."); }
+    } catch (e) { setErr("Algo falló. Probá de nuevo."); }
+    setBusy(false);
+  };
+  const saveNewPass = async () => {
+    if (newPass.length < 8) { setErr("La contraseña tiene que tener al menos 8 caracteres."); return; }
+    setBusy(true); setErr("");
+    const { error } = await supabase.auth.updateUser({ password: newPass });
+    setBusy(false);
+    if (error) { setErr("No se pudo guardar la contraseña. Probá con otra."); return; }
+    try { localStorage.removeItem("rr_need_new_password"); } catch (e) {}
+    setNeedNew(false); setNewPass(""); setInfo("Listo: la próxima vez entrás con tu mail y esta contraseña.");
   };
   const signOut = async () => { await supabase.auth.signOut(); syncUserId = null; window.location.reload(); };
 
@@ -10160,30 +10205,52 @@ function AccountMenu({ session }) {
         <span className="rm-account-email" title={session.user.email}>{session.user.email}</span>
         {syncPending && <span className="rm-account-sync" title="Hay cambios que todavía no se guardaron en la nube. Se reintenta solo.">· guardando…</span>}
         <button className="rm-account-link" onClick={signOut}>Cerrar sesión</button>
+        {needNew && (
+          <div className="rm-account-form" style={{ marginTop: 8 }}>
+            <p className="rm-account-note">Elegí una contraseña nueva (mínimo 8 caracteres):</p>
+            <input type="password" autoComplete="new-password" placeholder="Contraseña nueva" value={newPass} onChange={(e) => setNewPass(e.target.value)} onKeyDown={(e) => e.key === "Enter" && saveNewPass()} />
+            <button className="rm-btn-inline" disabled={busy} onClick={saveNewPass}>{busy ? "Guardando…" : "Guardar contraseña →"}</button>
+            {err && <p className="rm-account-note" style={{ color: "#b23b3b" }}>{err}</p>}
+          </div>
+        )}
+        {!needNew && info && <p className="rm-account-note">{info}</p>}
       </div>
     );
   }
+  const titles = { login: "Iniciar sesión", signup: "Crear cuenta", forgot: "Recuperar contraseña", otp: "Entrar con código" };
   return (
     <div className="rm-account">
       {!open ? (
         <button className="rm-sidebar-link" onClick={() => setOpen(true)}>
           <span className="rm-sidebar-icon">🔐</span>
-          <span className="rm-sidebar-label">Guardar mi progreso</span>
+          <span className="rm-sidebar-label">Iniciar sesión</span>
         </button>
-      ) : status === "sent" ? (
+      ) : step === "code" ? (
         <div className="rm-account-form">
-          <p className="rm-account-note">Te mandamos un mail a {email}. Tocá el link que trae, o escribí acá el código de 6 números que aparece en el mismo mail. Si no lo ves, revisá spam o promociones.</p>
-          <input inputMode="numeric" autoComplete="one-time-code" maxLength={8} placeholder="Código de 6 números" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verifyCode()} />
-          <button className="rm-btn-inline" disabled={codeStatus === "checking"} onClick={verifyCode}>{codeStatus === "checking" ? "Verificando…" : "Entrar con el código →"}</button>
-          {codeStatus === "error" && <p className="rm-account-note" style={{ color: "#b23b3b" }}>Ese código no es válido o ya venció. Pedí uno nuevo.</p>}
-          <button className="rm-account-link" onClick={() => { setStatus(null); setCode(""); setCodeStatus(null); }}>Pedir otro mail</button>
+          <p className="rm-account-note">{info || `Te mandamos un mail a ${email}.`} Escribí acá el código de 6 números (también podés tocar el link del mail). Si no lo ves, revisá spam o promociones.</p>
+          <input inputMode="numeric" autoComplete="one-time-code" maxLength={8} placeholder="Código de 6 números" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verify()} />
+          <button className="rm-btn-inline" disabled={busy} onClick={verify}>{busy ? "Verificando…" : "Confirmar →"}</button>
+          {err && <p className="rm-account-note" style={{ color: "#b23b3b" }}>{err}</p>}
+          <button className="rm-account-link" onClick={() => reset(mode === "signup" ? "signup" : "login")}>Volver</button>
         </div>
       ) : (
         <div className="rm-account-form">
-          <input type="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} />
-          <button className="rm-btn-inline" disabled={status === "sending"} onClick={send}>{status === "sending" ? "Enviando…" : "Enviarme el link →"}</button>
-          {status === "error" && <p className="rm-account-note" style={{ color: "#b23b3b" }}>No se pudo enviar. Probá de nuevo en un momento.</p>}
-          <p className="rm-account-note">Así tu perfil, tu lista y tus mails quedan guardados aunque cambies de compu o de celular. Al crear la cuenta aceptás los Términos y la Política de Privacidad (abajo de todo en cada página).</p>
+          <strong style={{ fontSize: 13 }}>{titles[mode]}</strong>
+          <input type="email" autoComplete="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+          {(mode === "login" || mode === "signup") && (
+            <input type="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} placeholder={mode === "signup" ? "Elegí una contraseña (mín. 8)" : "Contraseña"} value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+          )}
+          <button className="rm-btn-inline" disabled={busy || !okEmail} onClick={submit}>
+            {busy ? "Un momento…" : mode === "login" ? "Entrar →" : mode === "signup" ? "Crear cuenta →" : "Enviarme un código →"}
+          </button>
+          {err && <p className="rm-account-note" style={{ color: "#b23b3b" }}>{err}</p>}
+          {mode === "login" && <>
+            <button className="rm-account-link" onClick={() => reset("signup")}>No tengo cuenta: crear una</button>
+            <button className="rm-account-link" onClick={() => reset("forgot")}>Olvidé mi contraseña</button>
+            <button className="rm-account-link" onClick={() => reset("otp")}>Entrar solo con un código por mail</button>
+          </>}
+          {mode !== "login" && <button className="rm-account-link" onClick={() => reset("login")}>Ya tengo cuenta: iniciar sesión</button>}
+          <p className="rm-account-note">Con tu cuenta, tu perfil, tu lista y tus mails quedan guardados y los ves igual desde cualquier compu o celular. Al crearla aceptás los Términos y la Política de Privacidad (abajo de todo en cada página).</p>
         </div>
       )}
     </div>
@@ -10264,6 +10331,7 @@ export default function App() {
       let handled = null;
       try { handled = localStorage.getItem("rr_login_handled_uid"); } catch (e) {}
       if (event === "SIGNED_OUT") { try { localStorage.removeItem("rr_login_handled_uid"); } catch (e) {} }
+      if (event === "PASSWORD_RECOVERY") { try { localStorage.setItem("rr_need_new_password", "1"); } catch (e) {} }
       if (event === "SIGNED_IN" && sess && handled !== sess.user.id) {
         try { localStorage.setItem("rr_login_handled_uid", sess.user.id); } catch (e) {}
         const hadRemote = await pullFromCloud(sess.user.id);
