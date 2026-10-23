@@ -665,7 +665,7 @@
  "Benedict College": {
   "name": "James Rice",
   "title": "Head Coach",
-  "email": null,
+  "email": "James.Rice@benedict.edu",
   "generic": false,
   "assistants": [
    {
@@ -695,7 +695,7 @@
  "Caldwell University": {
   "name": "Christie Conforti",
   "title": "Head Coach",
-  "email": null,
+  "email": "cconforti@caldwell.edu",
   "generic": false,
   "assistants": [
    {
@@ -710,7 +710,7 @@
  "Christian Brothers University": {
   "name": "Samantha Davidson",
   "title": "Head Coach",
-  "email": null,
+  "email": "sdavids1@cbu.edu",
   "generic": false,
   "assistants": [
    {
@@ -722,7 +722,7 @@
  "Clark Atlanta University": {
   "name": "Tony Bailey",
   "title": "Head Coach",
-  "email": null,
+  "email": "abailey@cau.edu",
   "generic": false,
   "assistants": [
    {
@@ -740,7 +740,7 @@
  "College of Staten Island": {
   "name": "Nicole Sarcone",
   "title": "Head Coach",
-  "email": null,
+  "email": "Nicole.Sarcone@csi.cuny.edu",
   "generic": false,
   "assistants": [
    {
@@ -773,7 +773,7 @@
  "CUNY Queens College": {
   "name": "Travis Ponton",
   "title": "Head Coach",
-  "email": null,
+  "email": "travis.ponton@qc.cuny.edu",
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
@@ -781,7 +781,7 @@
  "Davis & Elkins College": {
   "name": "Alison McCarthy",
   "title": "Head Coach",
-  "email": null,
+  "email": "mccarthya@dewv.edu",
   "generic": false,
   "assistants": [
    {
@@ -793,7 +793,7 @@
  "East Central University": {
   "name": "Heather Hurt",
   "title": "Head Coach",
-  "email": null,
+  "email": "hhurt@ecok.edu",
   "generic": false,
   "assistants": [
    {
@@ -808,7 +808,7 @@
  "Eastern New Mexico University": {
   "name": "Blake Huber",
   "title": "Head Coach",
-  "email": null,
+  "email": "blake.huber@enmu.edu",
   "generic": false,
   "assistants": [
    {
@@ -820,7 +820,7 @@
  "Eckerd College": {
   "name": "Paul Honsinger",
   "title": "Head Coach",
-  "email": null,
+  "email": "honsinpf@eckerd.edu",
   "generic": false,
   "assistants": [
    {
@@ -858,7 +858,7 @@
  "Embry-Riddle Aeronautical University": {
   "name": "Lisa Wilson",
   "title": "Head Coach",
-  "email": null,
+  "email": "lisa.wilson@erau.edu",
   "generic": false,
   "assistants": [
    {
@@ -870,7 +870,7 @@
  "Flagler College – St. Augustine": {
   "name": "Mo Smith",
   "title": "Head Coach",
-  "email": null,
+  "email": "msmith@flagler.edu",
   "generic": false,
   "assistants": [
    {
@@ -885,7 +885,7 @@
  "Emporia State University": {
   "name": "MJ Baker",
   "title": "Head Coach",
-  "email": null,
+  "email": "mbaker25@emporia.edu",
   "generic": false,
   "assistants": [
    {
@@ -900,7 +900,7 @@
  "Florida Tech": {
   "name": "Ashley Raley-Ross",
   "title": "Head Coach",
-  "email": null,
+  "email": "araleyross@fit.edu",
   "generic": false,
   "assistants": [
    {
@@ -931,7 +931,7 @@
  "Florida Southern College": {
   "name": "Megan Dzikas",
   "title": "Head Coach",
-  "email": null,
+  "email": "mdzikas@flsouthern.edu",
   "generic": false,
   "assistants": [
    {
@@ -943,7 +943,7 @@
  "Fort Hays State University": {
   "name": "Talia Kahrs",
   "title": "Head Coach",
-  "email": null,
+  "email": "tmmiller3@fhsu.edu",
   "generic": false,
   "assistants": [
    {
@@ -970,7 +970,7 @@
  "Fort Valley State University": {
   "name": "LaToya Jones",
   "title": "Head Coach",
-  "email": null,
+  "email": "latoya.jones@fvsu.edu",
   "generic": false,
   "assistants": [
    {
@@ -998,7 +998,7 @@
  "Fresno Pacific University": {
   "name": "Tim Beauregard",
   "title": "Head Coach",
-  "email": null,
+  "email": "tim.beauregard@fresno.edu",
   "generic": false,
   "assistants": [
    {
@@ -1038,7 +1038,7 @@
  "Glenville State University": {
   "name": "Emily Stoller",
   "title": "Head Coach",
-  "email": null,
+  "email": "emily.stoller@glenville.edu",
   "generic": false,
   "assistants": [
    {
@@ -1053,7 +1053,7 @@
  "Grand Valley State University": {
   "name": "Mike Williams",
   "title": "Head Coach",
-  "email": null,
+  "email": "willimi@gvsu.edu",
   "generic": false,
   "assistants": [
    {
@@ -1068,7 +1068,7 @@
  "Hawaii Pacific University": {
   "name": "Brent Gibson",
   "title": "Head Coach",
-  "email": null,
+  "email": "bregibson@hpu.edu",
   "generic": false,
   "assistants": [
    {
@@ -1086,7 +1086,7 @@
  "Holy Family University": {
   "name": "Bernadette Laukaitis",
   "title": "Head Coach",
-  "email": null,
+  "email": "blaukaitis@holyfamily.edu",
   "generic": false,
   "assistants": [
    {
@@ -1133,7 +1133,7 @@
  "Lake Erie College": {
   "name": "Mikayla Lopez",
   "title": "Head Coach",
-  "email": null,
+  "email": "mlopez@lec.edu",
   "generic": false,
   "assistants": [
    {
@@ -1156,7 +1156,7 @@
  "Lander University": {
   "name": "Colie Shelwick",
   "title": "Head Coach",
-  "email": null,
+  "email": "nshelwick@lander.edu",
   "generic": false,
   "assistants": [
    {
@@ -1168,7 +1168,7 @@
  "Lees-McRae College": {
   "name": "Lauren Galvani",
   "title": "Head Coach",
-  "email": null,
+  "email": "galvanil@lmc.edu",
   "generic": false,
   "assistants": [
    {
