@@ -8395,7 +8395,10 @@ function ReminderEmailBox({ profile }) {
   useEffect(() => {
     let alive = true;
     supabase.auth.getSession().then(({ data }) => { if (alive) setSession((data && data.session) || null); }).catch(() => {});
-    return () => { alive = false; };
+    // Si la persona inicia sesión en otra pestaña (magic link), esta pantalla se entera sin recargar.
+    let sub = null;
+    try { sub = supabase.auth.onAuthStateChange((_ev, sess) => { if (alive) setSession(sess || null); }).data.subscription; } catch (e) { /* sin auth: se ignora */ }
+    return () => { alive = false; try { sub && sub.unsubscribe(); } catch (e) { /* nada */ } };
   }, []);
   const uid = session && session.user && session.user.id;
   useEffect(() => {
