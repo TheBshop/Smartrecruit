@@ -8359,7 +8359,7 @@ function planSinceText(startDate, now = new Date()) {
 // ---- Recordatorio semanal por email (Resend, desde una función de Supabase) ----
 // Pasar a true recién cuando la tabla email_reminders y la función send-weekly-reminders estén creadas en Supabase
 // (ver supabase/LEEME-recordatorios.md). Mientras sea false, el sitio no muestra ni consulta nada de esto.
-const EMAIL_REMINDERS_LIVE = false;
+const EMAIL_REMINDERS_LIVE = true;
 // El sitio guarda un resumen corto (etapa, próxima acción, semana) para que el mail del domingo lo use.
 function reminderDigest(profile, now = new Date()) {
   const state = readPlanState();
