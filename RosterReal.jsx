@@ -4356,6 +4356,11 @@ function EadaSection({ e, profileMajor }) {
         {e.intl != null && <div><span>Egresados internacionales</span><b>{(e.intl * 100).toFixed(1).replace(".", ",")}%</b></div>}
         <div><span>Carreras con título</span><b>{fourYear} de 4 años · {twoYear} de 2 años</b></div>
       </div>
+      <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 8, background: "var(--paper-dim)", border: "1px solid var(--line)", fontSize: 13, lineHeight: 1.5 }}>
+        <b>Ojo con el promedio de becas.</b> {String(eadaDivision(e.cls)).includes("D3")
+          ? "Las universidades de División III no dan becas deportivas: la ayuda que reciben los atletas es académica o por necesidad económica."
+          : "En la mayoría de los deportes la beca se reparte entre varios atletas del equipo (becas parciales), así que las ofertas varían mucho de un jugador a otro. Nunca asumas una beca completa."} El número de arriba sirve para comparar universidades, no para saber cuánto te van a ofrecer.
+      </div>
       {profileMajor && majorHit && (
         <p className="rm-today-note" style={{ marginTop: 12 }}>
           {majorHit.hit ? `Tu carrera: tiene "${majorHit.hit.name}" como ${ipedsLevelText(majorHit.hit)}.` : `Tu carrera: IPEDS no registra títulos en "${profileMajor}" en 2024-25.`}
@@ -8285,6 +8290,13 @@ function planAutoSet(tasks, ctx, now = new Date()) {
   });
   return out;
 }
+// Días desde el último mail a un coach (el más reciente de todo el registro). Sin envíos: null.
+function planDaysSinceMail(log, now = new Date()) {
+  let last = 0;
+  Object.values(log || {}).forEach((e) => { const t = e && e.lastContact ? new Date(e.lastContact).getTime() : 0; if (t > last) last = t; });
+  if (!last) return null;
+  return Math.max(0, Math.floor((now.getTime() - last) / 86400000));
+}
 function planCtx() {
   let log = {}, checkins = [], favorites = [];
   try { log = readOutreachLog() || {}; } catch (e) {}
@@ -8577,6 +8589,23 @@ function PlanPage({ profile, setStage }) {
           <button className="rm-btn-ghost" onClick={() => toggle(nextTask.id)}>Ya lo hice</button>
         </div>}
       </section>
+      {(() => {
+        const d = planDaysSinceMail(outLog);
+        if (d === null) return null;
+        const msg = d === 0 ? "Hoy le escribiste a un coach. Buen ritmo." : d < 7 ? "Estás en ritmo: un mail por semana alcanza para mantenerte en la sala." : d < 21 ? "Pasó más de una semana. Un mail corto a un programa de tu lista te mantiene en el radar." : "Pasó un buen tiempo. Un solo mail, aunque sea corto, vuelve a poner tu nombre delante del coach.";
+        return (
+          <div className="rm-card" style={{ padding: 14, marginTop: 12, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ textAlign: "center", minWidth: 72 }}>
+              <div className="rm-condensed" style={{ fontSize: 34, lineHeight: 1 }}>{d}</div>
+              <div style={{ fontSize: 12, color: "var(--ink-soft)" }}>{d === 1 ? "día" : "días"} sin escribirle a un coach</div>
+            </div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ fontSize: 14 }}>{msg}</div>
+              {d >= 7 && <button className="rm-btn-ghost" style={{ marginTop: 8 }} onClick={() => setStage(profile ? "outreach" : "form")}>Escribir un mail →</button>}
+            </div>
+          </div>
+        );
+      })()}
 
       <div className="rm-grid" style={{ marginTop: 16 }}>
         <div className="rm-card" style={{ padding: 14 }}><div style={{ fontSize: 12, color: "var(--ink-soft)" }}>Usando Smartrecruit</div><b style={{ fontSize: 22 }}>{since}</b></div>
