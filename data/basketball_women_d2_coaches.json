@@ -1808,5 +1808,33 @@
   "generic": false,
   "assistants": [],
   "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Saint Martin's University": {
+  "name": "Christy Martin",
+  "title": "Head Coach",
+  "email": "cmartin@stmartin.edu",
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Saginaw Valley State University": {
+  "name": "Jenny Pruett",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [
+   {
+    "name": "Julia Ayrault"
+   }
+  ],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
+ },
+ "Roberts Wesleyan University": {
+  "name": "Kevin Clifford",
+  "title": "Head Coach",
+  "email": null,
+  "generic": false,
+  "assistants": [],
+  "source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)"
  }
 }
