@@ -4887,6 +4887,39 @@ const SUPABASE_URL = "https://dliayalkzvaugukhxmcb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsaWF5YWxrenZhdWd1a2h4bWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzkwOTMsImV4cCI6MjA4ODExNTA5M30.vGBprr8FKBxTayS6Q6ZbWIxUZKItY4avgMJbUGgQC1E";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts", "rr_plan_state"];
+let syncUserId = null; // seteado por App al iniciar/cerrar sesión — writeJSON lo lee para saber si hay que sincronizar
+let syncTimer = null;
+// ---- Sincronización (criterios tomados de Kleppmann, "Designing Data-Intensive Applications", cap. 5 y 7) ----
+// 1) Cada clave lleva su propia hora de edición (rr_sync_meta). Si dos dispositivos editan cosas distintas, se combinan
+//    clave por clave; antes la última foto completa pisaba todo (lost update).
+// 2) Subir es "comparar y reemplazar": el UPDATE solo se aplica si la fila no cambió desde que se leyó. Si cambió, se
+//    vuelve a leer, se combina y se reintenta (compare-and-set).
+// 3) Subir es idempotente (mismo resultado si se repite), así que reintentar con espera creciente es seguro.
+// 4) Si otro dispositivo tenía datos más nuevos, se aplican acá y se recarga para que la pantalla muestre lo que hay guardado.
+const SYNC_META_KEY = "rr_sync_meta";
+function readSyncMeta() { try { return JSON.parse(localStorage.getItem(SYNC_META_KEY) || "{}") || {}; } catch (e) { return {}; } }
+function touchSyncMeta(key) {
+  if (SYNC_KEYS.indexOf(key) < 0) return;
+  try { const m = readSyncMeta(); m[key] = Date.now(); localStorage.setItem(SYNC_META_KEY, JSON.stringify(m)); } catch (e) {}
+}
+function buildSyncPayload() { const d = snapshotLocal(); d.__meta = readSyncMeta(); return d; }
+// Combina lo que trae la nube con lo local. Gana, por clave, la edición más nueva. Devuelve { payload, applied }.
+function mergeRemote(remote) {
+  const r = remote && typeof remote === "object" ? remote : {};
+  const rmeta = r.__meta && typeof r.__meta === "object" ? r.__meta : {};
+  const lmeta = readSyncMeta();
+  let applied = 0;
+  for (const k of SYNC_KEYS) {
+    if (typeof r[k] !== "string") continue;
+    const rt = Number(rmeta[k]) || 0, lt = Number(lmeta[k]) || 0;
+    const localHas = localStorage.getItem(k) != null;
+    if (!localHas || rt > lt || (lt === 0 && localStorage.getItem(k) !== r[k])) {
+      try { localStorage.setItem(k, r[k]); lmeta[k] = rt; applied++; } catch (e) {}
+    }
+  }
+  try { localStorage.setItem(SYNC_META_KEY, JSON.stringify(lmeta)); } catch (e) {}
+  return { payload: buildSyncPayload(), applied };
+}
 function snapshotLocal() {
   const out = {};
   for (const k of SYNC_KEYS) { const v = localStorage.getItem(k); if (v != null) out[k] = v; }
@@ -4897,16 +4930,50 @@ function restoreLocal(data) {
   // Solo pisa las claves que la nube trae; lo que solo existe en este navegador se conserva.
   for (const k of SYNC_KEYS) { if (typeof data[k] === "string") localStorage.setItem(k, data[k]); }
 }
-let syncUserId = null; // seteado por App al iniciar/cerrar sesión — writeJSON lo lee para saber si hay que sincronizar
-let syncTimer = null;
+let syncRunning = false, syncAgain = false, syncFails = 0, syncRetryTimer = null;
+function setSyncState(pending, errMsg) {
+  try {
+    if (pending) localStorage.setItem("rr_sync_pending", "1"); else localStorage.removeItem("rr_sync_pending");
+    if (errMsg) localStorage.setItem("rr_sync_error", String(errMsg).slice(0, 200)); else localStorage.removeItem("rr_sync_error");
+  } catch (e) {}
+}
+// Un ciclo: leer la fila, combinar, y reemplazar solo si nadie la cambió en el medio.
+async function pushSyncOnce(userId, attempt) {
+  const { data: row, error: e1 } = await supabase.from("user_profiles").select("data,updated_at").eq("id", userId).maybeSingle();
+  if (e1) throw e1;
+  if (!row) {
+    const { error } = await supabase.from("user_profiles").insert({ id: userId, data: buildSyncPayload(), updated_at: new Date().toISOString() });
+    if (error) { if (attempt < 3) return pushSyncOnce(userId, attempt + 1); throw error; }
+    return 0;
+  }
+  const { payload, applied } = mergeRemote(row.data);
+  const { data: upd, error } = await supabase.from("user_profiles")
+    .update({ data: payload, updated_at: new Date().toISOString() }).eq("id", userId).eq("updated_at", row.updated_at).select("id");
+  if (error) throw error;
+  if (!upd || !upd.length) { if (attempt < 3) return pushSyncOnce(userId, attempt + 1); throw new Error("conflicto de edición"); }
+  return applied;
+}
+async function runSync(userId) {
+  if (syncRunning) { syncAgain = true; return; }
+  syncRunning = true;
+  try {
+    const applied = await pushSyncOnce(userId, 0);
+    syncFails = 0; setSyncState(false, "");
+    if (applied > 0) { window.location.reload(); return; } // otro dispositivo tenía datos más nuevos: se muestran
+  } catch (e) {
+    syncFails++; setSyncState(true, (e && (e.message || e.code)) || "error");
+    clearTimeout(syncRetryTimer);
+    const wait = Math.min(300000, 5000 * Math.pow(3, Math.min(syncFails - 1, 4))); // 5 s, 15 s, 45 s, ... hasta 5 min
+    syncRetryTimer = setTimeout(() => { if (syncUserId) runSync(syncUserId); }, wait);
+  } finally {
+    syncRunning = false;
+    if (syncAgain) { syncAgain = false; scheduleSync(); }
+  }
+}
 function scheduleSync() {
   if (!syncUserId) return;
   clearTimeout(syncTimer);
-  syncTimer = setTimeout(() => {
-    supabase.from("user_profiles").upsert({ id: syncUserId, data: snapshotLocal(), updated_at: new Date().toISOString() }).then(
-      ({ error }) => { try { if (error) localStorage.setItem("rr_sync_pending", "1"); else localStorage.removeItem("rr_sync_pending"); } catch (e) {} },
-      () => { try { localStorage.setItem("rr_sync_pending", "1"); } catch (e) {} });
-  }, 1500); // debounce: espera una pausa antes de subir, para no pegarle a la red en cada tecla
+  syncTimer = setTimeout(() => { if (syncUserId) runSync(syncUserId); }, 1500); // debounce: espera una pausa antes de subir
 }
 if (typeof window !== "undefined") {
   window.addEventListener("online", () => { try { if (localStorage.getItem("rr_sync_pending")) scheduleSync(); } catch (e) {} });
@@ -4949,19 +5016,14 @@ function BackupBox() {
     </div>
   );
 }
-async function pullFromCloud(userId) {
+// Primer ingreso en este navegador: guarda una copia local por las dudas y combina con la nube (gana lo más nuevo por clave).
+async function syncOnLogin(userId) {
   try {
-    const { data, error } = await supabase.from("user_profiles").select("data").eq("id", userId).maybeSingle();
-    if (error || !data) return false;
     const before = snapshotLocal();
-    if (Object.keys(before).length) {
-      try { localStorage.setItem("rr_backup_antes_de_login", JSON.stringify({ at: new Date().toISOString(), data: before })); } catch (e) {}
-    }
-    restoreLocal(data.data); return true;
-  } catch (e) { return false; }
-}
-async function pushInitialSnapshot(userId) {
-  try { await supabase.from("user_profiles").upsert({ id: userId, data: snapshotLocal(), updated_at: new Date().toISOString() }); } catch (e) {}
+    if (Object.keys(before).length) localStorage.setItem("rr_backup_antes_de_login", JSON.stringify({ at: new Date().toISOString(), data: before }));
+  } catch (e) {}
+  try { await pushSyncOnce(userId, 0); setSyncState(false, ""); }
+  catch (e) { setSyncState(true, (e && (e.message || e.code)) || "error"); }
 }
 
 function readJSON(key, fallback) {
@@ -9602,8 +9664,8 @@ function OpportunitiesBoard({ profile }) {
 
 function todayKey() { return new Date().toLocaleDateString("en-CA"); }
 // Guarda en el navegador y, si hay sesión iniciada, programa la sincronización con la cuenta.
-function lsSetSynced(key, value) { localStorage.setItem(key, value); scheduleSync(); }
-function writeJSON(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); scheduleSync(); } catch (e) { /* modo privado */ } }
+function lsSetSynced(key, value) { localStorage.setItem(key, value); touchSyncMeta(key); scheduleSync(); }
+function writeJSON(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); touchSyncMeta(key); scheduleSync(); } catch (e) { /* modo privado */ } }
 function formatLongDate(iso) {
   return new Date(iso).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
 }
@@ -10219,7 +10281,7 @@ function AccountMenu({ session }) {
     return (
       <div className="rm-account">
         <span className="rm-account-email" title={session.user.email}>{session.user.email}</span>
-        {syncPending && <span className="rm-account-sync" title="Hay cambios que todavía no se guardaron en la nube. Se reintenta solo.">· guardando…</span>}
+        {syncPending && <span className="rm-account-sync" title={"Hay cambios que todavía no se guardaron en la nube. Se reintenta solo." + (function () { try { var m = localStorage.getItem("rr_sync_error"); return m ? " Motivo: " + m : ""; } catch (e) { return ""; } })()}>· guardando…</span>}
         <button className="rm-account-link" onClick={signOut}>Cerrar sesión</button>
         {needNew && (
           <div className="rm-account-form" style={{ marginTop: 8 }}>
@@ -10353,8 +10415,7 @@ export default function App() {
       if (event === "PASSWORD_RECOVERY") { try { localStorage.setItem("rr_need_new_password", "1"); } catch (e) {} }
       if (event === "SIGNED_IN" && sess && handled !== sess.user.id) {
         try { localStorage.setItem("rr_login_handled_uid", sess.user.id); } catch (e) {}
-        const hadRemote = await pullFromCloud(sess.user.id);
-        if (!hadRemote) await pushInitialSnapshot(sess.user.id); // primera vez de esta cuenta: sube lo que ya había en este navegador
+        await syncOnLogin(sess.user.id); // combina la nube con lo de este navegador (lo más nuevo gana, clave por clave) y sube el resultado
         window.location.reload(); // recarga simple: todo el sitio lee su estado inicial de localStorage, así queda consistente en un solo lugar
       }
     });
