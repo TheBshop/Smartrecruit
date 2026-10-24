@@ -10121,6 +10121,14 @@ function ConsentFields({ value, onChange }) {
   );
 }
 
+// Traduce los errores de Supabase Auth a mensajes claros (límite de mails, código vencido, red).
+function authErrorText(error, fallback) {
+  const msg = String((error && error.message) || "").toLowerCase();
+  const status = error && error.status;
+  if (status === 429 || /rate limit|too many|security purposes|after \d+ seconds/.test(msg)) return "Pediste varios mails seguidos. Esperá unos minutos y probá de nuevo.";
+  if (/network|fetch|failed to/.test(msg)) return "No hay conexión con el servidor. Revisá tu internet y probá de nuevo.";
+  return fallback;
+}
 function AccountMenu({ session }) {
   const [open, setOpen] = useState(false);
   const [syncPending, setSyncPending] = useState(false);
@@ -10142,6 +10150,12 @@ function AccountMenu({ session }) {
   const [newPass, setNewPass] = useState("");
   const [needNew, setNeedNew] = useState(() => { try { return localStorage.getItem("rr_need_new_password") === "1"; } catch (e) { return false; } });
   const codeType = mode === "signup" ? "signup" : mode === "forgot" ? "recovery" : "email";
+  const [cooldown, setCooldown] = useState(0); // segundos hasta poder pedir otro mail (evita pedidos repetidos)
+  useEffect(() => {
+    if (cooldown <= 0) return undefined;
+    const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
   const reset = (m) => { setMode(m); setStep("form"); setErr(""); setInfo(""); setCode(""); };
   const okEmail = !!email && /.+@.+\..+/.test(email.trim());
   const sendCode = async () => {
@@ -10150,7 +10164,7 @@ function AccountMenu({ session }) {
       let res;
       if (mode === "forgot") res = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin });
       else res = await supabase.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: window.location.origin } });
-      if (res.error) setErr("No se pudo enviar el mail. Probá de nuevo en un momento."); else setStep("code");
+      if (res.error) setErr(authErrorText(res.error, "No se pudo enviar el mail. Probá de nuevo en un momento.")); else { setStep("code"); setCooldown(60); }
     } catch (e) { setErr("No se pudo enviar el mail. Probá de nuevo en un momento."); }
     setBusy(false);
   };
@@ -10164,27 +10178,29 @@ function AccountMenu({ session }) {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: pass });
         if (error) {
           if (/not confirmed/i.test(error.message || "")) {
-            await supabase.auth.resend({ type: "signup", email: email.trim() });
-            setMode("signup"); setStep("code"); setInfo("Tu cuenta todavía no está confirmada. Te mandamos un código al mail.");
-          } else setErr("El mail o la contraseña no coinciden. Si no te acordás, tocá \"Olvidé mi contraseña\".");
+            const r = await supabase.auth.resend({ type: "signup", email: email.trim() });
+            if (r.error) setErr(authErrorText(r.error, "Tu cuenta todavía no está confirmada y no pudimos mandarte el código. Probá en unos minutos."));
+            else { setMode("signup"); setStep("code"); setCooldown(60); setInfo("Tu cuenta todavía no está confirmada. Te mandamos un código al mail."); }
+          } else if (error.status === 429 || /rate limit|too many/i.test(error.message || "")) setErr(authErrorText(error, ""));
+          else setErr("El mail o la contraseña no coinciden. Si no te acordás, tocá \"Olvidé mi contraseña\".");
         }
       } else {
         const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: pass, options: { emailRedirectTo: window.location.origin } });
-        if (error) setErr(/registered|exists/i.test(error.message || "") ? "Ese mail ya tiene cuenta. Iniciá sesión." : "No se pudo crear la cuenta. Revisá el mail y probá de nuevo.");
+        if (error) setErr(/registered|exists/i.test(error.message || "") ? "Ese mail ya tiene cuenta. Iniciá sesión." : authErrorText(error, "No se pudo crear la cuenta. Revisá el mail y probá de nuevo."));
         else if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) setErr("Ese mail ya tiene cuenta. Iniciá sesión o tocá \"Olvidé mi contraseña\".");
-        else if (!(data && data.session)) { setStep("code"); setInfo("Te mandamos un código de confirmación al mail."); }
+        else if (!(data && data.session)) { setStep("code"); setCooldown(60); setInfo("Te mandamos un código de confirmación al mail."); }
       }
     } catch (e) { setErr("Algo falló. Probá de nuevo en un momento."); }
     setBusy(false);
   };
   const verify = async () => {
     const t = String(code || "").replace(/\D/g, "");
-    if (t.length < 6 || busy) return;
+    if (t.length !== 6 || busy) { if (t.length !== 6) setErr("El código tiene 6 números."); return; }
     setBusy(true); setErr("");
     try {
       if (mode === "forgot") { try { localStorage.setItem("rr_need_new_password", "1"); } catch (e) {} }
       const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: t, type: codeType });
-      if (error) { try { localStorage.removeItem("rr_need_new_password"); } catch (e) {} setErr("Ese código no es válido o ya venció. Pedí uno nuevo."); }
+      if (error) { try { localStorage.removeItem("rr_need_new_password"); } catch (e) {} setErr(authErrorText(error, "Ese código no es válido o ya venció (dura 10 minutos). Pedí uno nuevo.")); }
     } catch (e) { setErr("Algo falló. Probá de nuevo."); }
     setBusy(false);
   };
@@ -10227,10 +10243,11 @@ function AccountMenu({ session }) {
         </button>
       ) : step === "code" ? (
         <div className="rm-account-form">
-          <p className="rm-account-note">{info || `Te mandamos un mail a ${email}.`} Escribí acá el código que viene en el mail (también podés tocar el link). Si no lo ves, revisá spam o promociones.</p>
-          <input inputMode="numeric" autoComplete="one-time-code" maxLength={8} placeholder="Código del mail" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verify()} />
+          <p className="rm-account-note">{info || `Te mandamos un mail a ${email}.`} Escribí acá el código de 6 números que viene en el mail (también podés tocar el link). Si no lo ves, revisá spam o promociones.</p>
+          <input inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="Código de 6 números" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verify()} />
           <button className="rm-btn-inline" disabled={busy} onClick={verify}>{busy ? "Verificando…" : "Confirmar →"}</button>
           {err && <p className="rm-account-note" style={{ color: "#b23b3b" }}>{err}</p>}
+          <button className="rm-account-link" disabled={cooldown > 0 || busy} onClick={() => (mode === "signup" ? submit() : sendCode())}>{cooldown > 0 ? `Pedir otro código (en ${cooldown} s)` : "Pedir otro código"}</button>
           <button className="rm-account-link" onClick={() => reset(mode === "signup" ? "signup" : "login")}>Volver</button>
         </div>
       ) : (
