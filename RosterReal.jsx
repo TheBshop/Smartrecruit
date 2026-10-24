@@ -10343,6 +10343,8 @@ export default function App() {
       if (!mounted) return;
       setSession(sess);
       syncUserId = sess ? sess.user.id : null;
+      // Si quedó algo sin subir (por ejemplo, se editó sin conexión), se reintenta apenas hay sesión.
+      if (sess) { try { if (localStorage.getItem("rr_sync_pending")) scheduleSync(); } catch (e) { /* nada */ } }
       // Supabase también dispara SIGNED_IN al recargar la página con una sesión ya guardada.
       // Sin este chequeo, cada recarga dispara otra recarga (bucle). Solo se procesa un login por cuenta en este navegador.
       let handled = null;
