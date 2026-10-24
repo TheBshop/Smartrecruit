@@ -10227,8 +10227,8 @@ function AccountMenu({ session }) {
         </button>
       ) : step === "code" ? (
         <div className="rm-account-form">
-          <p className="rm-account-note">{info || `Te mandamos un mail a ${email}.`} Escribí acá el código de 6 números (también podés tocar el link del mail). Si no lo ves, revisá spam o promociones.</p>
-          <input inputMode="numeric" autoComplete="one-time-code" maxLength={8} placeholder="Código de 6 números" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verify()} />
+          <p className="rm-account-note">{info || `Te mandamos un mail a ${email}.`} Escribí acá el código que viene en el mail (también podés tocar el link). Si no lo ves, revisá spam o promociones.</p>
+          <input inputMode="numeric" autoComplete="one-time-code" maxLength={8} placeholder="Código del mail" value={code} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => e.key === "Enter" && verify()} />
           <button className="rm-btn-inline" disabled={busy} onClick={verify}>{busy ? "Verificando…" : "Confirmar →"}</button>
           {err && <p className="rm-account-note" style={{ color: "#b23b3b" }}>{err}</p>}
           <button className="rm-account-link" onClick={() => reset(mode === "signup" ? "signup" : "login")}>Volver</button>
