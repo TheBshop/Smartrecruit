@@ -9936,7 +9936,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
    Los datos entre corchetes los completa el responsable del sitio antes de publicar
    (ver LEGAL_INFO). Borrador pendiente de revisión por un abogado argentino.
 --------------------------------------------------------------- */
-const LEGAL_VERSION = "2026-10-22";
+const LEGAL_VERSION = "2026-10-24";
 const LEGAL_INFO = {
   owner: "Valentino Ruberto",
   taxId: "DNI 44.151.926",
@@ -9944,7 +9944,7 @@ const LEGAL_INFO = {
   email: "contactosmartrecruit@gmail.com",
   jurisdiction: "la ciudad de Paraná, provincia de Entre Ríos",
   providers: "Cloudflare (alojamiento del sitio y funciones de servidor), Supabase (base de datos de cuentas), PostHog (analítica de uso, solo si el usuario la acepta), Anthropic (redacción de borradores con inteligencia artificial) y Google (envío de correos, solo si el usuario conecta su cuenta) y Resend (envío de los recordatorios semanales por correo, solo si el usuario los activa)",
-  updated: "22 de octubre de 2026",
+  updated: "24 de octubre de 2026",
 };
 const SHORT_DISCLAIMER = "Smartrecruit es una herramienta educativa que orienta el proceso de autorreclutamiento deportivo universitario en Estados Unidos. No es un agente ni un intermediario, no garantiza becas ni admisiones y no cobra por su uso. No está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.";
 
@@ -10022,7 +10022,11 @@ function TermsPage() {
       <LegalSection n="6" title="Usuarios menores de edad">
         <p>Si el usuario es menor de 18 años, debe contar con la autorización de su madre, padre o tutor para registrarse y cargar datos. El adulto responsable acepta estos Términos en su nombre y es responsable del uso que el menor haga del sitio.</p>
       </LegalSection>
-      <LegalSection n="7" title="Responsabilidades del usuario">
+      <LegalSection n="7" title="Cuenta y seguridad">
+        <p>Crear una cuenta es opcional y gratuito. Se hace con un correo electrónico y una contraseña, o con un código de 6 números que enviamos a ese correo. La cuenta es personal: cada persona debe usar su propio correo y mantener su contraseña en reserva. El usuario es responsable de lo que se haga con su cuenta y debe avisarnos a {L.email} si sospecha un acceso no autorizado.</p>
+        <p>La cuenta guarda el progreso del usuario para que lo vea igual desde cualquier dispositivo. Si se usa la cuenta en dos dispositivos, se combinan los datos y, ante un mismo dato editado en ambos, prevalece la edición más reciente. El usuario puede pedir la eliminación de su cuenta escribiendo a {L.email}.</p>
+      </LegalSection>
+      <LegalSection n="8" title="Responsabilidades del usuario">
         <ol>
           <li>Cargar información verdadera sobre su rendimiento deportivo, académico y personal.</li>
           <li>Verificar por su cuenta, en las fuentes oficiales, los requisitos, fechas y costos antes de tomar decisiones o hacer pagos.</li>
@@ -10031,29 +10035,29 @@ function TermsPage() {
           <li>No usar el sitio para fines ilícitos, ni para cargar contenido de terceros sin autorización.</li>
         </ol>
       </LegalSection>
-      <LegalSection n="8" title="Exactitud de la información">
+      <LegalSection n="9" title="Exactitud de la información">
         <p>Smartrecruit obtiene datos de fuentes públicas, como sitios de universidades y de asociaciones deportivas, y bases del Departamento de Educación de EE.UU. Hacemos esfuerzos razonables para mantenerlos correctos y actualizados, pero pueden contener errores o quedar desactualizados. Los rankings, el Fit Score, el Readiness Score, las proyecciones de vacantes y los montos de becas son estimaciones orientativas, no datos oficiales.</p>
       </LegalSection>
-      <LegalSection n="9" title="Correos generados con Mi correo">
+      <LegalSection n="10" title="Correos generados con Mi correo">
         <p>La herramienta Mi correo sugiere textos, que pueden redactarse con inteligencia artificial a partir de los datos del perfil. El atleta decide si los usa, los edita y los envía, y es responsable de revisar su contenido.</p>
         <p>Si el atleta conecta voluntariamente su cuenta de Google, Smartrecruit puede enviar desde esa cuenta, y solo cuando el atleta lo confirma, el correo que él mismo revisó y aprobó, al destinatario que eligió. Smartrecruit no envía correos por iniciativa propia, no lee la bandeja de entrada del usuario y no participa de la comunicación con entrenadores. El atleta puede desconectar su cuenta en cualquier momento.</p>
       </LegalSection>
-      <LegalSection n="10" title="Propiedad intelectual">
+      <LegalSection n="11" title="Propiedad intelectual">
         <p>Los textos, diseños, preguntas de práctica y el software de Smartrecruit pertenecen a {L.owner}. Los nombres y marcas de universidades y asociaciones pertenecen a sus titulares. El contenido que carga el usuario sigue siendo suyo; nos autoriza a usarlo solo para prestarle el servicio.</p>
       </LegalSection>
-      <LegalSection n="11" title="Responsabilidad">
+      <LegalSection n="12" title="Responsabilidad">
         <p>Smartrecruit responde conforme a la ley aplicable, incluida la Ley 24.240 de Defensa del Consumidor. Sin perjuicio de ello, no será responsable por decisiones de universidades, entrenadores o asociaciones, ni por resultados de admisión, becas o elegibilidad, ni por la falta de disponibilidad temporal del sitio.</p>
       </LegalSection>
-      <LegalSection n="12" title="Suspensión de cuentas">
+      <LegalSection n="13" title="Suspensión de cuentas">
         <p>Smartrecruit puede suspender cuentas que incumplan estos Términos, en particular si se carga información falsa o de terceros sin autorización.</p>
       </LegalSection>
-      <LegalSection n="13" title="Cambios en los Términos">
+      <LegalSection n="14" title="Cambios en los Términos">
         <p>Podemos modificar estos Términos. Los cambios importantes se avisarán en el sitio con al menos 15 días de anticipación. Seguir usando el sitio después de esa fecha implica aceptarlos.</p>
       </LegalSection>
-      <LegalSection n="14" title="Ley aplicable y jurisdicción">
+      <LegalSection n="15" title="Ley aplicable y jurisdicción">
         <p>Estos Términos se rigen por las leyes de la República Argentina. Para cualquier conflicto serán competentes los tribunales ordinarios de {L.jurisdiction}, sin perjuicio de los derechos que la ley de defensa del consumidor otorga al usuario para litigar en su domicilio.</p>
       </LegalSection>
-      <LegalSection n="15" title="Contacto">
+      <LegalSection n="16" title="Contacto">
         <p>Consultas sobre estos Términos: {L.email}.</p>
       </LegalSection>
     </div>
@@ -10075,6 +10079,7 @@ function PrivacyPage() {
             <thead><tr><th>Tipo</th><th>Ejemplos</th><th>Cómo se obtienen</th></tr></thead>
             <tbody>
               <tr><td>Identificación y contacto</td><td>Nombre, correo, teléfono, país</td><td>Los carga el usuario</td></tr>
+              <tr><td>Cuenta y sesión</td><td>Correo de la cuenta, fecha de alta, contraseña (la guarda de forma cifrada nuestro proveedor de cuentas; no podemos verla), códigos de ingreso de un solo uso</td><td>Se generan al crear la cuenta o iniciar sesión</td></tr>
               <tr><td>Deportivos</td><td>Deporte, puesto, estadísticas, link a video</td><td>Los carga el usuario</td></tr>
               <tr><td>Académicos</td><td>Notas, promedio, puntajes de exámenes, carrera deseada</td><td>Los carga el usuario</td></tr>
               <tr><td>De uso</td><td>Universidades guardadas, correos generados (tipo de mail, gancho usado, asunto y fecha de cada envío), datos que el usuario suma a sus correos, estados del embudo, progreso en la práctica</td><td>Se generan al usar el sitio</td></tr>
@@ -10108,7 +10113,7 @@ function PrivacyPage() {
         <p>Nuestros proveedores pueden alojar datos fuera de Argentina, por ejemplo en Estados Unidos. En ese caso exigimos niveles de protección adecuados, según el artículo 12 de la Ley 25.326. Al aceptar esta Política, el usuario consiente esas transferencias.</p>
       </LegalSection>
       <LegalSection n="8" title="Dónde se guardan y por cuánto tiempo">
-        <p>Si no creás una cuenta, tus datos quedan solo en tu navegador. Si la creás, también se guardan en nuestra base de datos para que los veas desde cualquier dispositivo. Los conservamos mientras la cuenta esté activa; si pedís eliminarla, los borramos en un plazo de 30 días, salvo que una norma exija conservarlos.</p>
+        <p>Si no creás una cuenta, tus datos quedan solo en tu navegador. Si la creás, también se guardan en nuestra base de datos para que los veas desde cualquier dispositivo. Los conservamos mientras la cuenta esté activa; si pedís eliminarla, los borramos dentro de los 5 días hábiles que fija el artículo 16 de la Ley 25.326, salvo que una norma exija conservarlos. Cuando iniciás sesión en otro dispositivo, combinamos lo guardado en la nube con lo que había en ese dispositivo y, ante un mismo dato editado en ambos, conservamos la edición más reciente.</p>
       </LegalSection>
       <LegalSection n="9" title="Almacenamiento en el navegador">
         <p>Usamos el almacenamiento local del navegador para guardar tu progreso y tu sesión. No usamos cookies de publicidad. Podés borrarlo desde la configuración de tu navegador, aunque, si no tenés cuenta, perderías tu progreso.</p>
