@@ -38,3 +38,7 @@ Correr el bloque comentado al final de `email_reminders.sql` (quitando los `--` 
 - Llamar dos veces a la función no duplica mails (un envío por persona cada 6 días).
 - Cada mail trae link de baja (`/baja?token=...`), con confirmación.
 - La Política de Privacidad ya menciona a Resend y el recordatorio (versión legal 2026-10-22: las personas con perfil van a tener que volver a aceptar).
+
+## Eliminar cuenta (función `delete-account`)
+Pegar `supabase/functions/delete-account/index.ts` como una función nueva llamada `delete-account` (Edge Functions → Deploy a new function → Via Editor).
+No necesita secretos. Dejar activada la verificación de JWT. El botón "Eliminar mi cuenta" del sitio la llama.

@@ -10281,6 +10281,26 @@ function AccountMenu({ session }) {
     setNeedNew(false); setNewPass(""); setInfo("Listo: la próxima vez entrás con tu mail y esta contraseña.");
   };
   const signOut = async () => { await supabase.auth.signOut(); syncUserId = null; window.location.reload(); };
+  // Eliminar la cuenta: borra en la nube el progreso, el recordatorio y el usuario. Los datos de este navegador no se tocan.
+  const [delOpen, setDelOpen] = useState(false);
+  const [delText, setDelText] = useState("");
+  const [delBusy, setDelBusy] = useState(false);
+  const [delErr, setDelErr] = useState("");
+  const deleteAccount = async () => {
+    if (delText.trim().toUpperCase() !== "ELIMINAR" || delBusy) return;
+    setDelBusy(true); setDelErr("");
+    try {
+      const { data, error } = await supabase.functions.invoke("delete-account", { body: { confirm: "ELIMINAR" } });
+      if (error || !data || !data.ok) throw new Error("fallo");
+      try { localStorage.removeItem("rr_login_handled_uid"); localStorage.removeItem("rr_sync_pending"); localStorage.removeItem("rr_sync_error"); } catch (e) {}
+      syncUserId = null;
+      try { await supabase.auth.signOut(); } catch (e) {}
+      window.location.reload();
+    } catch (e) {
+      setDelBusy(false);
+      setDelErr("No pudimos eliminar la cuenta. Probá de nuevo en un rato o escribinos a " + LEGAL_INFO.email + ".");
+    }
+  };
 
   if (session) {
     return (
@@ -10288,6 +10308,15 @@ function AccountMenu({ session }) {
         <span className="rm-account-email" title={session.user.email}>{session.user.email}</span>
         {syncPending && <span className="rm-account-sync" title={"Hay cambios que todavía no se guardaron en la nube. Se reintenta solo." + (function () { try { var m = localStorage.getItem("rr_sync_error"); return m ? " Motivo: " + m : ""; } catch (e) { return ""; } })()}>· guardando…</span>}
         <button className="rm-account-link" onClick={signOut}>Cerrar sesión</button>
+        <button className="rm-account-link" style={{ marginLeft: 10, opacity: 0.75 }} onClick={() => { setDelOpen(!delOpen); setDelErr(""); setDelText(""); }}>Eliminar mi cuenta</button>
+        {delOpen && (
+          <div className="rm-account-form" style={{ marginTop: 8 }}>
+            <p className="rm-account-note">Se borran de forma definitiva tu cuenta, tu progreso guardado en la nube y el recordatorio semanal. Lo que tenés guardado en este navegador no se borra. Para confirmar, escribí <b>ELIMINAR</b>:</p>
+            <input type="text" autoComplete="off" placeholder="ELIMINAR" value={delText} onChange={(e) => setDelText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && deleteAccount()} />
+            <button className="rm-btn-inline" disabled={delBusy || delText.trim().toUpperCase() !== "ELIMINAR"} onClick={deleteAccount}>{delBusy ? "Eliminando…" : "Eliminar mi cuenta para siempre"}</button>
+            {delErr && <p className="rm-account-note" style={{ color: "#b23b3b" }}>{delErr}</p>}
+          </div>
+        )}
         {needNew && (
           <div className="rm-account-form" style={{ marginTop: 8 }}>
             <p className="rm-account-note">Elegí una contraseña nueva (mínimo 8 caracteres):</p>
