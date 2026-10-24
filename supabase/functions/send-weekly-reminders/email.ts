@@ -44,12 +44,16 @@ export function buildReminderEmail(opts: { firstName: string; digest: Digest | n
   const stage = clip(d.stage, 40);
   const months = typeof d.monthsLeft === "number" && d.monthsLeft > 0 ? Math.round(d.monthsLeft) : null;
   const nextTitle = clip(d.next && d.next.title, 260);
-  const nextWhen = clip(d.next && d.next.when, 60);
+  const rawWhen = clip(d.next && d.next.when, 60);
+  // "Ahora" ya viene dicho en el título ("Ahora: …"); no se repite como segunda línea.
+  const nextWhen = rawWhen && !/^ahora$/i.test(rawWhen) && !nextTitle.toLowerCase().startsWith(rawWhen.toLowerCase()) ? rawWhen : "";
   const required = !!(d.next && d.next.required);
   const week = stale
     ? "Pasó una semana sin que entres a tu plan: un solo paso alcanza para retomar el ritmo."
     : clip(d.week, 300) || "Todavía no hiciste nada esta semana. Un solo paso alcanza para mantener la racha.";
-  const hi = opts.firstName ? `Hola, ${clip(opts.firstName, 40)}.` : "Hola.";
+  const fn = clip(opts.firstName, 40);
+  const nice = fn ? fn.charAt(0).toLocaleUpperCase("es") + fn.slice(1).toLocaleLowerCase("es") : "";
+  const hi = nice ? `Hola, ${nice}.` : "Hola.";
   const stageLine = stage ? `Tu etapa: ${stage}${months ? ` (faltan unos ${months} ${months === 1 ? "mes" : "meses"} para tu ingreso)` : ""}.` : "";
   const planUrl = `${opts.siteUrl.replace(/\/+$/, "")}/plan`;
   const subject = "Tu semana en Smartrecruit";
