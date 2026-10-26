@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import FH_ROSTER_OVERRIDES from "./data/field_hockey_rosters.json";
 import SOCCER_ROSTER_OVERRIDES from "./data/soccer_rosters.json";
 import RUGBY_WOMEN_PROGRAMS from "./data/rugby_women_programs.json";
@@ -2813,6 +2814,27 @@ h2.rm-condensed::before{ border:none; width:8px; height:26px; top:2px; backgroun
 .rm-offer-school{ font-family:'Barlow Condensed','Oswald',sans-serif; font-weight:800; font-size:21px; line-height:1.1; letter-spacing:.2px; text-transform:uppercase; margin-bottom:4px; }
 .rm-offer-sport{ font-weight:700; letter-spacing:.3px; }
 .rm-offer-year{ background:var(--navy); color:var(--gold); border-radius:0; font-weight:800; padding:3px 9px; }
+.rm-gloss-wrap{ position:relative; display:inline; }
+.rm-gloss{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:help; border-bottom:2px dotted var(--navy-mid); text-decoration:none; }
+.rm-gloss:hover,.rm-gloss:focus-visible{ background:rgba(75,126,168,.14); outline:none; }
+.rm-gloss-pop{ position:fixed; z-index:200; background:#0C2340; color:#fff; font-family:'Inter',sans-serif; padding:12px 14px; border-radius:8px; font-size:13.5px; line-height:1.45; font-weight:400; font-style:normal; text-transform:none; letter-spacing:0; box-shadow:0 8px 26px rgba(0,0,0,.3); display:block; text-align:left; }
+.rm-gloss-pop b{ display:block; font-size:14px; margin-bottom:4px; color:#FFD24A; }
+.rm-gloss-pop span{ display:block; }
+.rm-gloss-more{ margin-top:8px; background:none; border:0; color:#ffd24a; font:inherit; font-size:12.5px; cursor:pointer; padding:0; text-decoration:underline; }
+.rm-camino-steps{ display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+.rm-camino-step{ padding:6px 10px; border-radius:999px; font-size:13px; border:1px solid var(--line); background:#fff; }
+.rm-camino-step.on{ background:var(--navy); color:#fff; border-color:var(--navy); font-weight:700; }
+.rm-camino-step.done{ background:var(--paper-dim); }
+.rm-camino-list{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+.rm-camino-card{ border:2px solid var(--line); background:#fff; }
+.rm-camino-card.on{ border-color:var(--navy); }
+.rm-camino-head{ width:100%; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; text-align:left; background:none; border:0; padding:14px 16px; cursor:pointer; font:inherit; color:inherit; }
+.rm-camino-here{ margin-left:10px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; background:#ffb81c; color:#16324E; padding:2px 8px; }
+.rm-camino-here.done{ background:var(--paper-dim); color:var(--ink-soft); }
+.rm-camino-body{ padding:0 16px 16px; font-size:14.5px; }
+.rm-camino-body p{ margin:8px 0; }
+.rm-camino-body ul{ margin:4px 0 8px; padding-left:20px; }
+.rm-camino-body li{ margin-bottom:4px; }
 .rm-tier{ font-size:13px; font-weight:800; font-style:italic; letter-spacing:.6px; padding:5px 16px 5px 14px; border-radius:0; clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%); }
 .rm-tier-aspiracional{ background:#D8432C; color:#fff; }
 .rm-tier-realista{ background:var(--gold); color:#0B1B2E; }
@@ -8765,7 +8787,7 @@ function PlanPage({ profile, setStage }) {
           <div className="rm-today-hero-label">Tu próxima acción</div>
           {nextTask ? (
             <>
-              <div className="rm-today-hero-title">{nextTask.title}</div>
+              <div className="rm-today-hero-title">{glossify(nextTask.title, setStage)}</div>
               <div className="rm-today-note">{nextTask.when}{nextTask.rule ? ` · ${nextTask.rule}` : ""}{nextTask.required ? " · Obligatoria" : ""}</div>
             </>
           ) : (
@@ -8814,7 +8836,7 @@ function PlanPage({ profile, setStage }) {
               <label style={{ display: "flex", gap: 10, alignItems: "flex-start", flex: 1, cursor: "pointer" }}>
                 <input type="checkbox" checked={isDone} onChange={() => toggle(t.id)} />
                 <span style={{ opacity: isDone ? 0.6 : 1 }}>
-                  <span style={{ textDecoration: isDone ? "line-through" : "none" }}>{t.title}</span>
+                  <span style={{ textDecoration: isDone ? "line-through" : "none" }}>{glossify(t.title, setStage)}</span>
                   <span style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 5 }}>
                     <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "var(--paper-dim)", color: "var(--ink-soft)" }}>{t.when}</span>
                     {t.required && <span style={{ fontSize: 11.5, padding: "2px 8px", borderRadius: 999, background: "var(--navy)", color: "#fff" }}>Obligatoria</span>}
@@ -9870,6 +9892,244 @@ function applyLiveData(live) {
   return true;
 }
 
+// ---- Glosario: cada término difícil se explica en una línea, al tocarlo, en el lugar donde aparece ----
+// Las definiciones son orientativas: reglas, montos y fechas cambian por deporte y división; siempre se confirma en la fuente oficial.
+const GLOSSARY = [
+  { id: "ncaa", term: "NCAA", match: ["NCAA"], def: "La asociación que organiza el deporte universitario en EE.UU. Tiene tres divisiones (I, II y III). Cada una tiene sus propias reglas de becas y de contacto con los coaches." },
+  { id: "d1", term: "División I (D1)", match: ["D1", "División I", "Division I"], def: "El nivel más alto de la NCAA: más recursos y más exigencia. Puede dar becas deportivas, completas o parciales según el deporte." },
+  { id: "d2", term: "División II (D2)", match: ["D2", "División II", "Division II"], def: "Nivel intermedio de la NCAA. Da becas deportivas, casi siempre parciales, y suele combinarlas con ayuda académica o por necesidad." },
+  { id: "d3", term: "División III (D3)", match: ["D3", "División III", "Division III"], def: "Nivel de la NCAA sin becas deportivas. Sí puede haber ayuda académica o por necesidad económica, que a veces cubre mucho del costo." },
+  { id: "naia", term: "NAIA", match: ["NAIA"], def: "Otra asociación de deporte universitario, con universidades en general más chicas. Da becas deportivas y tiene su propio registro de elegibilidad." },
+  { id: "njcaa", term: "NJCAA", match: ["NJCAA", "junior college", "community college"], def: "Los colleges de dos años. Muchos dan becas y son un puente para pasar después a una universidad de cuatro años." },
+  { id: "eligibility", term: "Eligibility Center", match: ["Eligibility Center", "Centro de Elegibilidad"], def: "El trámite oficial donde la NCAA (o la NAIA) revisa tus estudios y tu estatus de amateur para confirmar que podés competir. Tiene un costo: confirmalo en el sitio oficial." },
+  { id: "amateurismo", term: "Amateurismo", match: ["amateurismo", "amateur"], def: "Las reglas que limitan cobrar por jugar o recibir premios y pagos antes de entrar a la universidad. Algunas universidades te piden una certificación que se completa online." },
+  { id: "periodo-contacto", term: "Período de contacto", match: ["período de contacto", "periodo de contacto"], def: "Fechas en las que los coaches pueden reunirse con vos en persona fuera de su universidad y ver tus partidos. Depende del deporte y de la división." },
+  { id: "periodo-evaluacion", term: "Período de evaluación", match: ["período de evaluación", "periodo de evaluación", "Período de evaluación (D1)"], def: "Fechas en las que los coaches pueden ver cómo jugás o visitar tu colegio, pero no reunirse con vos en persona fuera de su universidad." },
+  { id: "periodo-calma", term: "Período de calma", match: ["período de calma", "periodo de calma", "quiet period"], def: "Fechas en las que los contactos en persona solo pueden ser dentro de la universidad. Los mails y llamadas dependen de las reglas de cada deporte." },
+  { id: "periodo-muerto", term: "Período muerto", match: ["período muerto", "periodo muerto", "dead period"], def: "Fechas en las que no hay contacto en persona con los coaches, ni siquiera en su universidad. Vos podés escribirles cuando quieras: la regla limita el contacto del coach, no tu mail." },
+  { id: "ayuda-atletica", term: "Beca deportiva (ayuda atlética)", match: ["ayuda atlética", "beca deportiva", "athletic aid", "ayuda atletica"], def: "Dinero que la universidad te da por jugar. Puede ser parcial o completa y se renueva cada año según las reglas de la división y del equipo." },
+  { id: "acuerdo-ayuda", term: "Acuerdo de ayuda atlética", match: ["acuerdo de ayuda atlética", "carta de intención", "carta de intencion"], def: "El documento que firmás para formalizar la beca con la universidad. En algunas divisiones se llama carta de intención. Leelo completo y consultá qué pasa si cambian las condiciones." },
+  { id: "equivalencia", term: "Equivalencia (beca parcial)", match: ["equivalencia", "head-count", "headcount"], def: "En muchos deportes cada universidad tiene un monto de becas que reparte en partes entre las jugadoras. Por eso la mayoría de las becas son parciales. En unos pocos deportes cada beca es completa." },
+  { id: "cds", term: "Common Data Set (CDS)", match: ["Common Data Set", "CDS"], def: "El informe anual que publica cada universidad con datos de admisión, costos y ayuda financiera. Lo usamos para estimar el costo real." },
+  { id: "coa", term: "Costo de asistencia (COA)", match: ["costo de asistencia", "COA", "cost of attendance"], def: "El costo total de un año: matrícula, alojamiento, comida, libros, seguro y otros gastos. Es el número para comparar con lo que te ofrecen." },
+  { id: "eada", term: "Informe EADA", match: ["EADA"], def: "Datos oficiales de cada universidad sobre cuánto gasta y reparte en deportes de mujeres y de varones. Sirve para ver cuánta ayuda existe en un programa." },
+  { id: "gpa", term: "GPA", match: ["GPA"], def: "El promedio de notas en escala de 4.0. Tu promedio argentino, uruguayo o de otro país se convierte con el conversor del sitio." },
+  { id: "core", term: "Materias core", match: ["materias core", "cursos core", "core courses"], def: "Las materias académicas que la NCAA o la NAIA exigen aprobar para que puedas competir. Para estudiantes de otros países se revisan según el sistema educativo de tu país." },
+  { id: "ingles", term: "Examen de inglés", match: ["examen de inglés", "TOEFL", "IELTS", "Duolingo"], def: "Prueba que demuestra tu nivel de inglés. Las universidades aceptan TOEFL, IELTS o Duolingo; el puntaje mínimo cambia en cada una." },
+  { id: "sat-act", term: "SAT / ACT", match: ["SAT", "ACT"], def: "Pruebas estandarizadas de EE.UU. Para la elegibilidad deportiva de la NCAA ya no son obligatorias, pero algunas universidades las piden o las aceptan para la admisión." },
+  { id: "i20", term: "I-20", match: ["I-20"], def: "El documento que te da la universidad cuando te admite y confirma cómo vas a pagar tus estudios. Lo necesitás para pedir la visa de estudiante." },
+  { id: "f1", term: "Visa F-1", match: ["F-1", "visa de estudiante"], def: "La visa de estudiante que se pide en la embajada o consulado de EE.UU. con el I-20 en mano." },
+  { id: "walkon", term: "Walk-on", match: ["walk-on", "walk on"], def: "Entrar al equipo sin beca deportiva. A veces después, si rendís, se puede conseguir ayuda." },
+  { id: "redshirt", term: "Redshirt", match: ["redshirt"], def: "Un año en que entrenás con el equipo sin jugar partidos oficiales y sin que cuente como una de tus temporadas de elegibilidad." },
+  { id: "portal", term: "Portal de transferencias", match: ["portal de transferencias", "transfer portal"], def: "El sistema que usan los deportistas universitarios para avisar que quieren cambiarse de universidad y que otros coaches los contacten." },
+  { id: "commit", term: "Compromiso verbal (commit)", match: ["compromiso verbal", "commit", "verbal commitment"], def: "Acuerdo de palabra con un coach antes de firmar. No es un contrato: recién queda firme cuando se firma el acuerdo oficial." },
+  { id: "visita-oficial", term: "Visita oficial", match: ["visita oficial", "official visit"], def: "Una visita a la universidad a la que te invita el coach, con gastos pagos por la universidad dentro de lo que permiten las reglas." },
+  { id: "visita-no-oficial", term: "Visita no oficial", match: ["visita no oficial", "unofficial visit"], def: "Una visita que hacés por tu cuenta, pagando vos. Puede ser en cualquier momento en que haya contacto permitido." },
+  { id: "showcase", term: "Camp / showcase", match: ["showcase", "camp"], def: "Eventos donde jugás frente a varios coaches. Conviene ir solo si ya sabés cuáles de tus universidades van a estar." },
+  { id: "roster", term: "Roster (plantel)", match: ["roster", "plantel"], def: "La lista de jugadoras o jugadores de un equipo. Mirando quiénes terminan este año se estima si va a haber una vacante en tu posición." },
+  { id: "recruiting-needs", term: "Recruiting Needs", match: ["Recruiting Needs"], def: "Las búsquedas que publican los coaches: qué posición necesitan, de qué año y de qué nivel. Son una oportunidad concreta para escribir." },
+  { id: "seguimiento", term: "Seguimiento (follow-up)", match: ["follow-up"], def: "Un segundo mail corto si el coach no respondió. Se espera una o dos semanas y se suma una novedad, no se repite el primero." },
+  { id: "recruit-score", term: "Recruit Score / Fit Score", match: ["Recruit Score", "Fit Score"], def: "Puntajes de Smartrecruit: estiman tu compatibilidad deportiva, académica y económica con cada universidad. Son orientativos, no un dato oficial." },
+];
+const GLOSS_BY_ID = Object.fromEntries(GLOSSARY.map((g) => [g.id, g]));
+const GLOSS_ALIASES = (() => {
+  const rows = [];
+  GLOSSARY.forEach((g) => g.match.forEach((m) => rows.push({ m, id: g.id })));
+  rows.sort((a, b) => b.m.length - a.m.length);
+  return rows;
+})();
+const GLOSS_RE = (() => {
+  const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Sin lookbehind (no existe en iPhones viejos): el borde izquierdo se controla a mano dentro de glossify.
+  return new RegExp(`(${GLOSS_ALIASES.map((r) => esc(r.m)).join("|")})(?![\\p{L}\\p{N}])`, "giu");
+})();
+const GLOSS_LOOKUP = (() => { const m = {}; GLOSS_ALIASES.forEach((r) => { m[r.m.toLowerCase()] = r.id; }); return m; })();
+// Las siglas (NCAA, SAT, ACT, COA...) solo se marcan en mayúsculas: así "act" o "sat" en una frase común no se confunden.
+const GLOSS_UPPER = new Set(GLOSS_ALIASES.filter((r) => /^[A-Z0-9][A-Z0-9 .\-]*$/.test(r.m)).map((r) => r.m.toLowerCase()));
+
+// Un término tocable: abre una explicación corta justo debajo.
+function Gloss({ id, children, setStage }) {
+  const g = GLOSS_BY_ID[id];
+  const [pos, setPos] = useState(null); // null = cerrado; si no, { left, top } en pantalla (position: fixed, así ninguna tarjeta lo recorta)
+  const wrapRef = useRef(null);
+  const btnRef = useRef(null);
+  const popRef = useRef(null);
+  const open = !!pos;
+  useEffect(() => {
+    if (!open) return undefined;
+    const close = () => setPos(null);
+    const onDoc = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target) && !(popRef.current && popRef.current.contains(e.target))) close(); };
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    document.addEventListener("mousedown", onDoc); document.addEventListener("touchstart", onDoc); document.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", close, true); window.addEventListener("resize", close);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("touchstart", onDoc); document.removeEventListener("keydown", onKey); window.removeEventListener("scroll", close, true); window.removeEventListener("resize", close); };
+  }, [open]);
+  if (!g) return <>{children}</>;
+  const toggle = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    if (open) { setPos(null); return; }
+    const r = btnRef.current.getBoundingClientRect();
+    const w = Math.min(300, window.innerWidth * 0.82);
+    const left = Math.max(10, Math.min(r.left, window.innerWidth - w - 10));
+    const below = r.bottom + 6;
+    const top = below + 170 > window.innerHeight && r.top > 190 ? Math.max(10, r.top - 176) : below; // si abajo no entra, se abre arriba
+    setPos({ left, top, w });
+  };
+  return (
+    <span className="rm-gloss-wrap" ref={wrapRef}>
+      <button type="button" className="rm-gloss" ref={btnRef} aria-expanded={open} onClick={toggle}>{children}</button>
+      {open && createPortal(
+        <span className="rm-gloss-pop" ref={popRef} role="dialog" aria-label={g.term} style={{ left: pos.left, top: pos.top, width: pos.w }}>
+          <b>{g.term}</b>
+          <span>{g.def}</span>
+          {setStage && <button type="button" className="rm-gloss-more" onClick={() => { setPos(null); setStage("glosario"); window.scrollTo(0, 0); }}>Ver todo el glosario →</button>}
+        </span>, document.body)}
+    </span>
+  );
+}
+// Convierte los términos del glosario que aparecen en un texto en términos tocables. Cada término se marca solo la primera vez.
+function glossify(text, setStage) {
+  if (typeof text !== "string" || !text) return text;
+  const out = []; const seen = new Set(); let last = 0, k = 0, m;
+  GLOSS_RE.lastIndex = 0;
+  while ((m = GLOSS_RE.exec(text)) !== null) {
+    if (m.index > 0 && /[\p{L}\p{N}-]/u.test(text[m.index - 1])) continue;
+    const low = m[1].toLowerCase();
+    if (GLOSS_UPPER.has(low) && m[1] !== m[1].toUpperCase()) continue;
+    const id = GLOSS_LOOKUP[low];
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    if (m.index > last) out.push(text.slice(last, m.index));
+    out.push(<Gloss key={`g${k++}`} id={id} setStage={setStage}>{m[1]}</Gloss>);
+    last = m.index + m[1].length;
+  }
+  if (!out.length) return text;
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+
+function GlossaryPage({ setStage }) {
+  const [q, setQ] = useState("");
+  const norm = (x) => String(x).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const list = GLOSSARY.filter((g) => !q.trim() || norm(`${g.term} ${g.match.join(" ")} ${g.def}`).includes(norm(q))).slice().sort((a, b) => a.term.localeCompare(b.term, "es"));
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">Glosario</h2>
+      <p className="rm-hint">Los términos que vas a escuchar en el proceso, explicados en una línea. Son orientativos: las reglas cambian por deporte y por división, así que confirmá siempre en la fuente oficial. En todo el sitio, los términos subrayados con puntos se pueden tocar para ver su explicación.</p>
+      <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar un término (ej: amateurismo, I-20, D2)" style={{ width: "100%", padding: "10px 12px", border: "2px solid var(--line)", fontSize: 15, margin: "10px 0 16px" }} aria-label="Buscar en el glosario" />
+      {list.length === 0 && <p className="rm-today-note">No encontramos ese término. Probá con otra palabra o escribinos a {LEGAL_INFO.email}.</p>}
+      <div className="rm-catalog-list">
+        {list.map((g) => (
+          <div className="rm-catalog-row" key={g.id} style={{ cursor: "default" }}>
+            <div className="rm-catalog-row-main"><b>{g.term}</b></div>
+            <div style={{ fontSize: 14, marginTop: 4, flexBasis: "100%" }}>{g.def}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---- Mi camino: el recorrido completo, etapa por etapa, con lo que pasa, por qué importa y qué hacer ----
+const CAMINO_STAGES = [
+  { key: "base", label: "Base", emoji: "🌱", when: "Más de 3 años antes del ingreso",
+    goal: "Construir la base académica y deportiva, y entender cómo funciona el sistema.",
+    why: "Las notas, las materias core y el nivel deportivo se arman durante años, no en un mes. Quien llega tarde a esto no puede recuperarlo con mails.",
+    todo: ["Cuidá tu GPA: es lo primero que mira una admisión.", "Empezá el checklist de elegibilidad con tus materias core.", "Entendé las divisiones: NCAA D1, D2, D3, NAIA y NJCAA.", "Mirá el catálogo de universidades de tu deporte para tener un panorama realista."],
+    avoid: "Escribirle a muchos coaches todavía: no hay apuro, y muchos no pueden responderte hasta más adelante.",
+    go: [["catalog", "Ver universidades"], ["eligibility", "Elegibilidad"]] },
+  { key: "visibilidad", label: "Visibilidad", emoji: "🎥", when: "Entre 3 años y el inicio del contacto de D1",
+    goal: "Que un coach pueda encontrarte y evaluarte en pocos minutos.",
+    why: "Un coach mira decenas de perfiles por semana. Con un video claro y datos al día, pasás de ser un nombre más a un candidato que se puede evaluar.",
+    todo: ["Un video de highlights de 1 a 3 minutos, con las mejores jugadas primero.", "Estadísticas y notas al día, y rendí tu examen de inglés (TOEFL, IELTS o Duolingo).", "Armá tu lista corta: entre 10 y 15 universidades.", "Mandá tus primeros mails y registrá a quién escribiste."],
+    avoid: "Mandar el mismo mail genérico a todos: los coaches lo notan.",
+    go: [["video", "Guía del video"], ["outreach", "Escribir un mail"]] },
+  { key: "contacto", label: "Contacto", emoji: "✉️", when: "Cuando los coaches de D1 pueden escribirte",
+    goal: "Mantener conversaciones activas con varios programas.",
+    why: "Desde que se abre el contacto, los coaches arman sus listas. Responder rápido y hacer seguimiento te mantiene en esas listas.",
+    todo: ["Escribí seguido y registrá cada respuesta en tu tablero.", "Hacé seguimiento a los 7 o 10 días a quien no respondió.", "Mirá Recruiting Needs: hay coaches que publican lo que buscan.", "Pedí una llamada o una videollamada cuando haya interés."],
+    avoid: "Dejar sin responder a un coach que te escribió: tardar días puede costarte el lugar.",
+    go: [["needs", "Recruiting Needs"], ["history", "Mi tablero"]] },
+  { key: "decision", label: "Decisión", emoji: "🎯", when: "El último año antes del ingreso",
+    goal: "Comparar ofertas, decidir y dejar los papeles listos.",
+    why: "Una oferta buena en la cancha puede ser mala en la plata: hay que compararla con el costo real de asistencia.",
+    todo: ["Compará cada oferta contra el costo de asistencia (COA) de esa universidad.", "Preguntá qué porcentaje cubre la beca, por cuánto tiempo y bajo qué condiciones.", "Completá el registro de elegibilidad y la certificación de amateurismo cuando te lo pidan.", "Leé completo el acuerdo de ayuda atlética antes de firmar."],
+    avoid: "Pagarle a alguien que te promete una beca: ni Smartrecruit ni las universidades cobran por ese proceso.",
+    go: [["money", "Becas y costos"], ["eligibility", "Elegibilidad"]] },
+  { key: "ingreso", label: "Ingreso", emoji: "🛬", when: "Tu primera temporada",
+    goal: "Llegar bien: documentos, viaje y pretemporada.",
+    why: "Un error con la visa o con los papeles puede dejarte sin empezar la temporada.",
+    todo: ["Pedí la visa de estudiante (F-1) con el I-20 en cuanto lo recibas.", "Resolvé el alojamiento, el seguro médico y el viaje.", "Escribile a tu coach y a tus compañeras antes de llegar.", "Preparate físicamente para la pretemporada."],
+    avoid: "Esperar a último momento para sacar turno en la embajada.",
+    go: [["resources", "Recursos"]] },
+];
+
+function CaminoStrip({ profile, setStage }) {
+  const st = planStageFor(profile);
+  const idx = Math.max(0, CAMINO_STAGES.findIndex((s) => s.key === st.key));
+  const cur = CAMINO_STAGES[idx];
+  const next = CAMINO_STAGES[idx + 1];
+  return (
+    <section className="rm-card" style={{ padding: 16, marginTop: 14 }} aria-label="Mi camino">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+        <h3 className="rm-condensed" style={{ margin: 0, fontSize: 20 }}>🧭 Mi camino</h3>
+        <button type="button" className="rm-btn-inline" onClick={() => { setStage("camino"); window.scrollTo(0, 0); }}>Ver el camino completo →</button>
+      </div>
+      <div className="rm-camino-steps" role="list">
+        {CAMINO_STAGES.map((s, i) => (
+          <span key={s.key} role="listitem" className={`rm-camino-step ${i === idx ? "on" : i < idx ? "done" : ""}`}>{i < idx ? "✓ " : ""}{s.emoji} {s.label}</span>
+        ))}
+      </div>
+      <p style={{ margin: "12px 0 4px", fontSize: 15 }}><b>Ahora estás en {cur.emoji} {cur.label}.</b> {glossify(cur.goal, setStage)}</p>
+      <ul style={{ margin: "6px 0 0", paddingLeft: 20, fontSize: 14 }}>
+        {cur.todo.slice(0, 3).map((t) => <li key={t} style={{ marginBottom: 3 }}>{glossify(t, setStage)}</li>)}
+      </ul>
+      {next && <p style={{ margin: "10px 0 0", fontSize: 13, color: "var(--ink-soft)" }}>Lo que sigue: {next.emoji} <b>{next.label}</b> ({glossify(next.when.charAt(0).toLowerCase() + next.when.slice(1), setStage)}).</p>}
+    </section>
+  );
+}
+
+function CaminoPage({ profile, setStage }) {
+  const st = profile ? planStageFor(profile) : null;
+  const curIdx = st ? Math.max(0, CAMINO_STAGES.findIndex((s) => s.key === st.key)) : -1;
+  const [openKey, setOpenKey] = useState(curIdx >= 0 ? CAMINO_STAGES[curIdx].key : CAMINO_STAGES[0].key);
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">Mi camino a la beca</h2>
+      <p className="rm-hint">El proceso entero, de principio a fin. Cada etapa te dice qué pasa, por qué importa y qué hacer. Los términos subrayados con puntos se pueden tocar para ver qué significan.{profile && st ? ` Hoy estás en ${st.label}.` : ""}</p>
+      {!profile && <div className="rm-alert" style={{ marginBottom: 12 }}>Si cargás tu perfil, te marcamos en qué etapa estás. <button type="button" className="rm-btn-inline" onClick={() => setStage("start")}>Empezar en 10 minutos →</button></div>}
+      <div className="rm-camino-list">
+        {CAMINO_STAGES.map((s, i) => {
+          const open = openKey === s.key;
+          const state = curIdx < 0 ? "" : i === curIdx ? "on" : i < curIdx ? "done" : "";
+          return (
+            <section key={s.key} className={`rm-camino-card ${state}`}>
+              <button type="button" className="rm-camino-head" aria-expanded={open} onClick={() => setOpenKey(open ? "" : s.key)}>
+                <span><b>{i + 1}. {s.emoji} {s.label}</b>{i === curIdx ? <span className="rm-camino-here">Estás acá</span> : i < curIdx ? <span className="rm-camino-here done">Hecho</span> : null}</span>
+                <span style={{ fontSize: 12.5, color: "var(--ink-soft)" }}>{s.when}</span>
+              </button>
+              {open && (
+                <div className="rm-camino-body">
+                  <p><b>Objetivo.</b> {glossify(s.goal, setStage)}</p>
+                  <p><b>Por qué importa.</b> {glossify(s.why, setStage)}</p>
+                  <div><b>Qué hacer</b>
+                    <ul>{s.todo.map((t) => <li key={t}>{glossify(t, setStage)}</li>)}</ul>
+                  </div>
+                  <p><b>Ojo con esto.</b> {glossify(s.avoid, setStage)}</p>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 6 }}>
+                    {s.go.map(([to, label]) => <button key={to} type="button" className="rm-btn-inline" style={{ fontWeight: 700 }} onClick={() => { setStage(to); window.scrollTo(0, 0); }}>{label} →</button>)}
+                  </div>
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+      <p className="rm-today-note" style={{ marginTop: 16 }}>¿Hay una palabra que no entendés? <button type="button" className="rm-btn-inline" onClick={() => setStage("glosario")}>Abrí el glosario →</button> Esto es una guía educativa: confirmá siempre fechas y reglas en la fuente oficial de tu división.</p>
+    </div>
+  );
+}
+
 function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
   const today = todayKey();
   const [log, setLog] = useState(() => readOutreachLog());
@@ -9973,6 +10233,8 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
         </div>
       </section>
       <p className="rm-today-note" style={{ margin: "10px 2px 0" }}>{planWeekLine(wkReview, true)} <button className="rm-btn-inline" onClick={() => { setStage("plan"); setTimeout(() => { const el = document.getElementById("plan-semana"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 60); }}>Ver tu semana →</button></p>
+
+      <CaminoStrip profile={profile} setStage={setStage} />
 
       <div className="rm-today-progress" aria-label={`${doneCount} de 3 al día`}>
         {steps.map((x) => (
@@ -10518,7 +10780,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["start", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja"];
+const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -10605,6 +10867,7 @@ export default function App() {
 
   const NAV_LINKS = [
     { id: "landing", label: "Inicio", icon: "🏠" },
+    { id: "camino", label: "Mi camino", icon: "🧭" },
     { id: "catalog", label: "Universidades", icon: "🎓" },
     { id: "needs", label: "Recruiting Needs", icon: "📋" },
     { id: "plan", label: "Mi plan de hoy", icon: "✅" },
@@ -10619,12 +10882,13 @@ export default function App() {
         { id: "exams", label: "Exámenes", icon: "📝" },
         { id: "gpa", label: "Conversor GPA", icon: "🔢" },
         { id: "careers", label: "Buscar por carrera", icon: "🎯" },
+        { id: "glosario", label: "Glosario", icon: "📖" },
       ],
     },
   ];
   // Recursos se despliega hacia abajo. Se abre solo cuando se llega a Recursos o a cualquiera de sus
   // secciones (por ejemplo desde un paso de "Empezá acá"), y se puede cerrar a mano sin cambiar de página.
-  const RESOURCE_STAGES = ["resources", "eligibility", "exams", "gpa", "careers"];
+  const RESOURCE_STAGES = ["resources", "eligibility", "exams", "gpa", "careers", "glosario"];
   const [resourcesOpen, setResourcesOpen] = useState(false);
   useEffect(() => { if (RESOURCE_STAGES.includes(stage)) setResourcesOpen(true); }, [stage]);
   const toggleResources = () => {
@@ -10747,6 +11011,8 @@ export default function App() {
       )}
 
       {stage === "roadmap" && <RoadmapPage profile={profile} setStage={setStage} />}
+      {stage === "camino" && <CaminoPage profile={profile} setStage={setStage} />}
+      {stage === "glosario" && <GlossaryPage setStage={setStage} />}
       {stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
       {stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
       {stage === "outreach" && <MailPage profile={profile} setStage={setStage} initialPick={outreachPick} />}
