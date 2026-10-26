@@ -3635,6 +3635,29 @@ function withOutreachStatus(log, university, status) {
   return { ...log, [university]: { ...prev, status, statusAt: now, repliedAt } };
 }
 
+// Qué tan avanzado está el vínculo con un coach (solo con lo que ya sabemos: estado, fechas y seguimientos).
+function coachHeat(e) {
+  const st = e.status || "sin_respuesta";
+  if (st === "oferta" || st === "visita") return { key: "hot", label: "Caliente", color: "#b3401a", bg: "#fdeceb" };
+  if (st === "respondio") return (e.statusAt && daysSince(e.statusAt) <= 14) ? { key: "hot", label: "Caliente", color: "#b3401a", bg: "#fdeceb" } : { key: "warm", label: "Tibio", color: "#9a6a00", bg: "#fff3d6" };
+  if (st === "rechazo" || (nextOutreachStep(e).exhausted)) return { key: "cold", label: "Frío", color: "#5c6b7a", bg: "#eef1f5" };
+  return { key: "warm", label: "Tibio", color: "#9a6a00", bg: "#fff3d6" };
+}
+// Con qué coaches conviene hablar hoy: primero los que respondieron, después agradecimientos/ofertas, después seguimientos.
+function coachesForToday(entries, max = 3) {
+  const weight = { reply: 0, offer: 1, thanks: 1, followup: 2 };
+  return entries
+    .map((e) => ({ e, step: nextOutreachStep(e) }))
+    .filter((x) => x.step.due && weight[x.step.kind] !== undefined)
+    .sort((a, b) => weight[a.step.kind] - weight[b.step.kind] || new Date(a.e.lastContact) - new Date(b.e.lastContact))
+    .slice(0, max);
+}
+function withOutreachNote(log, university, notes) {
+  const prev = log[university];
+  if (!prev) return log;
+  return { ...log, [university]: { ...prev, notes: String(notes || "").slice(0, 600) } };
+}
+
 const OUTREACH_STATUS_LABELS = {
   sin_respuesta: "Sin respuesta",
   respondio: "Respondió",
@@ -5460,6 +5483,9 @@ function MailPage({ profile, setStage, embedded, initialPick }) {
       return next;
     });
   };
+  const saveNote = (university, notes) => {
+    setLog((prev) => { const next = withOutreachNote(prev, university, notes); writeOutreachLog(next); return next; });
+  };
   const remove = (university) => { removeOutreach(university); setLog(readOutreachLog()); };
   const followUp = (university) => {
     setPick({ university, kind: nextOutreachStep(log[university]).kind, nonce: Date.now() });
@@ -5491,6 +5517,23 @@ function MailPage({ profile, setStage, embedded, initialPick }) {
         </div>
       )}
 
+          {(() => {
+        const today = coachesForToday(entries);
+        if (!today.length) return null;
+        return (
+          <div className="rm-alert" style={{ marginTop: 28 }}>
+            <b>Para atender hoy:</b>
+            <ol style={{ margin: "6px 0 0", paddingLeft: 20 }}>
+              {today.map(({ e, step }) => (
+                <li key={e.university} style={{ marginBottom: 4 }}>
+                  <b>{e.university}</b> — {step.text}{" "}
+                  {profile && <button type="button" className="rm-btn-inline" onClick={() => followUp(e.university)}>Escribir →</button>}
+                </li>
+              ))}
+            </ol>
+          </div>
+        );
+      })()}
       <h3 className="rm-condensed" style={{ fontSize: 20, marginTop: 34 }}>Mi embudo</h3>
       <p className="rm-today-note">Cada universidad es una tarjeta. Arrastrala a la columna que corresponde (o usá el selector en el celular) cuando el coach responda, te llame o te haga una oferta.</p>
       <div className="rm-view-toggle" role="tablist">
@@ -5509,11 +5552,6 @@ function MailPage({ profile, setStage, embedded, initialPick }) {
             <span className="rm-fit-chip" style={{ background: "#fdeceb", color: "#b3401a" }}>{needsFollowUp.length} necesitan seguimiento</span>
             <span className="rm-fit-chip" style={{ background: "#eaf6ee", color: "#1f7a3f" }}>{responded.length} respondieron</span>
           </div>
-          {needsFollowUp.length > 0 && (
-            <div className="rm-alert" style={{ marginTop: 16 }}>
-              <b>Toca seguimiento con estas {needsFollowUp.length}:</b> {needsFollowUp.map((e) => e.university).join(", ")}.
-            </div>
-          )}
           <div className="rm-catalog-list" style={{ marginTop: 20 }}>
             {entries.map((e) => {
               const days = daysSince(e.lastContact);
@@ -5527,6 +5565,7 @@ function MailPage({ profile, setStage, embedded, initialPick }) {
                     <b>{e.university}</b>
                     {e.coachName && <span style={{ fontSize: 12, color: "var(--ink-soft)" }}>— {e.coachName}</span>}
                     {stale && <span className="rm-badge-cds" style={{ background: "#fdeceb", color: "#b3401a", borderColor: "#b3401a" }}>SEGUIMIENTO</span>}
+                    {(() => { const h = coachHeat(e); return <span className="rm-fit-chip" title="Qué tan avanzado está el vínculo, según el estado y las fechas" style={{ background: h.bg, color: h.color }}>{h.label}</span>; })()}
                   </div>
                   <div className="rm-catalog-row-meta">
                     {e.sport} · {e.timesContacted} envío{e.timesContacted === 1 ? "" : "s"} · último hace {days === 0 ? "hoy" : `${days} día${days === 1 ? "" : "s"}`} ({new Date(e.firstContact).toLocaleDateString("es")} → {new Date(e.lastContact).toLocaleDateString("es")})
@@ -5540,6 +5579,10 @@ function MailPage({ profile, setStage, embedded, initialPick }) {
                     {profile && <button type="button" className="rm-btn-inline" onClick={() => followUp(e.university)}>Escribir {MAIL_KINDS[step.kind].label.toLowerCase()} →</button>}
                     <button type="button" className="rm-btn-inline" style={{ color: "var(--ink-soft)" }} onClick={() => remove(e.university)}>Quitar del registro</button>
                   </div>
+                  <details style={{ flexBasis: "100%", marginTop: 8 }} open={!!e.notes}>
+                    <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--ink-soft)" }}>Notas sobre este coach{e.notes ? " ✓" : ""}</summary>
+                    <textarea aria-label={`Notas sobre ${e.university}`} defaultValue={e.notes || ""} maxLength={600} rows={3} placeholder="Qué te dijo, qué te pidió (video, notas, llamada), fechas de visita…" onBlur={(ev) => { if (ev.target.value !== (e.notes || "")) saveNote(e.university, ev.target.value); }} style={{ width: "100%", marginTop: 6, padding: 8, fontSize: 13, border: "2px solid var(--line)", fontFamily: "inherit", boxSizing: "border-box" }} />
+                  </details>
                 </div>
               );
             })}
@@ -5677,7 +5720,7 @@ function OutreachKanban({ log, favorites, onMove, onWrite }) {
             const stale = followUpDue(x);
             return (
               <div key={x.university} className={`rm-kanban-card ${stale ? "stale" : ""}`} draggable onDragStart={() => setDragging(x.university)} onDragEnd={() => setDragging(null)}>
-                <b>{x.university}</b>
+                <b>{x.university}</b>{x.status !== "por_contactar" && (() => { const h = coachHeat(x); return <span className="rm-fit-chip" style={{ background: h.bg, color: h.color, marginLeft: 6 }}>{h.label}</span>; })()}
                 <div className="rm-kanban-meta">
                   {x.status === "por_contactar" ? "En tu lista" : `${x.timesContacted || 0} envío${x.timesContacted === 1 ? "" : "s"} · hace ${days === 0 ? "hoy" : `${days} d`}`}
                   {stale && <span className="rm-kanban-flag">SEGUIMIENTO</span>}
