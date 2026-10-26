@@ -8399,6 +8399,17 @@ function planTasksRaw(profile, now = new Date()) {
   Object.values(log).forEach((e) => {
     if (e && followUpDue(e)) tasks.push({ id: `fu-${e.university}`, title: `Seguimiento a ${e.university}: ${nextOutreachStep(e).text}`, go: "history" });
   });
+  // Lo más urgente con coaches: contestar a quien te respondió (24 h), agradecer una llamada o visita, pedir el detalle de una oferta.
+  try {
+    const urgent = [];
+    coachesForToday(Object.values(log), 6).forEach(({ e, step }) => {
+      if (step.kind === "followup") return; // los seguimientos ya salen arriba
+      const tag = `${step.kind}-${e.university}-${e.statusAt || ""}`;
+      const lead = step.kind === "reply" ? `Contestale a ${e.university}` : step.kind === "thanks" ? `Agradecele a ${e.university}` : `Respondé a la oferta de ${e.university}`;
+      urgent.push({ id: `co-${tag}`, title: `${lead}: ${step.text}`, go: "outreach", required: true, when: step.kind === "reply" ? "En 24 horas" : "Hoy" });
+    });
+    tasks.unshift(...urgent); // van primero: un coach que respondió pasa por delante de cualquier otro paso
+  } catch (err) {}
   // Coaches que ya te contestaron: si pasa un mes sin que les escribas, el vínculo se enfría.
   Object.values(log).forEach((e) => {
     if (!e || !["respondio", "visita", "oferta"].includes(e.status)) return;
@@ -8642,6 +8653,7 @@ function reminderDigest(profile, now = new Date()) {
     stage: st.label, monthsLeft: st.monthsLeft,
     next: next ? { title: next.title, when: next.when, required: !!next.required } : null,
     week: planWeekLine(wk, true), reqOpen: tasks.filter((t) => t.required && !done.has(t.id)).length,
+    coaches: (() => { try { return coachesForToday(Object.values(readOutreachLog() || {}), 3).map(({ e, step }) => ({ u: e.university, k: step.kind })); } catch (err) { return []; } })(),
     updated: now.toISOString(),
   };
 }
