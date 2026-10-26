@@ -3388,7 +3388,9 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   const statsBlock = `- ${labels.goals}: ${profile.goals}\n- ${labels.assists}: ${profile.assists}${hasGaa(profile) ? `\n- ${labels.gaa}: ${Number(profile.gaa)}` : ""}`;
   const resultLine = F.result ? T(`Una novedad reciente: ${F.result}.`, `A recent update: ${F.result}.`) : null;
   if (first) {
-    add("athletic", "Datos deportivos", "Tus datos deportivos", T(`Rendimiento (última temporada):\n${statsBlock}`, `Performance (last season):\n${statsBlock}`), null, true);
+    // Con las estadísticas en 0 (perfil corto, todavía sin cargar) no se escribe un "0 goles": el bloque queda "no disponible".
+    const hasStats = (Number(profile.goals) || 0) > 0 || (Number(profile.assists) || 0) > 0 || hasGaa(profile);
+    add("athletic", "Datos deportivos", "Tus datos deportivos", hasStats ? T(`Rendimiento (última temporada):\n${statsBlock}`, `Performance (last season):\n${statsBlock}`) : null, hasStats ? null : "Todavía no cargaste tus estadísticas: sumalas en tu perfil para que el mail las incluya.", true);
     if (resultLine) add("result", "Novedad reciente", "Lo que escribiste vos", resultLine, null, true);
   } else if ((followup && stage === 2) || kind === "update") {
     add("news", "Novedades", "Tu último check-in + lo que escribiste",
@@ -3419,11 +3421,14 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     const majorEn = MAJOR_ES_EN[key] ? MAJOR_ES_EN[key].replace(/\b\w/g, (c) => c.toUpperCase()) : profile.major;
     const majorName = lang === "en" ? majorEn : profile.major;
     let majorLine;
-    if (fit.status === "confirmado_si") majorLine = T(`Vi que ${university} ofrece ${majorName}, justo la carrera que quiero estudiar`, `I saw that ${university} offers ${majorName}, exactly what I want to study`);
+    const noMajor = !String(profile.major || "").trim();
+    if (noMajor) majorLine = T("Todavía estoy definiendo qué carrera estudiar", "I'm still deciding what I want to study");
+    else if (fit.status === "confirmado_si") majorLine = T(`Vi que ${university} ofrece ${majorName}, justo la carrera que quiero estudiar`, `I saw that ${university} offers ${majorName}, exactly what I want to study`);
     else if (ncsa && ncsa.majors && [profile.major, normalizeMajor(profile.major || "")].some((m) => m && ncsa.majors.toLowerCase().includes(m.toLowerCase()))) majorLine = T(`Vi en el listado de carreras que ofrecen ${majorName}, que es lo que quiero estudiar`, `I saw in your list of majors that you offer ${majorName}, which is what I want to study`);
     else majorLine = T(`Me interesa estudiar ${majorName}`, `I'm interested in studying ${majorName}`);
-    if (fit.status === "confirmado_no") missing.push(`Según su Common Data Set, ${university} no ofrece "${profile.major}": pensá si querés escribirle igual.`);
-    if (fit.status === "ipeds_no") missing.push(`Según IPEDS, ${university} no otorgó títulos en "${profile.major}" en 2024-25: confirmá que la dicte antes de escribirle.`);
+    if (noMajor) { /* sin carrera cargada: no hay nada que verificar */ }
+    else if (fit.status === "confirmado_no") missing.push(`Según su Common Data Set, ${university} no ofrece "${profile.major}": pensá si querés escribirle igual.`);
+    if (!noMajor && fit.status === "ipeds_no") missing.push(`Según IPEDS, ${university} no otorgó títulos en "${profile.major}" en 2024-25: confirmá que la dicte antes de escribirle.`);
     const gpa = profile.gpa4 ?? T("[convertí tu GPA en la calculadora]", "[convert your GPA in the calculator]");
     add("academic", "Carrera y promedio", fit.status === "confirmado_si" ? (fit.cds ? "Common Data Set + tu perfil" : fit.ipeds ? "IPEDS + tu perfil" : "College Scorecard + tu perfil") : "Tu perfil",
       T(`${majorLine}. Mi GPA convertido a escala 4.0 es ${gpa}.`, `${majorLine}. My GPA converted to the 4.0 scale is ${gpa}.`), null, true);
@@ -5421,9 +5426,9 @@ function MailComposer({ profile, log, pick, onTracked }) {
   );
 }
 
-function MailPage({ profile, setStage, embedded }) {
+function MailPage({ profile, setStage, embedded, initialPick }) {
   const [log, setLog] = useState(() => readOutreachLog());
-  const [pick, setPick] = useState(null);
+  const [pick, setPick] = useState(initialPick || null);
   const entries = Object.values(log).sort((a, b) => new Date(b.lastContact) - new Date(a.lastContact));
 
   const updateStatus = (university, status) => {
@@ -7986,6 +7991,130 @@ function GpaCalculatorPage({ onUseInProfile }) {
   );
 }
 
+// ---- Empezar en 10 minutos: perfil corto (3 pasos) → tus mejores universidades → primer mail ----
+// Pide solo lo que hace falta para ordenar universidades y escribir un primer mail. El resto del perfil se completa después,
+// y quien lo prefiera puede usar el formulario completo. Las estadísticas arrancan en 0: se piden después para afinar el ranking.
+function StartPage({ onDone, setStage }) {
+  const thisYear = new Date().getFullYear();
+  const [step, setStep] = useState(0);
+  const [p, setP] = useState({ sport: "", gender: "F", position: "", gradYear: thisYear + 2, gpaScale: "ar10", gpaRaw: "", name: "", email: "", country: "Argentina", major: "", consent: undefined });
+  const set = (k) => (e) => setP({ ...p, [k]: e.target.value });
+  const hasPositions = !!(p.sport && POSITION_SELECT[p.sport]);
+  const ok0 = !!p.sport && (!hasPositions || !!p.position);
+  const gpaN = parseFloat(String(p.gpaRaw).replace(",", "."));
+  const ok1 = !!p.name.trim() && /.+@.+\..+/.test(p.email) && gpaN > 0 && !!p.gradYear;
+  const ok2 = consentIsValid(p.consent);
+  const finish = () => {
+    if (!ok2) return;
+    const full = {
+      ...emptyProfile, ...p, gpaRaw: gpaN, gradYear: parseInt(p.gradYear, 10), gradMonth: 12, goals: 0, assists: 0,
+      consent: { ...p.consent, version: LEGAL_VERSION, acceptedAt: new Date().toISOString() },
+    };
+    onDone(full);
+  };
+  const LABELS = ["Tu deporte", "Vos y tus notas", "Confirmar"];
+  return (
+    <div className="rm-wrap">
+      <div className="rm-section" style={{ borderTop: "none", paddingTop: 44 }}>
+        <h2 className="rm-condensed">Empezá en 10 minutos</h2>
+        <p className="rm-hint">Tres pasos cortos. Al final ves tus universidades más compatibles y un borrador de tu primer mail a un coach, listo para revisar. Lo demás (estadísticas, video, familia) lo cargás después.</p>
+        <div className="rm-grid">
+          {step === 0 && (<>
+            <div className="rm-field"><label>¿Qué deporte practicás?</label>
+              <select value={p.sport} onChange={(e) => { const v = e.target.value; setP({ ...p, sport: v, position: "" }); }}>
+                <option value="">Elegí tu deporte</option>
+                {SPORTS.map((sp) => <option key={sp} value={sp}>{sp}{sportHasData(sp) ? "" : " (próximamente)"}</option>)}
+              </select>
+            </div>
+            <div className="rm-field"><label>Rama</label>
+              <select value={p.gender} onChange={set("gender")}><option value="F">Femenino</option><option value="M">Masculino</option></select>
+            </div>
+            {p.sport && (() => { const cv = sportCoverage(p.sport, p.gender);
+              if (!cv.coaches && !cv.rosters) return <p className="rm-hint rm-full" style={{ margin: 0, color: "var(--flag)" }}>⚠ Para este deporte y rama todavía no cargamos coaches. Vas a ver las búsquedas que publican los coaches, pero no vas a tener sus mails.</p>;
+              return <p className="rm-hint rm-full" style={{ margin: 0, color: "var(--field-dark)" }}>✓ Tenemos {cv.coaches.toLocaleString("es-AR")} programas con datos de coaches para este deporte.</p>; })()}
+            {hasPositions && (
+              <div className="rm-field rm-full"><label>¿En qué posición jugás?</label>
+                <select value={p.position} onChange={set("position")}>
+                  <option value="">Elegí tu posición</option>
+                  {POSITION_SELECT[p.sport].map((c) => { const n = (POSITION_NAMES[p.sport] || {})[c] || [c, c]; const es = p.gender === "M" ? n[1] : n[0]; return <option key={c} value={c}>{es.charAt(0).toUpperCase() + es.slice(1)} ({c})</option>; })}
+                </select>
+              </div>
+            )}
+          </>)}
+          {step === 1 && (<>
+            <div className="rm-field"><label>Nombre</label><input value={p.name} onChange={set("name")} placeholder="Para firmar tus mails" autoComplete="given-name" /></div>
+            <div className="rm-field"><label>Tu email (desde ahí vas a escribir)</label><input type="email" value={p.email} onChange={set("email")} placeholder="tu@email.com" autoComplete="email" /></div>
+            <div className="rm-field"><label>Año en que terminás la secundaria</label>
+              <select value={p.gradYear} onChange={set("gradYear")}>{[0, 1, 2, 3, 4].map((i) => <option key={i} value={thisYear + i}>{thisYear + i}</option>)}</select>
+            </div>
+            <div className="rm-field"><label>País</label><input value={p.country} onChange={set("country")} list="rm-paises" autoComplete="country-name" /></div>
+            <div className="rm-field"><label>Escala de tu promedio</label>
+              <select value={p.gpaScale} onChange={set("gpaScale")}>{Object.entries(GPA_SCALES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select>
+            </div>
+            <div className="rm-field"><label>Tu promedio, en tu escala</label><input inputMode="decimal" value={p.gpaRaw} onChange={set("gpaRaw")} placeholder="ej: 8,5" /></div>
+            <div className="rm-field rm-full"><label>Carrera que te gustaría estudiar (opcional)</label><input value={p.major} onChange={set("major")} placeholder="Si todavía no sabés, dejalo vacío" /></div>
+          </>)}
+          {step === 2 && (
+            <div className="rm-full">
+              <p className="rm-hint" style={{ marginTop: 0 }}>Último paso: confirmá tu edad y aceptá los Términos y la Política de Privacidad. Smartrecruit no envía mails por vos ni se comunica con coaches: cada mail lo revisás y lo mandás vos.</p>
+              <ConsentFields value={p.consent} onChange={(c) => setP({ ...p, consent: c })} />
+            </div>
+          )}
+        </div>
+        <div className="rm-wizard-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, marginTop: 18, flexWrap: "wrap" }}>
+          <button type="button" className="rm-btn-ghost" disabled={step === 0} style={{ opacity: step === 0 ? 0.4 : 1 }} onClick={() => { setStep(step - 1); window.scrollTo(0, 0); }}>← Anterior</button>
+          <span style={{ fontSize: 13, color: "var(--ink-soft)" }}>Paso {step + 1} de 3 · {LABELS[step]}</span>
+          {step < 2
+            ? <button type="button" className="rm-btn" disabled={step === 0 ? !ok0 : !ok1} style={(step === 0 ? !ok0 : !ok1) ? { opacity: 0.5, cursor: "not-allowed" } : undefined} onClick={() => { setStep(step + 1); window.scrollTo(0, 0); }}>Siguiente →</button>
+            : <button type="button" className="rm-btn" disabled={!ok2} style={ok2 ? undefined : { opacity: 0.5, cursor: "not-allowed" }} onClick={finish}>Ver mis universidades →</button>}
+        </div>
+        <p className="rm-today-note" style={{ marginTop: 14 }}>¿Preferís cargar todo ahora? <button type="button" className="rm-btn-inline" onClick={() => { setStage("form"); window.scrollTo(0, 0); }}>Usar el perfil completo →</button></p>
+      </div>
+    </div>
+  );
+}
+
+// Pantalla posterior al perfil corto: las mejores opciones para escribir hoy y un botón directo al primer mail.
+function FirstMailPage({ profile, setStage, onWrite, onOpenSchool }) {
+  const tiered = useMemo(() => { try { return buildTieredResults(profile); } catch (e) { return { top: [], more: [], total: 0 }; } }, [profile]);
+  const withEmail = (r) => !!getCoachEmail(r.university, profile.sport, profile.gender);
+  // Primero las que ya tienen mail de coach cargado: son las que se pueden escribir hoy mismo.
+  const picks = useMemo(() => {
+    const all = [...tiered.top, ...tiered.more.slice(0, 40)];
+    const seen = new Set();
+    const uniq = all.filter((r) => !seen.has(r.university) && (seen.add(r.university), true));
+    return [...uniq.filter(withEmail), ...uniq.filter((r) => !withEmail(r))].slice(0, 3);
+  }, [tiered, profile]);
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">{profile.name ? `${profile.name}, ` : ""}ya podés escribir tu primer mail</h2>
+      <p className="rm-hint">Encontramos {tiered.total} universidades para tu perfil. Estas {picks.length || 3} son un buen punto de partida: las primeras ya tienen el mail del coach cargado. Elegí una y te armamos el borrador; lo revisás y lo mandás vos desde tu casilla.</p>
+      {picks.length === 0 ? (
+        <div className="rm-alert">Todavía no encontramos universidades para este deporte y rama. Probá con el perfil completo para ver las búsquedas que publican los coaches. <button type="button" className="rm-btn-inline" onClick={() => setStage("form")}>Perfil completo →</button></div>
+      ) : (
+        <div className="rm-catalog-list" style={{ marginTop: 16 }}>
+          {picks.map((r) => (
+            <div className="rm-catalog-row" key={r.university} style={{ cursor: "default" }}>
+              <div className="rm-catalog-row-main">
+                <b>{r.university}</b> <TierBadge tier={r.tier} />
+              </div>
+              <div className="rm-catalog-row-meta">{r.division}{r.state ? ` · ${r.state}` : ""} · {withEmail(r) ? "con mail del coach" : "sin mail de coach cargado todavía"}</div>
+              <div style={{ marginTop: 8, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+                <button type="button" className="rm-btn" onClick={() => onWrite(r.university)}>Escribirle a este coach →</button>
+                <button type="button" className="rm-btn-inline" onClick={() => onOpenSchool(r.university)}>Ver la universidad</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="rm-alert" style={{ marginTop: 22 }}>
+        <b>Para afinar el ranking:</b> cargá tus estadísticas, tu video y tu examen de inglés. Con eso el orden mejora y los mails salen más completos. <button type="button" className="rm-btn-inline" onClick={() => setStage("form")}>Completar mi perfil →</button>
+      </div>
+      <p className="rm-today-note" style={{ marginTop: 14 }}>Después del primer mail, "Mi plan de hoy" te dice qué hacer cada semana. <button type="button" className="rm-btn-inline" onClick={() => setStage("results")}>Ver las {tiered.total} universidades →</button></p>
+    </div>
+  );
+}
+
 function ProfileForm({ onSubmit, initial }) {
   const [p, setP] = useState(initial ? { gradMonth: 12, ...initial } : emptyProfile);
   const [step, setStep] = useState(0);
@@ -9277,7 +9406,7 @@ function OnboardingPanel({ profile, setStage }) {
   } catch (e) {}
 
   const steps = [
-    { id: "profile", n: 1, title: "Armá tu perfil", desc: "Deporte, posición, año y promedio. 2 minutos.", done: hasProfile, goto: "form", cta: hasProfile ? "Editar mi perfil" : "Empezar ahora →" },
+    { id: "profile", n: 1, title: "Armá tu perfil", desc: "Deporte, posición, año y promedio. 2 minutos.", done: hasProfile, goto: hasProfile ? "form" : "start", cta: hasProfile ? "Editar mi perfil" : "Empezar ahora →" },
     { id: "results", n: 2, title: "Mirá tus universidades y tu Recruit Score", desc: "Las universidades donde tenés chances reales, y por qué.", done: hasProfile && favCount > 0, goto: hasProfile ? "results" : "form", cta: "Ver mis resultados →", locked: !hasProfile },
     { id: "list", n: 3, title: "Guardá tu lista corta", desc: "Marcá ★ las que te interesan y compáralas.", done: favCount > 0, goto: "mylist", cta: "Ver mi lista →", locked: !hasProfile },
     { id: "eligibility", n: 4, title: "Chequeá tu elegibilidad", desc: "Qué documentos y notas te pide la NCAA/NAIA.", done: eligDone, goto: "eligibility", cta: "Ver requisitos →" },
@@ -10373,7 +10502,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja"];
+const PATH_STAGES = ["start", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -10426,6 +10555,7 @@ export default function App() {
   };
   usePlanReminder();
   const [selectedSchool, setSelectedSchool] = useState(null);
+  const [outreachPick, setOutreachPick] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const openSchool = (name) => { setSelectedSchool(name); setStage("school"); window.scrollTo(0, 0); };
@@ -10589,7 +10719,7 @@ export default function App() {
             <div className="rm-wrap rm-hero-inner">
               <h1 className="rm-condensed">Conseguí tu beca <span>por tu propia cuenta</span>, con datos reales.</h1>
               <p>Te mostramos qué universidades buscan tu posición y con cuáles tenés más chances.</p>
-              <button className="rm-btn" onClick={() => setStage("form")}>Armar mi perfil →</button>
+              <button className="rm-btn" onClick={() => setStage("start")}>Empezar en 10 minutos →</button>
             </div>
           </div>
           )}
@@ -10600,7 +10730,9 @@ export default function App() {
       )}
 
       {stage === "roadmap" && <RoadmapPage profile={profile} setStage={setStage} />}
-      {stage === "outreach" && <MailPage profile={profile} setStage={setStage} />}
+      {stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
+      {stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
+      {stage === "outreach" && <MailPage profile={profile} setStage={setStage} initialPick={outreachPick} />}
       {stage === "mylist" && <MyListPage setStage={setStage} onOpenSchool={openSchool} />}
       {stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
       {stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
