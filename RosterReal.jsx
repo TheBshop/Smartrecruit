@@ -2056,7 +2056,8 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-sidebar{ position:fixed; top:0; left:0; bottom:0; width:230px; background:var(--navy); display:flex; flex-direction:column; z-index:300; transition:width .22s ease, transform .22s ease; box-shadow:2px 0 20px rgba(0,0,0,0.2); }
 .rm-sidebar-top{ display:flex; align-items:center; justify-content:space-between; padding:16px 14px; border-bottom:1px solid rgba(255,255,255,0.1); min-height:70px; }
 .rm-sidebar-logo{ display:flex; align-items:center; gap:10px; cursor:pointer; overflow:hidden; }
-.rm-sidebar-logo img{ height:44px; width:44px; border-radius:50%; background:#fff; flex-shrink:0; }
+.rm-sidebar-logo img{ height:64px; width:64px; border-radius:10px; background:#fff; flex-shrink:0; }
+.rm-sidebar-logo .rm-sidebar-brand{ display:none; }
 .rm-sidebar-brand{ font-family:'Barlow Condensed','Oswald',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#fff; font-size:16px; white-space:nowrap; }
 .rm-sidebar-toggle{ background:rgba(255,255,255,0.1); border:none; color:#fff; width:28px; height:28px; border-radius:5px; cursor:pointer; font-size:15px; flex-shrink:0; transition:background .15s; }
 .rm-sidebar-toggle:hover{ background:rgba(255,255,255,0.22); }
@@ -10949,7 +10950,7 @@ export default function App() {
       <aside className="rm-sidebar">
         <div className="rm-sidebar-top">
           <div className="rm-sidebar-logo" onClick={() => { setStage("landing"); setMenuOpen(false); }}>
-            <img src="/img/logo.png" alt="Smart Recruit" width="44" height="44" />
+            <img src="/img/logo.png" alt="Smartrecruit" width="64" height="64" />
             <span className="rm-sidebar-brand">Smartrecruit</span>
           </div>
           <button className="rm-sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} aria-label="Expandir/comprimir menú" title="Expandir/comprimir">
