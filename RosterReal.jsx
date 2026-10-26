@@ -9390,6 +9390,22 @@ const BG_SPORTS_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
 // Onboarding guiado — el "¿y ahora qué?" para el que llega perdido. Detecta el
 // progreso real (perfil, GPA, favoritos, emails generados, checklist elegibilidad)
 // y va marcando pasos como hechos. Baja la fricción del que hace todo por cuenta propia.
+// Video de un minuto con todo el recorrido (subtitulado, sin sonido). No se descarga hasta que se toca "reproducir".
+function DemoVideo() {
+  return (
+    <div className="rm-section" style={{ borderTop: "none", paddingTop: 30, paddingBottom: 6 }}>
+      <div className="rm-wrap" style={{ maxWidth: 920 }}>
+        <h2 className="rm-condensed" style={{ fontSize: 26, margin: "0 0 6px" }}>Mirá cómo funciona en 1 minuto</h2>
+        <p style={{ fontSize: 14, color: "var(--ink-soft)", margin: "0 0 12px" }}>Del registro al primer mail a un coach, y todo lo que hay en la página. Tiene subtítulos: no hace falta sonido.</p>
+        <video controls playsInline preload="none" poster="/video/demo-poster.jpg" style={{ width: "100%", borderRadius: 10, border: "2px solid var(--line)", background: "#0e1e30" }} aria-label="Video de un minuto que muestra cómo funciona Smartrecruit">
+          <source src="/video/demo.mp4" type="video/mp4" />
+          Tu navegador no puede reproducir el video.
+        </video>
+      </div>
+    </div>
+  );
+}
+
 function OnboardingPanel({ profile, setStage }) {
   const [dismissed, setDismissed] = useState(() => {
     try { return localStorage.getItem("rr_onboarding_dismissed") === "1"; } catch (e) { return false; }
@@ -10724,6 +10740,7 @@ export default function App() {
           </div>
           )}
 
+          {!profile && <DemoVideo />}
           <OnboardingPanel profile={profile} setStage={setStage} />
           <OpportunitiesBoard profile={profile} />
         </>
