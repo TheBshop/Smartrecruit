@@ -8604,6 +8604,9 @@ function planSinceText(startDate, now = new Date()) {
 // Pasar a true recién cuando la tabla email_reminders y la función send-weekly-reminders estén creadas en Supabase
 // (ver supabase/LEEME-recordatorios.md). Mientras sea false, el sitio no muestra ni consulta nada de esto.
 const EMAIL_REMINDERS_LIVE = true;
+// Pasar a true recién cuando la función "delete-account" esté desplegada en Supabase. Mientras sea false no se muestra el botón "Eliminar mi cuenta":
+// quien quiera borrar sus datos lo pide por mail (la Política de Privacidad lo explica).
+const ACCOUNT_DELETE_LIVE = false;
 // El sitio guarda un resumen corto (etapa, próxima acción, semana) para que el mail del domingo lo use.
 function reminderDigest(profile, now = new Date()) {
   const state = readPlanState();
@@ -10743,8 +10746,8 @@ function AccountMenu({ session }) {
         <span className="rm-account-email" title={session.user.email}>{session.user.email}</span>
         {syncPending && <span className="rm-account-sync" title={"Hay cambios que todavía no se guardaron en la nube. Se reintenta solo." + (function () { try { var m = localStorage.getItem("rr_sync_error"); return m ? " Motivo: " + m : ""; } catch (e) { return ""; } })()}>· guardando…</span>}
         <button className="rm-account-link" onClick={signOut}>Cerrar sesión</button>
-        <button className="rm-account-link" style={{ marginLeft: 10, opacity: 0.75 }} onClick={() => { setDelOpen(!delOpen); setDelErr(""); setDelText(""); }}>Eliminar mi cuenta</button>
-        {delOpen && (
+        {ACCOUNT_DELETE_LIVE && <button className="rm-account-link" style={{ marginLeft: 10, opacity: 0.75 }} onClick={() => { setDelOpen(!delOpen); setDelErr(""); setDelText(""); }}>Eliminar mi cuenta</button>}
+        {ACCOUNT_DELETE_LIVE && delOpen && (
           <div className="rm-account-form" style={{ marginTop: 8 }}>
             <p className="rm-account-note">Se borran de forma definitiva tu cuenta, tu progreso guardado en la nube y el recordatorio semanal. Lo que tenés guardado en este navegador no se borra. Para confirmar, escribí <b>ELIMINAR</b>:</p>
             <input type="text" autoComplete="off" placeholder="ELIMINAR" value={delText} onChange={(e) => setDelText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && deleteAccount()} />
