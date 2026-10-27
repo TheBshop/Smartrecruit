@@ -1,6 +1,11 @@
 # Smartrecruit — código fuente
 
-- `RosterReal.jsx`: toda la app (datos + interfaz). Es el archivo que se edita.
+- `RosterReal.jsx`: la app (interfaz y lógica; ~1,5 MB). Es el archivo que se edita.
+- `datos/*.json`: los datos pesados (universidades, planteles, coaches, Scorecard, FieldLevel, etc.; ~15 MB). **Ya no están dentro del código**: el build los copia a `dist/data/NOMBRE.<hash>.json` (cache inmutable, ver `public/_headers`) y la app los baja en paralelo al abrir (`loadData()`), mostrando una pantalla liviana mientras tanto. Para cambiar un dato se edita el JSON de `datos/` (el nombre del archivo es el de la constante). Lo que se calcula a partir de esos datos al cargar vive en `__deriveAll()` (al final de `RosterReal.jsx`). Los scripts de `datos-src/*.py` fueron escritos para reemplazar constantes dentro de `RosterReal.jsx`: hay que apuntarlos a `datos/<CONSTANTE>.json` antes de volver a usarlos.
+- `build.mjs`: arma `dist/` (`npm run build`).
+
+## Regla permanente: el rendimiento es prioridad
+Velocidad de carga y peso de la página son prioridad en cada cambio. Antes de publicar: no meter datos grandes dentro del código (van en `datos/*.json`), no sumar librerías pesadas sin necesidad, y medir. Referencia (26/10/2026): código 1,7 MB (antes 16 MB); la pantalla aparece a los 0,2 s y la portada a ~1 s (antes 2 s), con CPU normal; con CPU 4 veces más lenta, 0,9 s y 3,9 s (antes 5,8 s).
 - `main.jsx`: arranca la app.
 - `public/`: se copia tal cual al sitio. Incluye `index.html` (con PostHog, SEO e ícono), `assets/analytics.js` (PostHog + aviso de cookies), `robots.txt` y `sitemap.xml`.
 - `analytics-src/entry.js`: código legible de la analítica (solo hace falta si se cambia).

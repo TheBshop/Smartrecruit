@@ -2,7 +2,7 @@
   "name": "smartrecruit",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp -r public/. dist/ && esbuild main.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV=\\\"production\\\" --outfile=dist/assets/index.js && V=$(date +%s) && for f in dist/index.html dist/privacidad/index.html dist/terminos/index.html; do sed -i \"s/?v=[0-9a-z]*/?v=$V/g\" \"$f\"; done"
+    "build": "node build.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",
