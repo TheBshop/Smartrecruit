@@ -2690,6 +2690,14 @@ h2.rm-condensed::before{ border:none; width:8px; height:26px; top:2px; backgroun
 .rm-hist-subject{ font-size:13.5px; font-style:italic; margin-top:4px; overflow-wrap:anywhere; }
 @media (max-width:560px){ .rm-hist-item{ flex-direction:column; gap:4px; } .rm-hist-when{ flex:none; display:flex; gap:8px; align-items:baseline; } }
 @media (prefers-reduced-motion:reduce){ .rm-hero h1{ animation:none; } }
+@media (pointer:coarse){
+  .rm-needs-links a{ display:inline-block; padding:10px 0; }
+  .rm-es-fav{ width:40px; height:40px; top:6px; right:6px; font-size:18px; }
+  .rm-btn-inline{ padding:10px 4px; margin-top:0; }
+  .rm-gloss{ display:inline-block; padding:6px 0; }
+  .rm-offer-toggle{ padding-top:10px; padding-bottom:10px; }
+  .rm-onboard-dismiss{ padding:10px 12px; }
+}
 `;
 
 const emptyProfile = {
