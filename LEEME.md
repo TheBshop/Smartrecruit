@@ -118,3 +118,10 @@ Quedan sin vínculo unas 70 universidades NCAA sin un registro oficial claro (ca
 - El link es `/atleta#<datos en base64url>`: el perfil viaja en el fragmento (nunca llega a un servidor). La página pública (`AthleteCardPage`) no descarga los datos grandes, es `noindex` y valida todo lo que lee del link (solo http/https, usuarios alfanuméricos, email/teléfono con formato).
 - Menores: el email viene destildado por defecto y se avisa que se comparta con conformidad del adulto responsable.
 - Clave `rr_share` (sincronizada) guarda redes y opciones.
+
+## Instituciones: cerradas, renombradas y fichas (27/10/2026)
+- Se quitaron del catálogo 25 instituciones que ya no funcionan (con fuente y fecha en `datos-src/instituciones_cerradas.json`): Clarks Summit, Eastern Nazarene, Northland, Alderson Broaddus, Alliance, Birmingham-Southern, Cabrini, Finlandia, Fontbonne, Holy Names, Medaille, Notre Dame College, Saint Rose, Wells, The King's College NY, St. Andrews NC, Univ. of Saint Katherine, ASA Miami, Multnomah (x2), Bacone y 4 campus de UW Colleges (Fond du Lac, Waukesha, Marinette, Baraboo). Se sacaron de `PROGRAMS_ALL_SPORTS`, `SCHOOL_PROFILES_NCSA`, `BBALL_ROSTERS` y `MAJOR_DATA_BY_SCHOOL`.
+- Con nombre nuevo, ahora enlazadas a su ficha (`SCORECARD_NAME_IDS`): Union College KY → Union Commonwealth University; Univ. of Houston–Victoria → Texas A&M–Victoria; Southwestern Assemblies of God → Nelson University; West Hills Lemoore/Coalinga → Lemoore/Coalinga College; Fort Berthold CC → Nueta Hidatsa Sahnish College; Bethel KS y Ottawa AZ (Surprise).
+- Fichas cargadas a mano porque no estaban en la descarga masiva: Saint John's (MN) 174792 y Nueta Hidatsa Sahnish 200086 (College Navigator / Scorecard).
+- Quedan 9 sin ficha, con mensaje propio: campus regionales (UWSP Marshfield y Wausau, UW Marshfield-Wood, Benedictine Mesa, CT State Gateway, Bryant & Stratton Milwaukee), 2 clubes de rugby y John Melvin University (no se pudo confirmar).
+- Los nombres viejos se mantienen en pantalla para no romper cruces con contactos y planteles; no hay buscador por nombre nuevo todavía.
