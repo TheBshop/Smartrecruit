@@ -112,3 +112,9 @@ Quedan sin vínculo unas 70 universidades NCAA sin un registro oficial claro (ca
 - **Mails nuevos** (`MAIL_KINDS`): pedir videollamada, check-in después de meses, ofrecer una referencia, pedir más tiempo para decidir, rechazar una oferta y aceptar una oferta. Salen en español e inglés, usan solo datos reales (nuevos campos opcionales: plazo y motivo) y avisan qué falta. La IA (`functions/api/generate-email.js`) conoce los mismos tipos. "Check-in" también se sugiere solo cuando pasaron 90 días sin novedades con un programa.
 - **Modo familia** (`/familia`, en Recursos): guía en lenguaje simple para madre, padre o tutor (qué es Smartrecruit y qué no, las etapas, cuánto puede cubrir una beca, qué mirar antes de aceptar, señales de alerta, cómo acompañar) y, si hay perfil, el avance (etapa, coaches, respuestas, lista) con "copiar resumen" y "enviar por WhatsApp". No usa servidor ni cuentas nuevas: el resumen se arma en el navegador y lo comparte la atleta.
 - El botón "Eliminar mi cuenta" está oculto (`ACCOUNT_DELETE_LIVE = false`) hasta que se despliegue `delete-account` en Supabase.
+
+## Ficha para compartir (/atleta)
+- En Perfil → "Tu ficha para compartir": medidor de completitud, usuarios de Instagram/TikTok, opciones de mostrar email/teléfono, y botones Copiar link / Compartir / WhatsApp.
+- El link es `/atleta#<datos en base64url>`: el perfil viaja en el fragmento (nunca llega a un servidor). La página pública (`AthleteCardPage`) no descarga los datos grandes, es `noindex` y valida todo lo que lee del link (solo http/https, usuarios alfanuméricos, email/teléfono con formato).
+- Menores: el email viene destildado por defecto y se avisa que se comparta con conformidad del adulto responsable.
+- Clave `rr_share` (sincronizada) guarda redes y opciones.

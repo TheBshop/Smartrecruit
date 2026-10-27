@@ -2690,6 +2690,18 @@ h2.rm-condensed::before{ border:none; width:8px; height:26px; top:2px; backgroun
 .rm-hist-subject{ font-size:13.5px; font-style:italic; margin-top:4px; overflow-wrap:anywhere; }
 @media (max-width:560px){ .rm-hist-item{ flex-direction:column; gap:4px; } .rm-hist-when{ flex:none; display:flex; gap:8px; align-items:baseline; } }
 @media (prefers-reduced-motion:reduce){ .rm-hero h1{ animation:none; } }
+.rm-athlete{ max-width:640px; padding-top:28px; padding-bottom:48px; display:grid; gap:14px; }
+.rm-athlete-head{ display:flex; gap:16px; align-items:center; }
+.rm-athlete-links{ display:grid; gap:4px; }
+.rm-athlete-links a{ color:var(--accent); font-weight:600; padding:6px 0; overflow-wrap:anywhere; }
+.rm-share-meter{ height:8px; border-radius:99px; background:var(--paper-dim,#eef1f5); overflow:hidden; }
+.rm-share-meter > div{ height:100%; background:var(--accent); transition:width .3s ease; }
+.rm-share-list{ list-style:none; margin:0; padding:0; display:grid; gap:4px; font-size:13.5px; color:var(--ink-soft); }
+.rm-share-list li.ok b{ color:#1a7f4b; }
+.rm-share-field{ display:grid; gap:4px; font-size:12px; color:var(--ink-soft); }
+.rm-share-field input, .rm-share-link{ width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:4px; padding:10px 12px; font:inherit; font-size:14px; color:var(--ink); background:#fff; }
+.rm-share-link{ margin-top:12px; font-size:12.5px; color:var(--ink-soft); }
+.rm-share-ghost{ color:var(--navy) !important; border-color:var(--navy) !important; background:#fff !important; padding:12px 18px !important; font-weight:600; border-radius:4px; }
 @media (pointer:coarse){
   .rm-needs-links a{ display:inline-block; padding:10px 0; }
   .rm-es-fav{ width:40px; height:40px; top:6px; right:6px; font-size:18px; }
@@ -4900,7 +4912,7 @@ function useEligibilityChecklist(division) {
 const SUPABASE_URL = "https://dliayalkzvaugukhxmcb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsaWF5YWxrenZhdWd1a2h4bWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzkwOTMsImV4cCI6MjA4ODExNTA5M30.vGBprr8FKBxTayS6Q6ZbWIxUZKItY4avgMJbUGgQC1E";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts", "rr_plan_state", "rr_quarterly"];
+const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts", "rr_plan_state", "rr_quarterly", "rr_share"];
 let syncUserId = null; // seteado por App al iniciar/cerrar sesión — writeJSON lo lee para saber si hay que sincronizar
 let syncTimer = null;
 // ---- Sincronización (criterios tomados de Kleppmann, "Designing Data-Intensive Applications", cap. 5 y 7) ----
@@ -9531,6 +9543,180 @@ function OnboardingPanel({ profile, setStage }) {
 // Mi Perfil — vista visual del perfil guardado, estilo NextCommit. La encuesta
 // (ProfileForm) se completa una sola vez; después el perfil queda guardado y se
 // muestra acá en tarjetas, con botón para editar y para ver resultados.
+// ---- Ficha para compartir: el perfil viaja dentro del link (después del #), no se guarda en ningún servidor ----
+const SHARE_VER = 1;
+function b64uEncode(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  bytes.forEach((b) => { bin += String.fromCharCode(b); });
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function b64uDecode(s) {
+  let t = String(s).replace(/-/g, "+").replace(/_/g, "/");
+  while (t.length % 4) t += "=";
+  const bin = atob(t);
+  return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
+}
+const cleanHandle = (v) => String(v || "").trim().replace(/^https?:\/\/[^/]+\/@?/i, "").replace(/^@/, "").replace(/[^A-Za-z0-9._]/g, "").slice(0, 30);
+function buildShareCard(profile, opts) {
+  const o = opts || {};
+  const card = {
+    v: SHARE_VER,
+    n: String(profile.name || "").slice(0, 80),
+    s: profile.sport || "", g: profile.gender || "", p: profile.position || "", c: profile.country || "",
+    y: getEntryYear(profile),
+    gp: profile.gpa4 != null ? Number(profile.gpa4) : null,
+    m: String(profile.major || "").slice(0, 80),
+    a: Number(profile.goals) || 0, b: Number(profile.assists) || 0,
+  };
+  if (hasGaa(profile)) card.ga = Number(profile.gaa);
+  if (profile.videoLink && /^https?:\/\//i.test(profile.videoLink)) card.vd = String(profile.videoLink).slice(0, 300);
+  const ig = cleanHandle(o.ig), tt = cleanHandle(o.tt);
+  if (ig) card.ig = ig;
+  if (tt) card.tt = tt;
+  if (o.email && profile.email) card.em = String(profile.email).slice(0, 120);
+  if (o.phone && profile.phone) card.ph = String(profile.phone).slice(0, 30);
+  return card;
+}
+function shareLinkFor(card) { return `${window.location.origin}/atleta#${b64uEncode(JSON.stringify(card))}`; }
+function parseShareCard(hash) {
+  try {
+    const raw = JSON.parse(b64uDecode(String(hash || "").replace(/^#/, "")));
+    if (!raw || typeof raw !== "object" || !raw.n) return null;
+    const str = (v, n) => (typeof v === "string" ? v.slice(0, n) : "");
+    const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : null);
+    return {
+      n: str(raw.n, 80), s: str(raw.s, 40), g: raw.g === "F" ? "F" : "M", p: str(raw.p, 40), c: str(raw.c, 60),
+      y: num(raw.y), gp: num(raw.gp), m: str(raw.m, 80), a: num(raw.a) || 0, b: num(raw.b) || 0, ga: num(raw.ga),
+      vd: /^https?:\/\//i.test(raw.vd || "") ? str(raw.vd, 300) : "",
+      ig: cleanHandle(raw.ig), tt: cleanHandle(raw.tt),
+      em: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw.em || "") ? str(raw.em, 120) : "",
+      ph: /^[0-9+()\-\s]{5,30}$/.test(raw.ph || "") ? str(raw.ph, 30) : "",
+    };
+  } catch (e) { return null; }
+}
+function copyText(text, done) {
+  try { navigator.clipboard.writeText(text).then(done, () => {}); } catch (e) {
+    try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); } catch (err) { /* nada */ }
+  }
+}
+
+// Página pública que ve el coach al abrir el link. No necesita los datos grandes del sitio.
+function AthleteCardPage() {
+  const card = useMemo(() => parseShareCard(window.location.hash), []);
+  useEffect(() => {
+    document.title = card ? `${card.n} · ${card.s} · Smartrecruit` : "Ficha de atleta · Smartrecruit";
+    let m = document.querySelector('meta[name="robots"]');
+    if (!m) { m = document.createElement("meta"); m.setAttribute("name", "robots"); document.head.appendChild(m); }
+    m.setAttribute("content", "noindex,nofollow");
+  }, [card]);
+  const labels = card ? profileStatLabels({ sport: card.s, position: card.p }, "es") : null;
+  const initials = card ? card.n.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() : "";
+  return (
+    <div className="rm-root">
+      <style>{CSS}</style>
+      <div className="rm-wrap rm-athlete">
+        {!card ? (
+          <div className="rm-profile-card" style={{ textAlign: "center" }}>
+            <h2 className="rm-condensed">Este link no se puede abrir</h2>
+            <p className="rm-hint">Parece incompleto. Pedile a la atleta que lo copie de nuevo desde su perfil en Smartrecruit.</p>
+            <a className="rm-btn" href="/" style={{ display: "inline-block", textDecoration: "none" }}>Ir a Smartrecruit</a>
+          </div>
+        ) : (
+          <>
+            <div className="rm-profile-card rm-athlete-head">
+              <div className="rm-profile-avatar">{initials}</div>
+              <div>
+                <h1 className="rm-condensed" style={{ margin: 0, fontSize: 30 }}>{card.n}</h1>
+                <div className="rm-card-meta">{card.s} {card.g === "F" ? "femenino" : "masculino"}{card.p ? ` · ${card.p}` : ""}{card.c ? ` · ${card.c}` : ""}</div>
+                {card.y ? <div className="rm-card-meta">Ingreso a la universidad: temporada {card.y}</div> : null}
+              </div>
+            </div>
+            <div className="rm-profile-card">
+              <div className="rm-profile-cardtitle">🏅 Deportivo</div>
+              <div className="rm-profile-grid">
+                <div><span>Deporte</span><b>{card.s}</b></div>
+                <div><span>Posición</span><b>{card.p || "—"}</b></div>
+                <div><span>{labels.goals}</span><b>{card.a}</b></div>
+                <div><span>{labels.assists}</span><b>{card.b}</b></div>
+                {card.ga != null && <div><span>{labels.gaa}</span><b>{card.ga}</b></div>}
+              </div>
+              {card.vd && <a className="rm-btn" href={card.vd} target="_blank" rel="noreferrer noopener" style={{ display: "block", textAlign: "center", textDecoration: "none", marginTop: 14 }}>▶ Ver video de highlights</a>}
+            </div>
+            <div className="rm-profile-card">
+              <div className="rm-profile-cardtitle">🎓 Académico</div>
+              <div className="rm-profile-grid">
+                <div><span>Promedio (escala 4.0)</span><b>{card.gp != null ? card.gp.toFixed(2) : "—"}</b></div>
+                <div><span>Carrera de interés</span><b>{card.m || "—"}</b></div>
+              </div>
+            </div>
+            {(card.ig || card.tt || card.em || card.ph) && (
+              <div className="rm-profile-card">
+                <div className="rm-profile-cardtitle">📬 Contacto y redes</div>
+                <div className="rm-athlete-links">
+                  {card.em && <a href={`mailto:${card.em}`}>✉️ {card.em}</a>}
+                  {card.ph && <a href={`tel:${card.ph.replace(/[^0-9+]/g, "")}`}>📞 {card.ph}</a>}
+                  {card.ig && <a href={`https://www.instagram.com/${card.ig}`} target="_blank" rel="noreferrer noopener">📸 Instagram @{card.ig}</a>}
+                  {card.tt && <a href={`https://www.tiktok.com/@${card.tt}`} target="_blank" rel="noreferrer noopener">🎵 TikTok @{card.tt}</a>}
+                </div>
+              </div>
+            )}
+            <p className="rm-hint" style={{ textAlign: "center" }}>Datos cargados por la propia atleta. Armado con <a href="/">Smartrecruit</a>, la herramienta gratuita para conseguir beca por tu cuenta.</p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// En Perfil: cuánto le falta a la ficha y el botón para compartirla.
+function ShareProfileCard({ profile }) {
+  const isMinor = !!(profile.consent && profile.consent.minor);
+  const [opts, setOpts] = useState(() => { const s = readJSON("rr_share", {}) || {}; return { ig: s.ig || "", tt: s.tt || "", email: s.email != null ? !!s.email : !isMinor, phone: !!s.phone }; });
+  const [copied, setCopied] = useState(false);
+  const set = (patch) => setOpts((o) => { const n = { ...o, ...patch }; writeJSON("rr_share", n); return n; });
+  const card = buildShareCard(profile, opts);
+  const link = shareLinkFor(card);
+  const items = [
+    { ok: !!card.vd, label: "Video de highlights", hint: "Es lo primero que mira un coach. Cargalo en Editar mi perfil." },
+    { ok: card.gp != null, label: "Promedio", hint: "Cargá tu promedio en Editar mi perfil." },
+    { ok: card.a > 0 || card.b > 0, label: "Estadísticas", hint: "Sumá tus números de la última temporada." },
+    { ok: !!card.m, label: "Carrera de interés", hint: "Aunque sea una idea: ayuda a elegir universidades." },
+    { ok: !!(card.ig || card.tt), label: "Instagram o TikTok deportivo", hint: "Una cuenta con tus partidos y entrenamientos, no solo memes." },
+    { ok: !!card.em, label: "Email de contacto visible", hint: "Tildá la opción de abajo para que el coach pueda escribirte." },
+  ];
+  const done = items.filter((i) => i.ok).length;
+  const doCopy = () => copyText(link, () => { setCopied(true); setTimeout(() => setCopied(false), 2500); });
+  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const doShare = () => { try { navigator.share({ title: `${card.n} · ${card.s}`, text: `Mi perfil deportivo y académico:`, url: link }).catch(() => {}); } catch (e) { /* nada */ } };
+  const wa = `https://wa.me/?text=${encodeURIComponent(`Mi perfil deportivo y académico: ${link}`)}`;
+  return (
+    <div className="rm-profile-card rm-share">
+      <div className="rm-profile-cardtitle">🔗 Tu ficha para compartir</div>
+      <p className="rm-hint" style={{ margin: "6px 0 10px" }}>Un link con tus datos, tu video y tus redes para mandarle a un coach, ponerlo en tu bio o pasárselo a tu entrenador. Los datos viajan dentro del link: no los guardamos en ningún servidor.</p>
+      <div className="rm-share-meter"><div style={{ width: `${Math.round((done / items.length) * 100)}%` }} /></div>
+      <div className="rm-card-meta" style={{ margin: "6px 0 8px" }}>Ficha completa al {Math.round((done / items.length) * 100)}% · {done} de {items.length}</div>
+      <ul className="rm-share-list">
+        {items.map((i) => <li key={i.label} className={i.ok ? "ok" : ""}><b>{i.ok ? "✓" : "○"} {i.label}</b>{!i.ok && <span> — {i.hint}</span>}</li>)}
+      </ul>
+      <div className="rm-profile-grid" style={{ marginTop: 12 }}>
+        <label className="rm-share-field"><span>Instagram (usuario)</span><input value={opts.ig} onChange={(e) => set({ ig: cleanHandle(e.target.value) })} placeholder="tu.usuario" maxLength={30} /></label>
+        <label className="rm-share-field"><span>TikTok (usuario)</span><input value={opts.tt} onChange={(e) => set({ tt: cleanHandle(e.target.value) })} placeholder="tu.usuario" maxLength={30} /></label>
+      </div>
+      <label className="rm-consent-check"><input type="checkbox" checked={opts.email} disabled={!profile.email} onChange={(e) => set({ email: e.target.checked })} /> Mostrar mi email{profile.email ? ` (${profile.email})` : " (cargalo en tu perfil)"}</label>
+      <label className="rm-consent-check"><input type="checkbox" checked={opts.phone} disabled={!profile.phone} onChange={(e) => set({ phone: e.target.checked })} /> Mostrar mi teléfono{profile.phone ? "" : " (cargalo en tu perfil)"}</label>
+      {isMinor && <p className="rm-hint" style={{ marginTop: 8 }}>Sos menor: compartí el link solo con coaches y con la conformidad de tu madre, padre o tutor. Si dudás, dejá el contacto sin tildar.</p>}
+      <input className="rm-share-link" readOnly value={link} onFocus={(e) => e.target.select()} aria-label="Link de tu ficha" />
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
+        <button type="button" className="rm-btn" onClick={doCopy}>{copied ? "¡Link copiado!" : "Copiar link"}</button>
+        {canShare && <button type="button" className="rm-btn-ghost rm-share-ghost" onClick={doShare}>Compartir…</button>}
+        <a className="rm-btn-ghost rm-share-ghost" href={wa} target="_blank" rel="noreferrer noopener" style={{ textDecoration: "none" }}>WhatsApp</a>
+        <a className="rm-btn-ghost rm-share-ghost" href={link} target="_blank" rel="noreferrer noopener" style={{ textDecoration: "none" }}>Ver cómo la ve un coach →</a>
+      </div>
+    </div>
+  );
+}
+
 function ProfilePage({ profile, setStage, onOpenSchool }) {
   const [section, setSection] = useState("info");
   useEffect(() => { window.scrollTo(0, 0); }, [section]);
@@ -9582,6 +9768,7 @@ function ProfilePage({ profile, setStage, onOpenSchool }) {
         <div className="rm-profile-main">
           {section === "info" && (
             <>
+              <ShareProfileCard profile={profile} />
               <div className="rm-profile-card">
                 <div className="rm-profile-cardtitle">👤 Datos personales</div>
                 <div className="rm-profile-grid">
@@ -11598,8 +11785,10 @@ function DataSplash({ error, onRetry }) {
 export default function App() {
   const [state, setState] = useState("loading");
   const start = () => { setState("loading"); loadData().then(() => setState("ready")).catch(() => setState("error")); };
-  useEffect(() => { start(); }, []);
+  const isAthleteLink = typeof window !== "undefined" && /^\/atleta\/?$/.test(window.location.pathname);
+  useEffect(() => { if (!isAthleteLink) start(); }, []);
   const [wantsStart, setWantsStart] = useState(false);
+  if (isAthleteLink) return <AthleteCardPage />;
   if (state !== "ready") {
     // Visitante nuevo en la portada: se muestra el título y el botón ya, sin esperar los datos (la portada completa entra apenas terminan de cargar).
     let isNewVisitor = false;
