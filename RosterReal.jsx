@@ -2894,6 +2894,12 @@ const MAIL_KINDS = {
   thanks: { label: "Después de la llamada o visita", when: "Hablaste con el coach o visitaste el campus." },
   offer: { label: "Recibí una oferta", when: "El coach te hizo una oferta y necesitás el detalle por escrito." },
   close: { label: "Cierre (sin lugar)", when: "Te dijeron que no hay lugar: agradecés y dejás la puerta abierta." },
+  call: { label: "Pedir una videollamada", when: "El coach ya te contestó o mostró interés y querés pasar de mails a una charla." },
+  checkin: { label: "Check-in (hace meses que no hablan)", when: "Pasaron meses sin novedades con este programa: lo ponés al día con tu promedio, tus números y tu video." },
+  refs: { label: "Ofrecer una referencia", when: "El coach quiere conocerte mejor: le ofrecés hablar con tu entrenador de club o de colegio." },
+  time: { label: "Pedir más tiempo para decidir", when: "Tenés una oferta y necesitás una fecha más larga para decidir con tu familia." },
+  decline: { label: "Rechazar una oferta", when: "Decidiste no aceptar la oferta: agradecés y cerrás bien, sin quemar el vínculo." },
+  commit: { label: "Aceptar una oferta", when: "Decidiste aceptar: confirmás y preguntás por los próximos pasos y los documentos." },
 };
 const HOOK_LABELS = {
   own: "Dato tuyo",
@@ -2948,6 +2954,7 @@ function nextOutreachStep(entry) {
   const msgs = outreachMessages(entry);
   const last = msgs[msgs.length - 1] || null;
   const sentAfterStatus = (k) => !!last && last.kind === k && (!entry.statusAt || last.at >= entry.statusAt);
+  if (st === "respondio" && sentAfterStatus("reply") && entry.lastContact && daysSince(entry.lastContact) >= 90) return { kind: "checkin", due: false, text: `Pasaron ${daysSince(entry.lastContact)} días desde tu último mail a este programa: un check-in con tus novedades mantiene el vínculo vivo.` };
   if (st === "respondio") return sentAfterStatus("reply")
     ? { kind: "reply", due: false, text: "Ya le respondiste. Cuando vuelva a escribirte, contestale dentro de las 24 horas." }
     : { kind: "reply", due: true, text: "Te respondió: contestale dentro de las 24 horas, sobre el mismo mail." };
@@ -2959,6 +2966,8 @@ function nextOutreachStep(entry) {
     : { kind: "offer", due: true, text: "Recibiste una oferta: agradecé y pedí el detalle por escrito antes de decidir." };
   if (st === "rechazo") return { kind: "close", due: false, text: sentAfterStatus("close") ? "Cerrado con un agradecimiento. Seguí con otros programas." : "Sin lugar: un mail corto de agradecimiento deja la puerta abierta (opcional)." };
   const stage = followupStage(entry);
+  const idle = entry.lastContact ? daysSince(entry.lastContact) : 0;
+  if (stage > MAX_FOLLOWUPS && idle >= 90) return { kind: "checkin", due: false, stage, text: `Pasaron ${idle} días sin novedades con este programa: un check-in corto con tu promedio, tus números y tu video lo vuelve a poner sobre la mesa.` };
   if (stage > MAX_FOLLOWUPS) return { kind: "update", due: false, exhausted: true, stage, text: `Ya le mandaste ${MAX_FOLLOWUPS} seguimientos sin respuesta: no insistas. Probá con otro entrenador del staff, o volvé a escribir solo si tenés una novedad fuerte.` };
   const days = entry.lastContact ? daysSince(entry.lastContact) : 0;
   const inDays = Math.max(0, FOLLOWUP_WAIT[stage - 1] - days);
@@ -2975,7 +2984,10 @@ const MAIL_FACT_FIELDS = {
   result: { label: "Resultado o novedad reciente", es: "salimos campeonas del torneo regional sub-18", en: "my team won the U18 regional championship" },
   avail: { label: "¿Cuándo podés hacer una llamada?", es: "de lunes a viernes después de las 17 (hora de mi país)", en: "on weekdays after 4 pm Eastern Time" },
   answer: { label: "Tu respuesta a lo que te preguntó", es: "", en: "", long: true },
+  deadline: { label: "¿Hasta qué fecha necesitás para decidir?", es: "el 15 de diciembre", en: "December 15" },
+  reason: { label: "Motivo de tu decisión (opcional)", es: "elegí un programa que se ajusta mejor a la carrera que quiero estudiar", en: "I chose a program that is a better fit for what I want to study" },
 };
+const cap1 = (t) => String(t || "").charAt(0).toLocaleUpperCase() + String(t || "").slice(1);
 function cleanMailFacts(facts) {
   const out = {};
   Object.keys(MAIL_FACT_FIELDS).forEach((k) => {
@@ -3093,6 +3105,27 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   } else if (kind === "offer") {
     add("of_intro", "Agradecer la oferta", "Tu registro de envíos",
       T("Muchas gracias por la oferta: significa mucho para mí y para mi familia.", "Thank you so much for the offer — it means a great deal to me and my family."), null, true);
+  } else if (kind === "call") {
+    add("ca_intro", "Motivo del mail", "Tu registro de envíos",
+      T("Gracias por mantenerte en contacto. Me gustaría proponerte una videollamada corta para conocernos mejor.", "Thank you for staying in touch. I'd like to suggest a short video call so we can get to know each other better."), null, true);
+  } else if (kind === "checkin") {
+    const idle = contactEntry && contactEntry.lastContact ? daysSince(contactEntry.lastContact) : null;
+    const mo = idle !== null ? Math.max(1, Math.round(idle / 30)) : null;
+    add("ck_intro", "Motivo del mail", "Tu registro de envíos",
+      mo ? T(`Pasaron unos ${mo} ${mo === 1 ? "mes" : "meses"} desde mi último mail y quería ponerte al día. Sigo muy ${wish} en ${university}.`, `It's been about ${mo} ${mo === 1 ? "month" : "months"} since my last email and I wanted to give you a quick update. I'm still very interested in ${university}.`)
+        : T(`Quería ponerte al día con mis novedades. Sigo muy ${wish} en ${university}.`, `I wanted to give you a quick update. I'm still very interested in ${university}.`), null, true);
+    if (!messages.length) missing.push("\"Check-in\" es para coaches a los que ya les escribiste: si es tu primer mail a este programa, usá \"Primer contacto\".");
+  } else if (kind === "refs") {
+    add("rf_intro", "Motivo del mail", "Tu registro de envíos",
+      T("Quería ofrecerte hablar con alguien que me conoce como atleta y como persona, por si te sirve para conocerme mejor.", "I wanted to offer you the chance to speak with someone who knows me as an athlete and as a person, in case it helps you get to know me better."), null, true);
+  } else if (kind === "time") {
+    add("tm_intro", "Agradecer la oferta", "Tu registro de envíos", T("Muchas gracias por la oferta: significa mucho para mí y para mi familia.", "Thank you so much for the offer — it means a great deal to me and my family."), null, true);
+  } else if (kind === "decline") {
+    add("dc_intro", "Agradecer y comunicar", "Tu registro de envíos",
+      T("Muchas gracias por la oferta y por todo el tiempo que me dedicaste. Después de pensarlo mucho con mi familia, decidí no aceptarla.", "Thank you so much for the offer and for all the time you've given me. After a lot of thought and conversations with my family, I've decided not to accept it."), null, true);
+  } else if (kind === "commit") {
+    add("cm_intro", "Aceptar", "Tu registro de envíos",
+      T(`Muchas gracias por la oferta y por confiar en mí. Después de pensarlo con mi familia, me encantaría aceptarla y sumarme a ${university}.`, `Thank you so much for the offer and for believing in me. After talking it over with my family, I'd love to accept and join ${university}.`), null, true);
   } else {
     add("cl_intro", "Agradecimiento", "Tu registro de envíos", T("Gracias por avisarme y por tu sinceridad.", "Thank you for letting me know, and for being upfront with me."), null, true);
   }
@@ -3227,17 +3260,23 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   // ---- Datos deportivos / novedades / respuesta, según la ocasión
   const statsBlock = `- ${labels.goals}: ${profile.goals}\n- ${labels.assists}: ${profile.assists}${hasGaa(profile) ? `\n- ${labels.gaa}: ${Number(profile.gaa)}` : ""}`;
   const resultLine = F.result ? T(`Una novedad reciente: ${F.result}.`, `A recent update: ${F.result}.`) : null;
+  const gpaLine = kind === "checkin" && profile.gpa4 ? T(`\n- Promedio actual (escala 4.0): ${profile.gpa4}`, `\n- Current GPA (4.0 scale): ${profile.gpa4}`) : "";
   if (first) {
     // Con las estadísticas en 0 (perfil corto, todavía sin cargar) no se escribe un "0 goles": el bloque queda "no disponible".
     const hasStats = (Number(profile.goals) || 0) > 0 || (Number(profile.assists) || 0) > 0 || hasGaa(profile);
     add("athletic", "Datos deportivos", "Tus datos deportivos", hasStats ? T(`Rendimiento (última temporada):\n${statsBlock}`, `Performance (last season):\n${statsBlock}`) : null, hasStats ? null : "Todavía no cargaste tus estadísticas: sumalas en tu perfil para que el mail las incluya.", true);
     if (resultLine) add("result", "Novedad reciente", "Lo que escribiste vos", resultLine, null, true);
-  } else if ((followup && stage === 2) || kind === "update") {
+  } else if ((followup && stage === 2) || kind === "update" || kind === "checkin") {
+    // Sin estadísticas cargadas no se escribe "0 atajadas": solo van los datos que existen (números, promedio y video).
+    const hasNums = (Number(profile.goals) || 0) > 0 || (Number(profile.assists) || 0) > 0 || hasGaa(profile);
+    const vid = profile.videoLink || "";
+    const listEs = [hasNums ? statsBlock : null, gpaLine ? gpaLine.replace(/^\n/, "") : null, vid ? `- Mi último partido: ${vid}` : null].filter(Boolean).join("\n");
+    const listEn = [hasNums ? statsBlock : null, gpaLine ? gpaLine.replace(/^\n/, "") : null, vid ? `- My latest game: ${vid}` : null].filter(Boolean).join("\n");
     add("news", "Novedades", "Tu último check-in + lo que escribiste",
-      T(`${resultLine ? `${resultLine}\n\n` : ""}Mis números más recientes:\n${statsBlock}${profile.videoLink ? `\n- Mi último partido: ${profile.videoLink}` : ""}`,
-        `${resultLine ? `${resultLine}\n\n` : ""}My latest numbers:\n${statsBlock}${profile.videoLink ? `\n- My latest game: ${profile.videoLink}` : ""}`), null, true);
+      T(`${[resultLine, listEs ? `Mis números más recientes:\n${listEs}` : null].filter(Boolean).join("\n\n")}`,
+        `${[resultLine, listEn ? `My latest numbers:\n${listEn}` : null].filter(Boolean).join("\n\n")}`), null, true);
     if (!profile.videoLink) missing.push("No cargaste el link a tu último partido: hacé el check-in semanal en Inicio.");
-    if (!F.result && kind === "update") missing.push("Una novedad sin novedad no suma: escribí arriba el resultado o logro reciente (\"Resultado o novedad reciente\").");
+    if (!F.result && (kind === "update" || kind === "checkin")) missing.push("Una novedad sin novedad no suma: escribí arriba el resultado o logro reciente (\"Resultado o novedad reciente\").");
   } else if (followup) {
     add("video", "Video", "Tu perfil", videoLine("Te dejo de nuevo mi video", "Here is my video again"), "No cargaste el link a tu video.");
     if (!profile.videoLink) missing.push("Falta el link a tu video: un seguimiento sin video tiene mucha menos respuesta.");
@@ -3247,6 +3286,32 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     add("video", "Video", "Tu perfil", videoLine("Por si te sirve, mi último video", "In case it's useful, here is my latest video"), "No cargaste el link a tu video.");
   } else if (kind === "thanks") {
     if (resultLine) add("result", "Novedad reciente", "Lo que escribiste vos", resultLine, null, true);
+  } else if (kind === "call") {
+    add("topics", "Qué querés charlar", "Tu perfil",
+      T("En la llamada me gustaría contarte más sobre mí y preguntarte por el programa: qué buscan en mi posición y cuáles serían los próximos pasos.", "On the call I'd like to tell you more about myself and ask about the program: what you look for in my position and what the next steps would be."), null, true);
+    add("avail", "Tu disponibilidad", "Lo que escribiste vos", F.avail ? T(`Tengo disponibilidad ${F.avail}.`, `I'm available ${F.avail}.`) : T("[Escribí tus días y horarios, con tu huso horario]", "[Add your days and times, with your time zone]"), null, true);
+    if (!F.avail) missing.push("Sumá arriba tu disponibilidad (días, horarios y huso horario): así el coach puede decirte que sí en un solo mail.");
+    add("video", "Video", "Tu perfil", videoLine("Por si querés verlo antes, mi último video", "In case you'd like to watch it beforehand, here is my latest video"), "No cargaste el link a tu video.");
+  } else if (kind === "refs") {
+    add("ref", "Tu referencia", "Lo que escribiste vos", F.referral
+      ? T(`${cap1(F.referral)} está disponible para conversar con vos sobre mí. Puedo pasarte su contacto o pedirle que te escriba.`, `${cap1(F.referral)} is available to speak with you about me. I can share their contact details or ask them to reach out to you.`)
+      : T("[Nombre y cargo de tu entrenador o referencia]", "[Name and role of your coach or reference]"), null, true);
+    if (!F.referral) missing.push("Completá arriba \"¿Quién te recomienda?\" con el nombre y el cargo de quien puede hablar de vos (entrenador de club o de colegio), y avisale antes de mandar el mail.");
+    add("video", "Video", "Tu perfil", videoLine("Mi último video, por si te sirve", "My latest video, in case it's useful"), "No cargaste el link a tu video.");
+  } else if (kind === "time") {
+    add("deadline", "Plazo que pedís", "Lo que escribiste vos", F.deadline
+      ? T(`Quiero tomar esta decisión con toda la información y conversarla con mi familia. ¿Sería posible tener hasta ${F.deadline} para darte mi respuesta?`, `I want to make this decision with all the information and talk it over with my family. Would it be possible to have until ${F.deadline} to give you my answer?`)
+      : T("Quiero tomar esta decisión con toda la información y conversarla con mi familia. ¿Sería posible tener hasta [fecha] para darte mi respuesta?", "I want to make this decision with all the information and talk it over with my family. Would it be possible to have until [date] to give you my answer?"), null, true);
+    if (!F.deadline) missing.push("Completá arriba la fecha que necesitás. Pedir tiempo es normal, pero el coach puede tener otras candidatas: pedí una fecha concreta y razonable, y respondé antes si podés.");
+  } else if (kind === "decline") {
+    add("dc_reason", "Motivo (opcional)", "Lo que escribiste vos", F.reason ? T(`Mi decisión se debe a que ${F.reason}.`, `My decision comes down to this: ${F.reason}.`) : null, "No hace falta dar explicaciones: es opcional.");
+    missing.push("Antes de enviar, asegurate de que la decisión sea firme: rechazar una oferta es muy difícil de revertir. Y avisá apenas lo decidas, así el coach puede ofrecerle el lugar a otra persona.");
+  } else if (kind === "commit") {
+    add("cm_next", "Próximos pasos", "Tu perfil",
+      T("¿Me podrías contar cuáles son los próximos pasos? En particular: los documentos de la beca que tengo que firmar (carta de intención o acuerdo, según corresponda), el proceso de admisión, los formularios de ayuda financiera y lo que necesito para la visa de estudiante.",
+        "Could you walk me through the next steps? In particular: the scholarship paperwork I need to sign (a letter of intent or agreement, as applicable), the admissions process, financial aid forms and what I need for my student visa."), null, true);
+    missing.push("Un compromiso verbal no te obliga, pero lo que firmes sí: no aceptes sin tener la oferta por escrito (qué cubre, por cuántos años y cómo se renueva) y leé cada documento con tu familia antes de firmar.");
+    missing.push("Cuando aceptes, avisales con un mail de cierre a los otros programas con los que estás hablando.");
   }
 
   // La comparación de estadísticas contra el plantel NO va en los mails: compara números de un club o colegio
@@ -3297,7 +3362,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
 
   // ---- Calendario de reclutamiento
   const cal = emailCalendarContext(profile, division);
-  if (first || followup || kind === "update") {
+  if (first || followup || kind === "update" || kind === "checkin") {
     let calText = null;
     if (cal.restricted && cal.active) {
       const label = lang === "en" ? PERIOD_LABEL_EN[cal.active.type] : String(PERIOD_TYPE_LABEL[cal.active.type] || cal.active.type).toLowerCase();
@@ -3320,6 +3385,18 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
         `Are you still recruiting ${posAsk} for the class of ${entry}? If there's no longer a spot, I'd really appreciate knowing so I can plan accordingly — and if there is, I'd love to hear what you would need from me.`), null, true);
   } else if (kind === "update") {
     add("ask", "Pedido", "Tu perfil", T(`Sigo muy ${wish} en ${university}. Si te sirve, te puedo mandar el partido completo o más material.`, `I'm still very interested in ${university}. If it's useful, I'm happy to send full-game footage or anything else you need.`), null, true);
+  } else if (kind === "call") {
+    add("ask", "Pedido", "Tu perfil", T("Si te parece bien, ¿qué día y horario te queda cómodo? Me adapto a tu agenda.", "If that works for you, what day and time would be convenient? I'm happy to adapt to your schedule."), null, true);
+  } else if (kind === "checkin") {
+    add("ask", "Pedido", "Tu perfil", T(`¿Siguen buscando ${posAsk} para la clase de ${entry}? Si te sirve, te puedo mandar el partido completo o más material.`, `Are you still recruiting ${posAsk} for the class of ${entry}? If it's useful, I'm happy to send full-game footage or anything else you'd like to see.`), null, true);
+  } else if (kind === "refs") {
+    add("ask", "Pedido", "Tu perfil", T("¿Te gustaría que le pida que se ponga en contacto con vos?", "Would you like me to ask them to get in touch with you?"), null, true);
+  } else if (kind === "time") {
+    add("interest", "Interés", "Tu perfil", T(`Sigo muy ${wish} en ${university} y quiero elegir con toda la información. Muchas gracias por entenderlo.`, `I'm still very interested in ${university} and want to choose with all the information. Thank you for understanding.`), null, true);
+  } else if (kind === "decline") {
+    add("ask", "Cierre", "Tu perfil", T("Valoro mucho tu confianza y me gustaría mantener el contacto. Les deseo muchos éxitos en la temporada.", "I truly value your confidence in me and would love to stay in touch. I wish you and the team a great season."), null, true);
+  } else if (kind === "commit") {
+    add("ask", "Cierre", "Tu perfil", T(`Estoy muy ${profile.gender === "F" ? "entusiasmada" : "entusiasmado"} con esta oportunidad y con sumarme al equipo. Muchas gracias otra vez.`, "I'm very excited about this opportunity and about joining the team. Thank you again."), null, true);
   } else if (kind === "reply") {
     add("ask", "Próximo paso", "Tu perfil", T("Si te parece, podemos coordinar una videollamada.", "If it works for you, I'd be glad to set up a video call.") + (availLine || T(" Decime qué día y horario te queda cómodo.", " Let me know what day and time suit you.")), null, true);
   } else if (kind === "thanks") {
@@ -3380,6 +3457,11 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   else if (followup) subject = `${T("Seguimiento", "Following up")} | ${idBit}${videoBit}`;
   else if (kind === "update") subject = `${T("Novedad", "Update")} | ${idBit}${videoBit}`;
   else if (kind === "thanks") subject = `${T("Gracias", "Thank you")} | ${idBit}`;
+  else if (kind === "call") subject = `${T("Videollamada", "Video call")} | ${idBit}`;
+  else if (kind === "checkin") subject = `${T("Check-in", "Checking in")} | ${idBit}${videoBit}`;
+  else if (kind === "refs") subject = `${T("Referencias", "References")} | ${idBit}`;
+  else if (kind === "time" || kind === "decline") subject = `${T("Sobre la oferta", "About the offer")} | ${idBit}`;
+  else if (kind === "commit") subject = `${T("Mi decisión", "My decision")} | ${idBit}`;
   else if (kind === "offer") subject = `${T("Sobre la oferta", "About the offer")} | ${idBit}`;
   else subject = `Re: ${idBit}`;
   const body = blocks.filter((b) => b.available && !b.excluded).map((b) => b.text).join("\n\n");
@@ -3474,6 +3556,60 @@ function withOutreachNote(log, university, notes) {
   const prev = log[university];
   if (!prev) return log;
   return { ...log, [university]: { ...prev, notes: String(notes || "").slice(0, 600) } };
+}
+
+// ---- Chequeo del trimestre: cada ~90 días, una revisión guiada de 10 minutos (notas, video, coaches fríos, lista, etapa) ----
+const QUARTER_DAYS = 90;
+function readQuarterly() {
+  const q = readJSON("rr_quarterly", null);
+  return q && typeof q === "object" ? { done: Array.isArray(q.done) ? q.done : [], since: q.since || null } : { done: [], since: null };
+}
+// Si nunca se abrió, se anota desde cuándo se usa el sitio; así el primer chequeo toca 90 días después (o antes, si ya había envíos).
+function ensureQuarterlySince() {
+  const q = readQuarterly();
+  if (q.done.length || q.since) return;
+  writeJSON("rr_quarterly", { ...q, since: new Date().toISOString() });
+}
+function quarterlyStatus(profile, now = new Date()) {
+  const q = readQuarterly();
+  const lastDone = q.done.length ? new Date(q.done[q.done.length - 1]) : null;
+  let anchor = lastDone;
+  if (!anchor) {
+    const cands = [];
+    if (q.since) cands.push(new Date(q.since));
+    try { const sd = readPlanState().startDate; if (sd) cands.push(new Date(sd + "T12:00:00")); } catch (e) { /* nada */ }
+    try { Object.values(readOutreachLog() || {}).forEach((e) => { if (e && e.firstContact) cands.push(new Date(e.firstContact)); }); } catch (e) { /* nada */ }
+    const valid = cands.filter((d) => !isNaN(d));
+    anchor = valid.length ? new Date(Math.min(...valid.map((d) => d.getTime()))) : null;
+  }
+  if (!profile || !anchor || isNaN(anchor)) return { due: false, days: null, lastDone: lastDone && !isNaN(lastDone) ? lastDone : null };
+  const days = Math.floor((now - anchor) / 86400000);
+  return { due: days >= QUARTER_DAYS, days, lastDone: lastDone && !isNaN(lastDone) ? lastDone : null };
+}
+function quarterKey(now = new Date()) { return `${now.getFullYear()}-Q${Math.floor(now.getMonth() / 3) + 1}`; }
+// Coaches que hace 60 días o más no reciben nada tuyo (sin contar los que te dijeron que no).
+function coldCoaches(entries, minDays = 60) {
+  return (entries || []).filter((e) => e && e.status !== "rechazo" && e.lastContact && daysSince(e.lastContact) >= minDays)
+    .sort((a, b) => new Date(a.lastContact) - new Date(b.lastContact));
+}
+function quarterlySummaryText(profile, now = new Date()) {
+  const entries = Object.values(readOutreachLog() || {});
+  const replied = entries.filter((e) => ["respondio", "visita", "oferta"].includes(e.status)).length;
+  const offers = entries.filter((e) => e.status === "oferta").length;
+  const stage = planStageFor(profile, now);
+  const entry = getEntryYear(profile);
+  const fecha = now.toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
+  const nxt = (() => { try { const t = planNextTask(planTasksFor(profile, now), planEffectiveDone(readPlanState(), now.toLocaleDateString("en-CA"), planTasksFor(profile, now), planCtx(), now).done); return t ? t.title : null; } catch (e) { return null; } })();
+  return [
+    `Resumen del trimestre — ${(profile.name || "").trim() || "Atleta"} (${fecha})`,
+    `Deporte: ${profile.sport}${profile.position ? `, posición ${profile.position}` : ""}. Ingreso a la universidad: temporada ${entry}.`,
+    `Etapa del proceso: ${stage.label}${stage.monthsLeft ? ` (faltan unos ${stage.monthsLeft} meses para el ingreso)` : ""}.`,
+    `Promedio cargado (escala 4.0): ${profile.gpa4 || "sin cargar"}.`,
+    `Coaches: contactó a ${entries.length}, le respondieron ${replied}${offers ? ` y tiene ${offers} oferta${offers === 1 ? "" : "s"}` : ""}.`,
+    nxt ? `Próximo paso: ${nxt}` : null,
+    "",
+    "Recordatorio: Smartrecruit es una guía educativa. No es un agente, no garantiza becas y no cobra por conseguirlas.",
+  ].filter((x) => x !== null).join("\n");
 }
 
 const OUTREACH_STATUS_LABELS = {
@@ -4756,7 +4892,7 @@ function useEligibilityChecklist(division) {
 const SUPABASE_URL = "https://dliayalkzvaugukhxmcb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsaWF5YWxrenZhdWd1a2h4bWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzkwOTMsImV4cCI6MjA4ODExNTA5M30.vGBprr8FKBxTayS6Q6ZbWIxUZKItY4avgMJbUGgQC1E";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts", "rr_plan_state"];
+const SYNC_KEYS = ["rr_profile", "rr_favorites", "rr_outreach_log", "rr_outreach_count", "rr_eligibility_checklist", "rr_checklist_done", "rr_coach_emails", "rr_exam_best", "rr_checkins", "rr_admissions", "rr_roadmap_manual", "rr_visit_days", "rr_email_lang", "rr_onboarding_dismissed", "rr_mail_facts", "rr_plan_state", "rr_quarterly"];
 let syncUserId = null; // seteado por App al iniciar/cerrar sesión — writeJSON lo lee para saber si hay que sincronizar
 let syncTimer = null;
 // ---- Sincronización (criterios tomados de Kleppmann, "Designing Data-Intensive Applications", cap. 5 y 7) ----
@@ -5005,6 +5141,12 @@ const MAIL_FACTS_BY_KIND = {
   thanks: ["result"],
   offer: [],
   close: [],
+  call: ["avail"],
+  checkin: ["result", "watched"],
+  refs: ["referral"],
+  time: ["deadline"],
+  decline: ["reason"],
+  commit: [],
 };
 function mailKindLabel(kind, stage) {
   if (kind !== "followup" || !stage) return (MAIL_KINDS[kind] || MAIL_KINDS.first).label;
@@ -8214,6 +8356,7 @@ function planTasksRaw(profile, now = new Date()) {
   // Revisión semanal de tu cuenta de NCAA (lunes): desde que se abre el contacto.
   if (now.getDay() === 1 && (stage.key === "contacto" || stage.key === "decision" || stage.key === "ingreso")) tasks.push({ id: "weekly-ncaa", title: "Revisá tu cuenta de NCAA Eligibility Center: documentos pendientes o pedidos de la universidad", go: "eligibility" });
 
+  try { if (quarterlyStatus(p, now).due) tasks.push({ id: `quarterly-${quarterKey(now)}`, title: "Chequeo del trimestre: 10 minutos para revisar notas, video, coaches sin novedades y tu lista.", go: "chequeo" }); } catch (e) {}
   let log = {};
   try { log = readOutreachLog() || {}; } catch (e) {}
   Object.values(log).forEach((e) => {
@@ -8285,11 +8428,13 @@ function planTaskMeta(t, now = new Date()) {
   else if (id.startsWith("p-base-")) when = "Esta etapa";
   else if (id.startsWith("cal-soon-")) { const d = new Date(id.slice(-10) + "T12:00:00"); if (!isNaN(d)) when = `Desde el ${d.getDate()} de ${MONTHS_ES[d.getMonth()]}`; }
   else if (id.startsWith("fu-")) when = "Vencido";
+  else if (id.startsWith("quarterly-")) when = "Este trimestre";
   if (id.startsWith("cal-")) { rule = "Calendario de reclutamiento de la NCAA"; required = id.startsWith("cal-now-"); }
   else if (id.startsWith("p-d1-")) { rule = "Regla NCAA D1: fecha según tu año de ingreso"; required = true; }
   else if (id === "weekly-ncaa" || id === "elig-next" || id === "p-base-guide" || id.startsWith("p-m-docs-")) { rule = "NCAA Eligibility Center"; required = id !== "p-base-guide"; }
   else if (id.startsWith("p-m-grades-")) { rule = "Elegibilidad: tu promedio cuenta"; required = true; }
   else if (id.startsWith("p-m-english-")) rule = "Admisión: examen de inglés";
+  else if (id.startsWith("quarterly-")) rule = "Rutina trimestral: que el proceso no se enfríe";
   else if (id.startsWith("p-m-d23-")) rule = "D2, D3 y NAIA: podés escribir cuando quieras";
   else if (id.startsWith("fu-")) { rule = "Seguimiento a coaches"; required = true; }
   else if (id === "gap-contact") required = true;
@@ -8474,6 +8619,7 @@ function reminderDigest(profile, now = new Date()) {
     next: next ? { title: next.title, when: next.when, required: !!next.required } : null,
     week: planWeekLine(wk, true), reqOpen: tasks.filter((t) => t.required && !done.has(t.id)).length,
     coaches: (() => { try { return coachesForToday(Object.values(readOutreachLog() || {}), 3).map(({ e, step }) => ({ u: e.university, k: step.kind })); } catch (err) { return []; } })(),
+    quarterly: (() => { try { const q = quarterlyStatus(profile, now); return { due: q.due, days: q.days }; } catch (err) { return { due: false }; } })(),
     updated: now.toISOString(),
   };
 }
@@ -10061,6 +10207,8 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
     ? { title: `Seguí con ${due[0].university}`, why: "Ya pasó el tiempo de espera sin respuesta.", cta: "Ver el seguimiento", run: () => jumpTo("hoy-seguimiento") }
     : checkinDue
       ? { title: "Hacé tu check-in de la semana", why: "Tus próximos mails usan tus últimos números y video.", cta: "Actualizar", run: () => { setShowCheckin(true); jumpTo("hoy-checkin"); } }
+      : qStatus.due
+        ? { title: "Hacé el chequeo del trimestre", why: "10 minutos para revisar notas, video, coaches sin novedades y tu lista.", cta: "Empezar", run: () => setStage("chequeo") }
       : planReq && !String(planReq.id).startsWith("fu-")
         ? planAction(planReq)
         : nextCoach
@@ -10070,6 +10218,8 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
             : { title: "Esta semana está al día", why: "Explorá escuelas nuevas o revisá tu hoja de ruta.", cta: "Ver escuelas", run: () => setStage("catalog") };
   const wkReview = planWeekReview(planState, log, checkins, new Date(), 0);
   useEffect(() => { syncReminderDigest(profile); }, [profile]);
+  useEffect(() => { ensureQuarterlySince(); }, []);
+  const qStatus = quarterlyStatus(profile);
   const setStatus = (university, status) => {
     const next = withOutreachStatus(log, university, status);
     writeOutreachLog(next); setLog(next);
@@ -10116,6 +10266,9 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
           <span key={x.id} className={`rm-today-step ${x.done ? "done" : "todo"}`}><b>{x.done ? "✓" : "○"}</b> {x.text}</span>
         ))}
       </div>
+      {qStatus.due && (
+        <p className="rm-today-note" style={{ margin: "-6px 2px 16px" }}>🗓️ <b>Toca tu chequeo del trimestre</b> (10 minutos). <button type="button" className="rm-btn-inline" onClick={() => { setStage("chequeo"); window.scrollTo(0, 0); }}>Hacerlo ahora →</button></p>
+      )}
 
       {/* 1 — Seguimientos vencidos */}
       {due.length > 0 ? (
@@ -10655,7 +10808,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja"];
+const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja", "chequeo"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -11074,13 +11227,14 @@ function AppInner() {
         { id: "exams", label: "Exámenes", icon: "📝" },
         { id: "gpa", label: "Conversor GPA", icon: "🔢" },
         { id: "careers", label: "Buscar por carrera", icon: "🎯" },
+        { id: "chequeo", label: "Chequeo del trimestre", icon: "🗓️" },
         { id: "glosario", label: "Glosario", icon: "📖" },
       ],
     },
   ];
   // Recursos se despliega hacia abajo. Se abre solo cuando se llega a Recursos o a cualquiera de sus
   // secciones (por ejemplo desde un paso de "Empezá acá"), y se puede cerrar a mano sin cambiar de página.
-  const RESOURCE_STAGES = ["resources", "eligibility", "exams", "gpa", "careers", "glosario"];
+  const RESOURCE_STAGES = ["resources", "eligibility", "exams", "gpa", "careers", "glosario", "chequeo"];
   const [resourcesOpen, setResourcesOpen] = useState(false);
   useEffect(() => { if (RESOURCE_STAGES.includes(stage)) setResourcesOpen(true); }, [stage]);
   const toggleResources = () => {
@@ -11205,6 +11359,7 @@ function AppInner() {
       {stage === "roadmap" && <RoadmapPage profile={profile} setStage={setStage} />}
       {stage === "camino" && <CaminoPage profile={profile} setStage={setStage} />}
       {stage === "glosario" && <GlossaryPage setStage={setStage} />}
+      {stage === "chequeo" && <QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} />}
       {stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
       {stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
       {stage === "outreach" && <MailPage profile={profile} setStage={setStage} initialPick={outreachPick} />}
@@ -11239,6 +11394,101 @@ function AppInner() {
 function normalizeProfile(p) {
   const gpa4 = GPA_SCALES[p.gpaScale].convert(parseFloat(p.gpaRaw));
   return { ...p, gpa4: Math.round(gpa4 * 100) / 100 };
+}
+
+// ---- Página del chequeo del trimestre ----
+function QuarterlyPage({ profile, setStage, onWrite }) {
+  const [q, setQ] = useState(readQuarterly);
+  const [ticks, setTicks] = useState({});
+  const [copied, setCopied] = useState(false);
+  const [finished, setFinished] = useState(false);
+  useEffect(() => { ensureQuarterlySince(); }, []);
+  if (!profile) {
+    return (
+      <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+        <h2 className="rm-condensed">Chequeo del trimestre</h2>
+        <p className="rm-hint">Primero armá tu perfil: el chequeo se hace sobre tus notas, tus mails y tu lista.</p>
+        <button className="rm-btn" onClick={() => setStage("start")}>Armar mi perfil →</button>
+      </div>
+    );
+  }
+  const now = new Date();
+  const status = quarterlyStatus(profile, now);
+  const entries = Object.values(readOutreachLog() || {});
+  const cold = coldCoaches(entries).slice(0, 6);
+  const replied = entries.filter((e) => ["respondio", "visita", "oferta"].includes(e.status)).length;
+  const offers = entries.filter((e) => e.status === "oferta").length;
+  const favs = readFavorites().length;
+  const checkins = readJSON("rr_checkins", []);
+  const lastCk = checkins.length ? checkins[checkins.length - 1] : null;
+  const stage = planStageFor(profile, now);
+  const nextStage = planNextStage(profile, now);
+  let eligPending = 0;
+  try { const checked = readJSON("rr_eligibility_checklist", {}); const elig = ELIGIBILITY_CHECKLISTS[Object.keys(ELIGIBILITY_CHECKLISTS)[0]] || []; eligPending = elig.filter((i) => !checked[i.id]).length; } catch (e) { /* nada */ }
+  const fmt = (d) => d.toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
+  const items = [
+    { id: "notas", title: "1. Notas y perfil", text: `Promedio cargado: ${profile.gpaRaw || "—"} (${profile.gpa4 || "—"} en escala 4.0). Si cerró un trimestre o un semestre, cargá el nuevo. Revisá también altura, peso, posición y año de egreso.`, cta: "Actualizar perfil", run: () => setStage("form") },
+    { id: "video", title: "2. Estadísticas y video", text: lastCk ? `Tu último check-in fue hace ${daysSince(lastCk.date)} días. Sumá lo último de la temporada a tus números y a tu video: tus próximos mails los usan.` : "Todavía no hiciste ningún check-in. Cargá tus números y el link a tu último partido: tus mails los usan.", cta: "Hacer el check-in", run: () => setStage("landing") },
+    { id: "coaches", title: "3. Coaches sin novedades", text: cold.length ? `${cold.length === 1 ? "Hay 1 coach" : `Hay ${cold.length} coaches`} sin recibir nada tuyo hace 2 meses o más. Un check-in corto con tus novedades los vuelve a poner sobre la mesa.` : `No tenés coaches fríos. Este trimestre sumá 2 o 3 programas nuevos a tu lista de envíos.`, cta: cold.length ? null : "Buscar universidades", run: () => setStage("catalog"), extra: (
+      <>
+        <p className="rm-hint" style={{ margin: "6px 0" }}>Hasta hoy: escribiste a {entries.length}, te respondieron {replied}{offers ? ` y tenés ${offers} oferta${offers === 1 ? "" : "s"}` : ""}.</p>
+        {cold.map((e) => (
+          <div key={e.university} style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", margin: "4px 0" }}>
+            <span style={{ flex: "1 1 220px" }}><b>{e.university}</b> · hace {daysSince(e.lastContact)} días · {(OUTREACH_STATUS_LABELS[e.status] || e.status || "").toLowerCase()}</span>
+            <button type="button" className="rm-btn-inline" onClick={() => onWrite(e.university, "checkin")}>Escribir check-in →</button>
+          </div>
+        ))}
+      </>
+    ) },
+    { id: "lista", title: "4. Tu lista de universidades", text: `Tu lista tiene ${favs} universidad${favs === 1 ? "" : "es"}. Lo ideal es tener entre 10 y 15, mezclando aspiracionales, realistas y seguras.`, cta: "Ver mi lista", run: () => setStage("mylist") },
+    { id: "resultados", title: "5. Tus resultados", text: "Los resultados cambian cuando los coaches publican búsquedas nuevas. Volvé a mirarlos y sumá lo que aparezca.", cta: "Ver mis resultados", run: () => setStage("results") },
+    { id: "camino", title: "6. Tu etapa", text: `Estás en la etapa ${stage.label}${nextStage ? `; la próxima, ${nextStage.label}, empieza en unos ${nextStage.months} meses` : ""}. ${stage.focus}`, cta: "Ver Mi camino", run: () => setStage("camino") },
+    { id: "elig", title: "7. Elegibilidad y exámenes", text: eligPending ? `Te quedan ${eligPending} ítem${eligPending === 1 ? "" : "s"} sin marcar en la checklist de elegibilidad. Revisá también la fecha de tu examen de inglés.` : "Tu checklist de elegibilidad está completa. Revisá igual la fecha de tu examen de inglés y los documentos.", cta: "Ir a Elegibilidad", run: () => setStage("eligibility") },
+  ];
+  const doneCount = items.filter((i) => ticks[i.id]).length;
+  const copy = () => {
+    const text = quarterlySummaryText(profile, now);
+    const done = () => { setCopied(true); setTimeout(() => setCopied(false), 2500); };
+    try { navigator.clipboard.writeText(text).then(done, () => {}); } catch (e) {
+      try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); } catch (err) { /* nada */ }
+    }
+  };
+  const finish = () => {
+    const next = { ...q, done: [...q.done, new Date().toISOString()].slice(-12) };
+    writeJSON("rr_quarterly", next); setQ(next); setFinished(true); window.scrollTo(0, 0);
+  };
+  const nextDate = new Date(Date.now() + QUARTER_DAYS * 86400000);
+  const box = { background: "#fff", border: "1px solid #e3ded2", borderRadius: 8, padding: 16, marginBottom: 12 };
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60, maxWidth: 820 }}>
+      <h2 className="rm-condensed">Chequeo del trimestre</h2>
+      <p className="rm-hint">Cada 3 meses, 10 minutos para que tu proceso no se enfríe. Son 4 o 5 años de camino: lo que se revisa seguido no se pierde.</p>
+      <p className="rm-hint">{status.lastDone ? `Último chequeo: ${fmt(status.lastDone)}.` : "Todavía no hiciste ningún chequeo."}{status.due ? " Ya toca hacer uno." : status.days !== null ? ` Falta${QUARTER_DAYS - status.days === 1 ? "" : "n"} ${Math.max(0, QUARTER_DAYS - status.days)} día${QUARTER_DAYS - status.days === 1 ? "" : "s"} para el próximo, pero podés hacerlo cuando quieras.` : ""}</p>
+      {finished && (
+        <div className="rm-alert" style={{ background: "#E8F5EC", borderColor: "#2e8b57", color: "#1c5a37" }}>
+          <b>Chequeo guardado.</b> El próximo toca alrededor del {fmt(nextDate)}. Te lo vamos a recordar en tu plan y en el mail semanal.
+        </div>
+      )}
+      <p className="rm-hint"><b>{doneCount} de {items.length}</b> revisados</p>
+      {items.map((it) => (
+        <div key={it.id} style={box}>
+          <label style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer" }}>
+            <input type="checkbox" checked={!!ticks[it.id]} onChange={() => setTicks((t) => ({ ...t, [it.id]: !t[it.id] }))} style={{ marginTop: 4 }} />
+            <span><b>{it.title}</b><br /><span style={{ fontSize: 14 }}>{it.text}</span></span>
+          </label>
+          {it.extra && <div style={{ marginLeft: 26 }}>{it.extra}</div>}
+          {it.cta && <div style={{ marginLeft: 26, marginTop: 8 }}><button type="button" className="rm-btn-inline" onClick={it.run}>{it.cta} →</button></div>}
+        </div>
+      ))}
+      <div style={box}>
+        <b>Para compartir con tu familia</b>
+        <p className="rm-hint" style={{ margin: "6px 0 10px" }}>Copiá un resumen corto (etapa, promedio, coaches y próximo paso) para pasárselo a tu familia o a tu entrenador.</p>
+        <button type="button" className="rm-btn-inline" onClick={copy}>{copied ? "¡Copiado!" : "Copiar resumen →"}</button>
+      </div>
+      <button type="button" className="rm-btn" onClick={finish} disabled={finished}>{finished ? "Chequeo guardado ✓" : "Terminé el chequeo"}</button>
+      {finished && <> <button type="button" className="rm-btn-inline" style={{ marginLeft: 12 }} onClick={() => { setStage("landing"); window.scrollTo(0, 0); }}>Volver al inicio →</button></>}
+    </div>
+  );
 }
 
 // La app espera a que los datos estén cargados; mientras tanto se ve una pantalla liviana (el código pesa ~1 MB, los datos se bajan en paralelo).

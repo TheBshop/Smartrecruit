@@ -12,6 +12,7 @@ export type Digest = {
   week?: string;
   reqOpen?: number;
   coaches?: { u?: string; k?: string }[];
+  quarterly?: { due?: boolean; days?: number } | null;
   updated?: string;
 };
 
@@ -61,11 +62,16 @@ export function buildReminderEmail(opts: { firstName: string; digest: Digest | n
   const coachText = coaches.length ? ["Coaches para atender:", ...coaches.map((c) => `- ${c.u}: ${c.k}`), ""].join("\n") : "";
   const coachHtml = coaches.length ? `<div style="margin:0 0 18px"><div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Coaches para atender</div><ul style="margin:0;padding-left:18px;font-size:14px">${coaches.map((c) => `<li><b>${escapeHtml(c.u)}</b>: ${escapeHtml(c.k)}</li>`).join("")}</ul></div>` : "";
   const planUrl = `${opts.siteUrl.replace(/\/+$/, "")}/plan`;
+  // Si el chequeo del trimestre está vencido (y el resumen es reciente), se suma una línea con el enlace.
+  const quarterlyDue = !stale && !!(d.quarterly && d.quarterly.due);
+  const quarterlyUrl = `${opts.siteUrl.replace(/\/+$/, "")}/chequeo`;
+  const quarterlyText = quarterlyDue ? `Toca tu chequeo del trimestre (10 minutos): ${quarterlyUrl}\n` : "";
+  const quarterlyHtml = quarterlyDue ? `<div style="margin:0 0 18px;font-size:14px">🗓️ <b>Toca tu chequeo del trimestre</b> (10 minutos): notas, video, coaches sin novedades y tu lista. <a href="${escapeHtml(quarterlyUrl)}" style="color:#14213d">Hacerlo ahora</a></div>` : "";
   const subject = "Tu semana en Smartrecruit";
   const nextLine = nextTitle ? `Tu próxima acción${required ? " (obligatoria)" : ""}: ${nextTitle}${nextWhen ? ` — ${nextWhen}` : ""}` : "Tu próxima acción te espera en tu plan.";
 
   const text = [
-    hi, "", week, stageLine, "", nextLine, "", coachText, `Abrir mi plan: ${planUrl}`, "",
+    hi, "", week, stageLine, "", nextLine, "", coachText, quarterlyText, `Abrir mi plan: ${planUrl}`, "",
     "—",
     "Recibís este correo porque activaste el recordatorio semanal en Smartrecruit. Es uno por semana (domingos).",
     `Para darte de baja: ${opts.unsubUrl}`,
@@ -83,7 +89,7 @@ ${stageLine ? `<p style="margin:0 0 16px;font-size:14px;color:#555">${escapeHtml
 <div style="font-size:15px">${nextTitle ? escapeHtml(nextTitle) : "Te espera en tu plan."}</div>
 ${nextWhen ? `<div style="font-size:13px;color:#666;margin-top:6px">${escapeHtml(nextWhen)}</div>` : ""}
 </div>
-${coachHtml}<a href="${escapeHtml(planUrl)}" style="display:inline-block;background:#14213d;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-size:15px">Abrir mi plan</a>
+${coachHtml}${quarterlyHtml}<a href="${escapeHtml(planUrl)}" style="display:inline-block;background:#14213d;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-size:15px">Abrir mi plan</a>
 </div>
 <p style="font-size:12px;color:#777;margin:16px 4px 0">Recibís este correo porque activaste el recordatorio semanal en Smartrecruit. Es uno por semana (domingos). <a href="${escapeHtml(opts.unsubUrl)}" style="color:#777">Darme de baja</a>.</p>
 <p style="font-size:12px;color:#777;margin:8px 4px 0">Smartrecruit es una herramienta educativa: no es un agente, no garantiza becas ni admisiones y no está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.</p>
