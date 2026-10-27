@@ -125,3 +125,8 @@ Quedan sin vínculo unas 70 universidades NCAA sin un registro oficial claro (ca
 - Fichas cargadas a mano porque no estaban en la descarga masiva: Saint John's (MN) 174792 y Nueta Hidatsa Sahnish 200086 (College Navigator / Scorecard).
 - Quedan 9 sin ficha, con mensaje propio: campus regionales (UWSP Marshfield y Wausau, UW Marshfield-Wood, Benedictine Mesa, CT State Gateway, Bryant & Stratton Milwaukee), 2 clubes de rugby y John Melvin University (no se pudo confirmar).
 - Los nombres viejos se mantienen en pantalla para no romper cruces con contactos y planteles; no hay buscador por nombre nuevo todavía.
+
+## Perfil de demo para grabar
+- Abrí `https://smartrecruit.com.ar/?demo=1` (idealmente en una ventana privada). Carga a "Tomás Herrera" (arquero argentino ficticio, ingreso 2028, quiere Kinesiología) con 6 universidades en la lista, 4 contactos en el tablero (uno respondió, uno con visita, dos para seguimiento) y las redes de ejemplo.
+- Con `&go=catalog` (o `plan`, `outreach`, `profile`, `chequeo`, `familia`) abre directo esa pantalla.
+- Solo se aplica si el navegador NO tiene un perfil propio: nunca pisa datos reales. Para repetir la demo, borrar los datos del sitio o abrir otra ventana privada.

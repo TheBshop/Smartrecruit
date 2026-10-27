@@ -11788,7 +11788,39 @@ function DataSplash({ error, onRetry }) {
   );
 }
 
+// Perfil de demostración (ficticio) para grabar videos: se carga con /?demo=1 (o /?demo=1&go=catalog) y SOLO si el navegador no tiene un perfil propio,
+// así nunca pisa los datos de nadie. Conviene abrirlo en una ventana privada.
+function applyDemoIfRequested() {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("demo") !== "1") return false;
+    const go = (q.get("go") || "").replace(/[^a-z]/gi, "");
+    if (!localStorage.getItem("rr_profile")) {
+      const day = 86400000, now = Date.now(), iso = (d) => new Date(now - d * day).toISOString();
+      const profile = {
+        name: "Tomás Herrera", email: "tomas.demo@example.com", phone: "", videoLink: "https://www.youtube.com/watch?v=demo-smartrecruit",
+        country: "Argentina", gender: "M", sport: "Soccer", position: "GK", gradYear: 2027, gradMonth: 12, gpaScale: "ar10", gpaRaw: 8.5,
+        major: "Kinesiología", goals: 82, assists: 7, gaa: 0.9, goal: "completa",
+        consent: { accepted: true, ageAnswered: true, minor: false, version: LEGAL_VERSION, acceptedAt: iso(30) },
+      };
+      localStorage.setItem("rr_profile", JSON.stringify(normalizeProfile(profile)));
+      localStorage.setItem("rr_favorites", JSON.stringify(["Barry University", "Belmont Abbey College", "Bentley University", "Barton College", "Adelphi University", "Azusa Pacific University"]));
+      const entry = (university, status, daysAgo, times) => ({ university, sport: "Soccer", firstContact: iso(daysAgo + (times - 1) * 7), lastContact: iso(daysAgo), timesContacted: times, status, sentDates: Array.from({ length: times }, (_, i) => iso(daysAgo + (times - 1 - i) * 7)), messages: Array.from({ length: times }, (_, i) => ({ at: iso(daysAgo + (times - 1 - i) * 7), kind: i === 0 ? "first" : "followup" })) });
+      localStorage.setItem("rr_outreach_log", JSON.stringify({
+        "Barry University": entry("Barry University", "respondio", 6, 2),
+        "Belmont Abbey College": entry("Belmont Abbey College", "sin_respuesta", 12, 1),
+        "Bentley University": entry("Bentley University", "sin_respuesta", 20, 1),
+        "Barton College": entry("Barton College", "visita", 3, 3),
+      }));
+      localStorage.setItem("rr_share", JSON.stringify({ ig: "arquero.demo", tt: "arquero.demo", email: true, phone: false }));
+      localStorage.setItem("rr_onboarding_dismissed", "1");
+    }
+    window.history.replaceState(null, "", go ? "/" + go : "/");
+    return true;
+  } catch (e) { return false; }
+}
 export default function App() {
+  useState(() => applyDemoIfRequested());
   const [state, setState] = useState("loading");
   const start = () => { setState("loading"); loadData().then(() => setState("ready")).catch(() => setState("error")); };
   const isAthleteLink = typeof window !== "undefined" && /^\/atleta\/?$/.test(window.location.pathname);
