@@ -5,7 +5,7 @@
 - `build.mjs`: arma `dist/` (`npm run build`).
 
 ## Regla permanente: el rendimiento es prioridad
-Velocidad de carga y peso de la página son prioridad en cada cambio. Antes de publicar: no meter datos grandes dentro del código (van en `datos/*.json`), no sumar librerías pesadas sin necesidad, y medir. Referencia (26/10/2026): código 1,7 MB (antes 16 MB); la pantalla aparece a los 0,2 s y la portada a ~1 s (antes 2 s), con CPU normal; con CPU 4 veces más lenta, 0,9 s y 3,9 s (antes 5,8 s).
+Velocidad de carga y peso de la página son prioridad en cada cambio. Antes de publicar: no meter datos grandes dentro del código (van en `datos/*.json`), no sumar librerías pesadas sin necesidad, y medir. Referencia (26/10/2026): código 1,7 MB (antes 16 MB); visitante nuevo ve el título y el botón a los 0,3 s (portada completa ~1,3 s; antes 2 s); con CPU 4 veces más lenta, 1,1 s y ~4 s (antes 5,8 s).
 - `main.jsx`: arranca la app.
 - `public/`: se copia tal cual al sitio. Incluye `index.html` (con PostHog, SEO e ícono), `assets/analytics.js` (PostHog + aviso de cookies), `robots.txt` y `sitemap.xml`.
 - `analytics-src/entry.js`: código legible de la analítica (solo hace falta si se cambia).

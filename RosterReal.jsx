@@ -11262,6 +11262,26 @@ export default function App() {
   const [state, setState] = useState("loading");
   const start = () => { setState("loading"); loadData().then(() => setState("ready")).catch(() => setState("error")); };
   useEffect(() => { start(); }, []);
-  if (state !== "ready") return <DataSplash error={state === "error"} onRetry={start} />;
+  const [wantsStart, setWantsStart] = useState(false);
+  if (state !== "ready") {
+    // Visitante nuevo en la portada: se muestra el título y el botón ya, sin esperar los datos (la portada completa entra apenas terminan de cargar).
+    let isNewVisitor = false;
+    try { isNewVisitor = window.location.pathname === "/" && !localStorage.getItem("rr_profile"); } catch (e) {}
+    if (state === "error" || !isNewVisitor) return <DataSplash error={state === "error"} onRetry={start} />;
+    return (
+      <div className="rm-root">
+        <style>{CSS}</style>
+        <div className="rm-hero">
+          <div className="rm-wrap rm-hero-inner">
+            <h1 className="rm-condensed">Conseguí tu beca <span>por tu propia cuenta</span>, con datos reales.</h1>
+            <p>Te mostramos qué universidades buscan tu posición y con cuáles tenés más chances.</p>
+            <button className="rm-btn" disabled={wantsStart} onClick={() => { setWantsStart(true); try { window.history.pushState({ stage: "start" }, "", "/start"); } catch (e) {} }}>
+              {wantsStart ? "Cargando datos…" : "Empezar en 10 minutos →"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return <AppInner />;
 }
