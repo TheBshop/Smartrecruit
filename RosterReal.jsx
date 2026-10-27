@@ -10811,7 +10811,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja", "chequeo"];
+const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja", "chequeo", "familia"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -11230,14 +11230,15 @@ function AppInner() {
         { id: "exams", label: "Exámenes", icon: "📝" },
         { id: "gpa", label: "Conversor GPA", icon: "🔢" },
         { id: "careers", label: "Buscar por carrera", icon: "🎯" },
-        { id: "chequeo", label: "Chequeo del trimestre", icon: "🗓️" },
+        { id: "chequeo", label: "Chequeo trimestral", icon: "🗓️" },
+        { id: "familia", label: "Para tu familia", icon: "👨‍👩‍👧" },
         { id: "glosario", label: "Glosario", icon: "📖" },
       ],
     },
   ];
   // Recursos se despliega hacia abajo. Se abre solo cuando se llega a Recursos o a cualquiera de sus
   // secciones (por ejemplo desde un paso de "Empezá acá"), y se puede cerrar a mano sin cambiar de página.
-  const RESOURCE_STAGES = ["resources", "eligibility", "exams", "gpa", "careers", "glosario", "chequeo"];
+  const RESOURCE_STAGES = ["resources", "eligibility", "exams", "gpa", "careers", "glosario", "chequeo", "familia"];
   const [resourcesOpen, setResourcesOpen] = useState(false);
   useEffect(() => { if (RESOURCE_STAGES.includes(stage)) setResourcesOpen(true); }, [stage]);
   const toggleResources = () => {
@@ -11362,6 +11363,7 @@ function AppInner() {
       {stage === "roadmap" && <RoadmapPage profile={profile} setStage={setStage} />}
       {stage === "camino" && <CaminoPage profile={profile} setStage={setStage} />}
       {stage === "glosario" && <GlossaryPage setStage={setStage} />}
+      {stage === "familia" && <FamilyPage profile={profile} setStage={setStage} />}
       {stage === "chequeo" && <QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} />}
       {stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
       {stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
@@ -11397,6 +11399,79 @@ function AppInner() {
 function normalizeProfile(p) {
   const gpa4 = GPA_SCALES[p.gpaScale].convert(parseFloat(p.gpaRaw));
   return { ...p, gpa4: Math.round(gpa4 * 100) / 100 };
+}
+
+// ---- Modo familia: qué es el proceso, en palabras simples, para madre, padre o tutor (y un resumen del avance para compartir) ----
+const FAMILY_STAGE_TEXT = {
+  base: "Es la etapa de preparar la base: cuidar las notas, entrenar y entender cómo funciona el sistema. No hay apuro por escribir a muchos entrenadores.",
+  visibilidad: "Es la etapa de mostrarse: tener un video corto y las estadísticas al día, armar una lista corta de universidades y mandar los primeros mails.",
+  contacto: "Es la etapa en la que los entrenadores de D1 ya pueden escribir: toca escribir seguido, hacer seguimiento y contestar rápido.",
+  decision: "Es la etapa de decidir: responder a cada entrenador, comparar ofertas y costos y dejar los documentos listos.",
+  ingreso: "Ya se acerca la primera temporada. A partir de la admisión, la universidad les indica los trámites que siguen.",
+};
+function FamilyPage({ profile, setStage }) {
+  const [copied, setCopied] = useState(false);
+  const now = new Date();
+  const stage = profile ? planStageFor(profile, now) : null;
+  const entries = profile ? Object.values(readOutreachLog() || {}) : [];
+  const replied = entries.filter((e) => ["respondio", "visita", "oferta"].includes(e.status)).length;
+  const offers = entries.filter((e) => e.status === "oferta").length;
+  const favs = profile ? readFavorites().length : 0;
+  const summary = profile ? quarterlySummaryText(profile, now) : "";
+  const copy = () => {
+    const done = () => { setCopied(true); setTimeout(() => setCopied(false), 2500); };
+    try { navigator.clipboard.writeText(summary).then(done, () => {}); } catch (e) {
+      try { const ta = document.createElement("textarea"); ta.value = summary; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); done(); } catch (err) { /* nada */ }
+    }
+  };
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60, maxWidth: 820 }}>
+      <h2 className="rm-condensed">Para tu familia</h2>
+      <p className="rm-hint">Una guía en palabras simples para madre, padre o tutor: cómo funciona el camino a una beca deportiva en EE.UU., qué mirar y cómo acompañar sin hacer el trabajo de la atleta. Pasale este enlace: <b>smartrecruit.com.ar/familia</b>.</p>
+      {profile && (
+        <div className="rm-college-profile" style={{ marginBottom: 14, padding: "14px 18px" }}>
+          <b>Cómo va {(profile.name || "").trim().split(/\s+/)[0] || "la atleta"}</b>
+          <p style={{ margin: "8px 0" }}>Etapa: <b>{stage.label}</b>{stage.monthsLeft ? ` (faltan unos ${stage.monthsLeft} meses para el ingreso, temporada ${getEntryYear(profile)})` : ""}. {FAMILY_STAGE_TEXT[stage.key] || ""}</p>
+          <p style={{ margin: "8px 0" }}>Escribió a <b>{entries.length}</b> entrenador{entries.length === 1 ? "" : "es"}; le respondieron <b>{replied}</b>{offers ? `; tiene ${offers} oferta${offers === 1 ? "" : "s"}` : ""}. Su lista tiene <b>{favs}</b> universidad{favs === 1 ? "" : "es"}.</p>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <button type="button" className="rm-btn-inline" onClick={copy}>{copied ? "¡Copiado!" : "Copiar resumen →"}</button>
+            <a className="rm-btn-inline" href={`https://wa.me/?text=${encodeURIComponent(summary)}`} target="_blank" rel="noopener noreferrer">Enviar por WhatsApp →</a>
+          </div>
+        </div>
+      )}
+      <GuideBlock title="Qué es Smartrecruit y qué no es" open>
+        <p>Smartrecruit es una <b>guía educativa</b>: enseña cómo funciona el reclutamiento universitario en EE.UU. y ordena los pasos para que la atleta se postule por su cuenta.</p>
+        <p><b>No es una agencia ni un intermediario, no garantiza becas ni admisiones y no cobra</b> por conseguirlas. Tampoco está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.</p>
+      </GuideBlock>
+      <GuideBlock title="Cómo es el camino, en cuatro etapas">
+        <p><b>1. Base.</b> {FAMILY_STAGE_TEXT.base}</p>
+        <p><b>2. Visibilidad.</b> {FAMILY_STAGE_TEXT.visibilidad}</p>
+        <p><b>3. Contacto.</b> {FAMILY_STAGE_TEXT.contacto}</p>
+        <p><b>4. Decisión.</b> {FAMILY_STAGE_TEXT.decision}</p>
+        <p>Es un camino de varios años: lo que más ayuda es la constancia (un paso por semana) y no dejar enfriar a los entrenadores que ya contestaron.</p>
+      </GuideBlock>
+      <GuideBlock title="Cuánto puede cubrir una beca">
+        <p>La "beca total" casi nunca es solo deportiva: suele ser una <b>combinación</b> de beca deportiva, beca por notas y ayuda de la propia universidad. En divisiones como D2 o NAIA las becas suelen ser parciales, y D3 no da becas deportivas (sí ayuda académica).</p>
+        <p>Los estudiantes internacionales <b>no pueden recibir la ayuda federal de EE.UU.</b> Lo que sí pueden recibir es la ayuda de cada universidad.</p>
+        <p><button type="button" className="rm-btn-inline" onClick={() => { setStage("money"); window.scrollTo(0, 0); }}>Ver "Becas y costos" completo →</button></p>
+      </GuideBlock>
+      <GuideBlock title="Qué mirar antes de aceptar una oferta">
+        <p>Pidan siempre la oferta <b>por escrito</b> y antes de decidir fíjense en: qué cubre (matrícula, alojamiento, comidas, seguro médico y otros gastos), por cuántos años es, cómo se renueva y hasta qué fecha hay que responder.</p>
+        <p>Sumen los gastos que la beca no cubre (pasajes, seguro, libros, gastos personales) y comparen con lo que la familia puede pagar. Un compromiso verbal no obliga, pero lo que se firma sí: lean cada documento en familia antes de firmar.</p>
+      </GuideBlock>
+      <GuideBlock title="Señales de alerta">
+        <p>Desconfíen de quien <b>garantice</b> una beca, presione para decidir ya o pida dinero por adelantado a cambio de "conseguirla". Nadie puede asegurar una beca antes de que un entrenador y la universidad la ofrezcan por escrito.</p>
+        <p>Tampoco compartan datos sensibles (pasaporte, cuentas bancarias) por mail con alguien que todavía no es una universidad o un entrenador verificado. Ante la duda, comprueben el mail del entrenador en la página oficial del equipo.</p>
+      </GuideBlock>
+      <GuideBlock title="Cómo acompañar sin hacer el trabajo por ella">
+        <p>Los entrenadores quieren hablar con la atleta: conviene que escriba ella sus mails, con su voz. La familia puede ayudar mucho con tres cosas:</p>
+        <p>• <b>Tiempo y constancia:</b> acordar un momento fijo por semana para su plan y para el chequeo del trimestre.<br />• <b>Documentos:</b> pasaporte vigente, certificados de estudios traducidos y el examen de inglés. Después de la admisión, la universidad indica el resto.<br />• <b>Plata:</b> hablar con franqueza de cuánto puede aportar la familia, para comparar ofertas con números reales.</p>
+        {profile && profile.consent && profile.consent.minor && <p>Como la atleta es menor de 18, Smartrecruit pide la conformidad de un adulto con su nombre y correo. Pueden revisar o corregir esos datos desde el perfil.</p>}
+        <p><button type="button" className="rm-btn-inline" onClick={() => { setStage("chequeo"); window.scrollTo(0, 0); }}>Hacer juntos el chequeo del trimestre →</button></p>
+      </GuideBlock>
+      {!profile && <p className="rm-hint">Si la atleta todavía no armó su perfil, <button type="button" className="rm-btn-inline" onClick={() => setStage("start")}>puede empezar acá →</button></p>}
+    </div>
+  );
 }
 
 // ---- Página del chequeo del trimestre ----
@@ -11487,6 +11562,7 @@ function QuarterlyPage({ profile, setStage, onWrite }) {
         <b>Para compartir con tu familia</b>
         <p className="rm-hint" style={{ margin: "6px 0 10px" }}>Copiá un resumen corto (etapa, promedio, coaches y próximo paso) para pasárselo a tu familia o a tu entrenador.</p>
         <button type="button" className="rm-btn-inline" onClick={copy}>{copied ? "¡Copiado!" : "Copiar resumen →"}</button>
+        {" "}<button type="button" className="rm-btn-inline" onClick={() => { setStage("familia"); window.scrollTo(0, 0); }}>Ver la página para tu familia →</button>
       </div>
       <button type="button" className="rm-btn" onClick={finish} disabled={finished}>{finished ? "Chequeo guardado ✓" : "Terminé el chequeo"}</button>
       {finished && <> <button type="button" className="rm-btn-inline" style={{ marginLeft: 12 }} onClick={() => { setStage("landing"); window.scrollTo(0, 0); }}>Volver al inicio →</button></>}
