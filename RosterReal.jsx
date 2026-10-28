@@ -218,6 +218,8 @@ let SOCCER_D2M_BIO_2026 = {};
 
 
 let SOCCER_D2F_STATS_2026 = {};
+// Temporada 2025 (la última completa) de fútbol femenino D2: {universidad: [[nombre,PJ,tit,min,goles,asist,pts,tiros,alarco(,GC,atajadas)]]}. Se cruza por nombre con el plantel actual.
+let SOCCER_D2F_STATS_2025 = {};
 let SOCCER_D2F_BIO_2026 = {};
 
 
@@ -4564,12 +4566,12 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
             </table>
             ) : (
             <table className="rm-exam-table">
-              {r.sport === "Volleyball" ? <thead><tr><th>Jugadora</th><th>Pos.</th><th>Sets</th><th>Kills/set</th><th>Asist./set</th><th>Dig/set</th><th>Pts/set</th></tr></thead> : <thead><tr><th>Jugador</th><th>PJ</th><th>Min.</th><th>Goles</th><th>Asist.</th><th>Puntos</th><th>Tiros</th><th>Al arco</th></tr></thead>}
+              {r.sport === "Volleyball" ? <thead><tr><th>Jugadora</th><th>Pos.</th><th>Sets</th><th>Kills/set</th><th>Asist./set</th><th>Dig/set</th><th>Pts/set</th></tr></thead> : <thead><tr><th>Jugador</th><th>PJ</th><th>Min.</th><th>Goles</th><th>Asist.</th><th>Puntos</th><th>Tiros</th><th>Al arco</th>{r.prevSeason && <th title="Partidos · goles · asistencias de la temporada 2025">Temp. 2025 (PJ · G · A)</th>}</tr></thead>}
               <tbody>
                 {[...r.roster].sort((x, y) => (y.points || 0) - (x.points || 0) || (y.goals || 0) - (x.goals || 0) || String(x.player_name).localeCompare(String(y.player_name))).map((p, i) => (
                   r.sport === "Volleyball"
                     ? <tr key={`${p.player_name}-${i}`}><td>{p.player_name}</td><td>{p.position || "—"}</td><td>{p.games_played}</td><td>{p.goals}</td><td>{p.assists}</td><td>{p.digs}</td><td>{p.points}</td></tr>
-                    : <tr key={`${p.player_name}-${i}`}><td>{p.player_name}</td><td>{p.games_played}</td><td>{p.minutes == null || p.minutes === "" ? "—" : Math.round(p.minutes)}</td><td>{p.goals}</td><td>{p.assists}</td><td>{p.points}</td><td>{p.shots}</td><td>{p.shots_on_goal}</td></tr>
+                    : <tr key={`${p.player_name}-${i}`}><td>{p.player_name}</td><td>{p.games_played}</td><td>{p.minutes == null || p.minutes === "" ? "—" : Math.round(p.minutes)}</td><td>{p.goals}</td><td>{p.assists}</td><td>{p.points}</td><td>{p.shots}</td><td>{p.shots_on_goal}</td>{r.prevSeason && <td>{p.prev ? `${p.prev.gp ?? "—"} · ${p.prev.gl ?? "—"} · ${p.prev.as ?? "—"}` : "—"}</td>}</tr>
                 ))}
               </tbody>
             </table>
@@ -11156,6 +11158,7 @@ function __assignData(d) {
   SOCCER_D2M_STATS_2026 = d.SOCCER_D2M_STATS_2026;
   SOCCER_D2M_BIO_2026 = d.SOCCER_D2M_BIO_2026;
   SOCCER_D2F_STATS_2026 = d.SOCCER_D2F_STATS_2026;
+  SOCCER_D2F_STATS_2025 = d.SOCCER_D2F_STATS_2025;
   SOCCER_D2F_BIO_2026 = d.SOCCER_D2F_BIO_2026;
   VB_D1_2026 = d.VB_D1_2026;
   VB_D2_2026 = d.VB_D2_2026;
@@ -11312,8 +11315,10 @@ function __deriveAll() {
       prevKeys.forEach((k) => { delete ROSTERS_LOADED[k]; });
       const key = g === 'F' ? `${school}::Soccer::F` : `${school}::Soccer`;
       const bio = (SOCCER_D2F_BIO_2026[g] || {})[school] || {};
-      ROSTERS_LOADED[key] = { school, sport: 'Soccer', gender: g, division: 'NCAA D2', statsLoaded: true, statsSeason: '2026 (en curso)', partial: true,
-        roster: rows.map((r) => { const b = bio[r[0]] || []; return { player_name: r[0], position: b[0] || '', class_year: b[1] || '', hometown: b[2] || '', country: b[3] || '', games_played: r[1], starts: r[2], minutes: r[3], goals: r[4], assists: r[5], points: r[6], shots: r[7], shots_on_goal: r[8] }; }) };
+      const nk = (n) => String(n).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+      const prevRows = g === 'F' ? SOCCER_D2F_STATS_2025[school] : null; const prevBy = new Map((prevRows || []).map((q) => [nk(q[0]), q]));
+      ROSTERS_LOADED[key] = { school, sport: 'Soccer', gender: g, division: 'NCAA D2', statsLoaded: true, statsSeason: '2026 (en curso)', partial: true, prevSeason: prevRows ? '2025' : undefined,
+        roster: rows.map((r) => { const b = bio[r[0]] || []; return { player_name: r[0], position: b[0] || '', class_year: b[1] || '', hometown: b[2] || '', country: b[3] || '', games_played: r[1], starts: r[2], minutes: r[3], goals: r[4], assists: r[5], points: r[6], shots: r[7], shots_on_goal: r[8], prev: prevBy.get(nk(r[0])) ? (({ 1: gp, 2: gs, 3: mn, 4: gl, 5: as }) => ({ gp, gs, mn, gl, as }))(prevBy.get(nk(r[0]))) : undefined }; }) };
     });
   });
   Object.entries(PSAC_FH_STATS).forEach(([school, d]) => {
@@ -11459,7 +11464,7 @@ function __deriveAll() {
 let __dataPromise = null;
 export function loadData() {
   if (!__dataPromise) {
-    const names = ["FIELDLEVEL_NEEDS","OFFERS_BOARD","SCHOOL_PROFILES_NCSA","RECRUITING_NEEDS_GENERAL","PROGRAMS_ALL_SPORTS","BBALL_ROSTERS","BBALL_D2_ROSTERS","WBB_ROSTERS_2026_27","WBB_ESPN_STATS_2025_26","HOCKEY_PARTIAL_STATS_2026","HOCKEY_BIO_2026","SOCCER_PARTIAL_STATS_2026","SOCCER_BIO_2026","SOCCER_D2M_STATS_2026","SOCCER_D2M_BIO_2026","SOCCER_D2F_STATS_2026","SOCCER_D2F_BIO_2026","VB_D1_2026","VB_D2_2026","MAJOR_DATA_BY_SCHOOL","FOS_BY_ID","FOS_NAME_IDS","EADA_DATA","EADA_SITE_NAMES","SCORECARD_BY_ID","COACH_CONTACTS_BY_PROGRAM"];
+    const names = ["FIELDLEVEL_NEEDS","OFFERS_BOARD","SCHOOL_PROFILES_NCSA","RECRUITING_NEEDS_GENERAL","PROGRAMS_ALL_SPORTS","BBALL_ROSTERS","BBALL_D2_ROSTERS","WBB_ROSTERS_2026_27","WBB_ESPN_STATS_2025_26","HOCKEY_PARTIAL_STATS_2026","HOCKEY_BIO_2026","SOCCER_PARTIAL_STATS_2026","SOCCER_BIO_2026","SOCCER_D2M_STATS_2026","SOCCER_D2M_BIO_2026","SOCCER_D2F_STATS_2026","SOCCER_D2F_STATS_2025","SOCCER_D2F_BIO_2026","VB_D1_2026","VB_D2_2026","MAJOR_DATA_BY_SCHOOL","FOS_BY_ID","FOS_NAME_IDS","EADA_DATA","EADA_SITE_NAMES","SCORECARD_BY_ID","COACH_CONTACTS_BY_PROGRAM"];
     __dataPromise = Promise.all(names.map((n) => fetch("/data/" + DATA_MANIFEST[n]).then((r) => { if (!r.ok) throw new Error(n + " " + r.status); return r.json(); })))
       .then((vals) => { const d = {}; names.forEach((n, i) => { d[n] = vals[i]; }); __restoreNaN(d); __assignData(d); __deriveAll(); })
       .catch((e) => { __dataPromise = null; throw e; });
