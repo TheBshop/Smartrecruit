@@ -4355,7 +4355,8 @@ function CollegeProfileCard({ school, cds, place }) {
         <b>{cds.majors_offered_ABET.length ? cds.majors_offered_ABET.join(" · ") : "sin lista cargada"}</b>
       </div>
       <div className="rm-college-profile-need"><b>Ayuda financiera:</b> {cds.need_policy}</div>
-      {contact && (() => {
+      {contact && !isLoggedIn() && <CoachLock motivo="ficha" />}
+      {contact && isLoggedIn() && (() => {
         const isEmail = contact.contactUrl.startsWith("mailto:");
         const email = isEmail ? contact.contactUrl.replace("mailto:", "") : null;
         return (
@@ -4489,7 +4490,8 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
 
       {eada && <EadaSection e={eada} profileMajor={profileMajor} />}
 
-      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && (
+      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && !isLoggedIn() && <CoachLock motivo="ficha" />}
+      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && isLoggedIn() && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Entrenadores latinoamericanos en el staff</h3>
           <div className="rm-catalog-list">
@@ -4503,7 +4505,8 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
-      {contactsForSchool(school).length > 0 && (
+      {contactsForSchool(school).length > 0 && !isLoggedIn() && <CoachLock motivo="ficha" />}
+      {contactsForSchool(school).length > 0 && isLoggedIn() && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Coaches por programa</h3>
           <div className="rm-catalog-list">
@@ -4714,7 +4717,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
       )}
 
       {/* ---- Coach y contacto ---- */}
-      {contact && (
+      {contact && isLoggedIn() && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Contacto del cuerpo técnico · {programLabelEs(contact.sport, contact.gender)}</h3>
           <div className="rm-coach-card">
@@ -4728,7 +4731,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
-      {contact && contact.staff && contact.staff.length > 0 && (
+      {contact && contact.staff && contact.staff.length > 0 && isLoggedIn() && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Cuerpo técnico de {programLabelEs(contact.sport, contact.gender)} · temporada 2026-27</h3>
           <p className="rm-exam-note" style={{ marginTop: 0 }}>Head coach y asistentes, tal como los publica el sitio oficial del programa.</p>
@@ -8999,6 +9002,7 @@ function CoachCard({ r }) {
     // Roster cargado pero todavía sin contacto del coach: no se muestra un botón vacío.
     return <div className="rm-missing">Todavía no tenemos el contacto del coach de esta universidad — buscalo en la ficha de la universidad o en su sitio deportivo.</div>;
   }
+  if (!isLoggedIn()) return <div className="rm-missing">🔒 Los contactos de coaches se ven con tu cuenta gratuita. <button type="button" className="rm-btn-inline" onClick={() => openSignup("contacto_resultado")}>Crear cuenta →</button></div>;
   if (!r.coachName) {
     // Resultado de FieldLevel: no tenemos nombre/email/teléfono real del coach, solo el link de perfil.
     return <a className="rm-contact" href={r.coachContact} target="_blank" rel="noreferrer">{r.coachLabel} →</a>;
@@ -9433,11 +9437,13 @@ function MoreRow({ r, profile, onOpenSchool, isFav, toggleFav }) {
   );
 }
 
+const FREE_RESULTS = 3; // universidades que se ven sin cuenta
 function Results({ profile, onBack, onOpenSchool }) {
   const tiered = useMemo(() => buildTieredResults(profile), [profile]);
   const { top, more, total } = tiered;
   const [showMore, setShowMore] = useState(false);
   const [favs, toggleFav, isFav] = useFavorites();
+  const loggedIn = isLoggedIn();
   const counts = (list) => ["aspiracional", "realista", "segura"].map((k) => ({ ...TIERS[k], n: list.filter((r) => r.tier.key === k).length }));
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 40 }}>
@@ -9463,14 +9469,23 @@ function Results({ profile, onBack, onOpenSchool }) {
       </button>
       {top.length === 0 && <p>No encontramos necesidades publicadas para esa combinación de deporte/género todavía. Probá otra posición o revisá el deporte elegido.</p>}
       <div id="rm-full-results">
-        {top.map((r, i) => (
+        {(loggedIn ? top : top.slice(0, FREE_RESULTS)).map((r, i) => (
           <div key={i}>
             <div style={{ margin: "14px 0 -6px" }}><TierBadge tier={r.tier} /></div>
             <ResultCard r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />
           </div>
         ))}
       </div>
-      {more.length > 0 && (
+      {!loggedIn && total > FREE_RESULTS && (
+        <div className="rm-card" style={{ padding: "24px 20px", textAlign: "center", margin: "26px 0", border: "2px solid var(--gold, #FFB81C)" }}>
+          <div style={{ fontSize: 30 }}>🔒</div>
+          <h3 className="rm-condensed" style={{ fontSize: 22, margin: "4px 0" }}>Hay {total - FREE_RESULTS} universidades más para tu perfil</h3>
+          <p style={{ fontSize: 14.5, color: "var(--ink-soft)", margin: "0 auto 14px", maxWidth: 520 }}>Con tu cuenta gratuita ves tu lista completa ordenada en aspiracionales, realistas y seguras, los contactos de los coaches y generás tus mails personalizados.</p>
+          <button type="button" className="rm-btn" onClick={() => openSignup("resultados")}>Ver mi lista completa →</button>
+          <p style={{ fontSize: 12.5, color: "var(--ink-soft)", margin: "10px 0 0" }}>Gratis, sin tarjeta. Solo con tu mail.</p>
+        </div>
+      )}
+      {loggedIn && more.length > 0 && (
         <div id="rm-more-results" style={{ marginTop: 40 }}>
           <button className="rm-btn" onClick={() => setShowMore(!showMore)} aria-expanded={showMore}>
             {showMore ? "Ocultar las otras opciones" : `Ver ${more.length} opciones más (hasta ${total} en total)`}
@@ -9556,7 +9571,7 @@ function OnboardingPanel({ profile, setStage }) {
         <div className="rm-onboard">
           <div className="rm-onboard-head">
             <div>
-              <h2 className="rm-condensed" style={{ fontSize: 22, margin: 0 }}>{allDone ? "¡Ya diste todos los primeros pasos! 🎉" : hasProfile ? "Seguí desde donde quedaste" : "Empezá acá — es gratis y no te tenés que registrar"}</h2>
+              <h2 className="rm-condensed" style={{ fontSize: 22, margin: 0 }}>{allDone ? "¡Ya diste todos los primeros pasos! 🎉" : hasProfile ? "Seguí desde donde quedaste" : "Empezá acá — es gratis"}</h2>
               <p style={{ fontSize: 13.5, color: "var(--ink-soft)", margin: "4px 0 0" }}>{allDone ? "Ahora es cuestión de sumar universidades a tu lista y escribirle a más coaches. Volvé cuando quieras." : "Cinco pasos para arrancar por tu cuenta. Nadie te evalúa ni te rechaza."}</p>
             </div>
             <button className="rm-onboard-dismiss" onClick={() => { setDismissed(true); try { lsSetSynced("rr_onboarding_dismissed", "1"); } catch (e) {} }} title="Ocultar">✕</button>
@@ -10705,7 +10720,7 @@ function TermsPage() {
         <p>Si el usuario es menor de 18 años, debe contar con la autorización de su madre, padre o tutor para registrarse y cargar datos. El adulto responsable acepta estos Términos en su nombre y es responsable del uso que el menor haga del sitio.</p>
       </LegalSection>
       <LegalSection n="7" title="Cuenta y seguridad">
-        <p>Crear una cuenta es opcional y gratuito. Se hace con un correo electrónico y una contraseña, o con un código de 6 números que enviamos a ese correo. La cuenta es personal: cada persona debe usar su propio correo y mantener su contraseña en reserva. El usuario es responsable de lo que se haga con su cuenta y debe avisarnos a {L.email} si sospecha un acceso no autorizado.</p>
+        <p>Crear una cuenta es gratuito. Parte del sitio se puede usar sin cuenta (guías, glosario, perfil, Recruit Score y las primeras universidades de tu lista), pero otras funciones (lista completa de universidades, contactos de coaches, generador de mails, plan, calendario y seguimiento) requieren una cuenta. Se hace con un correo electrónico y una contraseña, o con un código de 6 números que enviamos a ese correo. La cuenta es personal: cada persona debe usar su propio correo y mantener su contraseña en reserva. El usuario es responsable de lo que se haga con su cuenta y debe avisarnos a {L.email} si sospecha un acceso no autorizado.</p>
         <p>La cuenta guarda el progreso del usuario para que lo vea igual desde cualquier dispositivo. Si se usa la cuenta en dos dispositivos, se combinan los datos y, ante un mismo dato editado en ambos, prevalece la edición más reciente. El usuario puede pedir la eliminación de su cuenta escribiendo a {L.email}.</p>
       </LegalSection>
       <LegalSection n="8" title="Responsabilidades del usuario">
@@ -10866,6 +10881,47 @@ function ConsentFields({ value, onChange }) {
           {reading === "terms" ? <TermsPage /> : <PrivacyPage />}
         </div>
       )}
+    </div>
+  );
+}
+
+// ---- Acceso con cuenta: lo que sirve para conseguir la beca (lista completa, contactos, mails, plan, tablero) requiere cuenta gratuita ----
+// La sesión de Supabase se guarda en localStorage; se lee en forma sincrónica para decidir qué mostrar. Al iniciar o cerrar sesión la página se recarga, así que queda consistente.
+function isLoggedIn() {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && /^sb-.*-auth-token$/.test(k)) { const v = JSON.parse(localStorage.getItem(k) || "null"); if (v && (v.access_token || (v.currentSession && v.currentSession.access_token))) return true; }
+    }
+  } catch (e) {}
+  return false;
+}
+function openSignup(motivo) {
+  try { window.posthog && window.posthog.capture("cuenta_gate_click", { motivo }); } catch (e) {}
+  try { window.dispatchEvent(new Event("rr-open-account")); } catch (e) {}
+}
+function AccountGate({ title, text, bullets, motivo, children }) {
+  if (isLoggedIn()) return children;
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 40 }}>
+      <div className="rm-card" style={{ padding: "26px 22px", textAlign: "center", maxWidth: 560, margin: "0 auto" }}>
+        <div style={{ fontSize: 34 }}>🔒</div>
+        <h2 className="rm-condensed" style={{ fontSize: 24, margin: "6px 0" }}>{title}</h2>
+        <p style={{ fontSize: 14.5, color: "var(--ink-soft)", margin: "0 0 12px" }}>{text}</p>
+        {bullets && <ul style={{ textAlign: "left", fontSize: 14, margin: "0 auto 16px", maxWidth: 440, paddingLeft: 20 }}>{bullets.map((b) => <li key={b}>{b}</li>)}</ul>}
+        <button type="button" className="rm-btn" onClick={() => openSignup(motivo)}>Crear mi cuenta gratis →</button>
+        <p style={{ fontSize: 12.5, color: "var(--ink-soft)", margin: "10px 0 0" }}>Gratis, sin tarjeta. Solo con tu mail. <button type="button" className="rm-btn-inline" onClick={() => openSignup(motivo)}>Ya tengo cuenta</button></p>
+      </div>
+    </div>
+  );
+}
+function CoachLock({ motivo }) {
+  return (
+    <div className="rm-sp-section">
+      <div className="rm-missing" style={{ textAlign: "center" }}>
+        🔒 <b>Los contactos de coaches se ven con tu cuenta gratuita.</b>{" "}
+        <button type="button" className="rm-btn-inline" onClick={() => openSignup(motivo || "contactos")}>Crear cuenta →</button>
+      </div>
     </div>
   );
 }
@@ -11646,7 +11702,7 @@ function AppInner() {
           </div>
         </div>
       )}
-      {sessionReady && !session && !saveBannerHidden && profile && profile.name && ["landing", "results", "mylist", "plan", "camino", "history", "outreach", "profile"].includes(stage) && (
+      {sessionReady && !session && !saveBannerHidden && profile && profile.name && ["landing", "results", "camino", "profile"].includes(stage) && (
         <div className="rm-wrap" style={{ paddingTop: 16 }}>
           <div className="rm-alert">
             <b>Tu progreso está guardado solo en este navegador.</b> Si cambiás de celular o borrás los datos, lo perdés. Creá tu cuenta gratis (con tu mail, sin tarjeta) y lo ves igual desde cualquier dispositivo.
@@ -11679,21 +11735,21 @@ function AppInner() {
       {stage === "camino" && <CaminoPage profile={profile} setStage={setStage} />}
       {stage === "glosario" && <GlossaryPage setStage={setStage} />}
       {stage === "familia" && <FamilyPage profile={profile} setStage={setStage} />}
-      {stage === "chequeo" && <QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} />}
+      {stage === "chequeo" && <AccountGate motivo="chequeo" title="Tu chequeo trimestral, con tu cuenta" text="Cada tres meses revisás tu avance y actualizás tus números para que tus mails usen datos al día." bullets={["Seguimiento de tu progreso trimestre a trimestre","Mails que se actualizan con tus últimos resultados","Todo guardado en tu cuenta"]}><QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /></AccountGate>}
       {stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
       {stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
-      {stage === "outreach" && <MailPage profile={profile} setStage={setStage} initialPick={outreachPick} />}
-      {stage === "mylist" && <MyListPage setStage={setStage} onOpenSchool={openSchool} />}
+      {stage === "outreach" && <AccountGate motivo="mails" title="Tus mails a coaches, con tu cuenta" text="Acá se generan los mails personalizados con datos reales de cada programa y se arma tu historial." bullets={["Mails en inglés y español con el gancho justo para cada coach","Contactos de coaches de cada universidad","Todo guardado y sincronizado entre tu compu y tu celular"]}><MailPage profile={profile} setStage={setStage} initialPick={outreachPick} /></AccountGate>}
+      {stage === "mylist" && <AccountGate motivo="lista" title="Tu lista de universidades, guardada en tu cuenta" text="Armá tu lista corta, compará y seguí el estado de cada postulación." bullets={["Tu lista no se pierde si cambiás de dispositivo","Tablero de seguimiento de cada coach","Recordatorio semanal de qué hacer"]}><MyListPage setStage={setStage} onOpenSchool={openSchool} /></AccountGate>}
       {stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
       {stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
-      {stage === "needs" && <RecruitingNeedsPage />}
+      {stage === "needs" && <AccountGate motivo="needs" title="Recruiting Needs, con tu cuenta" text="Qué posiciones buscan los coaches y para qué temporada, con sus contactos." bullets={["Búsquedas publicadas por programa","Contacto directo del coach","Filtros por deporte, división y posición"]}><RecruitingNeedsPage /></AccountGate>}
       {stage === "eligibility" && <EligibilityPage />}
       {stage === "video" && <VideoGuidePage />}
       {stage === "money" && <MoneyGuidePage />}
-      {stage === "plan" && <PlanPage profile={profile} setStage={setStage} />}
+      {stage === "plan" && <AccountGate motivo="plan" title="Tu plan de hoy, con tu cuenta" text="Cada día te decimos qué paso sigue en tu camino hacia la beca, según tu año y tu avance." bullets={["Tareas diarias y semanales para tu perfil","Racha y seguimiento de lo que hiciste","Recordatorio por mail para que no se te pase"]}><PlanPage profile={profile} setStage={setStage} /></AccountGate>}
       {stage === "baja" && <BajaPage setStage={setStage} />}
-      {stage === "calendar" && <CalendarPage />}
-      {stage === "history" && <OutreachHistoryPage profile={profile} setStage={setStage} />}
+      {stage === "calendar" && <AccountGate motivo="calendario" title="Tu calendario de recruiting, con tu cuenta" text="Fechas y plazos clave para tu año de ingreso, organizados para vos." bullets={["Períodos de contacto permitidos y fechas límite","Tus propios recordatorios","Sincronizado en todos tus dispositivos"]}><CalendarPage /></AccountGate>}
+      {stage === "history" && <AccountGate motivo="envios" title="Tus envíos, guardados en tu cuenta" text="Registrá a qué coaches les escribiste, cuándo, con qué mail y si respondieron." bullets={["Historial y tablero por etapa","Alertas de a quién hacerle seguimiento","Disponible desde cualquier dispositivo"]}><OutreachHistoryPage profile={profile} setStage={setStage} /></AccountGate>}
       {stage === "exams" && <ExamsPage setStage={setStage} />}
       {stage === "gpa" && <GpaCalculatorPage />}
       {stage === "careers" && <CareerFinderPage profile={profile} onOpenSchool={openSchool} />}
