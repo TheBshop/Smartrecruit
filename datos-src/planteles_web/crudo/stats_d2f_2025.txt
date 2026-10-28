@@ -2813,3 +2813,122 @@ S|Tulafono, Shia|7|0|140|0|0|0|0|0
 S|Wynn, Olivia|14|7|722|0|0|0|0|0
 G|Baltazar, Willow|16|11|898:00|16|44
 G|Wynn, Olivia|14|7|722:00|11|36
+#catawbaathletics.com|200
+S|Ehmer, Bree|22|22|1644|20|6|46|70|38
+S|Delair, Morgan|22|22|1778|10|8|28|54|28
+S|Morin, Kylie|22|22|1477|7|12|26|50|29
+S|Matthews, Ella|22|22|1483|6|2|14|38|18
+S|Rayburn, Maria|22|22|1898|4|2|10|21|9
+S|Skinner, Ali|22|22|1837|5|0|10|23|11
+S|Ibanez Claret, Adriana|15|0|280|3|2|8|13|9
+S|Peterson, Natalie|22|0|810|2|4|8|25|12
+S|Robinson, Reese|19|18|1611|3|1|7|8|4
+S|Gibbs, Ryen|15|1|330|2|0|4|4|2
+S|Darbo, Lauren|18|16|595|1|1|3|10|3
+S|Robinson, Kate|21|20|1228|1|1|3|12|8
+S|Singh, Savannah|20|0|639|1|1|3|10|5
+S|Cook, Rylie|3|0|12|1|0|2|2|1
+S|Grono, Kennedy|12|4|460|1|0|2|4|1
+S|Vestergaard Heron, Agnethe|12|0|252|0|2|2|6|4
+S|Bleecker, Erin|1|0|9|0|1|1|0|0
+S|Serkin, Phoebe|19|3|631|0|1|1|9|3
+S|Shields, Molly|13|3|400|0|1|1|3|0
+S|Ward, Summer|11|1|178|0|1|1|4|2
+S|Alepa, Peyton|4|0|39|0|0|0|0|0
+S|Alexander, Riley|8|0|100|0|0|0|0|0
+S|Brown, Tuesday|6|0|63|0|0|0|2|1
+S|Clare, Adriana ibanez|1|0|27|0|0|0|1|1
+S|Claret, Adria ibanez|1|0|5|0|0|0|0|0
+S|Cooper, Emily|1|0|9|0|0|0|0|0
+S|Dähne, Jenni|1|1|90|0|0|0|0|0
+S|Dahne, Jenni|20|20|1785|0|0|0|0|0
+S|Hack, Lucy|22|22|1902|0|0|0|4|2
+S|Mace, Ally|5|0|34|0|0|0|1|1
+S|Randall, McKenna|1|0|9|0|0|0|0|0
+S|Rush, Avery|3|0|40|0|0|0|0|0
+S|Smith, Hailee|1|0|7|0|0|0|0|0
+S|Tindall, Cali|6|0|90|0|0|0|2|1
+S|Zitt, Lauren|3|1|113|0|0|0|0|0
+G|Dähne, Jenni|1|1|90:00|2|3
+G|Zitt, Lauren|3|1|114:21|0|3
+#aumathletics.com|200
+S|Roche, Aisling|13|12|957|2|0|4|13|6
+S|Charles, Za'keya|16|8|794|1|1|3|9|5
+S|Manning, Michaelyn|13|13|1033|1|1|3|1|1
+S|Wallace, Chloe|16|16|1293|1|1|3|9|4
+S|Galan Revuelta, Paula|11|2|375|1|0|2|3|2
+S|Goodale, Lacie|13|4|560|1|0|2|1|1
+S|Cook, Emmi|13|8|698|0|1|1|3|1
+S|Wekesa, Giulia|11|11|735|0|1|1|2|0
+S|Rankin, Aoibheann|15|13|1125|0|0|0|5|1
+S|Chakua, Jayna|13|3|387|0|0|0|1|0
+S|Gobbi, Aurora|16|15|1316|0|0|0|1|0
+S|Guzman-Ortiz, Karla|16|16|1425|0|0|0|0|0
+S|Collado Lopez, Lana|16|16|1417|0|0|0|2|1
+S|Moore, Chloe|14|3|659|0|0|0|1|1
+S|Nelson, Natalie|16|7|574|0|0|0|2|0
+S|Pigford, Courtney|16|15|1171|0|0|0|3|2
+S|Rush, Faith|1|0|15|0|0|0|0|0
+S|Sabens, Natahley|6|0|63|0|0|0|0|0
+S|Thomas, Lucy|16|14|1158|0|0|0|3|1
+G|Guzman-Ortiz, Karla|16|16|1424:27|46|115
+G|Rush, Faith|1|0|15:33|0|1
+#athletics.biola.edu|200
+S|Phelps, Briley|16|16|1392|7|5|19|39|20
+S|Nelson, Peyton|17|17|1494|6|2|14|64|27
+S|Rechin, Marije|10|10|769|2|5|9|16|8
+S|Brumfield, Riley|17|16|1413|1|1|3|6|4
+S|Grannis, Ella|14|5|572|1|0|2|3|3
+S|Kakigi, Leah|16|16|1113|1|0|2|5|3
+S|Bradshaw, Taylor|17|17|1371|0|1|1|4|1
+S|Gehring, Hayden|14|7|922|0|1|1|13|6
+S|Laws, Taylin|17|17|1443|0|1|1|0|0
+S|Palm, Mallory|5|5|393|0|1|1|4|1
+S|Salvador, Adrielle|17|17|1424|0|1|1|8|2
+S|Allen, Hailey|11|0|144|0|0|0|1|1
+S|Alverio, Jade|15|3|401|0|0|0|5|3
+S|Andrade, Mia|16|4|454|0|0|0|4|2
+S|Bousard, Addie|5|1|196|0|0|0|0|0
+S|Brennan, Laura|7|0|173|0|0|0|0|0
+S|Davari, Ali|3|0|44|0|0|0|0|0
+S|Loso, Tori|3|0|50|0|0|0|1|0
+S|Magee, Isa|8|3|201|0|0|0|0|0
+S|Martin, Ella|7|0|91|0|0|0|1|0
+S|Monty, Autum|17|17|1357|0|0|0|0|0
+S|Prisock, Jojo|11|11|649|0|0|0|0|0
+S|Sims, Cassidy|17|5|628|0|0|0|4|0
+S|Steele, Kambria|4|0|82|0|0|0|0|0
+G|Brennan, Laura|7|0|176:08|2|1
+G|Monty, Autum|17|17|1353:52|18|55
+#gotoros.com|200
+S|Leavitt, Kaylee|18|13|934|3|0|6|27|16
+S|Delgado, Alexis|18|11|1089|2|1|5|15|11
+S|Lopez Rayas, Betsy|17|7|599|2|1|5|16|9
+S|Hewison, Makenzie|16|14|1141|1|1|3|6|4
+S|Dinh, Sophia|16|6|623|0|2|2|4|2
+S|Ramirez, Cynthia|18|15|1059|1|0|2|13|7
+S|Sievers, Emilia|17|2|660|1|0|2|12|3
+S|Tone, Kaila|15|13|1154|0|2|2|5|3
+S|Turner, Coral|12|4|368|1|0|2|4|2
+S|Arkus, Emma|14|14|1109|0|1|1|3|0
+S|Ansley, Quinne|5|1|43|0|0|0|0|0
+S|Bohenko, Taya|17|2|488|0|0|0|5|4
+S|Burke, Riley|3|0|14|0|0|0|0|0
+S|Cosier, Payton|1|0|12|0|0|0|0|0
+S|Diaz, Juanita|9|1|154|0|0|0|1|0
+S|Durkin, Laurel|10|1|154|0|0|0|1|0
+S|Edwards, Alyssa|18|14|1259|0|0|0|17|7
+S|Fortuna-Ramos, Leilani|18|13|843|0|0|0|5|2
+S|Haman, Audrey|18|18|1485|0|0|0|0|0
+S|Jimenez, Lexie|8|2|228|0|0|0|2|0
+S|Nauman, Marlies|3|0|135|0|0|0|0|0
+S|Ramirez, Isabella|10|7|483|0|0|0|4|3
+S|Redshaw, Charli|6|4|189|0|0|0|1|0
+S|Sedano-Gallardo, Leilani|9|2|153|0|0|0|0|0
+S|Snow, Emmalee|17|0|428|0|0|0|4|2
+S|Speirs, Gisele|13|7|548|0|0|0|4|3
+S|Stone, Rahel|2|0|39|0|0|0|0|0
+S|Ulloa, Victoria|17|16|1413|0|0|0|6|4
+S|Villasenor, Celine|14|10|935|0|0|0|0|0
+G|Haman, Audrey|18|18|1485:00|18|68
+G|Nauman, Marlies|3|0|135:00|4|2
