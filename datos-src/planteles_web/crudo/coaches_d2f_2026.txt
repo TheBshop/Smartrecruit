@@ -380,3 +380,29 @@ C|Alex Mathias|Assistant Coach|amathias@rollins.edu
 #svsucardinals.com|200
 C|Tyler Channell|Women's Soccer Head Coach|ttchanne@svsu.edu
 C|Bridget Symborski|Assistant Coach|bsymbors@svsu.edu
+#shepherdrams.com|200
+C|Bob Meals|Head Women's Soccer Coach|rmeals@shepherd.edu
+C|Jacob Deuel|Assistant Women's Soccer Coach|jdeuel@shepherd.edu
+C|Catalina Salas|Graduate Assistant|csalas01@rams.shepherd.edu
+#shipraiders.com|200
+C|Rob Fulton|Head Coach|RWFult@ship.edu
+C|Dr. Jen Clements|Assistant Coach|JAClem@ship.edu
+C|Daniella Blitz|Graduate Assistant|db1093@ship.edu
+C|Dr. Jared Dailey|Volunteer Assistant|JMDailey@ship.edu
+#snhupenmen.com|200
+C|Elie Monteiro|Head Women's Soccer Coach|e.monteiro@snhu.edu
+C|Jamie Williams|Assistant Women's Soccer Coach|v.williams@snhu.edu
+C|Shae Roys|Assistant Women's Soccer Coach|s.roys@snhu.edu
+#www.sbubearcats.com|200
+C|Debbie Pekel|Head Women's Soccer Coach|deborah.pekel@sbuniv.edu
+C|Loris Tsiatsipy|Women's Soccer Graduate Assistant|loris.tsiatsipy@sbuniv.edu
+C|Tamerra Gantt|Volunteer Assistant Coach|
+C|Dawson Sawyer|Volunteer Assistant Coach|
+#smsumustangs.com|200
+C|Clay Glasgow|Head Women's Soccer Coach|clayson.glasgow@smsu.edu
+C|David Juarez|Assistant Soccer Coach|david.juarez@smsu.edu
+C|Becky Wilkins|Assistant Soccer Coach|becky.wilkins@my.smsu.edu
+C|Edison Peralta|Volunteer Assistant Coach|
+#trumanbulldogs.com|200
+C|Mike Cannon|Head Women's Soccer Coach|mcannon@truman.edu
+C|Ashlynn Geren|Graduate Assistant - Women's Soccer|kf88426@truman.edu
