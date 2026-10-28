@@ -1962,3 +1962,127 @@ S|Toomay, Carson|2|0|27|0|0|0|0|0
 S|Wright, Mackenzie|16|16|1005|0|0|0|5|1
 G|Loethen, Siman|16|16|1405:54|25|47
 G|Thomas, Mikayla|2|0|34:06|0|2
+#uahchargers.com|200
+S|White, Carley|17|12|1202|4|2|10|35|17
+S|Da Silva, Sabrina|17|16|1149|3|1|7|34|10
+S|Gillespie, Jayla|16|9|840|1|4|6|17|4
+S|Klingel, Katey Ann|17|16|1305|2|2|6|19|12
+S|Rojas, Adriana|17|3|795|3|0|6|19|7
+S|Tortelli, Michella|17|13|1028|3|0|6|27|10
+S|Gustafsson, Evelina|16|10|843|0|2|2|12|6
+S|Wells, Ashley|8|8|287|1|0|2|2|2
+S|Marlow, Olivia|17|5|1130|0|1|1|1|0
+S|Naman, RK|17|8|744|0|1|1|9|7
+S|Tarentino, Campbell|11|11|990|0|1|1|4|1
+S|Curtis, Chelsey|16|6|389|0|0|0|5|2
+S|Delfin, Mariela|5|3|205|0|0|0|0|0
+S|Fegley, Taylor|15|5|566|0|0|0|4|3
+S|Hull, Prescott|17|15|1341|0|0|0|4|3
+S|Knauss, Addison|16|1|253|0|0|0|1|0
+S|Leflouria, Aniah|12|8|533|0|0|0|0|0
+S|Powell, Kacey|4|2|211|0|0|0|0|0
+S|Snyder, Morgan|17|15|1181|0|0|0|4|2
+S|Stickell, Edie|12|4|258|0|0|0|0|0
+S|Szopa, CeCe|15|15|1319|0|0|0|0|0
+S|Turley, Erin|12|1|146|0|0|0|3|0
+S|Wallace, AK|1|0|12|0|0|0|0|0
+S|Wallace, Anna|3|0|45|0|0|0|2|0
+S|White, Michelle|2|1|56|0|0|0|0|0
+G|Powell, Kacey|4|2|212:05|3|15
+G|Szopa, CeCe|15|15|1317:55|14|74
+#ucmathletics.com|200
+S|Ernst, Mikayla|21|21|1482|12|6|30|84|37
+S|Joyce, Izzy|21|21|1483|5|5|15|31|20
+S|Jespersen, Coryn|21|19|1117|4|4|12|19|10
+S|O'Brien, Patsy|21|21|1255|4|4|12|28|13
+S|Patterson, Aspen|21|21|1733|2|5|9|14|6
+S|Hofbauer, Alexandra|21|0|454|2|3|7|9|6
+S|Clark, Ryann|20|19|1384|3|0|6|13|7
+S|Clement, Maryn|17|0|221|2|2|6|7|7
+S|Douglas-Trotman, Hazel|21|11|1192|2|0|4|10|6
+S|Ricker, Kate|21|20|1430|0|3|3|6|2
+S|Dibbini, Jada|21|3|645|1|0|2|2|2
+S|Hughes, Rylie|9|0|111|1|0|2|6|5
+S|Smith, Mackenzie|21|21|1785|1|0|2|3|1
+S|Weis, Acacia|8|0|176|1|0|2|1|1
+S|Borgstadt, Hannah|15|0|197|0|1|1|2|2
+S|Campbell, Sophia|12|1|262|0|1|1|1|1
+S|Knight, Gracie|21|21|1587|0|1|1|3|0
+S|Reishus, Laney|15|11|925|0|1|1|7|6
+S|Lack, Anna|9|0|107|0|0|0|2|0
+S|Lockhart, Hadley|19|0|459|0|0|0|14|8
+S|Lunders, Ava|17|0|304|0|0|0|5|3
+S|Martin, Hayleigh|2|0|16|0|0|0|0|0
+S|Martin, Katherine|5|0|109|0|0|0|0|0
+S|McFarlane, Hannah|3|0|48|0|0|0|0|0
+S|Person, Emilee|18|0|440|0|0|0|0|0
+S|Robinson, Kara|14|0|194|0|0|0|1|1
+S|Wright, Kristen|21|21|1842|0|0|0|0|0
+G|Martin, Hayleigh|2|0|17:13|0|0
+G|McFarlane, Hannah|3|0|48:12|0|1
+G|Wright, Kristen|21|21|1839:28|13|81
+#ucgoldeneagles.com|200
+S|Bland, Jamie|18|15|1107|6|5|17|23|14
+S|Debaecker, Li-Lou|14|14|817|7|1|15|31|16
+S|Crowe, Sydney|21|21|1445|6|2|14|41|20
+S|Hackney, Linsey|15|2|404|5|1|11|12|7
+S|Buehlmann, Anaé|13|7|520|4|0|8|18|9
+S|Curry, Demari|6|0|139|2|3|7|2|2
+S|Casamento, Ciara|21|20|1533|1|4|6|18|11
+S|Gregor, Anna|21|2|759|3|0|6|19|8
+S|Roberts, Zailee|18|14|934|1|4|6|7|2
+S|Mills, Mya|16|10|940|2|1|5|11|6
+S|Anderson, Zana Jo|1|0|25|2|0|4|3|2
+S|Cinco, Isabella|19|0|555|1|2|4|3|2
+S|Dís Óskarsdóttir, Emilía|21|3|577|1|1|3|11|5
+S|Pooler, Maya|21|1|762|1|1|3|1|1
+S|Bourne, Ava|15|5|538|1|0|2|7|4
+S|Freese, Allison|21|20|1420|1|0|2|9|5
+S|Bowman, Grace|11|1|218|0|1|1|1|0
+S|LoGuercio, Alyssa|21|21|1672|0|1|1|17|5
+S|Rothmann, Alison|21|21|1669|0|1|1|13|6
+S|Andrew, Allison|1|0|45|0|0|0|0|0
+S|Chaverra, Sofia|6|6|490|0|0|0|0|0
+S|Degli Esposti, Ines|17|15|1341|0|0|0|0|0
+S|Duffy, Kate|3|0|52|0|0|0|3|2
+S|Eichler, Rachel|13|10|590|0|0|0|1|0
+S|Gauze, Kaitlyn|3|2|114|0|0|0|1|0
+S|Goes, Hannah|21|21|1790|0|0|0|4|3
+S|Haven, Jayla|3|0|44|0|0|0|0|0
+S|Landers, Ava|6|0|99|0|0|0|2|2
+S|Singer, Gracie|1|0|29|0|0|0|0|0
+S|Touzeau, Axelle|4|0|70|0|0|0|2|0
+S|Zuniga arriagada, Elisa|1|0|30|0|0|0|0|0
+G|Mosquera Chaverra, Sofia|6|6|489:55|7|38
+G|Degli Esposti, Ines|17|15|1340:57|23|79
+G|Singer, Gracie|1|0|29:12|0|0
+G|Zúñiga Arriagada, Elisa|1|0|29:56|0|0
+#gomountainlions.com|200
+S|Stassi, Abby|23|21|1718|17|3|37|64|33
+S|Aguilar, Emily|23|22|1782|7|4|18|49|18
+S|Pavlich, Brooke|23|16|1295|6|4|16|43|17
+S|Levi, Taylynn|23|23|2039|3|7|13|39|15
+S|Broberg, Elise|21|20|1813|1|8|10|23|11
+S|Johnson, Luka|23|10|1234|4|2|10|59|21
+S|Tadlock, Casey|23|23|1951|4|0|8|31|14
+S|Carlson, Mikaela|21|13|1109|2|2|6|19|8
+S|Garcia, Noelia|8|0|179|2|0|4|6|4
+S|Groshong, Malia|23|23|2058|1|1|3|11|4
+S|Dare, Regan|5|2|203|0|2|2|3|1
+S|Morris, Mattea|23|23|1968|1|0|2|15|5
+S|Burkey, Reagan|12|4|324|0|1|1|2|0
+S|Rockwell, Jessica|13|13|1011|0|1|1|4|2
+S|Sutherland, Alyssa|11|0|175|0|1|1|0|0
+S|Weimer, Pierson|11|1|253|0|1|1|8|6
+S|Brennan, Grace|9|0|112|0|0|0|4|2
+S|Brown, Gracie|3|0|32|0|0|0|0|0
+S|Buehler, Addison|20|11|1242|0|0|0|2|0
+S|Collins, Katie|7|0|122|0|0|0|2|1
+S|Gimbel, Brooke|4|0|40|0|0|0|0|0
+S|Griffin, Sarah|2|0|30|0|0|0|1|0
+S|Mills, Sally|4|0|57|0|0|0|0|0
+S|Mirshafiei, Nylah|23|23|2120|0|0|0|0|0
+S|Rees, Dylan|2|0|8|0|0|0|0|0
+S|Valdimarsdottir, Viktoria|19|5|520|0|0|0|4|0
+G|Mirshafiei, Nylah|23|23|2117:48|19|62
+G|Rees, Dylan|2|0|09:14|0|0
