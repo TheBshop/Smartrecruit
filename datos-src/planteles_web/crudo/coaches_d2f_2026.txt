@@ -578,3 +578,11 @@ C|Al Meneses|Women's Soccer Head Coach|ameneses@swu.edu
 C|Oker Hernandez|Assistant Coach|ohernandez@swu.edu
 C|Adrian Guzman|Assistant Coach / Goalkeeper Coach|aguzman@swu.edu
 C|Karen Meneses|Volunteer Assistant Coach|
+#gswcanes.com|200
+C|Jacob Crawford|Head Coach|jacob.crawford@gsw.edu
+C|Khyyn Fernander|Assistant Coach|khyyn.fernander@gsw.edu
+C|Oneil Lewis|Assistant Coach|
+#lmurailsplitters.com|200
+C|Tasha Flynn|Head Coach|tasha.flynn@lmunet.edu
+C|Megan Snider|Assistant Coach|megan.snider@lmunet.edu
+C|Brooke Foster|Graduate Assistant|brooke.foster02@lmunet.edu

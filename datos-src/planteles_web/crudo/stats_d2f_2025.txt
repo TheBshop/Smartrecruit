@@ -3668,3 +3668,58 @@ S|Weidner, Hannah|1|0|45|0|0|0|0|0
 G|Magnin, Amanda|3|2|102:55|1|4
 G|O'Neill, Katelyn|16|15|1382:05|29|75
 G|Weidner, Hannah|1|0|45:00|2|3
+#gswcanes.com|200
+S|Bustamante, Lucia|13|6|565|5|0|10|20|13
+S|Moody, Ella|15|7|736|4|2|10|19|11
+S|Bagnost, Siaomee|13|12|880|2|3|7|8|5
+S|Brunner, Cassidy|13|7|723|3|1|7|25|14
+S|Gundin, Jordin|15|7|794|2|1|5|16|6
+S|Thomas, Delaney|15|14|915|2|1|5|28|13
+S|Dunlap, Maci|14|13|1132|2|0|4|8|6
+S|Hosmer, Lily|10|2|242|1|1|3|14|4
+S|Ramos, Jocelyn|15|8|732|1|1|3|11|3
+S|Weslowski, Sydney|15|10|849|1|1|3|15|5
+S|Frost, Lita|15|10|1028|1|0|2|9|6
+S|Wilson, Kira|15|13|1070|0|2|2|8|1
+S|Clark, Toni|14|14|1127|0|1|1|3|1
+S|Becker, Mackenzie|3|0|81|0|0|0|1|0
+S|Beddow, Alana|14|13|1125|0|0|0|0|0
+S|Carrington, Ellie|12|6|521|0|0|0|4|1
+S|Coe, Kenzie|1|0|24|0|0|0|0|0
+S|Morey, Bella|4|2|225|0|0|0|0|0
+S|Pearson, Riley|9|5|403|0|0|0|1|1
+S|Sissoko, Tati|5|1|140|0|0|0|1|1
+S|Stokes, Jackie|3|1|121|0|0|0|1|0
+S|Wheatley, Anna|14|11|852|0|0|0|12|4
+S|Wilkerson, Aubrey|5|0|183|0|0|0|1|0
+S|Winget, Karsen|4|1|138|0|0|0|2|1
+S|Woods, Leah|5|2|254|0|0|0|0|0
+G|Beddow, Alana|14|13|1125:00|16|52
+G|Morey, Bella|4|2|225:00|1|2
+#lmurailsplitters.com|200
+S|Snyder , Ellie|18|17||4|5|13|32|20
+S|Branam, Paige|8|8||5|2|12|18|7
+S|Filsner , Viktoria|18|18||2|7|11|46|25
+S|Brown, Jade|18|18||3|2|8|22|10
+S|van der Zalm, Donna|18|18||3|0|6|21|9
+S|Wilds, Edie|18|18||3|0|6|37|16
+S|Prosser, Camden|13|2||2|1|5|6|4
+S|Stafford , Hannah|13|6||1|3|5|11|5
+S|Miller, Riley|18|3||2|0|4|6|2
+S|Palmblad, Astrid|14|5||2|0|4|10|7
+S|Windszus Pessanha, Maiara|16|1||2|0|4|9|4
+S|Zimmers, Kenzie|11|2||2|0|4|5|3
+S|Berglund, Sophia|18|17||1|0|2|15|5
+S|Barnes, Gabby|14|2||0|1|1|2|2
+S|Eunice, Mary|17|16||0|1|1|0|0
+S|Garrett, Ava|15|0||0|1|1|5|4
+S|Patel, Maya|9|2||0|1|1|4|0
+S|Schiphof, Lieve|14|10||0|1|1|3|1
+S|Baye, Kami|3|0||0|0|0|0|0
+S|Beaston, Katerina|2|0||0|0|0|0|0
+S|Cooke, Emma|18|18||0|0|0|0|0
+S|Marasco, Maya|10|1||0|0|0|5|3
+S|Wellington , Raven|17|15||0|0|0|9|1
+S|Whalen, Rylee|2|0||0|0|0|1|1
+S|Wilds, Lily|7|1||0|0|0|0|0
+G|Cooke, Emma|18|18|1620:00|29|73
