@@ -783,3 +783,66 @@ P|Gabriella Bortolussi|F|So.|Mississauga, Canada
 P|Sofia Valdivia|F|So.|Chihuahua, Mexico
 P|Giovanna Mingo|D|So.|Asuncion, Paraguay
 P|Kelly Nunes|M|Sr.|Kingston, Jamaica
+#www.gbcathletics.com|200|soloextranjeras|24
+P|Maria Empadinhas|GK|So.|Cascais, Portugal
+P|Malaika Nunziata|GK|So.|Cape Town, South Africa
+P|Irene Freire Trillo|M|Jr.|Madrid, Spain
+P|Ella Badra|M|Jr.|Caracas, Venezuela
+P|Maria Fonseca|F|So.|Cascais, Portugal
+P|Tamara Trumic|F|Sr.|Spiegelberg, Germany
+P|Tess Pearce|M|Jr.|Manchester, England
+P|Sofia Bolado Vega|D|Sr.|Cantabria, Spain
+P|Stine Solvik|D|So.|Kristiansand, Norway
+#spufalcons.com|200|soloextranjeras|24
+#saintleolions.com|200|32
+P|Addison Pitts|GK|So.|Jacksonville, Fla.
+P|Emma Guidotti|GK|Jr.|Manalapan, N.J.
+P|Ella Van Doren|M|Sr.|New Port Richey, Fla.
+P|Roxie Fowler|D|Sr.|London, England
+P|Sara Hansen|M|Jr.|Lommendalen, Norway
+P|Evie Paget|D|So.|Cheshire, England
+P|Katherine Neves|F|Sr.|Rio de Janeiro, Brazil
+P|Chloe Froese|F|So.|Winnipeg, Canada
+P|Payton Todd|F|Gr.|Forest Hill, Md.
+P|Ilaria Miclet|F|So.|Primiero, Italy
+P|Marina Fernandez de Paz|F|So.|La Fresneda, Spain
+P|Samara Johnson|D/M|Jr.|Columbus, N.J.
+P|Aniah Joyce|F|Fr.|Uxbridge, Canada
+P|Rhyanne Pascoe|D|Jr.|Nottingham, England
+P|Jenny Bors|M|Fr.|Saint Simons Island, Ga.
+P|Kennedy Hartzell|D|So.|Hayden, Idaho
+P|Nola Johnson|M|So.|Sanford, Fla.
+P|Annika Schuller|M|So.|Radolfzell am Bodensee, Germany
+P|Marisa Montana|D|So.|North Reading, Mass.
+P|Gracie Holmes|D|Fr.|Gloucester, England
+P|Bailey Muzzatti|F|So.|Okemos, Mich.
+P|Claudia Gracia|M|So.|California, Md.
+P|Candice Deschamps|M|Jr.|Toulouse, France
+P|Sophia Stockbridge||Rs.|Vineland, N.J.
+#shawbears.com|200|33
+P|Elizabella Robinson|GK|So.|Fayetteville, NC
+P|Ava Benton|D|Jr.|Jackson, MS
+P|Nala Baker|M|Fr.|Los Angeles, CA
+P|Ashley Paredes|M|Sr.|Quito, Ecuador
+P|Julissa Martinez|D|So.|Hurst, TX
+P|Rachel Fry|M|Fr.|Sydney, Australia
+P|Dami Onafowokan|M|Fr.|Wolverhampton, England
+P|Camila Prieto|F|Sr.|El Paso, TX
+P|Anijah Formanek|D|Fr.|Old Bridge, NJ
+P|Kardyn Kraipovich|D|Fr.|Hanover, PA
+P|DeAndra Thomas|D|Fr.|Birmingham, AL
+P|Kaysi Araya-Jimenez|M|Fr.|Lincolnton, NC
+P|Sophie Ranyard|D|Fr.|Lennox Head, Australia
+P|Kaiah Rosado|M|Fr.|Glendora, CA
+P|Eva Baana|F|Jr.|Avry-Courcouronnes, France
+P|Jasmine Rennie|F|Fr.|Bath, England
+P|Alexia Almeida|D|Fr.|Homestead, FL
+P|Annika Huder|D|Sr.|Frankfurt, Germany
+P|Alaina Smith|D|Fr.|Cinnaminson, NJ
+P|Zhana Gnewuch|F|Fr.|Madison, WI
+P|Alisson Ortega|D|Fr.|Birmingham, AL
+P|Mikayla Brown|F|So.|Atlanta, GA
+P|Olivia Ankrom|GK|Gr.|Worthington, OH
+P|Genesis Beltran|M|Fr.|Birmingham, AL
+P|Alexis Stephens|GK|Fr.|Mebane, NC
+#goeasternathletics.com|200|soloextranjeras|24
