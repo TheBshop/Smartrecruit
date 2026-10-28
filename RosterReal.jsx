@@ -9437,7 +9437,7 @@ function MoreRow({ r, profile, onOpenSchool, isFav, toggleFav }) {
   );
 }
 
-const FREE_RESULTS = 3; // universidades que se ven sin cuenta
+const FREE_RESULTS = 5; // universidades que se ven sin cuenta
 function Results({ profile, onBack, onOpenSchool }) {
   const tiered = useMemo(() => buildTieredResults(profile), [profile]);
   const { top, more, total } = tiered;
