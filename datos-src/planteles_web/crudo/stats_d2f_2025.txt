@@ -2563,3 +2563,130 @@ S|Rold, Lakin|8|6|592|0|0|0|3|0
 S|Wexler, Ruby|4|0|88|0|0|0|1|1
 G|Everley, Lili|24|22|2037:23|16|69
 G|Harrington, Alli|6|2|142:37|4|3
+#wscwildcats.com|200
+S|Mancuso, Morgan|18|17|1046|6|1|13|39|16
+S|Allen, Reagan|18|18|1082|4|4|12|29|8
+S|Pemberton, Paige|18|17|1041|4|2|10|34|13
+S|Davis, Rachel|18|3|632|3|2|8|13|7
+S|Evers, Abby|15|1|309|3|0|6|6|3
+S|Sorensen, Alaina|18|18|1233|3|0|6|16|9
+S|Thompsen, Briella|17|0|403|2|1|5|15|7
+S|Ferin, Alyssa|14|5|465|1|1|3|4|3
+S|James, Nevaeh|18|18|1219|1|1|3|7|4
+S|Donaldson, Tyler|18|16|1178|0|2|2|4|3
+S|Herall, Kaylee|18|12|886|0|2|2|14|4
+S|Lewis, Jordan|4|0|60|1|0|2|1|1
+S|Riggins, Molly|16|15|964|1|0|2|10|9
+S|Walker, Addison|18|17|1410|1|0|2|6|3
+S|Woods, Taylor|17|0|471|0|2|2|8|4
+S|Gonzalez, Mia|18|7|818|0|1|1|5|3
+S|Berry, Tatum|12|2|328|0|0|0|2|0
+S|Cook, Javonne|7|0|125|0|0|0|0|0
+S|Cox, Kate|4|0|61|0|0|0|0|0
+S|Hofstetter, Alexa|18|16|1325|0|0|0|0|0
+S|Lisby, Nyah|7|0|154|0|0|0|0|0
+S|Marlow, Christina|16|9|760|0|0|0|2|0
+S|Miller, Katelyn|9|2|295|0|0|0|0|0
+S|Pritchard, Sarah|9|0|165|0|0|0|0|0
+S|Schmeling, Madilyn|12|0|306|0|0|0|3|0
+S|Schmidt, Piper|9|0|205|0|0|0|1|0
+S|Skoruppa, Eryn|10|0|140|0|0|0|0|0
+S|Vodnansky, Addison|17|5|738|0|0|0|3|1
+G|Hofstetter, Alexa|18|16|1323:43|29|80
+G|Miller, Katelyn|9|2|296:17|5|19
+#wvsuyellowjackets.com|200
+S|Karam, Leila|21|18|1242|11|2|24|52|28
+S|París Fílter, Sara|20|17|1210|8|4|20|53|28
+S|Okoro, Rachel|10|2|321|9|1|19|20|13
+S|Pouedras, Laura|21|19|1570|6|6|18|48|21
+S|Lea evin, Ece|19|6|765|5|6|16|33|17
+S|Hernandez Diaz, Maria Alejandra|20|16|1088|4|4|12|30|11
+S|Tobaru, Aika|21|17|1525|4|3|11|23|15
+S|Rennie, Ellise|17|3|620|3|4|10|19|8
+S|Freire omonigho, Sharon|19|4|690|1|4|6|13|6
+S|Nuñez Perreira, Hannah Aneley|21|19|1639|1|3|5|8|5
+S|Nchana choni, Maika|17|2|548|1|2|4|9|7
+S|Bru garcia, Alexia|20|19|1526|0|3|3|14|5
+S|Amil Ruiz, Avril|21|18|1494|1|0|2|16|7
+S|Fortin, Madison rose|21|20|1758|1|0|2|12|3
+S|Higashi, Nagi|20|18|1534|0|2|2|8|6
+S|Nunez, Itzel|14|7|795|1|0|2|3|1
+S|Bastock, Poppy|20|20|1783|0|0|0|0|0
+S|Castellanos, Renata|2|1|80|0|0|0|0|0
+S|Davies, Billie Jean|6|3|309|0|0|0|1|1
+S|Mayoral montero, Marta|2|1|98|0|0|0|0|0
+S|Signorini, Gabriela|6|1|116|0|0|0|1|0
+S|White, Reygan|1|0|27|0|0|0|0|0
+G|Bastock, Poppy|20|20|1782:27|27|69
+G|Castellanos, Renata|2|1|80:04|0|0
+G|White, Reygan|1|0|10:17|0|0
+#gomountaineers.com|200
+S|Murakami, Natsuki|18|16|1303|4|0|8|28|11
+S|Connolly, Sarah|19|16|889|1|3|5|28|13
+S|Welsh, Jordan|19|16|962|2|1|5|26|12
+S|Kindt, Lauren|19|4|844|0|4|4|19|10
+S|Mazurek, Caitlin|19|8|756|2|0|4|24|11
+S|Thomas, Cianna|19|18|1382|2|0|4|39|17
+S|Morkunas, Karly|19|19|1545|1|0|2|9|5
+S|Ralls, Jenna|14|11|780|1|0|2|7|5
+S|Reser, Madilyn|15|3|446|1|0|2|6|3
+S|Roberts, Tawny|19|14|879|0|2|2|7|3
+S|Kubena, Ellie|19|19|1571|0|1|1|9|3
+S|Minikel-Lacocque, Adah|15|3|552|0|1|1|14|8
+S|Richardson, Riley|13|0|328|0|1|1|0|0
+S|Anna, Teagan|1|1|90|0|0|0|0|0
+S|Bottoms, Taylor|1|0|13|0|0|0|0|0
+S|Breaux, Izzy|6|0|119|0|0|0|2|1
+S|Cohen, Sequoia|15|4|499|0|0|0|3|0
+S|Collins, Hadley|19|11|993|0|0|0|9|3
+S|Dolan, Elliott|10|0|198|0|0|0|0|0
+S|Fitzpatrick, Ashlyn|14|12|1191|0|0|0|0|0
+S|Fricke, Shelton|6|0|54|0|0|0|1|1
+S|Hibbs, Kira|1|0|9|0|0|0|0|0
+S|Imada, Anna|1|0|14|0|0|0|0|0
+S|Klutz, Abby|1|1|55|0|0|0|1|1
+S|Lowe, Ava|10|2|330|0|0|0|0|0
+S|Lozano, Jadyn|2|1|50|0|0|0|0|0
+S|Lyman, Gracie|3|0|43|0|0|0|1|1
+S|Orosco, Aubree|5|5|379|0|0|0|0|0
+S|Ramdhanny, Malia|19|19|1576|0|0|0|5|1
+S|Schindler, Reilly|11|1|229|0|0|0|3|2
+S|Smith, Kylee|8|1|95|0|0|0|1|0
+S|Trinidad-Gonzalez, Desiree|2|1|21|0|0|0|0|0
+S|Velasco, Isabel|5|0|28|0|0|0|0|0
+S|Wolfe, Brenna|18|2|463|0|0|0|8|3
+G|Anna, Teagan|1|1|90:00|1|1
+G|Fitzpatrick, Ashlyn|14|12|1191:37|29|76
+G|Lozano, Jadyn|2|1|49:42|1|3
+G|Orosco, Aubree|5|5|378:41|12|21
+#wouwolves.com|200
+S|Boger, Olivia|21|14|1237|7|2|16|40|20
+S|Taylor, Kaitlin|21|21|1603|6|2|14|63|28
+S|Beavers, Ally|21|21|1496|3|6|12|28|13
+S|Garcia, Cici|21|20|1669|4|1|9|41|23
+S|Slayter, Alyna|21|21|1629|2|3|7|19|8
+S|Courtenay, Maya|19|1|412|1|2|4|13|3
+S|DiBenedetto, Kyra|17|4|458|1|1|3|10|3
+S|Foster, Jada|20|20|1767|1|1|3|3|1
+S|Rose, Lauren|21|21|1678|1|1|3|10|3
+S|Borje-Peeples, Kaia|19|0|380|1|0|2|5|3
+S|Mickel, Lillian|14|7|721|1|0|2|3|3
+S|Tercek, Katya|14|1|246|1|0|2|9|6
+S|Heugly, Leah|19|19|1576|0|1|1|2|2
+S|Jones, Kylie|16|8|732|0|1|1|3|0
+S|Taylor, Savannah|3|1|75|0|1|1|3|0
+S|Crooks, Scottie|1|0|11|0|0|0|0|0
+S|Doyle, Abby|2|0|29|0|0|0|0|0
+S|Fish, Natalie|3|0|24|0|0|0|0|0
+S|Fung, Maya|2|0|23|0|0|0|1|0
+S|Huynh, Aliyah|5|0|59|0|0|0|1|0
+S|Lewis, Meadow|6|0|80|0|0|0|0|0
+S|Lopez, Bella|20|20|1704|0|0|0|0|0
+S|Luff, Lexi|17|2|476|0|0|0|6|3
+S|Panui, Aubree|19|8|707|0|0|0|4|1
+S|Salanoa, Xeyana|3|1|186|0|0|0|0|0
+S|Seibert, Kate|11|1|302|0|0|0|6|5
+S|Smith, Emma|21|20|1389|0|0|0|8|3
+S|Townsend, Grace|3|0|36|0|0|0|0|0
+G|Lopez, Bella|20|20|1702:56|11|65
+G|Salanoa, Xeyana|3|1|187:04|7|3
