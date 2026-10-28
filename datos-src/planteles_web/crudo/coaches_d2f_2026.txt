@@ -211,3 +211,21 @@ C|Sue Negrete|Assistant Coach|susan.negrete@fresno.edu
 C|Carlos Herrada|Assistant Coach|carlos.herrada@fresno.edu
 C|Erin Obwald|Assistant Coach|erin.obwald@fresno.edu
 C|Jesslyn Frampton|Assistant Coach|
+#fhsuathletics.com|200
+C|Alex Hagan|Head Women's Soccer Coach|alhagan@fhsu.edu
+C|Megan Wiman|Assistant Women's Soccer Coach|
+#gcsubobcats.com|200
+C|Jack Marchant|Head Coach|jack.marchant@gcsu.edu
+C|Garrett Johnson|Assistant Coach|
+C|Adriana Duque|Graduate Assistant|
+C|Amanda Dewey|Volunteer Assistant|
+#hardingsports.com|200
+C|Audrey Adkison|Head Women's Soccer Coach|aadkison1@harding.edu
+C|Alex Moon|Women's Soccer Graduate Assistant|
+#hpusharks.com|200
+C|Connor Artigue|Head Women's Soccer Coach|cartigue@hpu.edu
+C|Sarah Inafuku|Assistant Coach & Director of Operations|sinafuku@hpu.edu
+C|Noelani Bio|Assistant Coach|
+#iupathletics.com|200
+C|Kernell Borneo|Head Coach|kborneo@iup.edu
+C|Elizabeth Lathrop|Graduate Assistant|eml002@iup.edu
