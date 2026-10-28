@@ -5905,8 +5905,33 @@ function buildYearChecklist(profile) {
     ] },
     { from: 5, title: `Firma, visa y viaje${entry ? ` (agosto de ${entry})` : ""}`, items: [
       { id: "y-sign", label: "Firmaste el acuerdo de beca por escrito" },
-      { id: "y-i20", label: "Recibiste el formulario I-20 de la universidad y pagaste el SEVIS" },
-      { id: "y-visa", label: "Sacaste turno y tuviste la entrevista de visa F-1" },
+      { id: "y-i20", label: "Recibiste el formulario I-20 y verificaste que tu nombre y fecha de nacimiento coincidan con el pasaporte", how: [
+        "El I-20 lo emite el oficial designado (DSO) de la universidad, no un reclutador ni un agente. Lo recibís después de que te admiten.",
+        "Si te admiten en varias universidades, cada una te manda su I-20: elegís el de una sola antes de pedir la visa.",
+        "Revisá datos personales, fechas de inicio y fin del programa, y los gastos y recursos económicos que declara. Si hay un error, escribile al DSO que lo mandó.",
+        "Firmalo (si te llegó digital, imprimilo) y guardalo: lo vas a necesitar en la entrevista y al entrar a EE.UU.",
+      ], link: "https://studyinthestates.dhs.gov/2025/07/sevp-form-series-understanding-the-form-i-20" },
+      { id: "y-sevis", label: "Pagaste la tarifa SEVIS I-901 y guardaste el recibo", how: [
+        "Se paga online en fmjfee.com, después de recibir el I-20 y antes de pedir la visa. Sin el recibo no podés solicitarla.",
+        "Confirmá el monto vigente en ese sitio antes de pagar.",
+      ], link: "https://www.fmjfee.com" },
+      { id: "y-visa", label: "Sacaste turno y tuviste la entrevista de visa F-1", how: [
+        "Seguí las instrucciones del sitio de la Embajada o Consulado de EE.UU. donde vayas a aplicar: los pasos y su orden cambian según el lugar.",
+        "La entrevista es obligatoria entre los 14 y los 79 años, y suelen tomar tus huellas digitales ahí.",
+        "Podés pedir la visa hasta 365 días antes del inicio del programa.",
+        "Una visa de turista (B) o la exención de visa no sirven para estudiar con créditos: necesitás la F-1.",
+      ], link: "https://travel.state.gov/content/travel/en/us-visas/study/student-visa.html" },
+      { id: "y-docs", label: "Preparaste los documentos para viajar", how: [
+        "Pasaporte, I-20 firmado y recibo del SEVIS, y lo que te pida la universidad.",
+        "Llevá los originales en el equipaje de mano, no en la valija despachada, y hacé al menos dos juegos de copias.",
+      ] },
+      { id: "y-arrival", label: "Planificaste tu llegada: fecha de entrada y presentación en la universidad", how: [
+        "Con visa F-1 no podés entrar a EE.UU. más de 30 días antes de la fecha de inicio que figura en el I-20.",
+        "Si tu deporte tiene pretemporada antes de esa fecha, hablalo con tu coach y con el DSO para que el I-20 refleje la fecha correcta.",
+        "Que tengas visa no garantiza el ingreso: lo decide el oficial de aduana al llegar. Presentate en tu universidad antes del inicio y avisá si te vas a demorar.",
+        "Si más adelante viajás durante la carrera, pedile al DSO la firma de viaje con 2 a 4 semanas de anticipación. Al terminar, tenés 60 días para irte o cambiar de estatus.",
+        "Esto es información general de fuentes oficiales, no asesoramiento migratorio: tu DSO es quien te dice qué corresponde en tu caso.",
+      ] },
     ] },
   ];
 }
@@ -5988,6 +6013,12 @@ function YearChecklist({ profile, setStage }) {
                     <input type="checkbox" checked={isDoneItem} disabled={auto} onChange={() => { if (!auto) toggleManual(item.id); }} aria-label={item.label} />
                     <div style={{ flex: 1 }}>
                       <div className="rm-elig-item-title">{item.label}{auto && <span style={{ fontSize: 11, color: "var(--ink-soft)", marginLeft: 6 }}>(se marca solo)</span>}</div>
+                      {item.how && (
+                        <details onClick={(e) => e.stopPropagation()} style={{ marginTop: 4 }}>
+                          <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--ink-soft)" }}>Cómo se hace</summary>
+                          <ul style={{ margin: "6px 0 0", paddingLeft: 18, fontSize: 13, lineHeight: 1.5 }}>{item.how.map((t, i) => <li key={i}>{t}</li>)}</ul>
+                        </details>
+                      )}
                       {item.goto && <button className="rm-btn-inline" onClick={(e) => { e.stopPropagation(); setStage(item.goto); }}>Ir →</button>}
                       {item.link && <a className="rm-btn-inline" href={item.link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Abrir sitio oficial →</a>}
                     </div>
