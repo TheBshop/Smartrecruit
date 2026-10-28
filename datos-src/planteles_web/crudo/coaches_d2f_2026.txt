@@ -474,3 +474,55 @@ C|Stefani Webb|Women's Soccer Head Coach|swebb@uttyler.edu
 C|Connor Woulahan|Assistant Coach|cwoulahan@uttyler.edu
 C|Robert Serra|Goalkeeper Coach|rserra@uttyler.edu
 C|Luan Rangel|Graduate Assistant|
+#parksiderangers.com|200
+C|Brittany Nikolic|Head Women's Soccer Coach|nikolic@uwp.edu
+C|Albert Martin|Women's Soccer Assistant Coach|martinm3@uwp.edu
+C|Lesley Kiesling|Women's Soccer Volunteer Assistant Coach|
+#uiupeacocks.com|200
+C|Patrick Ritter|Head Women's Soccer Coach|ritterp@uiu.edu
+C|Bradi Grabanski|Women's Soccer Assistant Coach|grabanskib34@uiu.edu
+#ursulinearrows.com|200
+C|Jason Kubbins|Head Soccer Coach|jkubbins@gannon.edu
+C|Sheridyn Woofter|Assistant Soccer Coach|sheridyn.woofter@gannon.edu
+#vstateblazers.com|200
+C|Stephen Andrew|Head Women's Soccer Coach|sandrew@valdosta.edu
+C|Findlay Cook|Graduate Assistant|fkcook@valdosta.edu
+C|Kirstie Jackson|Graduate Assistant|kirjackson@valdosta.edu
+#vanguardlions.com|200
+C|Emily Reynolds|Head Coach|wsoccer@vanguard.edu
+C|Noanne Rosse|Assistant Coach|wsoccer@vanguard.edu
+C|Alex Figueroa|Assistant Coach|
+#wusports.com|200
+C|Davy Phillips||davy.phillips@washburn.edu
+C|Jessica Hillebert||jessica.hillebert@washburn.edu
+C|Walker Farrar||walker.farrar@washburn.edu
+C|Kolten Schulte||kolten.schulte@washburn.edu
+#wscwildcats.com|200
+C|Emily Hester|Head Women's Soccer Coach|emheste1@wsc.edu
+C|Chris McNaughton|Assistant Women's Soccer Coach|chmcnau1@wsc.edu
+C|Parker Trivette|Graduate Assistant Women's Soccer Coach|patriv01@wsc.edu
+#wvsuyellowjackets.com|200
+C|Jacob Edwards|Head Coach, Women's Soccer|jacob.edwards@wvstateu.edu
+C|Delaney Day|Graduate Assistant, Women's Soccer|dday5@wvstateu.edu
+#gomountaineers.com|200
+C|Joshua Alcala|Head Women's Soccer Coach|soccer@western.edu
+C|Ernesto Hidalgo|Assistant Women's Soccer Coach|ehidalgo@western.edu
+C|Cianna Thomas|Women's Soccer Graduate Assistant Coach|
+C|Aubree Orosco|Women's Soccer Graduate Assistant Coach|
+#wouwolves.com|200
+C|Nate Ulness|Head Coach|ulnessn@wou.edu
+C|Mady Graham|Assistant Coach|grahamm@wou.edu
+#wwuvikings.com|200
+C|Travis Connell|Head Coach|travis.connell@wwu.edu
+C|Jamie Arthurs|Assistant Coach|jamie.arthurs@wwu.edu
+C|Johann Lahud-Zahner|Assistant Coach|
+C|Konner Vanrijswijck|Assistant Coach|
+C|Alex Nelson|Assistant Coach|
+#jewellcardinals.com|200
+C|Thomas Bledsoe|Head Women's Soccer Coach|bledsoet@william.jewell.edu
+C|Naguib Nassir|Assistant Women's Soccer Coach|nassirn@william.jewell.edu
+C|Aimee Nunez|Assistant Women's Soccer Coach|
+#wingatebulldogs.com|200
+C|Katie Mitchell|Head Women's Soccer Coach|k.mitchell@wingate.edu
+C|Michael Korman|Women's Soccer Assistant Coach & Goalkeepers Coach|m.korman@wingate.edu
+C|Lundon Danford|Women's Soccer Graduate Assistant Coach|lu.danford911@wingate.edu
