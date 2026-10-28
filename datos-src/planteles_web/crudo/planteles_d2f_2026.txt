@@ -635,3 +635,54 @@ P|Fiona Rombach|F|Fr.|Bielefeld, Germany
 P|Zoe Ans-Bitchoka|F|So.|Montreal, Canada
 P|Jordina Rovira|F|Gr.|Balaguer, Spain
 P|Charlotte De Keukelaere|D|So.|Chauve, France
+#pbasailfish.com|200|soloextranjeras|26
+P|Brogan MacIsaac|M|Sr.|Ontario, Canada
+#hiloathletics.com|200|soloextranjeras|34
+P|Melisa Ranvik|F|So.|Oslo, Norway
+P|Kaitlyn Brooks|F|Fr.|Toronto, Ontario, Canada
+#hilltoppersports.com|200|soloextranjeras|25
+P|Kaisa Vale|GK|Jr.|Vinje - Telemark, Norway
+P|Maria Eduarda Carmo de Azevedo|M|Jr.|Belo Horizonte, Brazil
+P|Ana Conejo Perez|M|Fr.|Gran Canaria, Spain
+P|Frida Lundberg|F|So.|Gavle, Sweden
+P|Isabella Guerra|M|Sr.|Quito, Ecuador
+#esuwarriors.com|200|soloextranjeras|35
+P|Taya Rodrigues|GK|Fr.|Bermuda
+P|Bella Bowen|F/M|Jr.|Peterborough, Ontario
+P|Ava Perrone|GK|Jr.|Vaughan, Ontario
+#gcsubobcats.com|200|soloextranjeras|28
+P|Kaisa Fagerström|D|So.|Espoo, Finland
+P|Jenni Järventaus|M|So.|Tampere, Finland
+#plnusealions.com|200|soloextranjeras|28
+#aumathletics.com|200|soloextranjeras|25
+P|Leslie Azouer|GK|Fr.|Stockholm, Sweden
+P|Beatrice Sales|D|Jr.|Santa Cruz de Minas, Brazil
+P|Aoibheann Rankin|M|So.|Wexford, Ireland
+P|Courtney Pigford|M|Jr.|Easington, County Durham England
+P|Chloe Wallace|D|Jr.|Evanton, Scotland
+P|Tara Knego|D|Jr.|Ljubljana, Slovenia
+P|Freya Stevenson|F|Jr.|Aberdeen, Scotland
+P|Claudia Dykes|D|Jr.|Sunshine Coast, Australia
+P|Bella Ingstrom|F|Fr.|Helsinki, Finland
+P|Izzy Morley|M|Fr.|London, England
+#cbubucs.com|200|soloextranjeras|24
+P|Lola Alonso|D|So.|Madrid, Spain
+P|Sarah Elliott|D|Fr.|Gold Coast, Australia
+P|Ellen Gaudry|D|Jr.|Melbourne, Australia
+P|Lea Kljajic|D/M|Gr.|Marchtrenk, Austria
+P|Frida Bergqvist||Fr.|Sundsvall, Sweden
+P|Lina Zagarti||Fr.|Seevetal, Germany
+P|Giulia Ticozzelli|D|Sr.|Milan, Italy
+P|Chloe May|D|Jr.|Loughborough, UK
+P|Emma Moreno||So.|Le Havre, France
+P|Julia Brandao|D|So.|Belo Horizonte, Brazil
+#fscmocs.com|200|soloextranjeras|35
+P|Georgina Spraggon|F|Jr.|Newcastle, England
+P|Isabella Payne|D/M|Jr.|Crawley, England
+#kwcpanthers.com|200|soloextranjeras|31
+P|Zella Moore|M|Fr.|Lewes, England
+P|Rayna Cummins|F|Jr.|St. James, Barbados
+#mckbearcats.com|200|soloextranjeras|33
+P|Lea Gruber|M|Fr.|Dannstadt-Schauernheim, Germany
+#michigantechhuskies.com|200|soloextranjeras|31
+P|Melissa Riley|M|So.|Metheringham, England
