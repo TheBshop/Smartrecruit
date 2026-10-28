@@ -406,3 +406,71 @@ C|Edison Peralta|Volunteer Assistant Coach|
 #trumanbulldogs.com|200
 C|Mike Cannon|Head Women's Soccer Coach|mcannon@truman.edu
 C|Ashlynn Geren|Graduate Assistant - Women's Soccer|kf88426@truman.edu
+#uahchargers.com|200
+C|James Ballamy|Head Coach|jb0111@uah.edu
+C|Sarah Ghaffoor|Assistant Coach|sarah.ghaffoor@uah.edu
+C|Jayla Gillespie|Assistant Coach|
+#ucmathletics.com|200
+C|Lewis Theobald|Head Women's Soccer Coach|theobald@ucmo.edu
+C|Jen Goethe|Assistant Coach|goethe@ucmo.edu
+C|Ashleigh Martin|Women's Soccer Graduate Assistant|aemartin@ucmo.edu
+C|Jason Pendleton|Volunteer Assistant Soccer Coach|
+#ucgoldeneagles.com|200
+C|Sarah Leiby-Gill|Head Coach|sarahleiby@ucwv.edu
+C|Salma Luevano|Assistant Coach|salmaluevano@ucwv.edu
+C|Jim Kirk|Assistant Coach|jameskirk@ucwv.edu
+C|Eve Frousiakis|Assistant Coach|evangeliquefrousi@ucwv.edu
+#gomountainlions.com|200
+C|J. B. Belzer|Head Women's Soccer Coach|jbelzer@uccs.edu
+C|Justin Stones|Associate Head Women's Soccer Coach|jstones@uccs.edu
+C|Bjarne Huth|Graduate Assistant|
+C|Nieves Fernandez Lopez|Graduate Assistant|mfernan9@uccs.edu
+C|Jade Kinsey|Volunteer Assistant Coach|jkinsey3@uccs.edu
+C|Anne Louthan|Volunteer Assistant Coach|alouthan@uccs.edu
+#hiloathletics.com|200
+C|Gene Okamura|Head Coach|geneo@hawaii.edu
+C|Jazlynn Ellis|Associate Head Coach|jellis4@hawaii.edu
+C|Adam Palochik|Assistant Coach|
+C|Cameron Castillo|Assistant Coach|
+C|Jameson Sato|Assistant Coach|
+C|Marc Fournier|Assistant Coach|
+C|George Ichimaru|Assistant Coach|
+C|Keani Shirai|Assistant Coach|kshirai@hawaii.edu
+#uisprairiestars.com|200
+C|Scott Myers|Head Coach|smyer24@uis.edu
+C|Hailey Parungao|Assistant Coach|parungao@uis.edu
+C|Melanie McKeown|Assistant Coach|
+#umdbulldogs.com|200
+C|Greg Cane|Head Coach|gcane1@d.umn.edu
+C|Sidney Burrell|Assistant Coach|sburrell@d.umn.edu
+C|Ginger Flohaug|Assistant Coach / Goalkeeper Coach|
+#umsltritons.com|200
+C|Stephen Cavallo|Head Women's Soccer Coach|stephen.cavallo@umsl.edu
+C|Chris McGill|Assistant Coach|c.mcgill@umsl.edu
+C|Eric Walker|Assistant Coach|Eric.walker@umsl.edu
+C|Eylesa Kellam|Assistant Coach|e.kellam@umsl.edu
+C|Rylee Griffith|Assistant Coach|
+#montevallofalcons.com|200
+C|Trey Gregory|Head Coach|wgregory@montevallo.edu
+C|Thomas Olson|Assistant Coach|tolson1@montevallo.edu
+#lopers.com|200
+C|Rob Breton|Head Women's Soccer Coach|bretonr@unk.edu
+C|Gustavo Guiterrez|Assistant Coach|gutierrezg@unk.edu
+C|Ava Morales|Graduate Assistant|moralesa6@lopers.unk.edu
+C|Daniel Jaimes|Volunteer Assistant Coach|jaimesd2@unk.edu
+#uncpbraves.com|200
+C|Lars Andersson|Head Coach|lars.andersson@uncp.edu
+C|Zach Nipper|Assistant Coach|zachary.nipper@uncp.edu
+C|Anna Duncan|Volunteer Assistant Coach|
+#usfcougars.com|200
+C|Andy Janssen|Head Coach|Andy.Janssen@USiouxFalls.edu
+C|John Moening|Assistant Coach|John.Moening@usiouxfalls.edu
+C|Gabe Wortman|Assistant Coach|
+#pacersports.com|200
+C|Adam Kleman|Head Women's Soccer Coach|adam.kleman@usca.edu
+C|Kinsie Mitchell|Assistant Women's Soccer Coach|kinsie.mitchell@usca.edu
+#uttylerpatriots.com|200
+C|Stefani Webb|Women's Soccer Head Coach|swebb@uttyler.edu
+C|Connor Woulahan|Assistant Coach|cwoulahan@uttyler.edu
+C|Robert Serra|Goalkeeper Coach|rserra@uttyler.edu
+C|Luan Rangel|Graduate Assistant|
