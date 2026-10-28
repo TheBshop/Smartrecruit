@@ -551,3 +551,21 @@ C|Katie Hooker|Head Coach|kahooker@msudenver.edu
 C|Andrew Sanchez|Assistant Coach|ansanchez@msudenver.edu
 C|Kristin Dedycker|Part-Time Assistant Coach|kwarren17@hotmail.com
 C|Jeff Hooker|Volunteer Assistant Coach|jshooker246@gmail.com
+#gogriffons.com|200
+C|Jacob Plocher|Head Coach|jplocher@missouriwestern.edu
+C|Bailey Brennan|Assistant Coach|bbrennan@missouriwestern.edu
+C|Joshua Pooler|Assistant Coach|jpooler@missouriwestern.edu
+#ungathletics.com|200
+C|Kayley Ralton|Head Women's Soccer Coach|kayley.ralton@ung.edu
+C|Jean-Pierre Merlet|Assistant Women's Soccer Coach|jean-pierre.merlet@ung.edu
+C|Callee Maughon|Women's Soccer Graduate Assistant|
+C|Mauricio Uribe|Soccer Graduate Assistant|
+#nsuwolves.com|200
+C|Bob Casper|Head Coach|Bob.Casper@northern.edu
+C|Matthew James|Assistant Coach|matthew.james@northern.edu
+C|Chelvan Arunasalam|Volunteer Assistant Coach [Goalkeepers]|chelvan.arunasalam@northern.edu
+C|Anastasios Daskalakis|Graduate Assistant Coach|
+#rockathletics.com|200
+C|Noreen Herlihy|Head Coach|noreen.herlihy@sru.edu
+C|Nicole Krueger|Assistant Coach|nicole.krueger@sru.edu
+C|Katharina Bilz|Graduate Assistant|
