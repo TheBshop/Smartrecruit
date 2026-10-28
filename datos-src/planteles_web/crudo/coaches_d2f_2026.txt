@@ -569,3 +569,12 @@ C|Anastasios Daskalakis|Graduate Assistant Coach|
 C|Noreen Herlihy|Head Coach|noreen.herlihy@sru.edu
 C|Nicole Krueger|Assistant Coach|nicole.krueger@sru.edu
 C|Katharina Bilz|Graduate Assistant|
+#uwaathletics.com|200
+C|Sam Wilson|Head Women's Soccer Coach|swilson@uwa.edu
+C|Darius Rashid|Assistant Coach|drashid@uwa.edu
+C|Lily Graham|Graduate Assistant|
+#swuathletics.com|200
+C|Al Meneses|Women's Soccer Head Coach|ameneses@swu.edu
+C|Oker Hernandez|Assistant Coach|ohernandez@swu.edu
+C|Adrian Guzman|Assistant Coach / Goalkeeper Coach|aguzman@swu.edu
+C|Karen Meneses|Volunteer Assistant Coach|
