@@ -147,3 +147,67 @@ C|Cory Marr|Associate Head Coach|cmarr@dbu.edu
 C|Dan Heger|Goalkeeper Coach|
 C|Austyn Applewhite|Graduate Assistant Coach|austyna@dbu.edu
 C|Taylor Garrett|Graduate Assistant Coach|tgarrett2343@dbu.edu
+#minesathletics.com|200
+C|Kevin Fickes|Head Coach|kfickes@mines.edu
+C|Shannon DeVoe|Assistant Coach|smcdonne@mines.edu
+C|Brett O'Connor|Goalkeeper Coach|
+C|Emily Townsend|Volunteer Assistant Coach|
+#gostatesmen.com|200
+C|Chloe Kane|Head Coach|ckane@deltastate.edu
+C|Leah Keogh|Graduate Assistant|
+C|Claire Regnault|Graduate Assistant|
+#ecutigers.com|200
+C|Joseph Quiray|Head Soccer Coach|jquiray@ecok.edu
+C|Makenzie Saul|Assistant Coach|makksau@email.ecok.edu
+#esuwarriors.com|200
+C|Tayler Jamison|Head Coach|tjamison1@esu.edu
+C|Avery Francis|Assistant Coach|afrancis3@esu.edu
+#eckerdtritons.com|200
+C|Luke Sheekey|Head Coach|sheekeyl@eckerd.edu
+C|Riley Casey|Assistant Coach|caseyr@eckerd.edu
+C|John Damasco|Assistant Coach|
+C|Joe Linley|Assistant Coach|
+#erauathletics.com|200
+C|Liam McIlhatton|Head Coach|mcilh6f5@erau.edu
+C|Maddie Cunningham|Assistant Coach|cunninm1@erau.edu
+C|Alma Olesen|Graduate Assistant Coach|
+C|Rachel Phillips|Graduate Assistant Coach|
+#esuhornets.com|200
+C|Jane Grimley-Gunn|Head Soccer Coach|jgrimley@emporia.edu
+C|Josue Rivas|Assistant Coach|jrivas3@emporia.edu
+C|George Gunn|Volunteer Assistant|ggunn@emporia.edu
+C|Emily Hounsell|Goalkeeper Student Assistant|ehounsel@g.emporia.edu
+#flaglerathletics.com|200
+C|Ashley Martin|Head Coach|amartin@flagler.edu
+C|Teddy West|Assistant Women's Soccer Coach|twest@flagler.edu
+C|Danny Miller|Assistant Women's Soccer Coach|
+C|Andrea Fernandez|Volunteer Assistant Coach|
+#fscmocs.com|200
+C|Maddi Moon|Head Women's Soccer Coach|mmoon@flsouthern.edu
+C|Sammy Kirn|Assistant Coach|skirn@flsouthern.edu
+C|Megan Carroll|Assistant Women's Soccer Coach|
+C|Ash Hill|Assistant Women's Soccer Coach|
+#floridatechsports.com|200
+C|Katy Freels|Head Coach|kfreels@fit.edu
+C|Scott Wilson|Associate Head Coach|swilson@fit.edu
+#goskyhawks.com|200
+C|Damian Clarke|Head Women's Soccer Coach|clarke_d@fortlewis.edu
+C|Hope Fredrick|Associate Head Coach|hesiffert@fortlewis.edu
+C|Hayley Hollenga|Assistant Coach|hnhollenga@fortlewis.edu
+C|Janet Mosher|Volunteer Assistant Coach|
+#fmupatriots.com|200
+C|Sam Holmes|Head Coach|sam.holmes@fmarion.edu
+C|Kevin Martin|Assistant Coach|kevin.martin@fmarion.edu
+#fpuravens.com|200
+C|Matt Johnson|Director of Athletics / Head Women's Soccer Coach|johnsonma@franklinpierce.edu
+C|Kevon Isa|Associate Head Coach|isak@franklinpierce.edu
+C|Nathalia Da Silva|Assistant Coach|dasilvan@franklinpierce.edu
+C|Millie Conod|Graduate Assistant|conodm25@live.franklinpierce.edu
+C|Merrik Mihalek|Graduate Assistant|mihalekm25@live.franklinpierce.edu
+C|Olivia Crespo|Assistant Coach|
+#www.fpusunbirds.com|200
+C|Jaime Ramirez|Head Coach|jaime.ramirez@fresno.edu
+C|Sue Negrete|Assistant Coach|susan.negrete@fresno.edu
+C|Carlos Herrada|Assistant Coach|carlos.herrada@fresno.edu
+C|Erin Obwald|Assistant Coach|erin.obwald@fresno.edu
+C|Jesslyn Frampton|Assistant Coach|
