@@ -1903,6 +1903,17 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-account{ margin-bottom:6px; }
 .rm-account-email{ display:block; font-size:11.5px; color:rgba(255,255,255,0.85); padding:6px 10px; word-break:break-all; }
 .rm-account-link{ background:none; border:none; color:#9fc6ff; font-size:11.5px; padding:0 10px 6px; cursor:pointer; text-align:left; }
+.rm-account-modal-bg{ position:fixed; inset:0; z-index:1000; background:rgba(10,20,40,0.65); display:flex; align-items:center; justify-content:center; padding:16px; }
+.rm-account-modal{ position:relative; background:#0b1d36; font-family:Inter,system-ui,sans-serif; color:#fff; width:min(400px,100%); max-height:92vh; overflow:auto; border-radius:12px; padding:22px 20px 16px; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+.rm-account-modal h3{ margin:0 0 4px; font-size:20px; }
+.rm-account-modal .rm-account-form{ padding:0; gap:10px; }
+.rm-account-modal .rm-account-form input{ font-size:16px; padding:11px 12px; }
+.rm-account-modal .rm-account-form .rm-btn-inline{ font-size:15px; padding:12px 14px; background:var(--gold,#FFB81C); color:#0b1d36; border:none; font-weight:800; border-radius:6px; cursor:pointer; }
+.rm-account-modal .rm-account-form strong{ display:none; }
+.rm-account-modal, .rm-account-modal .rm-account-note{ font-family:inherit; }
+.rm-account-modal .rm-account-note{ font-size:12.5px; line-height:1.45; }
+.rm-account-modal .rm-account-link{ font-size:13px; }
+.rm-account-modal-x{ position:absolute; top:8px; right:10px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer; opacity:.8; }
 .rm-account-form{ padding:8px 10px 4px; display:flex; flex-direction:column; gap:6px; }
 .rm-account-form input{ font-size:12px; padding:6px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.06); color:#fff; }
 .rm-account-form input::placeholder{ color:rgba(255,255,255,0.45); }
@@ -3885,6 +3896,7 @@ function useFavorites() {
     setFavs((prev) => {
       const next = prev.includes(school) ? prev.filter((s) => s !== school) : [...prev, school];
       writeFavorites(next);
+      if (next.length === 1 && !prev.includes(school)) { try { window.dispatchEvent(new Event("rr-first-fav")); } catch (e) {} }
       return next;
     });
   };
@@ -10895,8 +10907,9 @@ function AccountMenu({ session }) {
   }, [cooldown]);
   const reset = (m) => { setMode(m); setStep("form"); setErr(""); setInfo(""); setCode(""); };
   // Los avisos "guardá tu progreso" abren este formulario en modo "crear cuenta".
+  const [modal, setModal] = useState(false);
   useEffect(() => {
-    const onOpen = () => { setOpen(true); reset("signup"); };
+    const onOpen = () => { setOpen(true); setModal(true); reset("signup"); };
     window.addEventListener("rr-open-account", onOpen);
     return () => window.removeEventListener("rr-open-account", onOpen);
   }, []);
@@ -11006,8 +11019,14 @@ function AccountMenu({ session }) {
     );
   }
   const titles = { login: "Iniciar sesión", signup: "Crear cuenta", forgot: "Recuperar contraseña", otp: "Entrar con código" };
+  const inModal = modal && open;
+  const closeModal = () => { setModal(false); setOpen(false); };
+  const inModalWrap = (body) => inModal
+    ? createPortal(<div className="rm-account-modal-bg" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}><div className="rm-account-modal" role="dialog" aria-label="Cuenta"><button className="rm-account-modal-x" aria-label="Cerrar" onClick={closeModal}>✕</button><h3 className="rm-condensed">Guardá tu progreso</h3>{body}</div></div>, document.body)
+    : body;
   return (
     <div className="rm-account">
+      {inModalWrap(<>
       {!open ? (
         <button className="rm-sidebar-link" onClick={() => setOpen(true)}>
           <span className="rm-sidebar-icon">🔐</span>
@@ -11042,6 +11061,7 @@ function AccountMenu({ session }) {
           <p className="rm-account-note">Con tu cuenta, tu perfil, tu lista y tus mails quedan guardados y los ves igual desde cualquier compu o celular. Al crearla aceptás los Términos y la Política de Privacidad (abajo de todo en cada página).</p>
         </div>
       )}
+      </>)}
     </div>
   );
 }
@@ -11446,7 +11466,6 @@ function AppInner() {
   });
   const openAccountSignup = () => {
     try { window.posthog && window.posthog.capture("cuenta_aviso_click", { etapa: stage }); } catch (e) {}
-    setSidebarCollapsed(false); setMenuOpen(true);
     setTimeout(() => { try { window.dispatchEvent(new Event("rr-open-account")); } catch (e) {} }, 0);
   };
   const hideSaveBanner = () => {
@@ -11454,6 +11473,27 @@ function AppInner() {
     setSaveBannerHidden(true);
     try { localStorage.setItem("rr_save_banner_until", String(Date.now() + 7 * 24 * 3600 * 1000)); } catch (e) {}
   };
+  // Momentos de valor: al ver los resultados y al marcar la primera ★ se ofrece guardar el progreso (como mucho una vez cada 3 días por dispositivo).
+  const promptSave = (motivo) => {
+    try {
+      if (Number(localStorage.getItem("rr_save_modal_until") || 0) > Date.now()) return;
+      localStorage.setItem("rr_save_modal_until", String(Date.now() + 3 * 24 * 3600 * 1000));
+      window.posthog && window.posthog.capture("cuenta_modal_visto", { motivo });
+    } catch (e) {}
+    openAccountSignup();
+  };
+  const promptSaveRef = useRef(promptSave); promptSaveRef.current = promptSave;
+  useEffect(() => {
+    if (stage !== "results" || !profile || !sessionReady || session) return undefined;
+    const t = setTimeout(() => promptSaveRef.current("resultados"), 4000);
+    return () => clearTimeout(t);
+  }, [stage, !!profile, sessionReady, !!session]);
+  useEffect(() => {
+    if (!sessionReady || session) return undefined;
+    const on = () => setTimeout(() => promptSaveRef.current("primera_estrella"), 600);
+    window.addEventListener("rr-first-fav", on);
+    return () => window.removeEventListener("rr-first-fav", on);
+  }, [sessionReady, !!session]);
   useEffect(() => {
     let mounted = true;
     supabase.auth.getSession().then(({ data }) => { if (mounted) { setSession(data.session); setSessionReady(true); } }).catch(() => { if (mounted) setSessionReady(true); });
