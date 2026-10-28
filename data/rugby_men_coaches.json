@@ -25,5 +25,48 @@
     "Title": "Head Coach, Men's Rugby",
     "Source": "Sitio oficial de Indiana Tech Athletics (indianatechwarriors.com), 28/10/2026",
     "Email": "sjdifilippo@indianatech.edu"
+  },
+  {
+    "School": "Drury University",
+    "Coach": "Bryan Bevel",
+    "Title": "Head Coach, Men's Rugby",
+    "Email": "bbevel@drury.edu",
+    "Source": "Drury Athletics (drurypanthers.com), 28/10/2026"
+  },
+  {
+    "School": "Marian University – Indiana",
+    "Coach": "John Harley",
+    "Title": "Head Coach, Men's Rugby",
+    "Source": "Marian Athletics (muknights.com), 28/10/2026"
+  },
+  {
+    "School": "American International College",
+    "Coach": "Eric Olsen",
+    "Title": "Head Men's Rugby Coach",
+    "Source": "AIC Athletics (aicyellowjackets.com), 3/9/2025"
+  },
+  {
+    "School": "Siena College",
+    "Coach": "Jaco Visser",
+    "Title": "Head Coach, Men's Rugby",
+    "Source": "Siena Athletics (sienasaints.com), 28/10/2026"
+  },
+  {
+    "School": "Kutztown University of Pennsylvania",
+    "Coach": "Gregg A. Jones",
+    "Title": "Head Coach, Men's Rugby",
+    "Source": "Kutztown Athletics (kubears.com), 28/10/2026; cargo inferido del staff, a confirmar"
+  },
+  {
+    "School": "University of Rio Grande",
+    "Coach": "Brad Sandig",
+    "Title": "Head Coach, Men's Rugby",
+    "Source": "Rio Grande Athletics (rioredstorm.com), 2024; a confirmar"
+  },
+  {
+    "School": "Southern Nazarene University",
+    "Coach": "Aric Gilliland",
+    "Title": "Head Coach, Men's and Women's Rugby",
+    "Source": "SNU (snu.edu), 12/2021; a confirmar"
   }
 ]
