@@ -739,3 +739,23 @@ P|Clara Butler|F|Fr.|Manchester, United Kingdom
 P|Lawrencia Yeboah|F|Sr.|Takoradi, Ghana
 #gomountainlions.com|200|soloextranjeras|27
 P|Viktoria Valdimarsdottir|M|So.|Hafnarfjordur, Iceland
+#smcathletics.com|200|soloextranjeras|35
+P|Bia Maluf|D/M|Sr.|Salvador, Bahia, Brazil
+#tnutrojans.com|200|soloextranjeras|31
+P|Olivia Ulfvin|D|Fr.|Vaermdoe, Sweden
+P|Madie Andrews|D|So.|Manchester, England
+P|Emma Burnham|D|So.|Eastham, England
+P|Elsa Bengtsson|F|So.|Stockholm, Sweden
+P|Penelope Charroin|GK|Jr.|Niort, France
+P|Olivia Perroni|M|Fr.|Sao Paulo, Brazil
+P|Cristina Escudero|D|Sr.|Madrid, Spain
+#athletics.holyfamily.edu|200|soloextranjeras|28
+#gvsulakers.com|200|soloextranjeras|31
+P|Sonya Mehta|M|Sr.|Edmonton, Alberta
+#csusmcougars.com|200|soloextranjeras|34
+#obubison.com|200|soloextranjeras|25
+P|Emilia Gallego|GK|Fr.|Quito, Ecuador
+P|Jada Lamond|D|Jr.|Canberra, Australia
+P|Ryann Phillips|D|Fr.|Barrigada, Guam
+P|Marisol Gomez|M|Sr.|Aguascalientes, Mexico
+P|Clara Martin|F|Fr.|Cuellar, Spain
