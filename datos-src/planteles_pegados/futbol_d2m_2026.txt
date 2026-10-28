@@ -1,0 +1,92 @@
+# Planteles 2026 de fútbol masculino NCAA D2 cargados desde la página oficial de plantel de cada programa.
+# Formato: "## Nombre exacto del catálogo | fuente | fecha", y debajo una línea por jugador: número|nombre|posición|año|ciudad natal|colegio o universidad previa
+# Se aplican con: node datos-src/cargar_plantel_pegado.mjs datos-src/planteles_pegados/futbol_d2m_2026.txt [--dry]
+
+## University of Findlay | findlayoilers.com (plantel 2026) | 28/10/2026
+0|Ethan Hensley|GK|Sr.|Swanton, Ohio|Swanton
+1|Lazaro Salais|GK|Sr.|Lansing, Mich.|Lansing Eastern
+2|Giuseppe Marrix|D|Jr.|Naro, Italy|Briar Cliff Univ.
+3|Devin Chene|D|Jr.|Shelby Township, Mich.|Eisenhower
+4|Alex Diaz|M|Jr.|Perrysburg, Ohio|Perrysburg
+5|Braden Tossey|M|So.|Davisburg, Mich.|Clarkston
+6|Stephen Cain|D|So.|Rocky River, Ohio|Rocky River
+7|Tyler Pawlicki|F|Sr.|Sylvania, Ohio|Southview
+8|Tom Middleham|F|5th|Ashton, England|St. Edmund Arrowsmith
+9|Brendan Wishart|F|Sr.|Sylvania, Ohio|Northview
+10|Carson Oberski|F|Sr.|Farmington Hills, Mich.|Bedford
+11|Landon Smith|M|5th|Canal Winchester, Ohio|Liberty Christian
+12|Toby Kelly|D|Fr.|Burgess Hill, England|Bede's Senior School UK
+13|Joshua Bourn|D|Fr.|Wauseon, Ohio|Wauseon
+14|Eric Millan|F|So.|London, England|Raynes Park
+15|Jacob Russell|D|So.|Fairfield Township, Ohio|Fairfield
+16|Jorge Arevalo|M|Sr.|Quetzaltenango, Guatemala|Inter-American School (Lincoln Univ.)
+17|Josh Brennan|F|So.|Maumee, Ohio|St. Francis de Sales
+18|Logan Cannon|M|Fr.|Gahanna, Ohio|Gahanna Lincoln
+19|Calum Thornton|F|So.|Leeds, England|Farnley Academy
+20|Luke Rodgers|GK|So.|Athens, Ohio|Athens
+21|Joey Chirco|M|Jr.|Shelby Township, Mich.|Eisenhower
+22|Tyson Woodring|M|Jr.|Swanton, Ohio|Evergreen (Lourdes Univ.)
+23|Caden Whited|D|So.|Wadsworth, Ohio|Wadsworth
+24|Alex Davidson|M|Fr.|Norwalk, Ohio|Edison
+25|Evan Samosky|M|Fr.|Springfield, Ohio|Tecumseh
+26|CJ Davis|D|So.|Harrison, Ohio|Harrison
+27|Anton Graf|M|5th|Postdam, Germany|Leibniz Gymnasium (MidAmerica Nazarene Univ.)
+28|Kyle Mortus|F|Fr.|Toledo, Ohio|Springfield
+29|Wyatt Longaberger|M|Fr.|West Liberty, Ohio|West Liberty Salem
+30|Emerson Layman|D|Sr.|Spencerville, Ohio|Spencerville
+31|Michael Goessl|F|Fr.|Beavercreek, Ohio|Beavercreek
+32|Stewart Johns|D|So.|Livonia, Mich.|
+33|Andre Sardinha|D|Sr.|Madeira, Portugal|Liceu Jaime Moniz (Concord Univ.)
+34|Masyn Buehrer|M|Fr.|Wauseon, Ohio|Wauseon
+35|Brian Hall|M|So.|Toledo, Ohio|Emmanuel Christian
+36|Sully Pelot|F|So.|Athens, Ohio|Athens
+37|Ryan Ricciardo|D|Sr.|Newark, Ohio|Newark Catholic
+38|Cayden Prosser|D|Fr.|Urbana, Ohio|Northwestern
+39|Max Wyszczelski|D|Fr.|St. Clair Shores, Mich.|De La Salle
+40|Mateo Dague|F|So.|West Salem, Ohio|Northwestern
+41|Gabe Toops|F|So.|Columbus, Ohio|Worthington Kilbourne
+42|Leo Egerer|F|Sr.|Erlangen, Germany|Ohm Gymnasium Erlangen (St. Andrews Univ.)
+43|Chase Jeansonne|M|Fr.|Perrysburg, Ohio|Perrysburg
+50|Lukas Snyder|GK|Fr.|Canal Fulton, Ohio|Northwest
+
+## University of Jamestown | jimmiepride.com (plantel 2026) | 28/10/2026
+0|Connor Warren|GK|Jr.|Rapid City, S.D.|Rapid City Central High School
+00|Liam Horner|GK|So.|Bismarck, N.D.|Legacy High School
+1|Valon Ismaili|GK|Jr.|Hamburg, Germany|Friedrich-Ebert-Gymnasium
+2|Will Tubaro|DEF|So.|Toronto, Ont.|Michael Power St. Joseph
+3|Callum Pike|DEF|Jr.|London, England|Herkimer Community College
+4|Freddie Tomkinson|DEF|So.|Crewe, England|Reaseheath College
+5|Joseph Bird|DEF|So.|Glendale, Calif.|St. Francis High School
+6|Saif Ghodhbani|MID|Sr.|El Mourouj 1, Tunisia|Bethel College
+7|Finley Carr|MID|Sr.|Billericay, England|Mayflower High School / William Penn University
+8|Kai Yoshida|MID|Jr.|Hyogo, Japan|Ashiyagakuen
+9|Andrei Filho|FWD|Sr.|Jaragua do Sul, Brazil|SESI SENAI / Auburn University at Montgomery
+10|Nuutti Norhomaa|MID|Fr.|Espoo, Finland|Tapiolan Lukio
+11|Joshua Jackson|FWD|Jr.|Kingston, Jamaica|St. George's College
+12|Tom Hoffmann|DEF|Sr.|Cuijk, Netherlands|Merlet College
+13|Matthias Lion|MID|Jr.|Antwerp, Belgium|Sint-Eduardus
+14|Jack Greenwood|MID|So.|Norwich, England|Norwich City CSF
+16|Justin Junaid|MID|So.|Chafford Hundred, England|Harris Academy Chafford Hundred
+17|Johannes Kappeler|MID|Fr.|Cambridge, England|Impington International College
+18|Finley Comstock|FWD|Fr.|Vancouver, B.C.|Vancouver Technical Secondary
+19|Santiago Zepeda|MID|Jr.|Puebla, Mexico|Tecnológico de Monterrey
+20|Leo Waloch|MID|Sr.|New Ulm, Minn.|New Ulm High School
+21|Nathan Kopecky|FWD|Sr.|Rochester, Minn.|Dakota County Technical College
+22|Escher Paz|MID|Fr.|Ashland, Ore.|Ashland High School
+23|Clayton Kepler|DEF|Jr.|Rapid City, S.D.|Rapid City Central High School
+24|Sohaib Bouika el Haddad Kaddour|DEF|Jr.|Vitoria, Spain|West Virginia University Tech
+25|Aldin Hadzibecirovic|MID|Fr.|Vienna, Austria|
+26|Rocco LiTrenta|MID|Jr.|Mississauga, Ont.|Wheeling University
+28|Jesus Vazquez|DEF|Sr.|Waukegan, Ill.|Quincy University
+29|Mario Fernandez|MID|Gr.|Gijon, Spain|Universidad de Salamanca
+32|Ethan Huerta|DEF|Fr.|Stockton, Calif.|Saint Mary's High School
+33|Sean Carruth|DEF|Sr.|Riverton, Wyo.|Riverton High School
+34|Mootz Belleh Lasta|FWD|Fr.|Montreal, QC|College Regina Assumpta
+35|Gabe Jenison|DEF|So.|Valley City, N.D.|Valley City High School
+36|Ian Lere|DEF|So.|Jamestown, N.D.|Jamestown High School
+37|Toura Yamada|MID|Jr.|Gunma, Japan|Takasaki University of Health and Welfare High School / Emory & Henry College
+38|Kayden Zenk|MID|Fr.|Phoenix, Ariz.|Horizon High School
+39|Pierre Junior Hohi Hohi|FWD|Fr.|Houston, Texas|George Bush High School
+40|Enzo Zaidan|FWD|So.|Sao Paulo, Brazil|Colegio Adventista de Piracicaba
+64|Nacho Bueno|MID|Jr.|Valencia, Spain|Williams Baptist University
+99|Adam Kinnarath|GK|So.|Winnipeg, Man.|Miles Macdonnel Collegiate

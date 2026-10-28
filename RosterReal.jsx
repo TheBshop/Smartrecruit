@@ -11214,6 +11214,15 @@ function __deriveAll() {
         roster: rows.map((r) => { const b = bio[r[0]] || []; return { player_name: r[0], position: b[0] || '', class_year: b[1] || '', hometown: b[2] || '', country: b[3] || '', games_played: r[1], starts: r[2], minutes: r[3], goals: r[4], assists: r[5], points: r[6], shots: r[7], shots_on_goal: r[8] }; }) };
     });
   });
+  // Fútbol masculino D2 cargado solo con plantel (datos-src/cargar_plantel_pegado.mjs): está en BIO y no en STATS -> plantel sin estadísticas
+  Object.entries((SOCCER_D2M_BIO_2026 || {}).M || {}).forEach(([school, bio]) => {
+    if (((SOCCER_D2M_STATS_2026 || {}).M || {})[school]) return;
+    const prevKeys = Object.keys(ROSTERS_LOADED).filter((k) => { const e = ROSTERS_LOADED[k]; return e.sport === 'Soccer' && (e.gender || 'M') === 'M' && (e.school || k.split('::')[0]) === school; });
+    if (prevKeys.some((k) => !ROSTERS_LOADED[k].partial)) return;
+    prevKeys.forEach((k) => { delete ROSTERS_LOADED[k]; });
+    ROSTERS_LOADED[`${school}::Soccer`] = { school, sport: 'Soccer', gender: 'M', division: 'NCAA D2', statsLoaded: false, season: 2026, source: 'sitio oficial del programa (plantel 2026-27)',
+      roster: Object.entries(bio).map(([name, b]) => ({ player_name: name, position: b[0] || '', class_year: b[1] || '', hometown: b[2] || '', country: b[3] || '', games_played: 0 })) };
+  });
   Object.entries(SOCCER_D2F_STATS_2026).forEach(([g, bySchool]) => {
     Object.entries(bySchool).forEach(([school, rows]) => {
       const prevKeys = Object.keys(ROSTERS_LOADED).filter((k) => { const e = ROSTERS_LOADED[k]; return e.sport === 'Soccer' && (e.gender || 'M') === g && (e.school || k.split('::')[0]) === school; });
