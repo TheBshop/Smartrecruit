@@ -725,3 +725,17 @@ P|Tessa Hyland|M|Sr.|Blenheim, New Zealand
 P|Reese Hopkinson|M|Fr.|Leeds, England
 P|Alice Balaam|F|Fr.|Surrey, England
 #athletics.walsh.edu|200|soloextranjeras|24
+#gomountaineers.com|200|soloextranjeras|29
+P|Saya Ohama|M|So.|Higashiosaka, Japan
+P|Natsuki Murakami|M|Gr.|Oita, Japan
+#shipraiders.com|200|soloextranjeras|27
+#roadrunnersathletics.com|200|soloextranjeras|28
+P|Sandra Swartz|F|Sr.|Linkoping, Sweden
+#msumdragons.com|200|soloextranjeras|29
+P|Emilia Bukholt Kristensen|GK|So.|Poulstrup, Denmark
+P|Sophie Thompson|M|Jr.|Auckland, New Zealand
+P|Clara Butler|F|Fr.|Manchester, United Kingdom
+#angelosports.com|200|soloextranjeras|21
+P|Lawrencia Yeboah|F|Sr.|Takoradi, Ghana
+#gomountainlions.com|200|soloextranjeras|27
+P|Viktoria Valdimarsdottir|M|So.|Hafnarfjordur, Iceland
