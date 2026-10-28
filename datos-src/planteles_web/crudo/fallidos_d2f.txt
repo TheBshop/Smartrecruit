@@ -1,0 +1,8 @@
+# hosts que no cargaron (equivocados, bloqueados o fuera de línea): se prueban de nuevo con otra dirección
+aumwarhawks.com
+belmontabbeyathletics.com
+biolaeagles.com
+dhtoros.com
+tampaspartans.com
+barrybucs.com
+gogrizzlies.com

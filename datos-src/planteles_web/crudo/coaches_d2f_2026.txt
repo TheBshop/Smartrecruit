@@ -1,0 +1,149 @@
+#aupanthers.com|200
+C|Brooke DeRosa|Head Coach/Assistant Athletic Director|bderosa@adelphi.edu
+C|Paul Yarde|Assistant Coach|yardiepo@gmail.com
+C|Will Frohnhoefer|Assistant Coach|wfrohnhoefer@adelphi.edu
+C|Miquel Gasparin Ferrando|Assistant Coach|mgasparinferrando@adelphi.edu
+C|Sebastian Zieba|Recruitment Coordinator/Assistant Coach|szieba@adelphi.edu
+#assumptiongreyhounds.com|200
+C|Chip Warner|Head Coach|Al.warner@assumption.edu
+C|Ron Scarborough|Assistant Coach|r.scarborough@assumption.edu
+#drurypanthers.com|200
+C|Justin Olson|Women's Soccer, Head Coach|jolson003@drury.edu
+C|Josh Lewis-Evans|Assistant Coach, Women's Soccer|jlewis-evans@drury.edu
+C|Mackenzie Helin|Assistant Coach, Women's Soccer|
+C|Nico Helin|Goalkeepers Coach (Volunteer), Women's Soccer|
+#lewisflyers.com|200
+C|Chris Koenig|Head Coach|koenigch@lewisu.edu
+C|Grant Sicard|Assistant Coach|gsicard@lewisu.edu
+C|Megan Hutchinson|Graduate Assistant|mhutchinson@lewisu.edu
+C|Devin Hernandez|Volunteer Assistant/Goalkeeper Coach|
+C|Kyra Flesvig|Graduate Assistant (WBB, M/WXC, M/WT&F, SB, WSOC)|kyralflesvig@lewisu.edu
+#lynnfightingknights.com|200
+C|John Markey|Head Coach, Women's Soccer|jmarkey@lynn.edu
+C|Sawyer Hall|Assistant Coach, Women's Soccer|sahall@lynn.edu
+C|Kelly Giddes|Volunteer Assistant Coach, Women's Soccer|
+C|Leonardo Soriano|Volunteer Assistant Coach, Women's Soccer|
+#goashlandeagles.com|200
+C|Cayleb Paulino|Head Women's Soccer Coach|cpaulino@ashland.edu
+C|Grace Labadie|Associate Women's Soccer Head Coach|glabadie@ashland.edu
+C|Rachel Lynch|Graduate Assistant Women's Soccer Coach|rlynch9@ashland.edu
+#findlayoilers.com|200
+C|Sierra Tom|Head Coach|perrys1@findlay.edu
+C|Isaac Sanders|Assistant Coach|isaac.sanders@findlay.edu
+#gvsulakers.com|200
+C|Katelyn Longino|Head Coach|longinok@gvsu.edu
+C|Jade Smith|Assistant Coach|smitjl2@gvsu.edu
+C|TJ Ifaturoti||ifaturad@gvsu.edu
+C|Bryce Beckley||becklebr@gvsu.edu
+C|Jaycee Cotton||cottjayc@gvsu.edu
+#aicyellowjackets.com|200
+C|Sam Mitchell|Head Women's Soccer Coach|Sam.Mitchell@aic.edu
+C|Bella Mendoza|Assistant Women's Soccer Coach|isabella.mendoza@aic.edu
+C|Nina Cuccovia|Assistant Women's Soccer Coach|nina.cuccovia@aic.edu
+#angelosports.com|200
+C|Mike Erwin|Head Women's Soccer Coach|mike.erwin@angelo.edu
+C|Nayeli Celedon|Graduate Assistant|nceledon@angelo.edu
+C|Isabel Robben|Graduate Assistant | Goalkeeper Coach|irobben@angelo.edu
+#goaugie.com|200
+C|Brandon Barkus|Head Coach|brandon.barkus@augie.edu
+C|Allison Kempainen|Assistant Coach|allison.kempainen@augie.edu
+C|Zach Bartels|Assistant Coach|
+C|Trevor Foreman|Assistant Coach|trevor.foreman@augie.edu
+#bsubeavers.com|200
+C|Jim Stone|Head Coach|
+C|Ryan Raufus|Assistant Coach|
+C|Matthias "T" Steen|Assistant Coach | Director of Operations & Camps|beaver.soccer.recruiting@bemidjistate.edu
+C|Alyssa Thompson|Goalkeeper Coach|beaver.soccer.recruiting@bemidjistate.edu
+C|Don King|Goalkeeper Coach/Coordinator of GK Recruitment|beaver.soccer.recruiting@bemidjistate.edu
+C|Julian Licata|Volunteer Assistant Coach|beaver.soccer.recruiting@bemidjistate.edu
+C|Joel Stone|Volunteer Assistant Coach/Outstate Recruiter|
+#bentleyfalcons.com|200
+C|Tim Mason|Head Women's Soccer Coach|tmason@bentley.edu
+C|Kat Hassapis|Assistant Women's Soccer Coach|khassapis@bentley.edu
+#bhsuathletics.com|200
+C|John Hutchison|Head Coach|John.Hutchison@bhsu.edu
+C|Connor Campbell|Assistant Coach|Connor.Campbell@bhsu.edu
+C|Taylor McKindley|Assistant Coach|Taylor.McKindley@yellowjackets.bhsu.edu
+#chicowildcats.com|200
+C|Halle Meadows|Head Women's Soccer Coach|womenssoccer@csuchico.edu
+C|Jonny LeMay|Assistant Women's Soccer Coach|jrlemay@csuchico.edu
+C|Daniel Kahler|Assistant Women's Soccer Coach|
+#otterathletics.com|200
+C|Laura VanWart|Head Women's Soccer Coach|lvanwart@csumb.edu
+C|Cristian Materazzi|Assistant Coach|cmaterazzi@csumb.edu
+C|Amy Dill|Assistant Coach|
+#catawbaathletics.com|200
+C|Nick Brown|Head Coach|dnbrown@catawba.edu
+C|Lee Wattam|Assistant Coach / Head Development Team Coach|lwattam@catawba.edu
+C|Dave Marcincavage|Director of Goalkeeping|
+C|Jeremy Weeks|Assistant Coach|
+#aumathletics.com|200
+C|John Robertson|Women's Soccer Head Coach|john.robertson@aum.edu
+C|Alex Bridges|Women's Soccer Assistant Coach|Alex.bridges@aum.edu
+#athletics.biola.edu|200
+C|Brett Croft|Head Women's Soccer Coach|bu.womens.soccer@biola.edu
+C|Guilherme Mitrovitch|Lead Asst. Women's Soccer Coach|guilherme.mitrovitch@biola.edu
+C|Melanie Daly|Asst. Women's Soccer Coach|melanie.daly@biola.edu
+C|Bryan Price|Goalkeeper Coach|
+C|Paul Gizzi|Asst. Women's Soccer Coach|
+#gotoros.com|200
+C|Adriana Valdez Lopez|Head Coach|avaldezlopez@csudh.edu
+C|Destiny Moedano|Assistant Coach|
+C|Josh Figueroa|Assistant Coach|
+C|Sergio Orozco|Assistant Coach|
+C|Gerardo Hidalgo|Assistant Coach|
+#lagoldeneagles.com|200
+C|Erik Garcia|Head Women's Soccer Coach|egarc206@calstatela.edu
+C|Shannon Cross|Assistant Women's Soccer Coach|
+C|Jaclyn Orozco|Assistant Women's Soccer Coach|
+#csusbathletics.com|200
+C|Mark Peters|Head Coach|mpeters@csusb.edu
+C|David Massuere|Assistant Coach|David.Massuere@csusb.edu
+C|Salvador Regla|Assistant Coach|salvador.regla@csusb.edu
+C|Jonathan Frisby|Assistant Coach|jonathan.frisby@csusb.edu
+C|Kelsey Pena|Assistant Coach|
+#yellowjackets.cedarville.edu|200
+C|Jonathan Meade|Head Coach|jonathanmeade@cedarville.edu
+C|Savannah Wallace|Assistant Coach|savannahwallace@cedarville.edu
+C|Dr. Kevin Roper|Assistant Coach - Goalkeepers|roperk@cedarville.edu
+#goswords.com|200
+C|Michelle Richardson|Head Coach|wsoccer@chaminade.edu
+C|Conor Whittaker|Assistant Coach|wsoccer@chaminade.edu
+C|Savannah Miranda|Assistant Coach|
+C|La'akea Gonsalves|Assistant Coach|
+#cbubucs.com|200
+C|Christopher B. Tadley|Head Women's Soccer Coach|Ctadley@cbu.edu
+C|Lia Haggstrom|Graduate Assistant Coach for Women's Soccer|lhaeggst@cbu.edu
+C|Savanna Mondesir-Singh|Graduate Assistant Women's Soccer Coach|smondesi@cbu.edu
+C|Juli Gross|Graduate Assistant|
+C|Elisa Cruz|Graduate Assistant|
+#csucougars.com|200
+C|Jay Entlich|Head Women's Soccer Coach|entlich_jay@columbusstate.edu
+C|Erik Krivitsky|Assistant Women's Soccer Coach|krivitsky_erik@columbusstate.edu
+C|Jackie DeNova|Graduate Assistant Coach|denova_jackie@columbusstate.edu
+#cuigoldeneagles.com|200
+C|Chris Gould|Head Coach|chris.gould@cui.edu
+C|Miguel Mendoza|Assistant Coach|Miguel.Mendoza1@cui.edu
+C|Brianna Guerra|Graduate Assistant|
+C|Bryan Ortiz|Volunteer Assistant|
+#cspbears.com|200
+C|Steve Bellis|Head Coach|bellis@csp.edu
+C|Tom Kleczewski|Assistant Coach|
+C|Stuart Trench|Assistant Coach|trench@csp.edu
+C|Rosemary Elliott|Graduate Assistant|elliottr@csp.edu
+#govalkyries.com|200
+C|Colin Wylie|Head Coach|colin.wylie@converse.edu
+C|Renan Diniz|Assistant Coach|renan.diniz@converse.edu
+C|Cimone Francis|Volunteer Assistant Coach|cimone.francis@converse.edu
+#daemenwildcats.com|200
+C|Dan Dolan|Head Coach|ddolan@daemen.edu
+C|Corey DeVille|Assistant Coach|cdeville@daemen.edu
+C|John Netter|Assistant Coach (Volunteer)|
+C|Kylie Miranto|Assistant Coach (Volunteer)|
+C|Ana Muruzabal|Graduate Assistant Coach|ana.muruzabal@daemen.edu
+#dbupatriots.com|200
+C|Marcus Wood|Head Women's Soccer Coach|marcusw@dbu.edu
+C|Cory Marr|Associate Head Coach|cmarr@dbu.edu
+C|Dan Heger|Goalkeeper Coach|
+C|Austyn Applewhite|Graduate Assistant Coach|austyna@dbu.edu
+C|Taylor Garrett|Graduate Assistant Coach|tgarrett2343@dbu.edu

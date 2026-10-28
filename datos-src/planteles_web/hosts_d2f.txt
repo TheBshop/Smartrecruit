@@ -1,0 +1,179 @@
+# sitio oficial | nombre en el catálogo (fútbol femenino NCAA D2). Los marcados con ? son supuestos a verificar.
+aupanthers.com | Adelphi University
+aicyellowjackets.com | American International College
+angelosports.com | Angelo State University
+goashlandeagles.com | Ashland University
+assumptiongreyhounds.com | Assumption University
+aumwarhawks.com | Auburn University – Montgomery
+goaugie.com | Augustana University – South Dakota
+belmontabbeyathletics.com | Belmont Abbey College
+bsubeavers.com | Bemidji State University
+bentleyfalcons.com | Bentley University
+biolaeagles.com | Biola University
+bhsuathletics.com | Black Hills State University
+chicowildcats.com | California State University – Chico
+dhtoros.com | California State University – Dominguez Hills
+calstatelaathletics.com | California State University – Los Angeles
+otterathletics.com | California State University – Monterey Bay
+csusbcoyotes.com | California State University – San Bernardino
+csusmathletics.com | California State University – San Marcos
+catawbaathletics.com | Catawba College
+cedarvilleyellowjackets.com | Cedarville University
+wildcatsports.com | Central Washington University
+goswords.com | Chaminade University of Honolulu
+cbubucs.com | Christian Brothers University
+ccucougars.com | Colorado Christian University
+minesathletics.com | Colorado School of Mines
+csucougars.com | Columbus State University
+cuieagles.com | Concordia University – Irvine
+csphawks.com | Concordia University, St. Paul – Minnesota
+conversesports.com | Converse University
+dyusaints.com | D'Youville University
+daemenwildcats.com | Daemen University
+dbupatriots.com | Dallas Baptist University
+gostatesmen.com | Delta State University
+drurypanthers.com | Drury University
+ecutigers.com | East Central University
+esuwarriors.com | East Stroudsburg University of Pennsylvania
+eckerdtritons.com | Eckerd College
+erauathletics.com | Embry-Riddle Aeronautical University
+esuhornets.com | Emporia State University
+erskineflyingfleet.com | Erskine College
+fairmontstatefalcons.com | Fairmont State University
+flaglerathletics.com | Flagler College – St. Augustine
+fscmocs.com | Florida Southern College
+floridatechsports.com | Florida Tech
+fhsutigers.com | Fort Hays State University
+goskyhawks.com | Fort Lewis College
+fmupatriots.com | Francis Marion University
+fpuravens.com | Franklin Pierce University
+fpusunbirds.com | Fresno Pacific University
+frostburgbobcats.com | Frostburg State University
+gannonknights.com | Gannon University
+gcbobcats.com | Georgia College & State University
+gswhurricanes.com | Georgia Southwestern State University
+gcuathletics.com | Georgian Court University
+gvsulakers.com | Grand Valley State University
+hardingsports.com | Harding University
+hpusharks.com | Hawaii Pacific University
+hfutigers.com | Holy Family University
+iupathletics.com | Indiana University of Pennsylvania
+jessupathletics.com | Jessup University
+kwcpanthers.com | Kentucky Wesleyan College
+kingtornado.com | King University – Tennessee
+kubears.com | Kutztown University of Pennsylvania
+landerbearcats.com | Lander University
+leeflames.com | Lee University
+lmcbobcats.com | Lees-McRae College
+lrbears.com | Lenoir-Rhyne University
+lewisflyers.com | Lewis University
+lmuathletics.com | Lincoln Memorial University
+lubluetigers.com | Lincoln University – Missouri
+lcuchaps.com | Lubbock Christian University
+lynnfightingknights.com | Lynn University
+malonepioneers.com | Malone University
+maryvillesaints.com | Maryville University
+mckbearcats.com | McKendree University
+menloathletics.com | Menlo College
+msudenverroadrunners.com | Metropolitan State University of Denver
+michigantechhuskies.com | Michigan Technological University
+msumustangs.com | Midwestern State University
+millersvillemarauders.com | Millersville University of Pennsylvania
+msumavericks.com | Minnesota State University – Mankato
+msumdragons.com | Minnesota State University – Moorhead
+msubeavers.com | Minot State University
+mssulions.com | Missouri Southern State University
+minerathletics.com | Missouri University of Science & Technology
+mwgriffons.com | Missouri Western State University
+molloylions.com | Molloy University
+msubsports.com | Montana State University – Billings
+newberrywolves.com | Newberry College
+newmanjets.com | Newman University
+ngutrailblazers.com | North Greenville University
+goriverhawks.com | Northeastern State University
+nmuwildcats.com | Northern Michigan University
+northernsports.com | Northern State University
+bearcatsports.com | Northwest Missouri State University
+nnusports.com | Northwest Nazarene University
+nsusharks.com | Nova Southeastern University
+okbubison.com | Oklahoma Baptist University
+obutigers.com | Ouachita Baptist University
+paceuathletics.com | Pace University
+pbasailfish.com | Palm Beach Atlantic University
+pittstategorillas.com | Pittsburg State University
+plnusealions.com | Point Loma Nazarene University
+pnwathletics.com | Purdue University – Northwest
+quincyhawks.com | Quincy University
+regisrangers.com | Regis University
+robertsredhawks.com | Roberts Wesleyan University
+rockhursthawks.com | Rockhurst University
+rsuhillcats.com | Rogers State University
+rollinssports.com | Rollins College
+rooseveltlakers.com | Roosevelt University
+svsucardinals.com | Saginaw Valley State University
+sahawks.com | Saint Anselm College
+saintleolions.com | Saint Leo University
+smusaints.com | Saint Martin's University
+smcathletics.com | Saint Michael's College
+sfstategators.com | San Francisco State University
+spufalcons.com | Seattle Pacific University
+setonhillgriffins.com | Seton Hill University
+shawbears.com | Shaw University
+shepherdrams.com | Shepherd University
+shipraiders.com | Shippensburg University of Pennsylvania
+shorterhawks.com | Shorter University
+gosfu.com | Simon Fraser University
+sruathletics.com | Slippery Rock University
+scsuowls.com | Southern Connecticut State University
+snhupenmen.com | Southern New Hampshire University
+swuwarriors.com | Southern Wesleyan University
+sbubearcats.com | Southwest Baptist University
+smsumustangs.com | Southwest Minnesota State University
+shcbadgers.com | Spring Hill College
+scsuhuskies.com | St. Cloud State University
+twupioneers.com | Texas Woman's University
+tiffindragons.com | Tiffin University
+gotrojans.com | Trevecca Nazarene University
+trumanbulldogs.com | Truman State University
+ubbulldogs.com | Union University
+uahchargers.com | University of Alabama – Huntsville
+ucmathletics.com | University of Central Missouri
+ucobronchos.com | University of Central Oklahoma
+ucgoldeneagles.com | University of Charleston
+gomountainlions.com | University of Colorado – Colorado Springs
+hiloathletics.com | University of Hawaii at Hilo
+uisprairiestars.com | University of Illinois at Springfield
+gomarymarauders.com | University of Mary
+umdbulldogs.com | University of Minnesota – Duluth
+umsltritons.com | University of Missouri – St. Louis
+montevallofalcons.com | University of Montevallo
+umobears.com | University of Mount Olive
+lopers.com | University of Nebraska at Kearney
+uncpbraves.com | University of North Carolina at Pembroke
+ungnighthawks.com | University of North Georgia
+usfcougars.com | University of Sioux Falls
+pacersports.com | University of South Carolina Aiken
+uttylerpatriots.com | University of Texas – Tyler
+uwatigers.com | University of West Alabama
+parksiderangers.com | University of Wisconsin – Parkside
+uiupeacocks.com | Upper Iowa University
+ursulinearrows.com | Ursuline College
+vstateblazers.com | Valdosta State University
+vanguardlions.com | Vanguard University of Southern California
+walshathletics.com | Walsh University
+wusports.com | Washburn University
+wscwildcats.com | Wayne State College
+wcuathletics.com | West Chester University of Pennsylvania
+westlibertyhilltoppers.com | West Liberty University
+gobuffs.com | West Texas A&M University
+wvsuyellowjackets.com | West Virginia State University
+wvwcbobcats.com | West Virginia Wesleyan College
+gomountaineers.com | Western Colorado University
+wouwolves.com | Western Oregon University
+wwuvikings.com | Western Washington University
+wcgriffins.com | Westminster College – Utah
+westmontathletics.com | Westmont College
+jewellcardinals.com | William Jewell College
+wingatebulldogs.com | Wingate University
+winonastatewarriors.com | Winona State University
+yhcathletics.com | Young Harris College
