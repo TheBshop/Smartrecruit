@@ -268,3 +268,51 @@ C|Jacob Pickard|Interim Head Coach|jacob.pickard@menlo.edu
 C|Robyn Rowley|Assistant Coach|robyn.rowley@menlo.edu
 C|Amelia-Jayne Booth|Graduate Assistant Coach|amelia-jayne.booth@menlo.edu
 C|Alice Barbieri|Volunteer Assistant Coach|alice.barbieri@menlo.edu
+#michigantechhuskies.com|200
+C|Melissa Kuhar|Head Coach|makuhar@mtu.edu
+C|Jason Dellinger|Assistant Coach|
+C|Carter Elmy|Graduate Assistant|
+#msumustangs.com|200
+C|Ryan Spence|Head Women's Soccer Coach|ryan.spence@msutexas.edu
+C|Len Smith|Associate Head Women's Soccer Coach|leonard.smith@msutexas.edu
+C|Kyle Redding|Assistant Women's Soccer Coach|
+C|Liam Pritchard|Graduate Assistant Women's Soccer Coach|
+#msumavericks.com|200
+C|Brian Bahl|Head Coach|brian.bahl@mnsu.edu
+C|Aaron Tilsen|Associate Head Coach & Director of Recruiting/Scouting|aaron.tilsen@mnsu.edu
+C|Cooper Jones|Assistant Coach, Soccer|cooper.jones@mnsu.edu
+C|Avery Korsching|Volunteer Assistant Coach - Soccer|
+C|Courtney Kovacs|Volunteer Assistant Coach - Soccer|
+C|Jenny Vetter|Volunteer Assistant Coach, Soccer|
+#www.msumdragons.com|200
+C|Scott Forster|Head Soccer Coach|scott.forster@mnstate.edu
+C|Richard Pearce|Associate Head Soccer Coach|richard.pearce@mnstate.edu
+C|Kaylin Ricci|Assistant Soccer Coach|
+C|Julia Edelstein|Assistant Goalkeeper Coach|
+#mssulions.com|200
+C|Elliot Chadderton|Head Women's Soccer Coach|Chadderton-E@mssu.edu
+C|Aidan Bilbao|Assistant Coach|bilbao-a@mssu.edu
+C|Wendy Louque|Volunteer Assistant Coach|
+#minerathletics.com|200
+C|Matthew Perry|Head Women's Soccer Coach|mperry@mst.edu
+C|Dylan Fillwock|Volunteer Assistant Coach|
+C|Lena Blake|Graduate Goalkeeper Coach|
+#molloylions.com|200
+C|Steve Price|Head Women's Soccer Coach|sprice@molloy.edu
+C|Steve Maye|Assistant Women's Soccer Coach|smaye@molloy.edu
+C|Mark Nash|Assistant Women's Soccer Coach|mnash2@molloy.edu
+C|Lauren Marinello|Assistant Women's Soccer Coach|lmarinello1@molloy.edu
+C|Lucio Sorto Vasquez|Assistant Women's Soccer Coach|
+C|Kristine Prazak-Davoli|Women's Soccer Volunteer Assistant|
+#msubsports.com|200
+C|Abiye Jack|Head Women's Soccer Coach|abiye.jack@msubillings.edu
+C|Hannah Anderson|Women's Soccer Graduate Assistant|hannah.anderson23@msubillings.edu
+C|Hailee Gertsch|Women's Soccer Graduate Assistant|hailee.gertsch@msubillings.edu
+#newberrywolves.com|200
+C|Deedee Alexander|Head Coach|diana.alexander@newberry.edu
+C|Daniel Villalobos|Assistant Coach|daniel.villalobos@newberry.edu
+C|Allison Traub|Goalkeeper Coach|allison.traub@newberry.edu
+#newmanjets.com|200
+C|Dylan Gruntzel|Head Women's Soccer Coach|gruntzeld@newmanu.edu
+C|CJ Joseph|Assistant Women's Soccer Coach|josephc@newmanu.edu
+C|Antonia Henao|Graduate Assistant Women's Soccer Coach|henaoa@newmanu.edu
