@@ -539,3 +539,15 @@ C|Becks Young|Assistant Women's and Men's Soccer Coach|young105@gannon.edu
 #goshorterhawks.com|200
 C|Alissa Gembach|Head Women's Soccer Coach|agembach@shorter.edu
 C|Logan Dye|Goalkeepers/Recruiting Coordinator|
+#fightingfalcons.com|200
+C|Alex Zaroyan|Head Women's Soccer Coach|azaroyan@fairmontstate.edu
+C|Emily Gallagher|Assistant Women's Soccer Coach|emily.gallagher@fairmontstate.edu
+C|Corinne Grabow|Assistant Women's Soccer Coach|corinne.grabow@fairmontstate.edu
+#frostburgsports.com|200
+C|Brian Parker|Head Women's Soccer Coach|bparker@frostburg.edu
+C|Bryant Sheffield|Assistant Women's Soccer Coach|bsheffield@frostburg.edu
+#roadrunnersathletics.com|200
+C|Katie Hooker|Head Coach|kahooker@msudenver.edu
+C|Andrew Sanchez|Assistant Coach|ansanchez@msudenver.edu
+C|Kristin Dedycker|Part-Time Assistant Coach|kwarren17@hotmail.com
+C|Jeff Hooker|Volunteer Assistant Coach|jshooker246@gmail.com
