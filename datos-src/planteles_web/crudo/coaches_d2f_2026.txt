@@ -586,3 +586,15 @@ C|Oneil Lewis|Assistant Coach|
 C|Tasha Flynn|Head Coach|tasha.flynn@lmunet.edu
 C|Megan Snider|Assistant Coach|megan.snider@lmunet.edu
 C|Brooke Foster|Graduate Assistant|brooke.foster02@lmunet.edu
+#umobilerams.com|200
+C|Brian Person|Head Women's Soccer Coach|bperson@umobile.edu
+C|Jordan Sinclair|Assistant Women's Soccer Coach|jsinclair@umobile.edu
+C|Ty Turner|Women's Soccer Goalkeeper Coach|
+#hilltoppersports.com|200
+C|Pete McMenemy|Head Women's Soccer Coach|pmcmenemy@westliberty.edu
+C|Pedro Chillemi|Graduate Assistant|
+#athletics.walsh.edu|200
+C|Hannah Brown|Head Women's Soccer Coach|hbrown@walsh.edu
+C|Ally Stein|Assistant Coach|astein@walsh.edu
+C|Lauren Lindesmith|Assistant Coach|
+C|Haleigh Dendinger|Assistant Coach|
