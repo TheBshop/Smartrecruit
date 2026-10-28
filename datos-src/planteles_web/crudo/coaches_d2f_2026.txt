@@ -526,3 +526,16 @@ C|Aimee Nunez|Assistant Women's Soccer Coach|
 C|Katie Mitchell|Head Women's Soccer Coach|k.mitchell@wingate.edu
 C|Michael Korman|Women's Soccer Assistant Coach & Goalkeepers Coach|m.korman@wingate.edu
 C|Lundon Danford|Women's Soccer Graduate Assistant Coach|lu.danford911@wingate.edu
+#gobarrybucs.com|200
+C|Jay Harris|Head Coach|jaharris@barry.edu
+C|Gonzalo Rudolf|Assistant Coach|grudolf@barry.edu
+C|Jesus Rondon|Volunteer Assistant Coach|jrondon@barry.edu
+C|Cynthia Flores|Volunteer Assistant Coach|
+C|Iza Ruiz|Volunteer Assistant Coach|
+#gannonsports.com|200
+C|Colin Petersen|Head Women's Soccer Coach|petersen001@gannon.edu
+C|Lia Petersen|Assistant Women's Soccer Coach|petersen005@gannon.edu
+C|Becks Young|Assistant Women's and Men's Soccer Coach|young105@gannon.edu
+#goshorterhawks.com|200
+C|Alissa Gembach|Head Women's Soccer Coach|agembach@shorter.edu
+C|Logan Dye|Goalkeepers/Recruiting Coordinator|
