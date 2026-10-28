@@ -229,3 +229,42 @@ C|Noelani Bio|Assistant Coach|
 #iupathletics.com|200
 C|Kernell Borneo|Head Coach|kborneo@iup.edu
 C|Elizabeth Lathrop|Graduate Assistant|eml002@iup.edu
+#jessupathletics.com|200
+C|Amsalu Fantahun|Head Coach|afantahun@jessup.edu
+C|Jason Drury|Assistant Coach|jdrury@jessup.edu
+C|Yvette Giraudo|Assistant Coach|ygiraudo@jessup.edu
+C|Noah Braun|Volunteer Assistant|nbraun@jessup.edu
+#kwcpanthers.com|200
+C|Ty Stauffer|Head Women's Soccer Coach|tyler.stauffer@kwc.edu
+C|Kristen Hart|Assistant Women's Soccer Coach|kristen.hart@kwc.edu
+C|Annie Stauffer|Assistant Women's Soccer Coach|anne.stauffer@kwc.edu
+#kubears.com|200
+C|Erik Burstein|Head Women's Soccer Coach|burstein@kutztown.edu
+C|Maddy Reed|Assistant Coach|mreed@kutztown.edu
+#landerbearcats.com|200
+C|Chris Ayer|Head Women's Soccer Coach|cayer@lander.edu
+C|Jason Madvig|Associate Head Coach|cmadvig@lander.edu
+C|Van Taylor|Assistant Coach|vtaylor@lander.edu
+#lrbears.com|200
+C|Justin Maullin|Head Women's Soccer Coach|justin.maullin@lr.edu
+C|Holly Zador|Associate Head Coach|holly.zador@lr.edu
+C|Bryson Shaull|Men's & Women's Soccer Graduate Assistant|Bryson.Shaull@my.lr.edu
+C|Ian McMichael|Volunteer Assistant Coach|
+C|Lexi Pitman|Volunteer Assistant Coach|
+#malonepioneers.com|200
+C|Bailey Shattell|Head Coach|bshattell@malone.edu
+#maryvillesaints.com|200
+C|Lori Lawson|Head Women's Soccer Coach|llawson@maryville.edu
+C|Eric Delabar|Assistant Women's Soccer Coach|edelabar@maryville.edu
+C|Ian McReynolds|Assistant Women's Soccer Coach|im.maryvillewsoc@gmail.com
+C|Lexi Gentry|Assistant Women's Soccer Coach|
+#mckbearcats.com|200
+C|Tim Strange|Head Women's Soccer Coach|tstrange@mckendree.edu
+C|Marc Hager|Assistant Coach|marchager@mckendree.edu
+C|Kathleen Kenny|Assistant Coach|
+C|Sam Gomez|Assistant Coach / Goalkeeper Coach|
+#menloathletics.com|200
+C|Jacob Pickard|Interim Head Coach|jacob.pickard@menlo.edu
+C|Robyn Rowley|Assistant Coach|robyn.rowley@menlo.edu
+C|Amelia-Jayne Booth|Graduate Assistant Coach|amelia-jayne.booth@menlo.edu
+C|Alice Barbieri|Volunteer Assistant Coach|alice.barbieri@menlo.edu
