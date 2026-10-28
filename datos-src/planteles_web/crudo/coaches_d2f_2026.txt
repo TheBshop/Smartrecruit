@@ -316,3 +316,67 @@ C|Allison Traub|Goalkeeper Coach|allison.traub@newberry.edu
 C|Dylan Gruntzel|Head Women's Soccer Coach|gruntzeld@newmanu.edu
 C|CJ Joseph|Assistant Women's Soccer Coach|josephc@newmanu.edu
 C|Antonia Henao|Graduate Assistant Women's Soccer Coach|henaoa@newmanu.edu
+#nmuwildcats.com|200
+C|Erin Egolf|Head Coach|eegolf@nmu.edu
+C|Nathan Phillips|Assistant Coach|natphill@nmu.edu
+C|Harry Gray|Assistant Coach|
+C|Reed Schuyler|Volunteer Assistant Coach|
+#bearcatsports.com|200
+C|Marc Gordon|Head Coach|mgordon@nwmissouri.edu
+C|Quaid Curtin|Assistant Coach|qcurtin@nwmissouri.edu
+C|Olivia Heinert|Graduate Assistant|
+C|Lydia Kline|Student Assistant|
+C|Riley Pfannenstiel|Volunteer Assistant|
+#nsusharks.com|200
+C|Stephen Burgess|Interim Women's Soccer Head Coach|sburgess@nova.edu
+C|Agustin Iusem|Graduate Assistant Women's Soccer Coach|ai521@nova.edu
+#obutigers.com|200
+C|Kevin Wright|Head Women's Soccer Coach|wrightk@obu.edu
+C|Ryan Spigner|Women's Soccer Assistant Coach|spignerrt@obu.edu
+#paceuathletics.com|200
+C|Brittany Soto|Head Coach|bsoto@pace.edu
+C|Taylor Moyer|Graduate Assistant Coach|tm96155p@pace.edu
+#pbasailfish.com|200
+C|Stephanie Cradduck|Head Women's Soccer Coach|stephanie_cradduck@pba.edu
+C|Matteo Scarduzio|Goalkeeper Coach|matteo_scarduzio@pba.edu
+#pittstategorillas.com|200
+C|Wes Branstetter|Head Coach|wes.branstetter@pittstate.edu
+C|Lucca Munhoz|Assistant Coach|lmunhoz@pittstate.edu
+C|Alesha Kostrzewa|Graduate Assistant|akostrzewa@gus.pittstate.edu
+#plnusealions.com|200
+C|Kristi Kiely|Head Coach|kkiely@pointloma.edu
+C|Tanner Wolf|Assistant Coach|twolf@pointloma.edu
+C|Mark Yeeles|Assistant Coach|myeeles@pointloma.edu
+C|Duarte Andrade|Goalkeeper Coach|
+C|Julia Pinnell|Assistant Coach|
+C|Kate Maietta|Assistant Coach|
+#pnwathletics.com|200
+C|Mary Whisler|Head Women's Soccer Coach|mwhisler@pnw.edu
+C|Nicki Rucki|Assistant Women's Soccer Coach|n.rucki@pnw.edu
+C|Jonah NunoSheldon|Assistant Coach|
+#regisrangers.com|200
+C|Jeff Frykholm|Head Women's Soccer Coach|jfrykholm@regis.edu
+C|Luke Meadows|Assistant Women's Soccer Coach|lmeadows@regis.edu
+C|Dani Hansen|Volunteer Goalkeepers Coach|
+C|Josh Dworsky|Volunteer Assistant Coach|
+#robertsredhawks.com|200
+C|Bobby McColl|Head Coach|mccoll_bobby@roberts.edu
+C|Rob Arrendell|Assistant Coach|Arrendell_Robert@roberts.edu
+C|Cami Brescia|Graduate Assistant|brescia_cami@roberts.edu
+C|Aleah Martone|Assistant Coach|martone_Aleah@roberts.edu
+C|PJ Niegsch|Director of Goalkeeping/Head Development Coach|
+#rockhursthawks.com|200
+C|Greg Herdlick|Head Coach, Women's Soccer|greg.herdlick@rockhurst.edu
+C|Erin Ellefson|Assistant Coach|erin.ellefson@rockhurst.edu
+C|Kenzie Dunaway|Assistant Coach|Dunaway.kenz@gmail.com
+#rsuhillcats.com|200
+C|Alex Latorre|Head Coach|alatorre@rsu.edu
+C|Jordan Watson|Assistant Coach/Recruiting Coordinator|jwatson@rsu.edu
+C|Hannah Schulze|Volunteer Assistant Coach|
+#rollinssports.com|200
+C|Alicia Schuck|Head Coach|aschuck@rollins.edu
+C|Laszlo van Straelen|Assistant Coach/Recruiting Coordinator|lvanstraelen@rollins.edu
+C|Alex Mathias|Assistant Coach|amathias@rollins.edu
+#svsucardinals.com|200
+C|Tyler Channell|Women's Soccer Head Coach|ttchanne@svsu.edu
+C|Bridget Symborski|Assistant Coach|bsymbors@svsu.edu
