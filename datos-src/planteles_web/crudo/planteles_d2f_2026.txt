@@ -759,3 +759,27 @@ P|Jada Lamond|D|Jr.|Canberra, Australia
 P|Ryann Phillips|D|Fr.|Barrigada, Guam
 P|Marisol Gomez|M|Sr.|Aguascalientes, Mexico
 P|Clara Martin|F|Fr.|Cuellar, Spain
+#claytonstatesports.com|200|soloextranjeras|24
+P|Ellie Barrett|F|Jr.|Essex, England
+P|Dalya Ayayda|F|Jr.|London, Ontario, Canada
+P|Holly Jones|M|Jr.|Liverpool, England
+P|Jael Bruhlmeier|F|Jr.|Riedtwil, Switzerland
+P|Jessica Fidhi|M|So.|Montreal, Quebec, Canada
+P|Ninni Ringstad|M|Jr.|Moss, Norway
+P|Natasha Goodwin|D|Sr.|Uttoxeter, England
+P|Miu Kemei|F|So.|Iwaki, Japan
+#lubluetigers.com|200|soloextranjeras|29
+P|Kanon Dehama|GK|Sr.|Nagoya, Japan
+P|Rachael Noel|D|Jr.|St. Patrick, Grenada
+P|Anne Fernandes|D|Jr.|Rio de Janeiro, Brazil
+P|Dana Brooks|D|Sr.|Alajuela, Costa Rica
+P|Yeriell Quiros|M|So.|San Jose, Costa Rica
+P|Vanessa Dagher|M|Jr.|Brampton, Canada
+P|Shareina Langevine|D|So.|Toronto, Canada
+P|Nicole Calderon|M|Sr.|San Jose, Costa Rica
+P|Natalie Bevan|D|Jr.|Caledon East, Canada
+P|Sofia Bremer|D|Jr.|Belo Horizonte, Brazil
+P|Gabriella Bortolussi|F|So.|Mississauga, Canada
+P|Sofia Valdivia|F|So.|Chihuahua, Mexico
+P|Giovanna Mingo|D|So.|Asuncion, Paraguay
+P|Kelly Nunes|M|Sr.|Kingston, Jamaica
