@@ -546,3 +546,92 @@ P|Maddie Adams|F|So.|Texarkana, Texas
 P|Parker Barrow|D|Sr.|Little Rock, Ark.
 P|Tailynn Moore|D|Fr.|Mansfield, Texas
 P|Sara Daniel|D|Jr.|Searcy, Ark.
+#gogriffons.com|200|soloextranjeras|27
+#wscwildcats.com|200|soloextranjeras|29
+#pittstategorillas.com|200|soloextranjeras|25
+#aicyellowjackets.com|200|soloextranjeras|40
+P|Hedda Haukland|GK|Fr.|Bodø, Norway
+P|Emma Roberts|GK|Fr.|London, England
+P|Rotem Shechter|D|Jr.|Gan Yoshiya, Israel
+P|Molly Holmgren|M|Fr.|Malmo, Sweden
+P|Izzy Eaton|F|Fr.|Leeds, England
+P|Flavia Taveri|F|Jr.|Rome, Italy
+P|Quyannah Comber|F/M|So.|Kelowna, BC
+P|Amalia Vargas|D|So.|Santo Domingo, Dominican Republic
+P|Elena Nunez|D|Sr.|Valencia, Spain
+P|Mel Lourenco|M|So.|Rio de Janeiro, Brazil
+P|Amelia Sedgwick|D|Jr.|Nottingham, England
+P|Caroline Skov Johansson|M|So.|Soeborg, Denmark
+P|Lilia Slattery|D|So.|Swindon, England
+P|Romane Bernier|D|Fr.|Nantes, France
+P|Yishmel Dechi|F/M|So.|Toronto, ON
+P|Emali Goulas|M|Sr.|Melbourne, Australia
+P|Koa Paine|D|Jr.|Tasmania, Australia
+P|Karoline Eriksen|F|Fr.|Marstal, Denmark
+#msumustangs.com|200|soloextranjeras|30
+P|Marlene Myrvold|M|Sr.|Brekstad, Norway
+P|Izzy Amphlett|M|Jr.|Oxford, England
+#gswcanes.com|200|soloextranjeras|26
+P|Laugane Dion|D|So.|Quebec, Canada
+P|Ines Balaghni|F|Jr.|Injoux, France
+#jessupathletics.com|200|soloextranjeras|21
+#flaglerathletics.com|200|soloextranjeras|27
+P|Netanya Brown|F|Fr.|Bowmanville, Ontario, Canada
+P|Phoebe Davidson|F|So.|Manchester, England
+P|Irina Barron-Gomez|GK|Fr.|Barcelona, Spain
+#erauathletics.com|200|soloextranjeras|24
+P|Embla Adalsteinsdottir|GK|So.|Reykjavik, Iceland
+P|Ida Peterson|D|So.|Alingsaas, Sweden
+P|Lowa Ahlen|D|Fr.|Lidköping, Sweden
+P|Agnes Vigholm|M|Jr.|Eskiltsuna, Sweden
+P|Lisa Elowsson|F|Jr.|Stockholm, Sweden
+P|Molly Metcalfe|M|Sr.|Portsmouth, U.K.
+P|Ida Zetterberg|F|Jr.|Uppsala, Sweden
+P|Berglind Thrastardottir|F/M|Sr.|Hafnarfjordur, Iceland
+P|Ebba Fjordskaer|F|Fr.|Gothenburg, Sweden
+P|Franziska Libske|M|Jr.|Vechelde, Germany
+P|Thordis Sveinbjornsdottir|D|Fr.|Reykjavík, Iceland
+P|Eve Tiktikakis|M/D|Sr.|Melbourne, Australia
+P|Emily Vennard|D|Fr.|Dartford, U.K.
+P|Anna Hansson|M|Sr.|Skellefteå, Sweden
+#newberrywolves.com|200|soloextranjeras|32
+P|Claudia Vincent|D|Jr.|Sydney, Australia
+#gotoros.com|200|soloextranjeras|28
+#hpusharks.com|200|soloextranjeras|29
+#wingatebulldogs.com|200|soloextranjeras|32
+P|Noemie Tartrou|GK|Jr.|Herblay, France
+P|Ida Bogren|M|Fr.|Malmö, Sweden
+P|Sophie Joly|D|Jr.|Toronto, Ontario
+P|Matilda Boyle|F|Jr.|Perth, Australia
+P|Audur Helga Halldorsdottir|F|Jr.|Þorlákshöfn, Iceland
+P|Audrey Billette|D|Fr.|Montréal QC, Canada
+P|Michelle Wenger|M|Sr.|Biberstein, Switzerland
+P|Lori Škulj|D|Jr.|Škofja Loka, Slovenia
+P|Charlotte Herrmann|F|Fr.|Munich, Germany
+P|Pien Coppoolse|D|Jr.|Breda, The Netherlands
+P|Tilde Wahrenberg|F|So.|Helsingborg, Sweden
+#paceuathletics.com|200|soloextranjeras|33
+P|Bindiya Wadhwani|M|So.|Noord, Aruba
+#robertsredhawks.com|200|soloextranjeras|28
+P|Kyanna Alarcon|M|So.|Toronto, ONT
+P|Kyerra Alarcon|D|So.|Toronto, ONT
+P|Ayana Horan|D|So.|Courtice, ONT
+P|Mackenzie Kikkert|D|Fr.|Lincoln, ONT
+#goshorterhawks.com|200|soloextranjeras|20
+P|Tatiana do Pinho Cândido Ferreira|F|Sr.|Atibaia, Brazil
+#ursulinearrows.com|200|soloextranjeras|30
+P|Laetitia Scheunemann|GK|Jr.|Berlin, Germany
+P|Grace Martin|D|So.|Mississauga, Ontario
+P|Maria Saavedra|F|Sr.|London, Ontario
+P|Vanessa Baugatz|F|So.|Berlin, Germany
+P|Mia Meyer|M|Fr.|Hamburg, Germany
+P|Tara Resing|D|So.|Mülheim an der Ruhr, Germany
+P|Dora Peszlen|M|Jr.|Felcsút, Hungary
+P|Loreley Maier|F|Fr.|Bad Boll, Germany
+P|Fiona Rombach|F|Fr.|Bielefeld, Germany
+#goswords.com|200|soloextranjeras|24
+#rockhursthawks.com|200|soloextranjeras|30
+#iupathletics.com|200|soloextranjeras|31
+P|Zoe Ans-Bitchoka|F|So.|Montreal, Canada
+P|Jordina Rovira|F|Gr.|Balaguer, Spain
+P|Charlotte De Keukelaere|D|So.|Chauve, France
