@@ -10894,6 +10894,12 @@ function AccountMenu({ session }) {
     return () => clearTimeout(t);
   }, [cooldown]);
   const reset = (m) => { setMode(m); setStep("form"); setErr(""); setInfo(""); setCode(""); };
+  // Los avisos "guardá tu progreso" abren este formulario en modo "crear cuenta".
+  useEffect(() => {
+    const onOpen = () => { setOpen(true); reset("signup"); };
+    window.addEventListener("rr-open-account", onOpen);
+    return () => window.removeEventListener("rr-open-account", onOpen);
+  }, []);
   const okEmail = !!email && /.+@.+\..+/.test(email.trim());
   const sendCode = async () => {
     setBusy(true); setErr(""); setInfo("");
@@ -11434,9 +11440,23 @@ function AppInner() {
 
   // ---- Sesión (Supabase): magic link por email, con migración automática del progreso guardado en este navegador ----
   const [session, setSession] = useState(null);
+  const [sessionReady, setSessionReady] = useState(false); // evita mostrar "creá tu cuenta" mientras todavía se está leyendo la sesión
+  const [saveBannerHidden, setSaveBannerHidden] = useState(() => {
+    try { return Number(localStorage.getItem("rr_save_banner_until") || 0) > Date.now(); } catch (e) { return false; }
+  });
+  const openAccountSignup = () => {
+    try { window.posthog && window.posthog.capture("cuenta_aviso_click", { etapa: stage }); } catch (e) {}
+    setSidebarCollapsed(false); setMenuOpen(true);
+    setTimeout(() => { try { window.dispatchEvent(new Event("rr-open-account")); } catch (e) {} }, 0);
+  };
+  const hideSaveBanner = () => {
+    try { window.posthog && window.posthog.capture("cuenta_aviso_cerrado", { etapa: stage }); } catch (e) {}
+    setSaveBannerHidden(true);
+    try { localStorage.setItem("rr_save_banner_until", String(Date.now() + 7 * 24 * 3600 * 1000)); } catch (e) {}
+  };
   useEffect(() => {
     let mounted = true;
-    supabase.auth.getSession().then(({ data }) => { if (mounted) setSession(data.session); });
+    supabase.auth.getSession().then(({ data }) => { if (mounted) { setSession(data.session); setSessionReady(true); } }).catch(() => { if (mounted) setSessionReady(true); });
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, sess) => {
       if (!mounted) return;
       setSession(sess);
@@ -11583,6 +11603,15 @@ function AppInner() {
           <div className="rm-alert">
             <b>Sumamos Términos y Condiciones y Política de Privacidad.</b> Para seguir usando tu perfil, revisalos y aceptalos
             {" "}(si sos menor de 18, con la conformidad de tu madre, padre o tutor). <button type="button" className="rm-btn-inline" onClick={() => { setStage("form"); window.scrollTo(0, 0); }}>Revisar y aceptar →</button>
+          </div>
+        </div>
+      )}
+      {sessionReady && !session && !saveBannerHidden && profile && profile.name && ["landing", "results", "mylist", "plan", "camino", "history", "outreach", "profile"].includes(stage) && (
+        <div className="rm-wrap" style={{ paddingTop: 16 }}>
+          <div className="rm-alert">
+            <b>Tu progreso está guardado solo en este navegador.</b> Si cambiás de celular o borrás los datos, lo perdés. Creá tu cuenta gratis (con tu mail, sin tarjeta) y lo ves igual desde cualquier dispositivo.
+            {" "}<button type="button" className="rm-btn-inline" onClick={openAccountSignup}>Crear mi cuenta →</button>
+            {" "}<button type="button" className="rm-btn-inline" style={{ background: "transparent", color: "inherit", border: "none", textDecoration: "underline", fontWeight: 500 }} onClick={hideSaveBanner}>Ahora no</button>
           </div>
         </div>
       )}
