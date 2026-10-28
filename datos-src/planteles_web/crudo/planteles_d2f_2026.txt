@@ -686,3 +686,42 @@ P|Rayna Cummins|F|Jr.|St. James, Barbados
 P|Lea Gruber|M|Fr.|Dannstadt-Schauernheim, Germany
 #michigantechhuskies.com|200|soloextranjeras|31
 P|Melissa Riley|M|So.|Metheringham, England
+#uwaathletics.com|200|soloextranjeras|24
+P|Malena Iulietto|GK|Fr.|Notre Dame De L Ile Perrot, Canada
+P|Maya Schilling|D|So.|Gibraltar
+P|Mikaela Carpino|M|So.|Canada
+P|Holly Gillies|M/D|Sr.|Glasgow, Scotland
+P|Sofia Lacey|F|So.|Maidenhead, England
+P|Sofia Jimenez Perez|M|Jr.|Parras Coahuila, Mexico
+P|Kya Jacobs|F|So.|Guelph, Canada
+P|Santanna O'Grady|D|Sr.|Pickering, Ontario, Canada
+P|Jade Arruda|D|So.|Shelburne, Ontario
+P|Tianna Klysh|F|Jr.|Winnipeg, Manitoba, Canada
+P|Gabriela Signorini|D|Jr.|Vinhedo, São Paulo, Brazil
+#jewellcardinals.com|200|soloextranjeras|23
+#uncpbraves.com|200|soloextranjeras|25
+P|Lea Pepin|M|Fr.|Sherbrooke, Quebec, Canada
+P|Lilly Vegborn Green|F|Fr.|Halmstad, Sweden
+P|Klara Persson|M|Fr.|Sölvesborg, Sweden
+#rsuhillcats.com|200|soloextranjeras|28
+P|Calais Butts|GK|Sr.|Edmonton, Canada
+P|Te Waiariki Read|F|Jr.|Whangarei, New Zealand
+P|Bella Holland|F|So.|Blackpool, England
+P|Jessica Powell|D|Jr.|St. John's, Antigua
+#fightingfalcons.com|200|soloextranjeras|31
+P|Emelly Chicas|D/M|Sr.|Siguatepeque, Honduras
+P|Rania Hazri|M/F|Sr.|Shah Alam, Malaysia
+P|Stephanie Pedias|M|So.|Markham, Ontario, Canada
+P|Dayra Dinarte|F/M|Sr.|Nicoya, Costa Rica
+P|Agnes Bjork|D/M|Jr.|Stockholm, Sweden
+#goskyhawks.com|200|soloextranjeras|26
+#msumavericks.com|200|soloextranjeras|41
+#shepherdrams.com|200|soloextranjeras|23
+#sbubearcats.com|200|soloextranjeras|26
+P|Juana Fernandez Calvo|M/F|Jr.|Buenos Aires, Argentina
+#umdbulldogs.com|200|soloextranjeras|32
+P|Tessa Hyland|M|Sr.|Blenheim, New Zealand
+#ungathletics.com|200|soloextranjeras|28
+P|Reese Hopkinson|M|Fr.|Leeds, England
+P|Alice Balaam|F|Fr.|Surrey, England
+#athletics.walsh.edu|200|soloextranjeras|24
