@@ -1,0 +1,548 @@
+#uttylerpatriots.com|200
+P|Skylar Lind|GK|So.|Anchorage, AK
+P|Robbi Curry|GK|Sr.|Allen, Texas
+P|Peyton Roberts|GK|Jr.|Burleson, Texas
+P|Addison DeHoyos|MF|R-Fr.|San Antonio, Texas
+P|Ella Anderson|F|Jr.|Anna, Texas
+P|Halli Keese|F|Jr.|Denton, Texas
+P|Katie Wong|F|Jr.|Burleson, Texas
+P|Katarina Soto|D|So.|McKinney, Texas
+P|Addie Russu|MF|Sr.|Georgetown, Texas
+P|Carter Neiman|D|Jr.|Durango, CO
+P|Lily Moreno|MF|Fr.|Allen, Texas
+P|Marin Love|MF|Sr.|Henderson, Texas
+P|Quinn Wolfe|MF|So.|Prosper, Texas
+P|Lexi Luff|MF|So.|Anchorage, AK
+P|Taylor Thibodeau|MF|Sr.|Midlothian, Texas
+P|Ava Harris|F|So.|Mansfield, Texas
+P|Mayla Dawkins|F|Fr.|Arlington, Texas
+P|Hadley Carpenter|MF|Sr.|Waco, Texas
+P|Savanna Clark|D|Jr.|Rockwall, Texas
+P|Sarah Hayes|MF|Sr.|Argyle, Texas
+P|Arianna Johnson|D|So.|McKinney, Texas
+P|Nicoline Veasey|D|Sr.|Spring, Texas
+P|Paige Kees|MF|Fr.|Humble, Texas
+P|Danica Anaya|MF|Jr.|McKinney, Texas
+P|Celine Diaz|MF|Jr.|Ft. Worth, Texas
+P|Sam White|D|So.|Georgetown, Texas
+P|Onora Farney|D|Jr.|Litchfield Park, AZ
+P|Carson Glenn|MF|Jr.|Liberty Hill, Texas
+P|Larixsa Plascencia|MF|So.|San Antonio, Texas
+P|Katelyn Odajima|MF|R-Fr.|Waco, Texas
+P|Kayden Raney|MF|Fr.|Pflugerville, Texas
+P|Nicole Nguyen|F|So.|Lafayette, CA
+P|Emie Benson|D|Fr.|Georgetown, Texas
+P|Teagan Maddux|MF|Fr.|Spring, Texas
+P|Audrey Varney|D|Jr.|Flower Mound, Texas
+P|Trystan Wischnewsky|D|Fr.|Sachse, Texas
+P|Presley See|MF|Fr.|Ft. Worth, Texas
+#csusbathletics.com|200
+P|Austyn Brooks|GK|Fr.|Rancho Cucamonga, Calif.
+P|Bella Silva|GK|So.|Beaumont, Calif.
+P|Ayme Delgado|D|5th|San Diego, Calif.
+P|Jaclyn Silva|M|So.|Jurupa Valley, Calif.
+P|Alissa Torres|F|5th|Eastvale, Calif.
+P|Ruby Segura|D|5th|Cathedral City, Calif.
+P|Jazmine Wilson|D|5th|San Diego, Calif.
+P|Raylene Alcaraz|M|Sr.|Riverside, Calif.
+P|Sydney Sapida|F|Jr.|Murrieta, Calif.
+P|Yesenia Flores|F|Fr.|Chino Hills, Calif.
+P|Unieque Solis-Marquina|M|5th|San Bernardino, Calif.
+P|Alyssa Vernon|F|Jr.|Hesperia, Calif.
+P|Vianca Sanchez|M|Jr.|Fontana, Calif.
+P|Reagan Parkhill|M|Jr.|San Dimas, Calif.
+P|Madeleine Iñiguez|D|Jr.|Lathrop, Calif.
+P|Valerie Garcia|F|Sr.|Santa Ana, Calif.
+P|Jaelyn Frazier|F|Fr.|San Jacinto, Calif.
+P|Jayme Beatty|M|5th|West Covina, Calif.
+P|Abby Bassett|D|Jr.|Chino, Calif.
+P|Sophia Leoro|M|Jr.|Eastvale, Calif.
+P|Marianne Tarin|M|So.|Eastvale, Calif.
+P|Maya Alston|F|Jr.|Keizer, Ore.
+P|Gianna Senices|D|5th|Corona, Calif.
+P|Mila Bettinelli|F|5th|Sebastopol, Calif.
+P|Jackie Fuentes|M|Jr.|San Bernardino, Calif.
+P|Leilani White|D|Sr.|Eastvale, Calif.
+P|Sydney Montgomery|D|Jr.|Menifee, Calif.
+P|Sakiah Williams|D|Jr.|San Bernardino, Calif.
+P|Aloha Espiritu|M|Jr.|San Diego, Calif.
+P|Haylee Chilton|D|Jr.|Menifee, Calif.
+P|Angelyn Pena|F|Jr.|Los Angeles, Calif.
+P|Clarissa Rolon|F|Fr.|Hesperia, Calif.
+P|Sarahi Sanchez|F|Jr.|Guadalajara, Mexico
+P|Graciella Baird|F|Fr.|Hacienda Heights, Calif.
+P|Andrea Ortiz|M|5th|Hawthorne, Calif.
+P|Camila Lara|M|So.|Rancho Cucamonga, Calif.
+P|Codi Kowalsky|M|Fr.|La Habra, Calif.
+P|Jordan Goldstein|F|Jr.|Corona, Calif.
+P|Bella Ortiz|GK|Sr.|Upland, Calif.
+#landerbearcats.com|200
+P|Alicia Skoog|GK|R-Fr.|Greer, S.C.
+P|Leah Hayes Coen|GK|Sr.|Limerick, Ireland
+P|Kambell Robbins|GK|R-So.|Leesburg, Ga.
+P|Isabella LaMadrid|GK|R-Fr.|Atlanta, Ga.
+P|Sophia Trio|MF|So.|Charleston, S.C.
+P|Ellisyn Poland|F|R-So.|Charleston, S.C.
+P|Darcy Ahern|MF|Jr.|Chapin, S.C.
+P|Peyton Bibbee|MF|Jr.|Fairfax, Va.
+P|Katherine Haigler|F|So.|Chapin, S.C.
+P|Saige Peterson|F|So.|Spartanburg, S.C.
+P|Bri Little|MF|So.|Wilson, N.C.
+P|Sydney Erickson|D|R-Fr.|Chantilly, Va.
+P|Angele Hills|F|R-So.|Ladson, S.C.
+P|Rylee King|MF|Sr.|Lexington, S.C.
+P|Langley Stewart|D|So.|Simpsonville, S.C.
+P|Carolyn Tessadri|MF|Fr.|Rock Hill, S.C.
+P|Nicolly Oh|F|R-Fr.|Santa Barbara, Calif.
+P|Evelyn Wright|F|Jr.|Ridgeway, S.C.
+P|Morgan Duong|D|R-Fr.|Jacksonville, Fla.
+P|Ansley Morrell|F|Sr.|Moncks Corner, S.C.
+P|Grace Benson|D|So.|Chapin, S.C.
+P|Maddie Leber|D|Gr.|Wilmington, N.C.
+P|Lizzy Sexton|MF|Fr.|Fort Mill, S.C.
+P|Gianna Pacheco|D|R-Fr.|Beaufort, S.C.
+P|Gabby Redman|MF|Jr.|Charleston, S.C.
+P|Isabela Charriez|D|Fr.|Lexington, S.C.
+P|Alyssa Singh|MF|Fr.|Taylors, S.C.
+P|Emerson Hamilton|MF|Fr.|Greenville, S.C.
+P|Chase Tyler|D|Fr.|Broadalbin, N.Y.
+P|Reagan Hardy|D|Sr.|Summerville, S.C.
+P|Ruby Stayduhar|D|Sr.|Fort Mill, S.C.
+P|Kylie Wilson|D|Jr.|Bishop, Ga.
+P|Paige Bailey|F|So.|Myrtle Beach, S.C.
+P|Katie Hennessy|MF|R-Fr.|Spartanburg, S.C.
+P|Allyson Leyva|D|Fr.|Hilton Head Island, S.C.
+P|Sara Clayton|MF|Jr.|Summerville, S.C.
+P|Lilly Hodge|MF|Jr.|Charleston, S.C.
+#fpuravens.com|200
+P|Ryan Rosario|GK|So.|Holbrook, N.Y.
+P|Rachel Healey|GK|Jr.|Naugatuck, Conn.
+P|Kayla Leite|D|Jr.|Woodstock, Conn.
+P|Kenzie Longmuir|D|So.|Auckland, New Zealand
+P|Mikayla Horton|M|Jr.|East Islip, N.Y.
+P|Ruby Conroy|D|5th|Hawthorne, N.J.
+P|Vanessa Praher|M|Sr.|Wolfsburg, Germany
+P|Camille Berenguer|M|Fr.|Auvergne, France
+P|Hannah Callini|M|Fr.|Westfield, Mass.
+P|Sakurako Hara|M|Jr.|Saitama, Japan
+P|Audrey Mazzarella|F|Jr.|Enfield, Conn.
+P|Olivia Goss|M|So.|Manchester, Conn.
+P|Ari Clifford|M|Jr.|Plainville, Conn.
+P|Maddie Fitzgerald|F|So.|Whitman, Mass.
+P|Gianna Sakowski|F|Jr.|Springfield, Mass.
+P|Ava West|F|So.|North Bellmore, N.Y.
+P|Savannah Gauron|D|Fr.|Haverhill, Mass.
+P|Lucy Warywoda|D|Fr.|Kings Park, N.Y.
+P|Kate McArdle|F|So.|Holyoke, Mass.
+P|Isabella Hernandez Diaz|M|Sr.|Bogotá, Colombia
+P|Julia Derose|M|So.|Pawleys Island, S.C.
+P|Marina Hunleth|D|So.|Suffield, Conn.
+P|Aubree Usher|F|So.|Enfield, Conn.
+P|Kaitlyn Bautista|M|Jr.|Scurry, Texas
+P|Savannah Parker|F|Fr.|Lunenburg, Mass.
+P|Neela Caruso|D|So.|Plainville, Mass.
+P|Katie Stook|D|So.|Trumbull, Conn.
+P|Brigid Moore|D|Jr.|West Springfield, Mass.
+P|Isabella White|D|So.|East Longmeadow, Mass.
+P|Mari Heiskanen|M|So.|Kirkkonummi, Finland
+P|Lily Ollivierra|F|Jr.|Nashua, N.H.
+P|Brooke Hartshorn|M|5th|Frico, Texass
+P|Reese Hughes|F|Fr.|Chelmsford, Mass.
+P|McKenna Maguire|F|So.|Brookline, N.H.
+P|Syriah DeBakey|F|Fr.|Houston, Texas
+P|Ava Allaire|D|Sr.|Lynn, Mass.
+P|Zoriah Wray|M|Fr.|Springfield, Mass.
+P|Payton Leite|D|Fr.|Woodstock, Conn.
+P|Alyssa Foote|F|Fr.|Baltimore, M.D.
+P|Mia Goicochea|M|So.|Queens, N.Y.
+P|Jacqueline Manning|F|Fr.|Quincy, Mass.
+P|Grace Healy|D|Fr.|Long Island, N.Y.
+P|Audrey Drons|F|Fr.|Bellingham, Mass.
+P|Julianna Lanzillo|F|So.|Chelmsford, Mass.
+P|Inka Rajala|F|Jr.|Järvenpää, Finland
+P|Alexis Canoa|D|Fr.|Belchertown, Mass.
+P|Aino Martikainen|D|5th|Järvenpää, Finland
+P|Mia Banchero|F|Sr.|Seattle, Wash.
+P|Maia Colavito|D|Fr.|Woodbury, Conn.
+P|Jess LaCroix|GK|So.|Nashua, N.H.
+#dbupatriots.com|200
+P|Leslie Miller|GK|Jr.|Edmond, OK
+P|Josie Juvera|GK|Fr.|Prosper, TX
+P|Calla Schrock|M|So.|Bellflower, CA
+P|Leah Hurley|M|Fr.|College Station, TX
+P|Sadie Zbranek|F|Fr.|McKinney, TX
+P|Lex Williamson|M|Sr.|Rockwall, TX
+P|Skylar Belanger|D|So.|Keller, TX
+P|Sydney Hopper|M|So.|Bentonville, AR
+P|Allie Allen|F|Jr.|Abilene, TX
+P|Kylar Coffman|D|Sr.|Mansfield, TX
+P|Kenzi Tufts|D|Jr.|Southlake, TX
+P|Ava Garvin|D|Fr.|Little Elm, TX
+P|Hannah Montoya|M|Jr.|Oklahoma City, OK
+P|Kenzi Coffman|D|Fr.|Mansfield, TX
+P|Bella Medina|F|So.|Spring, TX
+P|Erin Dull|M|Jr.|Plano, TX
+P|Riley Olsen|F|So.|Flower Mound, TX
+P|Tatum Barnard|M|Fr.|McKinney, TX
+P|Carly Gekas|M|Sr.|Flower Mound, TX
+P|Chloe Monroe|D|Jr.|Argyle, TX
+P|Reagan Roberson|F|So.|Coppell, TX
+P|Emma Croley|M|Jr.|Riverside, CA
+P|McKenna Vela|F|Sr.|Weatherford, TX
+P|Tina Clark|D|Sr.|Trophy Club, TX
+P|Ella Wilson|D|Sr.|Bakersfield, CA
+P|Ashley Washburn|F|Sr.|The Woodlands, TX
+P|Tyler Weaver|D|Fr.|Houston, TX
+P|Chandler Wheat|F|So.|Midlothian, TX
+P|Mallory Bankhead|GK|Jr.|Belton, TX
+#uahchargers.com|200
+P|CeCe Szopa|GK|Sr.|Nolensville, Tenn.
+P|Kacey Powell|GK|R-Jr.|Decatur, Ala.
+P|Chelsey Curtis|MF|Jr.|Harvest, Ala.
+P|Claire Ward|D|Fr.|Madison, Ala.
+P|Edie Stickell|MF|So.|Lake Charles, La.
+P|Caila Batchelor|MF|R-Sr.|Madison, Ala.
+P|Adriana Rojas|MF|Jr.|Hollywood, Md.
+P|AC Blackaby|MF/F|Fr.|Cleveland, Tenn.
+P|Cara Tortelli|MF/F|Fr.|Novi, Mich.
+P|Sara Sherman|MF/F|Fr.|Henderson, Nev.
+P|Taylor Fegley|D|So.|Buford, Ga.
+P|RK Naman|MF|Jr.|Mobile, Ala.
+P|Addison Knauss|MF|Jr.|Buford, Ga.
+P|Ashley Wells|D|Sr.|Littleton, Colo.
+P|Aniah Leflouria|D|So.|Murfreesboro, Tenn.
+P|Carley White|MF/F|Sr.|Madison, Ala.
+P|Kaitlyn Lewis|F|Fr.|Memphis, Tenn.
+P|Campbell Tarentino|D|Jr.|Powder Springs, Ga.
+P|Michella Tortelli|MF|Jr.|Novi, Mich.
+P|Tuva Lundström|MF|Fr.|Stockholm, Sweden
+P|Mariela Delfin|D|R-Fr.|Trussville, Ala.
+P|Ella Marlow|MF/F|Fr.|Murfreesboro, Tenn.
+P|Evelina Gustafsson|MF|R-Jr.|Stockholm, Sweden
+P|Erin Turley|F|Jr.|Oxford, Ala.
+P|Zina Moesen|D|Jr.|Diepenbeek, Belgium
+P|Michelle White|D|Sr.|Spring Hill, Tenn.
+P|Olive Turner|D|Fr.|Huntsville, Ala.
+P|Prescott Hull|D|R-So.|Franklin, Tenn.
+P|AK Wallace|F|R-Fr.|Talladega, Ala.
+P|Lily Reafsnyder|GK|R-Fr.|Collierville, Tenn.
+#csucougars.com|200
+P|Ashlyn Valentine|GK|Fr.|Norcross, Ga.
+P|Huda Sayedzada|GK|Sr.|Columbus, Ga.
+P|Cici Powe|GK|Jr.|Allenhurst, Ga.
+P|Mia Johnson|F|Jr.|Seattle, Wash.
+P|Sophia Leal|M|Jr.|Oxford, Ga.
+P|Brylee Schermerhorn|D|Fr.|Maumee, Ohio
+P|Kelsey Croft|D/M|Sr.|Douglasville, Ga.
+P|Kendal Coreil|M|Sr.|Panama City Beach, Fla.
+P|Paulina Cervantes|M|Fr.|Gainesville, Fla.
+P|Kaylee Castano|M|Sr.|Las Vegas, Nevada
+P|Sarah Dennis|F|So.|Cumming, Ga.
+P|Raegen Varvarigos|F|Jr.|Oviedo, Fla.
+P|Elle Henschel|F|Jr.|Charlotte, N.C.
+P|Aubrey Patterson|D|So.|Athens, Ga.
+P|Ansley Caldwell|D/M|Sr.|Watkinsville, Ga.
+P|Juanita Escobar|M|Sr.|Medellin, Colombia
+P|Ui Suzuki|F|Jr.|Kawasaki, Japan
+P|Mia Robinson|F|Jr.|Camden, S.C.
+P|Brianna Nguyen|M|Jr.|Duluth, Ga.
+P|Shania Wegesend|F|Sr.|Commerce, Ga.
+P|Sue Murray|M|Fr.|Locust Grove, Ga.
+P|Payton Conti|F|Sr.|Dallas, Ga.
+P|Gianna Musci|D|Fr.|Lilburn Ga.
+P|Skye Tumbelty|D|Jr.|Green Cove Springs, Fla.
+P|Trinity Zeigler|F|So.|Woodstock, Ga.
+P|Jada Goodman|M|Jr.|Golden, Colo.
+P|Ellie Cervantes|D|Fr.|Gainesville, Fla.
+P|Delaney Weatherly|D|Jr.|Pendergrass, Ga.
+P|Allie Stokely|D|Fr.|Dacula, Ga.
+P|McKenna McBride|D|Fr.|Winter Garden, Fla.
+#montevallofalcons.com|200
+P|Frida Larsson|GK|Sr.|
+P|Jolie Cazale|GK|Gr.|Irvine, California
+P|Preslee Malavenda|M|Jr.|Chino HIlls, Ca.
+P|Erika Pay|WB|Sr.|Mysen, Norway
+P|Batie Casey|M/D|R-So.|Germantown, Tennessee
+P|Mia Matherne|M|Fr.|Pensacola, Florida
+P|Madison Bennett|WB|Jr.|Clarksville, Tenn.
+P|Sierra Nickelberry|D|Sr.|Fontana, California
+P|Katelynn Kott|F|Jr.|Palmdale, Ca.
+P|Janelle Torres|F|So.|Palmdale, California
+P|Hadley Rudolph|M/D|So.|Clarksville, Tennessee
+P|Hannah Payne|WB|Jr.|Olive Branch, Miss.
+P|Nyssa Hanawahine|D|Jr.|Kapolei, Hawai'i
+P|Neveah Irvin|D|Fr.|Vancouver, Wash.
+P|Shelby Irwin|D|Gr.|Corona, California
+P|Elise Marquardt|M|So.|Hoover, Alabama
+P|Tessa Harrington|D|Sr.|Cumming, Ga.
+P|Lainey Farabaugh|F/WB|Sr.|Altoona, Pennsylvania
+P|Natalie Sligar|F|So.|Las Vegas, Nevada
+P|Hannah York|D|Fr.|San Diego, California
+P|Isabel Dillehay|F/MF|Sr.|Centennial, Colorado
+P|Karsyn Ross|M|So.|Kelso, Washington
+P|Madysen Legere|WB/F|Gr.|Corona, California
+P|Emma Arkus|D|Gr.|Long Beach, California
+P|Isabel Pilcher|D|So.|East Sussex, England
+P|Malia Savage|D|Fr.|Clackamas, Oregon
+P|Ayla Ertekin|F|So.|Anchorage, Alaska
+P|Jeanne Marie Castleberry|M|Fr.|Mobile, Alabama
+P|Ciara Duff|GK|Sr.|Edinburgh, Scotland
+#pacersports.com|200
+P|Natalía Sól Arnarsdóttir|GK|R-So.|Hafnarfjörður, Iceland
+P|Savannah Yerger|GK|So.|Jacksonville, Fla.
+P|Erin Regalia|D|Jr.|Oxford, Mich.
+P|Reese Agnew|M/F|So.|Parker, Colo.
+P|Samantha Koneval|M/D|Jr.|Beloit, Ohio
+P|Emma Gause|M|Fr.|Eastvale, Calif.
+P|Ellen Van Caenegem|M/F|R-So.|Forney, Texas
+P|Katelyn Ensley|D|Fr.|Woodstock, Ga.
+P|Anastasia Virata|F|Fr.|Jacksonville Beach, Fla.
+P|Ellie Thompson|F|Jr.|Jacksonville, Fla.
+P|Gillian Young|M|Jr.|Oswego, Ill.
+P|Layne Frericks|M|Jr.|Spring Grove, Ill.
+P|Ruby Scott|M|Fr.|Ocala, Fla.
+P|Olivia Pia|M|Fr.|Jacksonville, Fla.
+P|Ellie Garces|M/D|Jr.|Jacksonville, Fla.
+P|Addison Logsdon|M|Fr.|Sanford, Fla.
+P|Josie Sola|M|R-Jr.|Aurora, Colo.
+P|Madeleine Barteau|D/M|Fr.|Chico, Calif.
+P|Isabella Recalde|M|So.|Playa Del Rey, Calif.
+P|Paige Marshall|D|Jr.|Uniontown, Ohio
+P|Gabriella Maddalena|D|Fr.|Lake Mary, Fla.
+P|Payton Bates|D|Jr.|McDonough, Ga.
+P|Greta Ohlwein|F|Sr.|Highland Park, Ill.
+P|Olivia Bates|D/M|Fr.|Johns Creek, Ga.
+P|Chloe Leonard|D|R-Jr.|Cranberry Township, Pa.
+P|Cassidy Wines|M|Sr.|Purvis, Miss.
+P|Isabella Gesmondi|D|Jr.|Land O’ Lakes, Fla.
+P|Haley Howell|M/F|Jr.|West Palm Beach, Fla.
+P|Leah Casolaro|M/F|Fr.|Lynbrook, N.Y.
+P|Riley Sweetland|GK|Fr.|Bettendorf, Iowa
+P|Alexis Crawford|GK|Fr.|Cypress, Texas
+#parksiderangers.com|200
+P|Tabi Lemens|GK|R-So.|Luxemburg, Wis
+P|Rilyn Breinholt|M|So.|North Liberty, Iowa
+P|Steph Salmeron|M|So.|Cicero, Ill.
+P|Georgia Ghuliani|D|Fr.|Melbourne, Australia
+P|Lindsay Dahlinger|M/F|Jr.|Novi, Mich.
+P|Charleyse McIntyre|M|Fr.|St. Clair Shores, Mich.
+P|Tealy Cross|F/M|Fr.|Hastings, Mich.
+P|Ava Rizzitano|F|Jr.|Kenosha, Wis.
+P|Kayden Schmidt|D|Jr.|Bayside, Wis.
+P|Emily Slye|D/M|Jr.|Kenosha, Wis.
+P|Mary Leininger|F|Fr.|Germantown, Wis.
+P|Veronica Moran|D|Jr.|Anoka, Minn.
+P|Sienna Espindola|F/M|Fr.|Mount Pleasant, Wis.
+P|Emily Giese|D|So.|Kenosha, Wis.
+P|Lola Lenhart|M|Fr.|Brown Deer, Wis.
+P|Summer Steel|D|So.|Oregon, Wis.
+P|Hattie Britton|D|Sr.|Marquette, Mich.
+P|Madi Kasianowicz|F|Sr.|Franklin, Wis.
+P|Ella McDonnell|F|Jr.|Morris, Ill.
+P|Emma Ambrose|M|Sr.|Rockton, Ill.
+P|Isabella Jackson|F|Jr.|Milwaukee, Wis.
+P|Bianca Martsinkovsky|M|So.|Palos Hills, Ill.
+P|Julia McRae|M|Fr.|New Berlin, Wis.
+P|Isabel Morales|M|Jr.|Gilberts, Ill.
+P|Kate Brown|F|Sr.|Kenosha, Wis.
+P|Lena Mau|D|Sr.|South Jordan, Utah
+P|Lindsey Ferrara|GK|So.|Hudson, Wis.
+P|Mariah Carter|M|Fr.|Waukesha, Wis.
+P|Stella Kertscher|M|Fr.|North Prairie, Wis.
+P|Hayden Spodarek|D|Fr.|Homer Glen, Ill.
+P|Kaitlyn Shortridge|M/D|Fr.|Maple Grove, Minn.
+P|Sophia Bohnak|D|Fr.|Troy, Ill.
+P|Ava Duran|D|Fr.|Oshkosh, Wis.
+P|Rebecca DuFour|GK|R-Jr.|Waterloo, Iowa
+#lagoldeneagles.com|200
+P|Makayla Worchester|GK|Jr.|Fullerton
+P|Kendyl Sumlin|GK|So.|Lakewood
+P|Jaiden Arinduque|M|Fr.|Chula Vista
+P|Samantha Padilla|M|So.|Whittier
+P|Camila Juarez|D|Sr.|Ben Lomand
+P|McKenzie Henao|D|So.|La Mirada
+P|Alejandra Andalon|D|Sr.|Bakersfield
+P|Lizbet Saligan|F|So.|South Central Los Angeles
+P|Lyha Lugo|F|Fr.|Lake Elsinore
+P|Itzel Carbajal|D|Sr.|Anaheim
+P|Bailey Martinez|M|So.|Corona
+P|Luna Chavez|M|Jr.|Culver City
+P|Ella Griffin|F|So.|Roseville
+P|Celine Gehrig|M|Sr.|Redondo Beach
+P|Itzel Ramirez|F|Sr.|Costa Mesa
+P|Maitland Kohoutek|D|Fr.|Livermore
+P|Jasmine Aguilar|M|Fr.|Norco
+P|Veronica Jimenez|M|Fr.|Los Angeles
+P|Alyssa Polk|M|So.|Stockton
+P|Alina Valdez|M|Sr.|Diamond Bar
+P|Jasmin De La Torre|M|Jr.|Bell Gardens
+P|Kristin Mijares|F|Jr.|Cerritos
+P|Dayanara Gonzalez|M|So.|Pico Rivera
+P|Carisia Raygoza|M|Sr.|Downey
+P|Averie Hernandez|D|Fr.|Irvine
+P|Ece Aliyazicioglu|M|Jr.|Chino
+P|Abigail Morales|F|Jr.|South Gate
+P|Briana Chagolla|F|Fr.|Riverside
+P|Analise Quintero|F|So.|Hacienda Heights
+#gobarrybucs.com|200
+P|Alisha Avila|GK|Jr.|Plantation, FL
+P|Marlen Hernandez|GK|So.|Austin, TX
+P|Cordelia Brown|D|Sr.|Austin, TX
+P|Dylan Barnes|F|Sr.|Baltimore, MD
+P|Melina Walle-Olsen|D|So.|Lillestrom, Norway
+P|Lucia Garcia|M|Sr.|Asturias, Spain
+P|Allyssia Merisier|D/M|Sr.|Sunrise, FL
+P|Alyna McFayden|F|So.|Pembroke Pines, FL
+P|Olivia Bradley|D|Sr.|West Chester, PA
+P|Ronya Halleen|F/M|Jr.|Kalmar, Sweden
+P|Kasey Chirinos|M|Fr.|Plantation, FL
+P|Lykke Johnsen-Mørken|M|Sr.|Tønsberg, Norway
+P|Katelyn Billoch|M|Sr.|Miami, FL
+P|Jillian Paulson|D|Jr.|Wheaton, IL
+P|Hudsyn Olszanski|D|Fr.|Temecula, CA
+P|Grace Bowman|F|So.|Lititz, PA
+P|Josefina Dellepere|F|So.|Key Biscayne, FL
+P|Aryanna Marin|D|Fr.|Coral Springs, FL
+P|Cheyan Smith|D|Sr.|Orlando, FL
+P|Samira Mellaneo|D|Jr.|George Town, Grand Cayman
+P|Rieanna Murray|F|So.|Hinesburg, VT
+P|Natalia Vizzerra|D|Jr.|Litchfield Park, AZ
+P|Anna Marta Almeida|M|So.|Porto, Portugal
+P|Gianna DiLeo|D|Fr.|Las Vegas, NV
+P|Ava Bowers|F/D|Fr.|Oceanside, NY
+P|Abby Bowen|M|Fr.|Gainesville, FL
+P|Camila Domine|M|So.|Plantation, FL
+P|Laura Rodriguez|F|Jr.|Ibague, Colombia
+P|Alexa-Renee Garcia|M|Sr.|Miami Springs, FL
+P|Addison Jarvis|D/M|Fr.|Las Vegas, NV
+P|Madison Gellner|F|Sr.|Lake Mary, FL
+P|Rain Jarrett|M|Fr.|Orlando, FL
+P|Alyssa Garant|D|Fr.|Whitby, Canada
+P|Ida Mattsson|D|Fr.|Karlskoga, Sweden
+P|Anna Perry|D|Fr.|Jacksonville, FL
+P|Tatum Tishler|F|Sr.|Tampa, FL
+P|Gianna Carrero|M|Fr.|Orlando, FL
+P|Aubrey Boushell|GK|Fr.|Hellertown, PA
+P|Emerson Welborn|GK|Fr.|Bremerton, WA
+#daemenwildcats.com|200
+P|Rylee Kumer|GK|Jr.|Ambridge, Pa.
+P|Allie O'Donnell|D|Jr.|Georgetown, Ont.
+P|Kaitlyn Wright|F|Jr.|Geneva, N.Y.
+P|Macayla Hansen|M|So.|Highlands Ranch, Colo.
+P|Makayla Rabideau|D|Fr.|Carson City, Nev.
+P|Piper Moser|F|Fr.|Litchfield Park, Ariz.
+P|Taylor Fiegel|F|Jr.|Lockport, N.Y.
+P|Kali Warring|F|So.|Alexandria, Va.
+P|Kaitlin Mettler|M|So.|Royalton, N.Y.
+P|Zainab Khalid|F|Fr.|Penfield, N.Y.
+P|Mari Amaya|M|Jr.|Miami, Fla.
+P|Chloé Cardone|F|Jr.|Hilton, N.Y.
+P|Sophia Licata|M|Fr.|Hilton, N.Y.
+P|Mia Wright|F|So.|Liverpool, N.Y.
+P|Kendall Akers|D|So.|Brockport, N.Y.
+P|Marisa Rickard|F|So.|North Tonawanda, N.Y.
+P|Olivia Kayser|F|Jr.|Fairport, N.Y.
+P|Victoria DiCarlo|M|Sr.|North Tonawanda, N.Y.
+P|Natalie Krelie|D|Sr.|Bath, N.Y.
+P|Aliyah Hien|D|Fr.|Kenmore, Wash.
+P|Ava Thompson|D|Jr.|East Amherst, N.Y.
+P|Casey Keller|D|So.|Rochester, N.Y.
+P|Brianne Repolio|M|Sr.|Haddon Heights, N.J.
+P|Reese Downey|D|Fr.|Hamburg, N.Y.
+P|Lily Macfarlane|F|Sr.|Murcott, England
+P|Mia Dickens|F/M|Fr.|Boise, Idaho
+P|Lorelai Urbanski|D|So.|Buffalo, N.Y.
+P|Allie Dimitrovski|GK|Jr.|Lancaster, N.Y.
+P|Chayse Fischer|D|Fr.|Whitesboro, N.Y.
+P|Sam Hite|GK|Fr.|Tucson, Ariz.
+P|Bridey McKenzie|M|Fr.|Amherst, N.Y.
+#newmanjets.com|200
+P|Abby McCulloch|GK|Fr.|Rose Hill, Kan.
+P|Emerson Wedel|GK|So.|Wichita, Kan.
+P|Hailey Korth|D|Sr.|Omaha, Neb.
+P|Trinity Perry|F|Jr.|Wichita, Kan.
+P|Jayla Erpelding|D|Jr.|Eudora, Kan.
+P|Kylie Campbell|D|Fr.|Little Elm, Texas
+P|Raylen Grant|M|So.|Wichita, Kan.
+P|Iveta Stefancinova|F|Fr.|Prešov, Slovakia
+P|Mya Campbell|D|Fr.|Whittier, Calif.
+P|Emma Kolbe|M|Sr.|Mulvane, Kan.
+P|Izzy Sandoval|F|Jr.|Newton, Kan.
+P|Allison Hernandez|F|Sr.|Blair, Neb.
+P|Victoria Sandoval|M|Fr.|San Diego, Calif.
+P|Roselynn Cordero-Galaviz|F|Fr.|Wichita, Kan.
+P|Jimena Ramirez|F|Jr.|Wichita, Kan.
+P|Lily Cortez|M|Jr.|Wichita, Kan.
+P|Lexi Bauer|D|Jr.|Wichita, Kan.
+P|Keilann Heath|D|Jr.|Wichita, Kan.
+P|Ingrid Parra|D|Fr.|Wichita, Kan.
+P|Grace Long|M|Sr.|Wichita, Kan.
+P|Alaia Bogenhagen|D|Fr.|Wichita, Kan.
+P|Aleksah Moreno|F|So.|Wichita, Kan.
+P|Peyton Childers|D|Jr.|Augusta, Kan.
+P|Emilia Alvarez|M|Jr.|Arlington, Texas
+P|Dariett Perez|D|Fr.|McAllen, Texas
+P|Joy Timmons|F|Fr.|Tulsa, Okla.
+P|Yesenia Enciso|D|So.|Wichita, Kan.
+P|Katherine Wilson|D|Sr.|Tulsa, Okla.
+P|Lillian Shilling|D|So.|Wichita, Kan.
+P|Lexi Crispin|F|So.|Rockwall, Texas
+P|Taryn Migdal|F|Jr.|Wichita, Kan.
+P|Emma Lintecum|GK|Jr.|Warrensburg, Mo.
+#ecutigers.com|200
+P|Alexandra Naill|GK|Jr.|Graham, WA
+P|Parker Frei|GK|Jr.|Albuquerque, NM
+P|Madison Martinez|D|Sr.|Wylie, Tx
+P|Addisyn Brown|D/M|Sr.|Oak Point, TX
+P|Alyssa Ward|D|Jr.|Argyle, TX
+P|Natalia Castaneda|F|Jr.|Arlington, TX
+P|Emily Cavazos|D|Jr.|Amarillo, TX
+P|Makaiah Carlson|D|Jr.|Centennial, CO
+P|Kylee Blair|M|Fr.|Garland, TX
+P|Sofia Flores|M|So.|Lewisville, TX
+P|Jalynne Campbell|D|Fr.|Duncanville, TX
+P|Kaylie Gonzalez|M|Fr.|Carrollton, TX
+P|Reece Roberson|M|Sr.|Rowlett, TX
+P|Kamryn Taylor|F|Jr.|Burleson, TX
+P|Aroa Pena|D|Jr.|Colindres, Spain
+P|Mia Martinez|M|Jr.|Lewisville, TX
+P|Avery Spadoni|F|So.|Celina, TX
+P|Melieah Hinnant|F|Jr.|Frisco, TX
+P|Estrella Hernandez|F|Fr.|Frisco, TX
+P|Isabella Vasquez|F|Fr.|Forney, TX
+P|Emma Stewart|M|Jr.|Arlington, TX
+P|Ava Jordan|F|Sr.|McKinney, TX
+P|Brooklyn Ellis|D|Sr.|Mustang, OK
+P|Lilly Harper|D|Fr.|Ada, OK
+P|Sophie Maldonado|F|Fr.|Lewisville, TX
+P|Kristena Contreras|D/M|Sr.|Allen, TX
+P|Ally Santos|D|Fr.|Garland, TX
+P|Ava Vasquez|M|So.|Coppell, TX
+#hardingsports.com|200
+P|Maysa Willis|GK|Sr.|Bentonville, Ark.
+P|Emerson Simmons|GK|Fr.|Searcy, Ark.
+P|Brooke Arthur|M|So.|Newport, Wales
+P|Claire Citty|M|Fr.|Searcy, Ark.
+P|Norah Neely|D|Jr.|Dayton, Ohio
+P|Gabie Eddins|F|Sr.|Searcy, Ark.
+P|Kendall Jerkins|M|Sr.|Arlington, Texas
+P|Natalie Gomez|M|Sr.|Haltom City, Texas
+P|Avery Jackson|D|Fr.|Mt. Juliet, Tenn.
+P|Campbell Cox|D|Jr.|Benbrook, Texas
+P|Georgie McMahan|F|Fr.|Searcy, Ark.
+P|Kloey Fullerton|F|Jr.|Searcy, Ark.
+P|Katie Jones|M|So.|Searcy, Ark.
+P|MK Shapkauski|M|So.|Greenville, S.C.
+P|Bree Williamson|M|Fr.|Heath, Texas
+P|Mykala Ulrich|F|So.|Dover, Fla.
+P|Julie Johnson|F|So.|Benton, Ark.
+P|Blair Rowlett|D|Fr.|Arcadia, Okla.
+P|Lucy Plenkovich|D|Fr.|Bellingham, Wash.
+P|Calle Citty|D|Sr.|Searcy, Ark.
+P|Sami Berry|F|Sr.|McKinney, Texas
+P|Skylar Henley|D|Jr.|Bedford, Texas
+P|Kate Daniel|D|Jr.|Searcy, Ark.
+P|Maddie Adams|F|So.|Texarkana, Texas
+P|Parker Barrow|D|Sr.|Little Rock, Ark.
+P|Tailynn Moore|D|Fr.|Mansfield, Texas
+P|Sara Daniel|D|Jr.|Searcy, Ark.
