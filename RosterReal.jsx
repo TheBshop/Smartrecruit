@@ -349,6 +349,13 @@ function getSchoolFicha(school) {
 // aparecía arriba porque el filtro académico no reconocía el nombre
 // en español de la misma carrera que sí ofrece).
 const MAJOR_ES_EN = {
+  "ciencias de la educación": "education", "licenciatura en educación": "education", "diseño gráfico": "graphic design", "diseño": "design", "marketing": "marketing", "finanzas": "finance",
+  "veterinaria": "veterinary science", "odontología": "dentistry", "farmacia": "pharmacy", "turismo": "tourism", "sociología": "sociology", "historia": "history", "matemática": "mathematics",
+  "física": "physics", "química": "chemistry", "ingeniería industrial": "industrial engineering", "ingeniería en sistemas": "computer science", "ingeniería": "engineering",
+  "licenciatura en administración": "business administration", "ciencias económicas": "economics", "ciencias de la comunicación": "communication", "trabajo social": "social work",
+  "música": "music", "cine": "film", "fotografía": "photography", "agronomía": "agronomy", "biotecnología": "biotechnology", "bioquímica": "biochemistry", "geología": "geology",
+  "recursos humanos": "human resources", "negocios internacionales": "international business", "ciencias del deporte": "sports science", "gestión deportiva": "sports management",
+  "administración deportiva": "sports management", "entrenamiento deportivo": "sports coaching",
   "ingeniería química": "chemical engineering",
   "ingeniería biomédica": "biomedical engineering",
   "ingeniería civil": "civil engineering",
@@ -2730,7 +2737,7 @@ h2.rm-condensed::before{ border:none; width:8px; height:26px; top:2px; backgroun
 `;
 
 const emptyProfile = {
-  name: "", email: "", phone: "", videoLink: "", country: "", gender: "F", sport: "Field Hockey", position: "",
+  name: "", email: "", phone: "", videoLink: "", city: "", club: "", heightCm: "", instagram: "", clubCoach: "", clubCoachPhone: "", country: "", gender: "F", sport: "Field Hockey", position: "",
   gradYear: 2028, gradMonth: 12, gpaScale: "ar10", gpaRaw: 8.0, major: "Ingeniería Química",
   goals: 7, assists: 8, goal: "completa",
 };
@@ -3135,14 +3142,21 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   const videoLine = (es, en) => (profile.videoLink ? T(`${es}: ${profile.videoLink}`, `${en}: ${profile.videoLink}`) : null);
 
   // ---- Saludo
-  add("greeting", "Saludo", "Contacto del coach", last ? T(`Hola Coach ${last},`, `Hello Coach ${last},`) : T("Hola Coach,", "Hello Coach,"), null, true);
+  add("greeting", "Saludo", "Contacto del coach", first ? (last ? T(`Estimado Coach ${last},`, `Dear Coach ${last},`) : T("Estimado Coach,", "Dear Coach,")) : (last ? T(`Hola Coach ${last},`, `Hello Coach ${last},`) : T("Hola Coach,", "Hello Coach,")), null, true);
   if (!last) missing.push("No tenemos el nombre del coach de esta universidad: el saludo queda genérico.");
 
   // ---- Apertura, según la ocasión
   if (first) {
+    const cityS = String(profile.city || "").trim(), clubS = String(profile.club || "").trim();
+    const cm = Number(profile.heightCm) || 0;
+    const ftIn = cm >= 120 && cm <= 240 ? (() => { const t = Math.round(cm / 2.54); return `${Math.floor(t / 12)}'${t % 12}"`; })() : "";
+    const whereS = [cityS, profile.country].filter(Boolean).join(", ");
+    const descEn = [ftIn, posEn.mapped ? posEn.phrase.replace(/\s*\([^)]*\)/g, "") : `${profile.sport} player`].filter(Boolean).join(" ");
+    const artEn = /^[aeiou]/i.test(descEn) ? "an" : "a";
     add("intro", "Presentación", "Tu perfil",
-      T(`Soy ${name}, de ${profile.country}, ${posEs.phrase ? `${posEs.phrase} de ` : "practico "}${profile.sport}. Termino la secundaria en ${graduationText(profile, "es")} y busco empezar a jugar en la temporada ${entry}.`,
-        `My name is ${name} and I'm from ${profile.country}. I play ${profile.sport}${posEn.mapped ? ` as ${articleEn} ${posEn.phrase}` : posEn.phrase ? ` (${posEn.phrase})` : ""}. I finish high school in ${graduationText(profile, "en")} and I'm looking to start playing in the ${entry} season.`), null, true);
+      T(`Soy ${name}, ${posEs.phrase ? `${posEs.phrase.replace(/\s*\([^)]*\)/g, "")} de ` : "practico "}${profile.sport}${cm ? ` (${cm} cm)` : ""}, de ${whereS || profile.country}${clubS ? ` y actualmente juego en ${clubS}` : ""}. Termino la secundaria en ${graduationText(profile, "es")} y busco empezar a jugar en la temporada ${entry}.`,
+        `I'm ${name}, ${artEn} ${descEn} from ${whereS || profile.country}${clubS ? `, currently playing for ${clubS}` : ""}. I finish high school in ${graduationText(profile, "en")} and I'm looking to start playing in the ${entry} season.`), null, true);
+    if (!cityS && !clubS) missing.push("Sumá tu ciudad y tu club o colegio en el perfil: la presentación y la firma quedan más completas (opcional).");
   } else if (followup && stage === 1) {
     const days = contactEntry && contactEntry.lastContact ? daysSince(contactEntry.lastContact) : null;
     add("fu_intro", "Retomar el contacto", "Tu registro de envíos",
@@ -3329,7 +3343,10 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   if (first) {
     // Con las estadísticas en 0 (perfil corto, todavía sin cargar) no se escribe un "0 goles": el bloque queda "no disponible".
     const hasStats = (Number(profile.goals) || 0) > 0 || (Number(profile.assists) || 0) > 0 || hasGaa(profile);
-    add("athletic", "Datos deportivos", "Tus datos deportivos", hasStats ? T(`Rendimiento (última temporada):\n${statsBlock}`, `Performance (last season):\n${statsBlock}`) : null, hasStats ? null : "Todavía no cargaste tus estadísticas: sumalas en tu perfil para que el mail las incluya.", true);
+    const lab = (x) => String(x || "").replace(/\s*\([^)]*\)/g, "").trim().replace(/^./, (c) => c.toLowerCase());
+    const statParts = [(Number(profile.goals) || 0) > 0 ? `${profile.goals} ${lab(labels.goals)}` : null, (Number(profile.assists) || 0) > 0 ? `${profile.assists} ${lab(labels.assists)}` : null, hasGaa(profile) ? `${T("un", "a")} ${lab(labels.gaa)} ${T("de", "of")} ${Number(profile.gaa)}` : null].filter(Boolean);
+    const statProse = statParts.length ? T(`En la última temporada${profile.club ? ` con ${profile.club}` : ""} registré ${joinList(statParts, "es")}.`, `Last season${profile.club ? ` with ${profile.club}` : ""} I recorded ${joinList(statParts, "en")}.`) : null;
+    add("athletic", "Datos deportivos", "Tus datos deportivos", hasStats ? statProse : null, hasStats ? null : "Todavía no cargaste tus estadísticas: sumalas en tu perfil para que el mail las incluya.", true);
     if (resultLine) add("result", "Novedad reciente", "Lo que escribiste vos", resultLine, null, true);
   } else if ((followup && stage === 2) || kind === "update" || kind === "checkin") {
     // Sin estadísticas cargadas no se escribe "0 atajadas": solo van los datos que existen (números, promedio y video).
@@ -3401,7 +3418,8 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     if (!noMajor && fit.status === "ipeds_no") missing.push(`Según IPEDS, ${university} no otorgó títulos en "${profile.major}" en 2024-25: confirmá que la dicte antes de escribirle.`);
     const gpa = profile.gpa4 ?? T("[convertí tu GPA en la calculadora]", "[convert your GPA in the calculator]");
     add("academic", "Carrera y promedio", fit.status === "confirmado_si" ? (fit.cds ? "Common Data Set + tu perfil" : fit.ipeds ? "IPEDS + tu perfil" : "College Scorecard + tu perfil") : "Tu perfil",
-      T(`${majorLine}. Mi GPA convertido a escala 4.0 es ${gpa}.`, `${majorLine}. My GPA converted to the 4.0 scale is ${gpa}.`), null, true);
+      T(`${profile.gpa4 ? `Mi GPA en escala 4.0 es ${gpa}. ` : ""}${majorLine}${profile.gpa4 ? "" : `. Mi GPA convertido a escala 4.0 es ${gpa}`}. ¿Podrías contarme cómo ${university} acompaña académicamente a los atletas internacionales?`,
+        `${profile.gpa4 ? `I hold a ${gpa} GPA on the 4.0 scale. ` : ""}${majorLine}${profile.gpa4 ? "" : `. My GPA converted to the 4.0 scale is ${gpa}`}. Could you tell me more about how ${university} supports international student-athletes academically?`), null, true);
 
     // ---- Elegibilidad (solo lo que la atleta marcó como hecho)
     const ekey = eligibilityKeyForDivision(division);
@@ -3439,9 +3457,10 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   // ---- Video, pedido y cierre
   const availLine = F.avail ? T(` Tengo disponibilidad ${F.avail}.`, ` I'm available ${F.avail}.`) : "";
   if (first) {
-    add("video", "Video", "Tu perfil", profile.videoLink ? T(`Mi video de highlights/último partido: ${profile.videoLink}`, `My highlights/latest game video: ${profile.videoLink}`) : T("[Pegá el link a tu video de highlights/último partido acá]", "[Paste the link to your highlights/latest game video here]"), null, true);
+    const refLine = String(profile.clubCoach || "").trim() ? T(` Mientras tanto, podés contactar a mi entrenador del club, ${String(profile.clubCoach).trim()}${profile.clubCoachPhone ? `, al ${String(profile.clubCoachPhone).trim()}` : ""}.`, ` In the meantime, you can reach my club coach, ${String(profile.clubCoach).trim()}${profile.clubCoachPhone ? `, at ${String(profile.clubCoachPhone).trim()}` : ""}.`) : "";
+    add("ask", "Próximos pasos", "Tu perfil", T("Me encantaría coordinar una videollamada cuando te quede cómodo y saber qué necesitarías ver de mí para avanzar.", "I'd love to schedule a video call whenever is convenient for you and hear what you'd need to see from me to move forward.") + availLine + refLine, null, true);
+    add("video", "Video", "Tu perfil", profile.videoLink ? T(`Podés ver mi video de highlights/último partido acá: ${profile.videoLink}. ¿Podrías mirarlo y contarme qué te parece? Agradecería mucho tu opinión.`, `You can watch my highlights/latest game video here: ${profile.videoLink}. Could you please take a look and let me know what you think? I'd really appreciate your feedback.`) : T("[Pegá el link a tu video de highlights/último partido acá]", "[Paste the link to your highlights/latest game video here]"), null, true);
     if (!profile.videoLink) missing.push("Falta el link a tu video: es lo más importante para un coach que no puede verte jugar en persona.");
-    add("ask", "Pedido", "Tu perfil", T("Si te parece, me encantaría hacer una videollamada cuando te quede cómodo y saber qué necesitarías ver de mí para avanzar.", "If it works for you, I'd love to have a video call whenever is convenient and hear what you'd need to see from me to move forward.") + availLine, null, true);
   } else if (followup && stage < MAX_FOLLOWUPS) {
     add("ask", "Pedido", "Tu perfil", T(`Sigo muy ${wish} en sumarme al programa para la temporada ${entry}. ¿Me podrías decir si hay lugar en mi posición y qué necesitaría para avanzar?`, `I'm still very interested in joining the program for the ${entry} season. Could you let me know if there is room in my position and what I would need to move forward?`), null, true);
   } else if (followup) {
@@ -3479,7 +3498,19 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     add("video", "Video", "Tu perfil", videoLine("Te dejo mi video por si surge algo", "Here is my video in case anything comes up"), "No cargaste el link a tu video.");
   }
   const signature = `${name}\n${profile.email || T("[tu email]", "[your email]")}${profile.phone ? `\n${profile.phone}` : ""}`;
-  add("close", "Cierre", "Tu perfil", T(`Gracias por tu tiempo${last ? `, Coach ${last}` : ""},\n${signature}`, `Thank you for your time${last ? `, Coach ${last}` : ""},\n${signature}`), null, true);
+  if (first) {
+    const tc = (t) => String(t || "").replace(/\b\w/g, (c) => c.toUpperCase());
+    const posLine = (lang === "en" ? posEn.mapped : posEs.phrase) ? tc((lang === "en" ? posEn.phrase : posEs.phrase).replace(/\s*\([^)]*\)/g, "")) : (String(profile.position || "").trim() || profile.sport);
+    const ig = String(profile.instagram || "").trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "");
+    const sigLines = [
+      [posLine, T(`Clase de ${entry}`, `Class of ${entry}`)].filter(Boolean).join(" | "),
+      [String(profile.club || "").trim(), [String(profile.city || "").trim(), profile.country].filter(Boolean).join(", ")].filter(Boolean).join(" | "),
+      [profile.phone, profile.email || T("[tu email]", "[your email]")].filter(Boolean).join(" | "),
+      ig ? `Instagram: @${ig}` : null,
+    ].filter(Boolean).join("\n");
+    add("close", "Cierre", "Tu perfil", T(`¡Espero poder charlar pronto!\n\nSaludos cordiales,\n${name}\n\n${sigLines}`, `I'm looking forward to our conversation!\n\nBest regards,\n${name}\n\n${sigLines}`), null, true);
+    if (!ig) missing.push("Sumá tu Instagram en el perfil si querés que figure en la firma (opcional).");
+  } else add("close", "Cierre", "Tu perfil", T(`Gracias por tu tiempo${last ? `, Coach ${last}` : ""},\n${signature}`, `Thank you for your time${last ? `, Coach ${last}` : ""},\n${signature}`), null, true);
   if (!profile.phone && first) missing.push("Sumá tu teléfono en el perfil si querés que aparezca en la firma (opcional).");
   if (!to) missing.push("Falta el email del coach: pegalo arriba y lo guardamos para la próxima.");
 
@@ -3517,7 +3548,12 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   const idBit = [name, T(`Clase de ${entry}`, `Class of ${entry}`), posShort].filter(Boolean).join(" | ");
   const thread = (messages.find((m) => m.subject) || {}).subject || null;
   let subject;
-  if (first) subject = [name, posShort, T(`Clase de ${entry}`, `Class of ${entry}`), statBit || null].filter(Boolean).join(" | ") + videoBit;
+  if (first) {
+    const cmS = Number(profile.heightCm) || 0;
+    const ftS = cmS >= 120 && cmS <= 240 ? (() => { const t = Math.round(cmS / 2.54); return `${Math.floor(t / 12)}'${t % 12}"`; })() : "";
+    const posS = [lang === "en" ? ftS : (cmS ? `${cmS} cm` : ""), posShort].filter(Boolean).join(" ");
+    subject = [name, T(`Clase ${entry}`, `${entry} Grad`), posS || null, profile.gpa4 ? `${profile.gpa4} GPA` : null, profile.videoLink ? T("con video", "Video included") : null].filter(Boolean).join(", ");
+  }
   else if (thread) subject = /^re:/i.test(thread) ? thread : `Re: ${thread}`;
   else if (followup) subject = `${T("Seguimiento", "Following up")} | ${idBit}${videoBit}`;
   else if (kind === "update") subject = `${T("Novedad", "Update")} | ${idBit}${videoBit}`;
@@ -8250,6 +8286,12 @@ function ProfileForm({ onSubmit, initial }) {
           <div className="rm-field"><label>Tu email (para enviar desde ahí)</label><input type="email" value={p.email} onChange={set("email")} placeholder="tu@email.com" /></div>
           <div className="rm-field"><label>Tu teléfono (opcional, va en la firma del email)</label><input type="tel" value={p.phone} onChange={set("phone")} placeholder="+54 9 11 xxxx-xxxx" /></div>
           <div className="rm-field rm-full"><label>Link a tu video (YouTube / Hudl / Vimeo)</label><input value={p.videoLink} onChange={set("videoLink")} placeholder="https://..." /></div>
+          <div className="rm-field"><label>Ciudad (opcional, va en tu presentación y firma)</label><input value={p.city || ""} onChange={set("city")} placeholder="Ej.: Paraná" /></div>
+          <div className="rm-field"><label>Club o colegio (opcional)</label><input value={p.club || ""} onChange={set("club")} placeholder="Ej.: Club Atlético Example" /></div>
+          <div className="rm-field"><label>Altura en cm (opcional)</label><input type="number" inputMode="numeric" value={p.heightCm || ""} onChange={set("heightCm")} placeholder="Ej.: 168" /></div>
+          <div className="rm-field"><label>Instagram (opcional, va en la firma)</label><input value={p.instagram || ""} onChange={set("instagram")} placeholder="@tuusuario" /></div>
+          <div className="rm-field"><label>Entrenador de tu club como referencia (opcional)</label><input value={p.clubCoach || ""} onChange={set("clubCoach")} placeholder="Nombre. Solo si te dio permiso" /></div>
+          <div className="rm-field"><label>Teléfono de ese entrenador (opcional)</label><input type="tel" value={p.clubCoachPhone || ""} onChange={set("clubCoachPhone")} placeholder="+54 9 ..." /></div>
           <div className="rm-field"><label>País de origen</label><input value={p.country} onChange={set("country")} list="rm-paises" autoComplete="country-name" />
             <datalist id="rm-paises">{["Argentina", "Bolivia", "Brasil", "Chile", "Colombia", "Costa Rica", "Ecuador", "España", "Guatemala", "México", "Panamá", "Paraguay", "Perú", "República Dominicana", "Uruguay", "Venezuela"].map((c) => <option key={c} value={c} />)}</datalist></div>
 
