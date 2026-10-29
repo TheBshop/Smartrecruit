@@ -6270,7 +6270,7 @@ function ArgentinaEligibilityGuide() {
     <div style={{ marginTop: 28 }}>
       <h3 className="rm-condensed" style={{ fontSize: 18 }}>Guía paso a paso para estudiantes internacionales</h3>
       <p className="rm-hint">Montos y reglas vigentes a octubre de 2026. Cambian seguido: confirmalos siempre en eligibilitycenter.org y playnaia.org.</p>
-      <p className="rm-hint"><a href="/guias/elegibilidad-ncaa-argentinos/" target="_blank" rel="noopener">Ver esta guía como página para compartir →</a></p>
+      <p className="rm-hint"><a href="/guias/elegibilidad-ncaa-latinoamerica/" target="_blank" rel="noopener">Ver esta guía como página para compartir →</a></p>
       <GuideBlock title="¿En qué centro me registro?" open>
         <table className="rm-exam-table"><tbody>
           <tr><td>NCAA División 1 o 2</td><td>NCAA Eligibility Center (eligibilitycenter.org), cuenta académica y deportiva</td></tr>

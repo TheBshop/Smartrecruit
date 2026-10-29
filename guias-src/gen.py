@@ -59,7 +59,7 @@ def page(slug,title,seo_title,desc,body,faq=None):
 </html>
 """
 P=[]
-P.append(page("elegibilidad-ncaa-argentinos","Cómo registrarte en el NCAA Eligibility Center desde Latinoamérica","Cómo registrarte en el NCAA Eligibility Center desde Latinoamérica (guía 2026) | Smartrecruit",
+P.append(page("elegibilidad-ncaa-latinoamerica","Cómo registrarte en el NCAA Eligibility Center desde Latinoamérica","Cómo registrarte en el NCAA Eligibility Center desde Latinoamérica (guía 2026) | Smartrecruit",
 "Guía paso a paso para estudiantes internacionales: qué cuenta abrir en la NCAA y la NAIA, cuánto cuesta, calendario, documentos y amateurismo.",
 """<p class="lead">Para jugar en una universidad de Estados Unidos no alcanza con que un coach te quiera: un organismo oficial tiene que confirmar que cumplís los requisitos académicos y de amateurismo. Esta guía te dice qué hacer y cuándo.</p>
 <h2>¿En qué centro me registro?</h2>
@@ -115,7 +115,7 @@ P.append(page("video-highlight-universidades","Cómo hacer un video highlight pa
 <p>Sumá además un partido completo sin editar: muchos coaches lo piden después del highlight.</p>
 <h2>Dónde subirlo</h2>
 <p>YouTube (como "No listado" si no querés que sea público), Hudl o Vimeo, con un título claro: "Nombre Apellido · Posición · Clase 2028 · País". Revisá que el link abra sin pedir permisos y actualizalo cada temporada.</p>"""))
-P.append(page("beca-futbol-estados-unidos-argentinos","Becas de fútbol en Estados Unidos para latinoamericanos: paso a paso","Becas de fútbol en Estados Unidos para latinoamericanos: paso a paso | Smartrecruit",
+P.append(page("beca-futbol-estados-unidos-latinoamericanos","Becas de fútbol en Estados Unidos para latinoamericanos: paso a paso","Becas de fútbol en Estados Unidos para latinoamericanos: paso a paso | Smartrecruit",
 "Cómo conseguir una beca de fútbol universitario en Estados Unidos por tu cuenta: divisiones, becas, elegibilidad, video y cómo escribirle a los coaches.",
 """<p class="lead">El fútbol universitario de Estados Unidos recluta mucho en Sudamérica. Con un buen video, notas en orden y constancia para escribirle a los coaches, se puede llegar sin agencia.</p>
 <h2>1. Elegí a qué nivel apuntar</h2>
@@ -123,12 +123,12 @@ P.append(page("beca-futbol-estados-unidos-argentinos","Becas de fútbol en Estad
 <h2>2. Entendé cómo son las becas</h2>
 <p>Fuera de D1, las becas de fútbol suelen ser parciales: el coach reparte un monto entre todo el plantel. Por eso pesa tanto el promedio: una buena beca académica completa lo que falta. En D3 no hay becas deportivas. Más detalle en la <a href="/guias/cuanto-cubre-una-beca-deportiva/">guía de becas</a>.</p>
 <h2>3. Ordená tu elegibilidad</h2>
-<p>Para NCAA D1 y D2 necesitás el NCAA Eligibility Center; para NAIA, su propio registro. Prestá especial atención al amateurismo si jugaste en inferiores de un club con primera división. Todo en la <a href="/guias/elegibilidad-ncaa-argentinos/">guía de elegibilidad</a>.</p>
+<p>Para NCAA D1 y D2 necesitás el NCAA Eligibility Center; para NAIA, su propio registro. Prestá especial atención al amateurismo si jugaste en inferiores de un club con primera división. Todo en la <a href="/guias/elegibilidad-ncaa-latinoamerica/">guía de elegibilidad</a>.</p>
 <h2>4. Armá tu video</h2>
 <p>Entre 3 y 5 minutos, tus mejores jugadas primero, identificado en cada jugada, y un partido completo aparte. Ver la <a href="/guias/video-highlight-universidades/">guía del video</a>.</p>
 <h2>5. Escribile a muchos coaches, bien</h2>
 <p>Lo normal es escribirle a entre 30 y 50 programas acordes a tu nivel, con un mail corto, en inglés y personalizado para cada universidad, y hacer seguimiento. En Smartrecruit tenés los emails de cientos de coaches de fútbol y un generador de mails. Ver <a href="/guias/como-escribirle-a-un-coach/">cómo escribirle a un coach</a>.</p>"""))
-P.append(page("beca-basquet-estados-unidos-argentinos","Becas de básquet en Estados Unidos para latinoamericanos: paso a paso","Becas de básquet en Estados Unidos para latinoamericanos: paso a paso | Smartrecruit",
+P.append(page("beca-basquet-estados-unidos-latinoamericanos","Becas de básquet en Estados Unidos para latinoamericanos: paso a paso","Becas de básquet en Estados Unidos para latinoamericanos: paso a paso | Smartrecruit",
 "Cómo buscar una beca de básquet universitario en Estados Unidos por tu cuenta: divisiones, becas, elegibilidad, video y contacto con coaches.",
 """<p class="lead">El básquet universitario tiene más de mil programas entre masculino y femenino. Elegir bien a qué nivel apuntar es la mitad del trabajo.</p>
 <h2>1. Elegí a qué nivel apuntar</h2>
@@ -136,7 +136,7 @@ P.append(page("beca-basquet-estados-unidos-argentinos","Becas de básquet en Est
 <h2>2. Entendé cómo son las becas</h2>
 <p>En D1 cada universidad define cuántas becas da desde 2025; en D2 y NAIA suelen ser parciales; en D3 no hay becas deportivas. Más detalle en la <a href="/guias/cuanto-cubre-una-beca-deportiva/">guía de becas</a>.</p>
 <h2>3. Ordená tu elegibilidad</h2>
-<p>NCAA y NAIA tienen centros de elegibilidad distintos. Si jugaste en un club con equipo profesional o cobraste algo, leé con atención la parte de amateurismo de la <a href="/guias/elegibilidad-ncaa-argentinos/">guía de elegibilidad</a>.</p>
+<p>NCAA y NAIA tienen centros de elegibilidad distintos. Si jugaste en un club con equipo profesional o cobraste algo, leé con atención la parte de amateurismo de la <a href="/guias/elegibilidad-ncaa-latinoamerica/">guía de elegibilidad</a>.</p>
 <h2>4. Video: más que puntos</h2>
 <p>Los coaches quieren ver lectura de juego, tiro, defensa y transición. Incluí tu altura y envergadura en la placa inicial. Ver la <a href="/guias/video-highlight-universidades/">guía del video</a>.</p>
 <h2>5. Contactá a los coaches</h2>
