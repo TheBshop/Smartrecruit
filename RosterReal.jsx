@@ -4600,6 +4600,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
                 <div className="rm-catalog-row-meta">
                   {c.email ? <a href={`mailto:${c.email}`}>{c.email}</a> : "Sin mail publicado"}{c.generic ? " (mail del programa)" : ""}
                   {c.assistants && c.assistants.length > 0 ? ` · Asistentes: ${c.assistants.map((a) => a.email ? `${a.name} (${a.email})` : a.name).join(", ")}` : ""}
+                  {c.assistants && c.assistants.some((a) => a.email) ? <span style={{ display: "block", marginTop: 3, fontWeight: 600, color: "var(--field-dark)" }}>Tip: empezá por un asistente, suelen responder antes que el head coach.</span> : null}
                   {c.gk ? ` · Arqueros: ${c.gk}` : ""}{c.updated ? ` · Relevado el ${c.updated.split("-").reverse().join("/")}` : ""}
                 </div>
               </div>
@@ -8886,6 +8887,25 @@ function usePlanReminder() {
     return () => clearInterval(id);
   }, []);
 }
+// Puntaje de preparación (0-100): qué tan armado está el recorrido de la persona. Mide preparación, no predice una oferta.
+function readinessScore(profile, ctx, doneCount, totalTasks) {
+  const has = (v) => v !== undefined && v !== null && String(v).trim() !== "";
+  const fields = ["name", "email", "phone", "city", "club", "heightCm", "instagram", "position", "clubCoach"];
+  const filled = fields.filter((f) => has(profile[f])).length;
+  const sc = GPA_SCALES[profile.gpaScale] || GPA_SCALES.ar10;
+  const gpa4 = has(profile.gpaRaw) && sc ? sc.convert(parseFloat(profile.gpaRaw) || 0) : 0;
+  const entries = Object.values(ctx.log || {});
+  const contacted = entries.filter((e) => e && Array.isArray(e.msgs) && e.msgs.length > 0).length;
+  const replied = entries.filter((e) => e && e.status === "respondio").length;
+  const parts = [
+    { key: "perfil", label: "Perfil completo", max: 25, pts: Math.round((filled / fields.length) * 25), tip: filled < fields.length ? `Completá tu perfil (${filled} de ${fields.length} datos): los mails salen más fuertes.` : "" },
+    { key: "video", label: "Video", max: 15, pts: has(profile.videoLink) ? 15 : 0, tip: has(profile.videoLink) ? "" : "Sumá el link a tu video: los coaches lo piden primero." },
+    { key: "academico", label: "Notas", max: 20, pts: !gpa4 ? 0 : gpa4 >= 3.5 ? 20 : gpa4 >= 3 ? 15 : gpa4 >= 2.5 ? 10 : 5, tip: !gpa4 ? "Cargá tu promedio para estimar tu elegibilidad." : gpa4 < 3 ? "Subir el promedio abre más universidades." : "" },
+    { key: "contacto", label: "Contactos con coaches", max: 25, pts: Math.round(Math.min(contacted, 10) / 10 * 15) + (replied > 0 ? 10 : 0), tip: contacted < 10 ? `Escribile a más programas (${contacted} de 10 sugeridos).` : replied === 0 ? "Seguí a los que no respondieron a los 7 o 10 días." : "" },
+    { key: "plan", label: "Avance del plan", max: 15, pts: totalTasks ? Math.round((doneCount / totalTasks) * 15) : 0, tip: "" },
+  ];
+  return { total: parts.reduce((n, x) => n + x.pts, 0), parts, contacted, replied };
+}
 function PlanPage({ profile, setStage }) {
   const [state, setState] = useState(readPlanState);
   const today = todayKey();
@@ -8948,6 +8968,30 @@ function PlanPage({ profile, setStage }) {
         <p style={{ margin: "10px 0 0", fontSize: 14 }}><b>Ahora: {stage.emoji} {stage.label}.</b> {stage.focus}</p>
         {nextStage && <p style={{ margin: "8px 0 0", fontSize: 13, color: "var(--ink-soft)" }}>Lo que sigue: <b>{nextStage.label}</b>, desde el {longDateEs(nextStage.date)} (en unos {nextStage.months} {nextStage.months === 1 ? "mes" : "meses"}).</p>}
       </div>
+
+      {(() => {
+        const rs = readinessScore(profile, ctx, doneCount, tasks.length);
+        const tips = rs.parts.filter((x) => x.tip).slice(0, 2);
+        return (
+          <div className="rm-card" style={{ padding: 14, marginTop: 16 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+              <b className="rm-condensed" style={{ fontSize: 28 }}>{rs.total}<span style={{ fontSize: 15, color: "var(--ink-soft)" }}>/100</span></b>
+              <span style={{ fontWeight: 600 }}>Tu puntaje de preparación</span>
+            </div>
+            <div style={{ display: "grid", gap: 6, marginTop: 10 }}>
+              {rs.parts.map((x) => (
+                <div key={x.key} style={{ display: "grid", gridTemplateColumns: "150px 1fr 48px", gap: 8, alignItems: "center", fontSize: 13 }}>
+                  <span>{x.label}</span>
+                  <span style={{ background: "var(--paper-dim)", borderRadius: 999, height: 8, overflow: "hidden" }}><span style={{ display: "block", height: "100%", width: `${Math.round((x.pts / x.max) * 100)}%`, background: "var(--field-dark)" }} /></span>
+                  <span style={{ textAlign: "right", color: "var(--ink-soft)" }}>{x.pts}/{x.max}</span>
+                </div>
+              ))}
+            </div>
+            {tips.length > 0 && <p style={{ margin: "10px 0 0", fontSize: 13.5 }}><b>Para subirlo:</b> {tips.map((x) => x.tip).join(" ")}</p>}
+            <p className="rm-today-note" style={{ marginTop: 8 }}>Mide qué tan armado tenés tu recorrido (perfil, video, notas, contactos y plan). No predice si un coach te va a ofrecer una beca.</p>
+          </div>
+        );
+      })()}
 
       <section className="rm-today-hero" aria-label="Tu próxima acción" style={{ marginTop: 16 }}>
         <div>
