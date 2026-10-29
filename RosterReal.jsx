@@ -3715,7 +3715,7 @@ function quarterlySummaryText(profile, now = new Date()) {
     `Coaches: contactó a ${entries.length}, le respondieron ${replied}${offers ? ` y tiene ${offers} oferta${offers === 1 ? "" : "s"}` : ""}.`,
     nxt ? `Próximo paso: ${nxt}` : null,
     "",
-    "Recordatorio: Smartrecruit es una guía educativa. No es un agente, no garantiza becas y no cobra por conseguirlas.",
+    "Recordatorio: Smartrecruit es una página para hacer el proceso por tu cuenta, de forma gratuita. No es un agente, no garantiza becas y no cobra por conseguirlas.",
   ].filter((x) => x !== null).join("\n");
 }
 
@@ -10529,7 +10529,7 @@ function CaminoPage({ profile, setStage }) {
           );
         })}
       </div>
-      <p className="rm-today-note" style={{ marginTop: 16 }}>¿Hay una palabra que no entendés? <button type="button" className="rm-btn-inline" onClick={() => setStage("glosario")}>Abrí el glosario →</button> Esto es una guía educativa: confirmá siempre fechas y reglas en la fuente oficial de tu división.</p>
+      <p className="rm-today-note" style={{ marginTop: 16 }}>¿Hay una palabra que no entendés? <button type="button" className="rm-btn-inline" onClick={() => setStage("glosario")}>Abrí el glosario →</button> Confirmá siempre fechas y reglas en la fuente oficial de tu división.</p>
     </div>
   );
 }
@@ -11970,7 +11970,7 @@ function CompareDIY({ setStage }) {
           </tbody>
         </table>
       </div>
-      <p className="rm-hint" style={{ marginTop: 12 }}>Smartrecruit es una guía educativa. No es una agencia, no garantiza becas ni admisiones y no está afiliada a la NCAA, la NAIA ni a ninguna universidad.</p>
+      <p className="rm-hint" style={{ marginTop: 12 }}>Smartrecruit es una página para hacer todo el proceso por tu cuenta, de forma gratuita. No es una agencia, no garantiza becas ni admisiones y no está afiliada a la NCAA, la NAIA ni a ninguna universidad.</p>
       <button className="rm-btn" onClick={() => setStage("start")}>Empezar en 10 minutos →</button>
     </div>
   );
@@ -12020,7 +12020,7 @@ function FamilyPage({ profile, setStage }) {
         </div>
       )}
       <GuideBlock title="Qué es Smartrecruit y qué no es" open>
-        <p>Smartrecruit es una <b>guía educativa</b>: enseña cómo funciona el reclutamiento universitario en EE.UU. y ordena los pasos para que la atleta se postule por su cuenta.</p>
+        <p>Smartrecruit es una <b>página para hacer el proceso por tu cuenta, de forma gratuita</b>: explica cómo funciona el reclutamiento universitario en EE.UU. y ordena los pasos para que la atleta se postule sola.</p>
         <p><b>No es una agencia ni un intermediario, no garantiza becas ni admisiones y no cobra</b> por conseguirlas. Tampoco está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.</p>
       </GuideBlock>
       <GuideBlock title="Cómo es el camino, en cuatro etapas">
