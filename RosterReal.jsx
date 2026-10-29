@@ -2,10 +2,6 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import FH_ROSTER_OVERRIDES from "./data/field_hockey_rosters.json";
 import SOCCER_ROSTER_OVERRIDES from "./data/soccer_rosters.json";
-import RUGBY_WOMEN_PROGRAMS from "./data/rugby_women_programs.json";
-import RUGBY_MEN_COACHES from "./data/rugby_men_coaches.json";
-import VOLLEYBALL_MEN_COACHES from "./data/volleyball_men_d2_coaches.json";
-import BASKETBALL_WOMEN_COACHES from "./data/basketball_women_d2_coaches.json";
 import { createClient } from "@supabase/supabase-js";
 
 
@@ -645,7 +641,7 @@ function matchFromEada(profile, exclude, limit = 8) {
       university, division, place: `${e.city || ""}${e.city ? ", " : ""}${e.st}`,
       source: "Datos oficiales EADA + IPEDS (sin búsqueda publicada)",
       score: Math.max(0, Math.min(100, Math.round(score))), reasons,
-      coachContact: (coachContactFor(university, profile.sport, g) || {}).contactUrl || null, coachLabel: (coachContactFor(university, profile.sport, g) || {}).label || null,
+      coachLocked: isLockedContact(coachContactFor(university, profile.sport, g)), coachContact: (coachContactFor(university, profile.sport, g) || {}).contactUrl || null, coachLabel: (coachContactFor(university, profile.sport, g) || {}).label || null,
       coachName: (coachContactFor(university, profile.sport, g) || {}).name || null, coachTitle: (coachContactFor(university, profile.sport, g) || {}).title || null,
       nationalityMatch: null, scholarship: sch, academicFit: fit, eadaOnly: true,
       missing: ["una búsqueda publicada por el coach", "el roster con año de clase y posición para proyectar la vacante"],
@@ -684,7 +680,7 @@ function matchFromCatalog(profile, exclude, limit = 150) {
       university, division, place: [pr.City, pr.State].filter(Boolean).join(", "),
       source: `Catálogo del deporte${pr.source ? ` (${pr.source})` : ""} (sin búsqueda publicada)`,
       score: Math.max(0, Math.min(100, Math.round(score))), reasons,
-      coachContact: contact.contactUrl || null, coachLabel: contact.label || null, coachName: contact.name || null, coachTitle: contact.title || null,
+      coachLocked: isLockedContact(contact), coachContact: contact.contactUrl || null, coachLabel: contact.label || null, coachName: contact.name || null, coachTitle: contact.title || null,
       nationalityMatch: null, scholarship: sch, academicFit: fit, eadaOnly: true,
       missing: ["una búsqueda publicada por el coach", "el roster con año de clase y posición para proyectar la vacante"],
     });
@@ -700,7 +696,7 @@ let COACH_CONTACTS_BY_PROGRAM = {};
 // Básquet masculino NCAA D2 — cuerpos técnicos 2026-27 de 24 programas que no tenían mail cargado. Copiados por el responsable del sitio
 // desde la página de staff oficial de cada universidad el 7/10/2026. En UT Tyler y Wayne State el head coach no publica su mail:
 // el contacto es el associate head coach. Chaminade usa un mail general del programa.
-const BBALL_D2_COACHES_2026 = {"Angelo State University": {"name": "Vinay Patel", "title": "Head Coach", "email": "vinay.patel@angelo.edu", "assistants": [{"name": "Connor Moore", "email": "connor.moore@angelo.edu"}, {"name": "Cole Rabedeaux", "email": "cole.rabedeaux@angelo.edu"}]}, "Arkansas Tech University": {"name": "Mark Downey", "title": "Head Men's Basketball Coach", "email": "mdowney@atu.edu", "assistants": [{"name": "Greg Chenault", "email": "gchenault@atu.edu"}, {"name": "Devin Foster", "email": "dfoster20@atu.edu"}, {"name": "Dusan Radivojevic", "email": "dradivojevic@atu.edu"}]}, "Ashland University": {"name": "John Ellenwood", "title": "Head Men's Basketball Coach", "email": "jellenwo@ashland.edu", "assistants": [{"name": "Brook Turson", "email": "bturson1@ashland.edu"}, {"name": "Mark DeLaney", "email": "mdelaney@ashland.edu"}, {"name": "Cal Bavineau", "email": "cbavinea@ashland.edu"}]}, "Auburn University – Montgomery": {"name": "Anthony Komara", "title": "Men's Basketball Head Coach", "email": "akomara@aum.edu", "assistants": [{"name": "Jack Kostel", "email": "jkostel@aum.edu"}]}, "Augusta University": {"name": "Dip Metress", "title": "Head Coach", "email": "dmetress@augusta.edu", "assistants": [{"name": "Zach Tinkham", "email": "ztinkham@augusta.edu"}]}, "Cal Poly Humboldt": {"name": "DJ Broome", "title": "Head Men's Basketball Coach", "email": "dab77@humboldt.edu", "assistants": [{"name": "John Seavey", "email": "js1133@humboldt.edu"}, {"name": "Kevin Johnson Jr.", "email": "kdj6@humboldt.edu"}]}, "Chaminade University of Honolulu": {"name": "Eric Bovaird", "title": "Head Coach (mail general del programa)", "email": "mbasketball@chaminade.edu", "generic": true, "assistants": []}, "Clarion University of Pennsylvania": {"name": "Damian Pitts", "title": "Head Coach", "email": "dpitts@pennwest.edu", "assistants": [{"name": "Mike McCready", "email": "mmccready@pennwest.edu"}]}, "College of Staten Island": {"name": "T.J. Tibbs", "title": "Head Coach", "email": "Tj.Tibbs@csi.cuny.edu", "assistants": [{"name": "Kurt Manesy", "email": "Kurt.Manesy@csi.cuny.edu"}, {"name": "Khalil Shorter", "email": "Khalil.Shorter@csi.cuny.edu"}, {"name": "Ashley Lambert", "email": "Ashley.Lambert@csi.cuny.edu"}, {"name": "Justin Zieris", "email": "Justin.Zieris@csi.cuny.edu"}]}, "Edinboro University": {"name": "Josh Gross", "title": "Head Coach", "email": "gross_jo@pennwest.edu", "assistants": []}, "D'Youville University": {"name": "Andy Stark", "title": "Head Men's Basketball Coach", "email": "starka@dyu.edu", "assistants": [{"name": "Adam Bartley", "email": "bartleya@dyu.edu"}, {"name": "Jake Sweeney", "email": "sweeneyj@dyu.edu"}]}, "Georgia College & State University": {"name": "Ryan Aquino", "title": "Head Coach", "email": "ryan.aquino@gcsu.edu", "assistants": [{"name": "Jake Rios", "email": "jake.rios@gcsu.edu"}]}, "Mercy University": {"name": "Charles Marquardt", "title": "Head Coach", "email": "cmarquardt@mercy.edu", "assistants": [{"name": "Reggie Dorsey", "email": "rdorseyii@mercy.edu"}, {"name": "Kevin Major", "email": "kmajor3@mercy.edu"}]}, "Mississippi College": {"name": "Josh Brooks", "title": "Head Coach", "email": "jbrooks@mc.edu", "assistants": [{"name": "John Works", "email": "jworks@mc.edu"}, {"name": "Jordan Marshall", "email": "jcmarshall@mc.edu"}]}, "Queens College – New York": {"name": "Chris Alesi", "title": "Head Men's Basketball Coach", "email": "christopher.alesi81@qc.cuny.edu", "assistants": []}, "Regis University": {"name": "Rex Walters", "title": "Head Men's Basketball Coach", "email": "rwalters001@regis.edu", "assistants": [{"name": "Stanley Owusu-Antwi", "email": "sowusuantwi@regis.edu"}, {"name": "Rex Walters Jr.", "email": "rwalters@regis.edu"}]}, "Simon Fraser University": {"name": "Barnaby Craddock", "title": "Head Coach", "email": "barnaby_craddock@sfu.ca", "assistants": [{"name": "Kaden Hruska", "email": "kaden_hruska@sfu.ca"}, {"name": "Tyus Jefferson", "email": "tyus_jefferson@sfu.ca"}]}, "Slippery Rock University": {"name": "Ian Grady", "title": "Head Coach", "email": "ian.grady@sru.edu", "assistants": [{"name": "Jon Valeriano", "email": "jonathan.valeriano@sru.edu"}, {"name": "Brad Henry", "email": "bradley.henry@sru.edu"}, {"name": "Duncan Williams", "email": "duncan.williams@sru.edu"}]}, "South Dakota Mines": {"name": "Michael Iseman", "title": "Head Coach", "email": "Michael.Iseman@sdsmt.edu", "assistants": [{"name": "Dylan Backalar", "email": "Dylan.Backalar@sdsmt.edu"}, {"name": "Christian DePollar", "email": "Christian.Depollar@sdsmt.edu"}]}, "University of Charleston": {"name": "James Long", "title": "Head Coach", "email": "jameslong@ucwv.edu", "assistants": [{"name": "Payton Sturm", "email": "paytonsturm@ucwv.edu"}]}, "University of Texas at Tyler": {"name": "Cody San Miguel", "lastName": "San Miguel", "title": "Associate Head Coach (el head coach, Doug Karleskint, no publica su mail)", "email": "csanmiguel@uttyler.edu", "assistants": [{"name": "Ezequiel Tenorio", "email": "etenorio@uttyler.edu"}]}, "Vanguard University of Southern California": {"name": "Rhett Soliday", "title": "Head Coach", "email": "rhett.soliday@vanguard.edu", "assistants": [{"name": "Taylor Kelly"}, {"name": "JJ Johnson", "email": "jadyn.johnson@vanguard.edu"}]}, "Wayne State University": {"name": "Will Vergollo", "title": "Associate Head Coach (el head coach, Bryan Smothers, no publica su mail)", "email": "Vergollo@wayne.edu", "assistants": [{"name": "Gjon Djokaj", "email": "gdjokaj@wayne.edu"}, {"name": "Kyle Lorentzen", "email": "kyle.lorentzen@wayne.edu"}, {"name": "Victor Jackson", "email": "Vjack1317@wayne.edu"}]}, "William Jessup University": {"name": "Mark Darnall", "title": "Head Coach", "email": "mdarnall@jessup.edu", "assistants": [{"name": "Travis Timmons", "email": "ttimmons@jessup.edu"}, {"name": "Kevin Pham", "email": "kpham@jessup.edu"}, {"name": "Michael Gervasoni", "email": "mgervasoni@jessup.edu"}]}};
+let BBALL_D2_COACHES_2026 = {};
 
 // Nombre del programa en español ("Vóley femenino") para mostrar a qué equipo pertenece cada contacto.
 // Básquet masculino D2: head coach y mail de los programas con plantel que no tenían mail, del directorio de
@@ -745,7 +741,7 @@ function coachContactFor(university, sport, gender) {
   const legacy = legacyContactFor(university, sport, gender);
   // Si el contacto nuevo no tiene mail y el viejo sí, sirve más el viejo.
   if (c && !cWrongSport && (c.email || !legacy)) {
-    return { name: c.name, title: c.title, contactUrl: c.email ? `mailto:${c.email}` : (c.profileUrl || null), label: c.email ? (c.generic ? `Escribirle al programa (${c.email})` : `Escribirle a ${c.name} (${c.email})`) : (c.profileUrl ? `Escribirle a ${c.name} por FieldLevel (publicó una vacante ahí)` : null), assistants: c.assistants || [], lastName: c.lastName || null, gk: c.gk || null, updated: c.updated || null, email: c.email || null, generic: !!c.generic };
+    return { locked: !!c.locked, name: c.name, title: c.title, contactUrl: c.email ? `mailto:${c.email}` : (c.profileUrl || null), label: c.email ? (c.generic ? `Escribirle al programa (${c.email})` : `Escribirle a ${c.name} (${c.email})`) : (c.profileUrl ? `Escribirle a ${c.name} por FieldLevel (publicó una vacante ahí)` : null), assistants: c.assistants || [], lastName: c.lastName || null, gk: c.gk || null, updated: c.updated || null, email: c.email || null, generic: !!c.generic };
   }
   return legacy;
 }
@@ -770,6 +766,8 @@ function legacyContactShown(university) {
   const l = ROSTER_COACH_CONTACTS[university];
   return l && l.sport && coachContactFor(university, l.sport, l.gender) === l ? l : null;
 }
+// Los mails de coaches que el servidor no entrega sin sesión llegan enmascarados con locked:true; se ven completos solo unos pocos de muestra.
+function isLockedContact(c) { return !!(c && c.locked) && !isLoggedIn(); }
 function schoolHasCoachContact(university) { return !!legacyContactShown(university) || contactsForSchool(university).length > 0; }
 /* ---------------------------------------------------------------
    COBERTURA TOTAL Y ADMISIÓN
@@ -928,7 +926,8 @@ function CoverageBlock({ r, profile }) {
 // Entrenadores latinoamericanos en cuerpos técnicos de EE.UU. (para detectar compatriotas en el staff, uno de los
 // pedidos del prompt original). checked = fecha en que se confirmó en el sitio oficial de la universidad; null = dato
 // aportado por el responsable del sitio, sin verificar todavía. email null = no publicado: no se deduce.
-const STAFF_BY_PROGRAM = [{"u": 197984, "sport": "Rugby", "gender": "M", "name": "Genaro Fessia", "role": "Head Coach", "email": "genarofessia@bac.edu", "country": "Argentina", "checked": "2026-10-02", "note": "Cordobés, ex-Puma (18 partidos con Argentina, Mundial 2011)."}, {"u": 199120, "sport": "Field Hockey", "gender": "F", "name": "Manuel Garcia Nieto", "role": "Assistant Coach", "email": "gnmanuel@email.unc.edu", "country": "Argentina", "checked": "2026-09-30", "note": "Nacido en Argentina; jugó y dirigió en Banco Provincia y Club Universitario."}, {"u": 183044, "sport": "Field Hockey", "gender": "F", "name": "Vicky Tinghitella", "role": "Assistant Coach", "email": "Victoria.Tinghitella@unh.edu", "country": "Argentina", "checked": "2026-09-30", "note": "Se ocupa, entre otras cosas, de las arqueras."}, {"u": 231581, "sport": "Field Hockey", "gender": "F", "name": "Brisa Uviedo", "role": "Assistant Field Hockey Coach", "email": "buviedo@bridgewater.edu", "country": "Argentina", "checked": null}, {"u": 166850, "sport": "Soccer", "gender": "F", "name": "Gabe Mejaíl", "role": "Head Women's Soccer Coach", "email": "mejailg@merrimack.edu", "country": "Argentina", "checked": null}, {"u": 219833, "sport": "Soccer", "gender": "M", "name": "Mariano Ilari", "role": "Assistant Men's Soccer Coach", "email": "milari@cbu.edu", "country": "Argentina", "checked": null}, {"u": 154101, "sport": "Soccer", "gender": "M", "name": "Juan Mackrey", "role": "Assistant Men's Soccer Coach", "email": "juan.mackrey@nwciowa.edu", "country": "Argentina", "checked": null}, {"u": 106485, "sport": "Volleyball", "gender": "F", "name": "Mirela Polete Vasconselos", "role": "Assistant Volleyball Coach", "email": null, "country": "Brasil", "checked": "2026-09-30", "note": "Su mail no está publicado: buscalo en el sitio de la universidad."}, {"u": 199032, "sport": "Volleyball", "gender": "F", "name": "Cristina Viera", "role": "Head Volleyball Coach", "email": "cristina.viera@montreat.edu", "country": "Uruguay", "checked": "2026-09-30", "note": "Jugó en la selección uruguaya de vóley."}, {"u": 110422, "sport": "Soccer", "gender": "F", "name": "Bernardo Silva", "role": "Head Coach", "email": "bsilva05@calpoly.edu", "country": "Portugal", "checked": "2026-10-29", "note": "Nativo de Portugal, según la web de Cal Poly."}, {"u": 110413, "sport": "Soccer", "gender": "M", "name": "Miguel Ruiz", "role": "Head Coach", "email": "miguelruiz@callutheran.edu", "country": "Colombia", "checked": "2026-10-29", "note": "Nació en Colombia y se mudó a California a los 9 años (bio oficial)."}, {"u": 487524, "sport": "Soccer", "gender": "M", "name": "Carlos Bermudez", "role": "Head Coach", "email": "bermudezcar@husson.edu", "country": "España", "checked": "2026-10-29", "note": "Nativo de Pozuelo de Alarcón, Madrid (anuncio oficial)."}, {"u": 161086, "sport": "Soccer", "gender": "M", "name": "Yuri Nascimento", "role": "Assistant Coach", "email": "ynascime@colby.edu", "country": "Brasil", "checked": "2026-10-29", "note": "Originario de São Paulo (bio oficial)."}, {"u": 134079, "sport": "Soccer", "gender": "M", "name": "Pablo Gallo Arias", "role": "Assistant Coach", "email": null, "country": "Colombia", "checked": "2026-10-29", "note": "Nació y se crió en Colombia (bio oficial). Su mail no está publicado: buscalo en el sitio de la universidad."}, {"u": 193584, "sport": "Soccer", "gender": "M", "name": "Marcelo Moreira", "role": "Assistant Coach", "email": "mmoreir0@naz.edu", "country": "Brasil", "checked": "2026-10-29", "note": "Ex jugador profesional de Brasil (bio oficial). Obtuvo la ciudadanía estadounidense en 2020."}, {"u": 137351, "sport": "Soccer", "gender": "M", "name": "Daniel De Oliveira", "role": "Assistant Coach", "email": null, "country": "Venezuela", "checked": "2026-10-29", "note": "Representó a Venezuela en selecciones juveniles y mayor (anuncio oficial). Su mail no está publicado: buscalo en el sitio de la universidad."}, {"u": 100663, "sport": "Soccer", "gender": "F", "name": "Lucas Costa", "role": "Assistant Coach", "email": "costalm@uab.edu", "country": "Brasil", "checked": "2026-10-29", "note": "Nativo del Distrito Federal, Brasil (anuncio oficial)."}, {"u": 110592, "sport": "Volleyball", "gender": "F", "name": "Juan Figueroa", "role": "Head Volleyball Coach", "email": "jfigue65@calstatela.edu", "country": "Puerto Rico", "checked": "2026-10-29", "note": "Puertorriqueño, campeón NCAA D2 (prensa de Puerto Rico)."}, {"u": 142461, "sport": "Soccer", "gender": "M", "name": "Julio Castillo", "role": "Head Coach", "email": "jcastillo@nnu.edu", "country": "México", "checked": "2026-10-29", "note": "Nació en Los Ángeles, creció en Tijuana y tiene doble nacionalidad; jugó en la selección mexicana sub-15 (nota oficial)."}, {"u": 134097, "sport": "Volleyball", "gender": "F", "name": "Ángel Pérez", "role": "Assistant Coach", "email": "ajp26f@fsu.edu", "country": "Puerto Rico", "checked": "2026-10-29", "note": "Nativo de Río Piedras, Puerto Rico (anuncio oficial)."}, {"u": 139940, "sport": "Volleyball", "gender": "F", "name": "Jorge Martinez", "role": "Head Coach", "email": "jmartinez124@gsu.edu", "country": "Puerto Rico", "checked": "2026-10-29", "note": "Nació y se crió en Puerto Rico (anuncio oficial)."}, {"u": 157076, "sport": "Volleyball", "gender": "F", "name": "Alejandra Jimenez", "role": "Head Volleyball Coach", "email": "alejandra.jimenez@kwc.edu", "country": "Puerto Rico", "checked": "2026-10-29", "note": "Nativa de Puerto Rico (nota de prensa)."}, {"u": 198835, "sport": "Soccer", "gender": "M", "name": "Jorge Morales", "role": "Interim Head Coach", "email": "jorge.morales@lr.edu", "country": "Colombia", "checked": "2026-10-29", "note": "Colombiano, vive en EE.UU. hace nueve años (bio oficial)."}, {"u": 122755, "sport": "Soccer", "gender": "M", "name": "Jesus Sanchez", "role": "Assistant Coach", "email": "jesus.a.sanchez@sjsu.edu", "country": "México", "checked": "2026-10-29", "note": "Nativo de Mazatlán, México (anuncio oficial)."}, {"u": 137546, "sport": "Soccer", "gender": "M", "name": "Eduardo Jimenez", "role": "Assistant Coach", "email": "efjimenez@stetson.edu", "country": "Puerto Rico", "checked": "2026-10-29", "note": "Dirige a la selección de Puerto Rico y lo llama su patria (nota oficial)."}, {"u": 122436, "sport": "Volleyball", "gender": "F", "name": "Carlos Moreno", "role": "Assistant Coach", "email": "carlosmoreno@sandiego.edu", "country": "Brasil", "checked": "2026-10-29", "note": "Nativo de Brasil; también dirigió en su país (bio oficial)."}, {"u": 114813, "sport": "Soccer", "gender": "F", "name": "Jaime Ramirez", "role": "Head Coach", "email": "jaime.ramirez@fresno.edu", "country": "México", "checked": "2026-10-29", "note": "Creció en Mexicali, México, y se mudó a California a los 11 años (bio oficial)."}, {"u": 136215, "sport": "Soccer", "gender": "F", "name": "Agustin Iusem", "role": "Assistant Coach", "email": "ai521@nova.edu", "country": "Argentina", "checked": "2026-10-29", "note": "Originario de Buenos Aires (bio oficial)."}];
+let STAFF_BY_PROGRAM = [];
+let RUGBY_WOMEN_PROGRAMS = [], RUGBY_MEN_COACHES = [], VOLLEYBALL_MEN_COACHES = [], BASKETBALL_WOMEN_COACHES = {};
 const countryKey = (c) => mailCountryKey(c);
 const COUNTRY_ADJ = { argentina: ["argentino", "argentina"], brazil: ["brasileño", "brasileña"], uruguay: ["uruguayo", "uruguaya"], colombia: ["colombiano", "colombiana"], chile: ["chileno", "chilena"], paraguay: ["paraguayo", "paraguaya"], mexico: ["mexicano", "mexicana"], peru: ["peruano", "peruana"] };
 function staffFor(university, sport, gender) {
@@ -1479,6 +1478,7 @@ function matchFieldLevel(profile) {
       source: row.source || "FieldLevel (necesidad publicada por el coach)",
       score: Math.max(0, Math.min(100, score)),
       reasons,
+      coachLocked: isLockedContact(coachContactFor(row.university, row.sport, row.gender || profile.gender)),
       coachContact: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).contactUrl || row.coach_profile_url,
       coachLabel: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).label || row.coach_label || "Ver perfil del coach en FieldLevel",
       coachName: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).name || null,
@@ -1708,6 +1708,7 @@ function matchFromLoadedRosters(profile) {
       source: partial ? `Estadísticas ${String(info.statsSeason || "2025")} (plantel parcial: sin clase${info.positionsKnown ? "" : " ni posición"})` : postedNear ? "Roster real + búsqueda publicada por el coach" : "Roster real (inferido — sin necesidad pública equivalente confirmada)",
       score: Math.max(0, Math.min(100, score)),
       reasons,
+      coachLocked: isLockedContact(contact),
       coachContact: contact.contactUrl || (need && need.row.coach_profile_url) || null,
       coachLabel: contact.label || (!contact.contactUrl && need && need.row.coach_profile_url ? "Ver perfil del coach en FieldLevel" : null),
       coachName: contact.name || null,
@@ -3769,8 +3770,8 @@ function coachOptionsFor(university, sport, gender, profile) {
   const c = coachContactFor(university, sport, gender);
   if (!c) return [];
   const opts = [];
-  if (c.name) opts.push({ key: "head", name: c.name, title: c.title || null, email: c.email || getCoachEmail(university, sport, gender) || null, head: true });
-  (c.assistants || []).forEach((a, i) => { if (a && a.name) opts.push({ key: `asst-${i}`, name: a.name, title: "Asistente", email: a.email || null, head: false }); });
+  if (c.name) opts.push({ key: "head", name: c.name, title: c.title || null, email: c.email || getCoachEmail(university, sport, gender) || null, head: true, locked: !!c.locked });
+  (c.assistants || []).forEach((a, i) => { if (a && a.name) opts.push({ key: `asst-${i}`, name: a.name, title: "Asistente", email: a.email || null, head: false, locked: !!c.locked }); });
   // Compatriotas del cuerpo técnico confirmados (STAFF_BY_PROGRAM): se marcan en la lista.
   const comp = profile && profile.country ? staffFor(university, sport, gender).filter((x) => mailCountrySame(x.country, profile.country)).map((x) => x.name) : [];
   opts.forEach((o) => { o.comp = comp.includes(o.name); if (o.comp) o.title = `${o.title || "Staff"} · de tu país`; });
@@ -3782,7 +3783,8 @@ function coachOptionsFor(university, sport, gender, profile) {
 }
 
 function ComposeLinks({ profile, r }) {
-  if (!isLoggedIn()) return <div className="rm-missing" style={{ marginTop: 10 }}>🔒 <b>El generador de mails a coaches se usa con tu cuenta gratuita.</b> <button type="button" className="rm-btn-inline" onClick={() => openSignup("mails_resultado")}>Crear cuenta →</button></div>;
+  const opts = coachOptionsFor(r.university, profile.sport, profile.gender, profile);
+  if (!isLoggedIn() && !opts.some((o) => !o.locked)) return <div className="rm-missing" style={{ marginTop: 10 }}>🔒 <b>El generador de mails a coaches se usa con tu cuenta gratuita.</b> <button type="button" className="rm-btn-inline" onClick={() => openSignup("mails_resultado")}>Crear cuenta →</button></div>;
   return <ComposeLinksInner profile={profile} r={r} />;
 }
 function ComposeLinksInner({ profile, r }) {
@@ -3923,6 +3925,7 @@ function RecruitingNeedsPage() {
   return (
     <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
       <h2 className="rm-condensed">Recruiting Needs</h2>
+      <SampleBanner what="búsquedas de coaches" shown={RECRUITING_NEEDS_GENERAL.length} total={GATED_TOTALS.needs} motivo="needs" />
       <p className="rm-hint">Búsquedas reales publicadas por coaches, de todos los deportes, todos los niveles y todas las universidades — no solo las que ya tenemos con roster cargado. Filtrá por deporte para ver únicamente lo tuyo. {RECRUITING_NEEDS_GENERAL.length} publicaciones cargadas hasta ahora; se va sumando con cada lote nuevo que carguemos.</p>
 
       <div className="rm-grid" style={{ marginBottom: 26 }}>
@@ -4015,7 +4018,7 @@ function CompareTable({ schools, onOpenSchool }) {
     { label: "Ubicación", get: (d) => (d.prog?.City ? `${d.prog.City}, ${d.prog.State || ""}` : d.ncsa.city || "—"), best: null },
     { label: "Roster real cargado", get: (d) => (d.hasRoster ? "Sí ✓" : "No"), best: null },
     { label: "Contacto de coach", get: (d) => (d.contact ? "Sí ✓" : "No"), best: null },
-    { label: "Búsquedas activas", get: (d) => (isLoggedIn() ? String(d.needs) : "🔒"), num: (d) => d.needs, dir: "high" },
+    { label: "Búsquedas activas", get: (d) => String(d.needs), num: (d) => d.needs, dir: "high" },
     { label: "Tasa de admisión", get: (d) => d.ficha?.admit_rate || "—", num: (d) => pctNum(d.ficha?.admit_rate), dir: "high" },
     { label: "Rango SAT", get: (d) => d.ficha?.sat_range || (d.ncsa.sat_25 && d.ncsa.sat_75 ? `${d.ncsa.sat_25}-${d.ncsa.sat_75}` : "—"), best: null },
     { label: "GPA prom. ingresantes", get: (d) => d.ncsa.avg_freshman_gpa || "—", best: null },
@@ -4436,8 +4439,8 @@ function CollegeProfileCard({ school, cds, place }) {
         <b>{cds.majors_offered_ABET.length ? cds.majors_offered_ABET.join(" · ") : "sin lista cargada"}</b>
       </div>
       <div className="rm-college-profile-need"><b>Ayuda financiera:</b> {cds.need_policy}</div>
-      {contact && !isLoggedIn() && <CoachLock motivo="ficha" />}
-      {contact && isLoggedIn() && (() => {
+      {isLockedContact(contact) && <CoachLock motivo="ficha" />}
+      {contact && !isLockedContact(contact) && (() => {
         const isEmail = contact.contactUrl.startsWith("mailto:");
         const email = isEmail ? contact.contactUrl.replace("mailto:", "") : null;
         return (
@@ -4571,12 +4574,12 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
 
       {eada && <EadaSection e={eada} profileMajor={profileMajor} />}
 
-      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && !isLoggedIn() && <CoachLock motivo="ficha" />}
-      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && isLoggedIn() && (
+      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && STAFF_BY_PROGRAM.filter((x) => x.u === eada.u).every((x) => isLockedContact(x)) && <CoachLock motivo="ficha" />}
+      {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u && !isLockedContact(x)) && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Entrenadores latinoamericanos en el staff</h3>
           <div className="rm-catalog-list">
-            {STAFF_BY_PROGRAM.filter((x) => x.u === eada.u).map((x) => (
+            {STAFF_BY_PROGRAM.filter((x) => x.u === eada.u && !isLockedContact(x)).map((x) => (
               <div className="rm-catalog-row" key={x.name} style={{ cursor: "default" }}>
                 <div className="rm-catalog-row-main"><b>{x.name}</b><span style={{ fontSize: 12.5 }}>{x.role} · {x.country}</span></div>
                 <div className="rm-catalog-row-meta">{x.email ? <a href={`mailto:${x.email}`}>{x.email}</a> : "Mail no publicado"}{x.checked ? ` · Verificado el ${x.checked.split("-").reverse().join("/")}` : " · Sin verificar"}{x.note ? ` · ${x.note}` : ""}</div>
@@ -4586,12 +4589,12 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
-      {contactsForSchool(school).length > 0 && !isLoggedIn() && <CoachLock motivo="ficha" />}
-      {contactsForSchool(school).length > 0 && isLoggedIn() && (
+      {contactsForSchool(school).some((c) => isLockedContact(c)) && <CoachLock motivo="ficha" />}
+      {contactsForSchool(school).some((c) => !isLockedContact(c)) && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Coaches por programa</h3>
           <div className="rm-catalog-list">
-            {contactsForSchool(school).map((c) => (
+            {contactsForSchool(school).filter((c) => !isLockedContact(c)).map((c) => (
               <div className="rm-catalog-row" key={`${c.sport}|${c.gender}`} style={{ cursor: "default" }}>
                 <div className="rm-catalog-row-main"><b>{programLabelEs(c.sport, c.gender)}</b><span style={{ fontSize: 12.5 }}>{c.name}{c.title ? ` · ${c.title}` : ""}</span></div>
                 <div className="rm-catalog-row-meta">
@@ -4782,8 +4785,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
       </div>}
 
       {/* ---- Recruiting Needs activos en esta escuela ---- */}
-      {needsHere.length > 0 && !isLoggedIn() && <div className="rm-sp-section"><div className="rm-missing" style={{ textAlign: "center" }}>🔒 <b>Las búsquedas activas de los coaches se ven con tu cuenta gratuita.</b> <button type="button" className="rm-btn-inline" onClick={() => openSignup("needs_ficha")}>Crear cuenta →</button></div></div>}
-      {needsHere.length > 0 && isLoggedIn() && (
+      {needsHere.length > 0 && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas activas publicadas</h3>
           <div className="rm-needs-list">
@@ -4799,7 +4801,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
       )}
 
       {/* ---- Coach y contacto ---- */}
-      {contact && isLoggedIn() && (
+      {contact && !isLockedContact(contact) && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Contacto del cuerpo técnico · {programLabelEs(contact.sport, contact.gender)}</h3>
           <div className="rm-coach-card">
@@ -4813,7 +4815,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
-      {contact && contact.staff && contact.staff.length > 0 && isLoggedIn() && (
+      {contact && contact.staff && contact.staff.length > 0 && !isLockedContact(contact) && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Cuerpo técnico de {programLabelEs(contact.sport, contact.gender)} · temporada 2026-27</h3>
           <p className="rm-exam-note" style={{ marginTop: 0 }}>Head coach y asistentes, tal como los publica el sitio oficial del programa.</p>
@@ -9071,7 +9073,7 @@ function CoachCard({ r }) {
     // Roster cargado pero todavía sin contacto del coach: no se muestra un botón vacío.
     return <div className="rm-missing">Todavía no tenemos el contacto del coach de esta universidad — buscalo en la ficha de la universidad o en su sitio deportivo.</div>;
   }
-  if (!isLoggedIn()) return <div className="rm-missing">🔒 Los contactos de coaches se ven con tu cuenta gratuita. <button type="button" className="rm-btn-inline" onClick={() => openSignup("contacto_resultado")}>Crear cuenta →</button></div>;
+  if (r.coachLocked) return <div className="rm-missing">🔒 Los contactos de coaches se ven con tu cuenta gratuita. <button type="button" className="rm-btn-inline" onClick={() => openSignup("contacto_resultado")}>Crear cuenta →</button></div>;
   if (!r.coachName) {
     // Resultado de FieldLevel: no tenemos nombre/email/teléfono real del coach, solo el link de perfil.
     return <a className="rm-contact" href={r.coachContact} target="_blank" rel="noreferrer">{r.coachLabel} →</a>;
@@ -9506,6 +9508,11 @@ function MoreRow({ r, profile, onOpenSchool, isFav, toggleFav }) {
   );
 }
 
+const GATED_TOTALS = typeof DATA_TOTALS !== "undefined" ? DATA_TOTALS : {};
+function SampleBanner({ what, shown, total, motivo }) {
+  if (isLoggedIn()) return null;
+  return <div className="rm-missing" style={{ textAlign: "center", margin: "10px 0 14px" }}>🔒 Estás viendo una muestra: <b>{shown}{total ? ` de ${total.toLocaleString("es-AR")}` : ""} {what}</b>. Con tu cuenta gratuita ves todo. <button type="button" className="rm-btn-inline" onClick={() => openSignup(motivo)}>Crear cuenta →</button></div>;
+}
 const FREE_RESULTS = 5; // universidades que se ven sin cuenta
 function Results({ profile, onBack, onOpenSchool }) {
   const tiered = useMemo(() => buildTieredResults(profile), [profile]);
@@ -10118,7 +10125,8 @@ function OpportunitiesBoard({ profile }) {
     <div className="rm-section" id="rm-offers-board" style={{ borderTop: "none", paddingTop: 20 }}>
       <div className="rm-wrap">
         <h2 className="rm-condensed" style={{ fontSize: 22, marginBottom: 4 }}>Coaches buscando jugadoras y jugadores ahora</h2>
-        <p className="rm-hint" style={{ marginBottom: 16 }}>{OFFERS_BOARD.length.toLocaleString("es")} búsquedas publicadas por coaches en FieldLevel. Algunas pueden estar cerradas: confirmá la vigencia con el coach. Filtrá por tu posición.</p>
+        <p className="rm-hint" style={{ marginBottom: 16 }}>{(isLoggedIn() ? OFFERS_BOARD.length : GATED_TOTALS.offers || OFFERS_BOARD.length).toLocaleString("es")} búsquedas publicadas por coaches en FieldLevel. Algunas pueden estar cerradas: confirmá la vigencia con el coach. Filtrá por tu posición.</p>
+        <SampleBanner what="búsquedas de coaches" shown={OFFERS_BOARD.length} total={GATED_TOTALS.offers} motivo="needs_home" />
 
         {expanded && (
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
@@ -11210,6 +11218,7 @@ const stageFromPath = () => {
 // (build.mjs los copia a dist/data/ con hash en el nombre; DATA_MANIFEST lo inyecta el build.)
 function __assignData(d) {
   FIELDLEVEL_NEEDS = d.FIELDLEVEL_NEEDS;
+  STAFF_BY_PROGRAM = d.STAFF_BY_PROGRAM; BBALL_D2_COACHES_2026 = d.BBALL_D2_COACHES_2026; RUGBY_WOMEN_PROGRAMS = d.RUGBY_WOMEN_PROGRAMS; RUGBY_MEN_COACHES = d.RUGBY_MEN_COACHES; VOLLEYBALL_MEN_COACHES = d.VOLLEYBALL_MEN_COACHES; BASKETBALL_WOMEN_COACHES = d.BASKETBALL_WOMEN_COACHES;
   OFFERS_BOARD = d.OFFERS_BOARD;
   SCHOOL_PROFILES_NCSA = d.SCHOOL_PROFILES_NCSA;
   RECRUITING_NEEDS_GENERAL = d.RECRUITING_NEEDS_GENERAL;
@@ -11574,8 +11583,14 @@ function __deriveAll() {
 let __dataPromise = null;
 export function loadData() {
   if (!__dataPromise) {
-    const names = ["FIELDLEVEL_NEEDS","FIELD_HOCKEY_HEAD_COACHES","ROSTER_COACH_CONTACTS","BIGTEN_MSOC_STATS_2025","BBALL_D2_CONFERENCES","PSAC_FH_STATS","HOCKEY_D2_STATS_2026","HOCKEY_D2_BIO_2026","CDS_DATA","ESSLO_DATA","CIP_NAMES","FOS_ASSOCIATE_SCHOOLS","SCORECARD_NAME_IDS","BBALL_D2_COACHES_FCP","BBALL_D2_COACHES_WEB","OFFERS_BOARD","SCHOOL_PROFILES_NCSA","RECRUITING_NEEDS_GENERAL","PROGRAMS_ALL_SPORTS","BBALL_ROSTERS","BBALL_D2_ROSTERS","WBB_ROSTERS_2026_27","WBB_ESPN_STATS_2025_26","HOCKEY_PARTIAL_STATS_2026","HOCKEY_BIO_2026","SOCCER_PARTIAL_STATS_2026","SOCCER_BIO_2026","SOCCER_D2M_STATS_2026","SOCCER_D2M_BIO_2026","SOCCER_D2F_STATS_2026","SOCCER_D2F_STATS_2025","SOCCER_D2F_BIO_2026","VB_D1_2026","VB_D2_2026","MAJOR_DATA_BY_SCHOOL","FOS_BY_ID","FOS_NAME_IDS","EADA_DATA","EADA_SITE_NAMES","SCORECARD_BY_ID","COACH_CONTACTS_BY_PROGRAM"];
-    __dataPromise = Promise.all(names.map((n) => fetch("/data/" + DATA_MANIFEST[n]).then((r) => { if (!r.ok) throw new Error(n + " " + r.status); return r.json(); })))
+    const names = ["STAFF_BY_PROGRAM","BBALL_D2_COACHES_2026","RUGBY_WOMEN_PROGRAMS","RUGBY_MEN_COACHES","VOLLEYBALL_MEN_COACHES","BASKETBALL_WOMEN_COACHES","FIELDLEVEL_NEEDS","FIELD_HOCKEY_HEAD_COACHES","ROSTER_COACH_CONTACTS","BIGTEN_MSOC_STATS_2025","BBALL_D2_CONFERENCES","PSAC_FH_STATS","HOCKEY_D2_STATS_2026","HOCKEY_D2_BIO_2026","CDS_DATA","ESSLO_DATA","CIP_NAMES","FOS_ASSOCIATE_SCHOOLS","SCORECARD_NAME_IDS","BBALL_D2_COACHES_FCP","BBALL_D2_COACHES_WEB","OFFERS_BOARD","SCHOOL_PROFILES_NCSA","RECRUITING_NEEDS_GENERAL","PROGRAMS_ALL_SPORTS","BBALL_ROSTERS","BBALL_D2_ROSTERS","WBB_ROSTERS_2026_27","WBB_ESPN_STATS_2025_26","HOCKEY_PARTIAL_STATS_2026","HOCKEY_BIO_2026","SOCCER_PARTIAL_STATS_2026","SOCCER_BIO_2026","SOCCER_D2M_STATS_2026","SOCCER_D2M_BIO_2026","SOCCER_D2F_STATS_2026","SOCCER_D2F_STATS_2025","SOCCER_D2F_BIO_2026","VB_D1_2026","VB_D2_2026","MAJOR_DATA_BY_SCHOOL","FOS_BY_ID","FOS_NAME_IDS","EADA_DATA","EADA_SITE_NAMES","SCORECARD_BY_ID","COACH_CONTACTS_BY_PROGRAM"];
+    const priv = typeof DATA_MANIFEST_PRIV !== "undefined" ? DATA_MANIFEST_PRIV : {};
+    const getJson = (url, headers) => fetch(url, headers ? { headers } : undefined).then((r) => { if (!r.ok) throw new Error(url + " " + r.status); return r.json(); });
+    // Con sesión, los datos con mails de coaches y vacantes se piden completos a /priv (el servidor valida el token); sin sesión, o si falla, queda la muestra pública.
+    const tokenP = isLoggedIn() && Object.keys(priv).length ? supabase.auth.getSession().then(({ data }) => (data && data.session && data.session.access_token) || "").catch(() => "") : Promise.resolve("");
+    __dataPromise = tokenP.then((tok) => Promise.all(names.map((n) => (tok && priv[n]
+      ? getJson("/priv/" + priv[n], { Authorization: "Bearer " + tok }).catch(() => getJson("/data/" + DATA_MANIFEST[n]))
+      : getJson("/data/" + DATA_MANIFEST[n])))))
       .then((vals) => { const d = {}; names.forEach((n, i) => { d[n] = vals[i]; }); __restoreNaN(d); __assignData(d); __deriveAll(); })
       .catch((e) => { __dataPromise = null; throw e; });
   }
@@ -11857,7 +11872,7 @@ function AppInner() {
       {stage === "mylist" && <AccountGate motivo="lista" title="Tu lista de universidades, guardada en tu cuenta" text="Armá tu lista corta, compará y seguí el estado de cada postulación." bullets={["Tu lista no se pierde si cambiás de dispositivo","Tablero de seguimiento de cada coach","Recordatorio semanal de qué hacer"]}><MyListPage setStage={setStage} onOpenSchool={openSchool} /></AccountGate>}
       {stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
       {stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
-      {stage === "needs" && <AccountGate motivo="needs" title="Recruiting Needs, con tu cuenta" text="Qué posiciones buscan los coaches y para qué temporada, con sus contactos." bullets={["Búsquedas publicadas por programa","Contacto directo del coach","Filtros por deporte, división y posición"]}><RecruitingNeedsPage /></AccountGate>}
+      {stage === "needs" && <RecruitingNeedsPage />}
       {stage === "eligibility" && <EligibilityPage />}
       {stage === "video" && <VideoGuidePage />}
       {stage === "money" && <MoneyGuidePage />}
