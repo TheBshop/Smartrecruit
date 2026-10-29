@@ -42,6 +42,29 @@ Rules:
 - Subject: for a first contact use "Class of {year} {position} | {Full Name} | {one key fact} + Highlights" (drop parts you don't have); for other types keep it short and specific.
 - Output ONLY valid JSON, no extra text: {"subject": "...", "body": "...", "todo": ["..."]}. "todo" lists, in Spanish, what the athlete must complete or verify before sending (placeholders, facts you could not confirm); empty list if nothing.`;
 
+// Solo usuarios con sesión: sin esto cualquiera podía gastar la clave de la API llamando al endpoint (el origen se puede falsificar fuera del navegador).
+const SUPABASE_URL = "https://dliayalkzvaugukhxmcb.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsaWF5YWxrenZhdWd1a2h4bWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1MzkwOTMsImV4cCI6MjA4ODExNTA5M30.vGBprr8FKBxTayS6Q6ZbWIxUZKItY4avgMJbUGgQC1E";
+async function userFromAuth(header) {
+  const m = /^Bearer\s+(.+)$/i.exec(header || "");
+  if (!m) return null;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_ANON_KEY, authorization: `Bearer ${m[1]}` } });
+    if (!r.ok) return null;
+    const u = await r.json();
+    return u && u.id ? u : null;
+  } catch { return null; }
+}
+// Tope por usuario (best-effort: vive en la memoria de cada instancia; para un tope firme, sumar una regla de Rate Limiting en Cloudflare).
+const HITS = new Map();
+function overLimit(uid, max = 40, windowMs = 3600000) {
+  const now = Date.now();
+  const arr = (HITS.get(uid) || []).filter((t) => now - t < windowMs);
+  if (arr.length >= max) { HITS.set(uid, arr); return true; }
+  arr.push(now); HITS.set(uid, arr);
+  if (HITS.size > 5000) HITS.clear();
+  return false;
+}
 const json = (obj, status = 200, origin = "*") => new Response(JSON.stringify(obj), {
   status, headers: { "content-type": "application/json", "access-control-allow-origin": origin, "vary": "origin" } });
 
@@ -74,9 +97,12 @@ async function handle(req, env) {
   const origin = req.headers.get("origin") || "";
   const okOrigin = ALLOWED.some((re) => re.test(origin));
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: {
-    "access-control-allow-origin": okOrigin ? origin : "null", "access-control-allow-methods": "POST", "access-control-allow-headers": "content-type" } });
+    "access-control-allow-origin": okOrigin ? origin : "null", "access-control-allow-methods": "POST", "access-control-allow-headers": "content-type, authorization" } });
   if (req.method !== "POST") return json({ error: "method" }, 405);
   if (!okOrigin) return json({ error: "origin" }, 403);
+  const authUser = await userFromAuth(req.headers.get("authorization"));
+  if (!authUser) return json({ error: "Iniciá sesión para usar la IA: es gratis y solo lleva tu mail." }, 401, origin);
+  if (overLimit(authUser.id)) return json({ error: "Llegaste al máximo de borradores con IA por hora. Probá de nuevo más tarde." }, 429, origin);
   if (!env.ANTHROPIC_API_KEY) return json({ error: "La clave de la API no está configurada en el servidor." }, 500, origin);
 
   let input;

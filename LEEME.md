@@ -145,3 +145,16 @@ La etapa "Firma, visa y viaje" de `buildYearChecklist` pasó de 3 casilleros a 6
 
 ## Planteles, estadísticas y staff desde los sitios oficiales (plataforma Sidearm)
 `datos-src/planteles_web/hacer_sitemaps.mjs <hosts.txt> [deporte] [temporada]` genera 3 sitemaps importables en la extensión Web Scraper (webscraper.io): estadísticas del año anterior (`/stats/AÑO`), plantel actual (`/roster`) y coaches (`/coaches`). `hosts.txt`: una línea `sitio | nombre exacto en el catálogo`. Los selectores se verificaron en los sitios de Lewis, Findlay y Grand Valley State. No cubre los sitios que muestran el staff solo en un directorio general (por ejemplo Ashland) ni los que bloquean el acceso (Tampa, Barry). `extractor_sidearm.js` hace lo mismo pegándolo en el navegador, escuela por escuela.
+
+## Vacantes de FieldLevel (29/10/2026)
+- `datos/FIELDLEVEL_NEEDS.json`: las búsquedas de coaches de los últimos 50 días (sin cerradas ni ofuscadas, descripción cortada en 170 caracteres) + 182 registros de RosterHunter (`source` distinto de `fieldlevel`, se conservan). Fuente: API pública `/api/RecruitingNeedApi/needs?sportEnum=<deporte>&page=N` (20 por página, las más nuevas primero), 29 deportes.
+- **Las edades son horas al momento de la descarga.** Al abrir la app `__ageAndDeriveNeeds()` les suma el tiempo transcurrido desde `NEEDS_SNAPSHOT_AT` (constante en `RosterReal.jsx`). **Al actualizar el archivo hay que cambiar esa fecha** por la hora (UTC) de la descarga.
+- `RECRUITING_NEEDS_GENERAL` ya no es un archivo propio: se arma al abrir a partir de `FIELDLEVEL_NEEDS` (antes era una copia con fechas relativas congeladas). `datos/RECRUITING_NEEDS_GENERAL.json` queda vacío.
+- `OFFERS_BOARD` sigue siendo un listado más viejo y amplio (2.833): incluye búsquedas de hace meses que pueden estar cerradas. La pantalla lo aclara.
+- Después de actualizar: `node datos-src/limpiar_datos.mjs` (vincula nombres de universidades con el catálogo) y `npm run build`.
+
+## Datos fuera del código (29/10/2026)
+Se sacaron de `RosterReal.jsx` 14 constantes grandes a `datos/*.json` (CDS_DATA, ESSLO_DATA, CIP_NAMES —ya con los nombres extra fusionados—, FOS_ASSOCIATE_SCHOOLS —lista; se arma el Set al cargar—, PSAC_FH_STATS, HOCKEY_D2_STATS_2026, HOCKEY_D2_BIO_2026, BIGTEN_MSOC_STATS_2025, BBALL_D2_CONFERENCES, BBALL_D2_COACHES_FCP/WEB, FIELD_HOCKEY_HEAD_COACHES, ROSTER_COACH_CONTACTS, SCORECARD_NAME_IDS). Se cargan como el resto en `loadData()`. El código pasó de 1,4 MB a 1,1 MB.
+
+## Seguridad de la IA de mails (29/10/2026)
+`/api/generate-email` exige sesión (token de Supabase en `Authorization: Bearer`, verificado contra `/auth/v1/user`) y limita a 40 borradores por hora por usuario (en memoria de cada instancia; para un tope firme, sumar una regla de Rate Limiting en Cloudflare). Antes cualquiera que falsificara el origen podía gastar la clave de Anthropic.
