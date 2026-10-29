@@ -712,7 +712,7 @@ let BBALL_D2_COACHES_FCP = {};
 // Algunas páginas todavía mostraban 2024-25 o 2025-26: queda anotado en "updated". Se usa solo donde no había mail.
 let BBALL_D2_COACHES_WEB = {};
 
-const CONTACT_SPORT_ES = { Soccer: "Fútbol", Basketball: "Básquet", Volleyball: "Vóley", "Field Hockey": "Hockey sobre césped", Rugby: "Rugby", Track: "Atletismo", Gymnastics: "Gimnasia" };
+const CONTACT_SPORT_ES = { Soccer: "Fútbol", Basketball: "Básquet", Volleyball: "Vóley", "Field Hockey": "Hockey sobre césped", Rugby: "Rugby", Track: "Atletismo", Gymnastics: "Gimnasia", Softball: "Softbol" };
 function programLabelEs(sport, gender) {
   const fem = sport === "Gymnastics" ? ["femenina", "masculina"] : ["femenino", "masculino"];
   return `${CONTACT_SPORT_ES[sport] || sport}${gender === "F" ? ` ${fem[0]}` : gender === "M" ? ` ${fem[1]}` : ""}`;
@@ -726,7 +726,7 @@ function coachLastName(name) {
   while (i > 1 && SURNAME_PARTICLES.has(parts[i - 1].toLowerCase())) i -= 1;
   return parts.slice(i).join(" ");
 }
-const CONTACT_SPORT_RE = { Soccer: /soccer|f[uú]tbol/i, "Field Hockey": /hockey/i, Basketball: /basket/i, Volleyball: /volley|v[oó]ley/i, Track: /track|atletismo|cross/i, Gymnastics: /gymnast|gimnasia/i, Rugby: /rugby/i };
+const CONTACT_SPORT_RE = { Soccer: /soccer|f[uú]tbol/i, "Field Hockey": /hockey/i, Basketball: /basket/i, Volleyball: /volley|v[oó]ley/i, Track: /track|atletismo|cross/i, Gymnastics: /gymnast|gimnasia/i, Rugby: /rugby/i, Softball: /softball|sóftbol|softbol/i };
 // Contacto viejo (uno por universidad): vale solo para el deporte y la rama que tiene anotados.
 // Antes se usaba para cualquier deporte de la universidad y un "Head Coach" de hockey terminaba como contacto de fútbol.
 function legacyContactFor(university, sport, gender) {
@@ -1023,6 +1023,7 @@ const POSITION_PLACEHOLDER = {
   "Volleyball": "ej: Armadora, Punta, Central, Líbero",
   "Basketball": "ej: Base, Escolta, Ala-Pívot, Pívot",
   "Rugby": "ej: Pilar, Segunda Línea, Apertura, Wing",
+  "Softball": "ej: Lanzadora, Receptora, Campo corto, Jardinera",
 };
 // Posiciones que se eligen de una lista (las siglas coinciden con las que usan los coaches en sus búsquedas).
 const POSITION_SELECT = {
@@ -1031,6 +1032,7 @@ const POSITION_SELECT = {
   "Volleyball": ["S", "OH", "MB", "OPP", "L", "DS"],
   "Basketball": ["PG", "SG", "SF", "PF", "C"],
   "Rugby": ["PR", "HK", "LK", "FL", "N8", "SH", "FH", "CE", "WG", "FB"],
+  "Softball": ["P", "C", "1B", "2B", "3B", "SS", "OF", "UT"],
 };
 const STAT_LABELS = {
   "Field Hockey": { goals: "Goles por temporada", assists: "Asistencias por temporada" },
@@ -1040,6 +1042,7 @@ const STAT_LABELS = {
   "Volleyball": { goals: "Kills por set (promedio)", assists: "Asistencias/bloqueos por set (según posición)" },
   "Basketball": { goals: "Puntos por partido (promedio)", assists: "Asistencias o rebotes por partido (según posición)" },
   "Rugby": { goals: "Tries por temporada", assists: "Asistencias/tackles por partido (según posición)" },
+  "Softball": { goals: "Promedio de bateo (o efectividad si sos lanzadora)", assists: "Carreras impulsadas por temporada" },
 };
 
 let SPORTS;
@@ -1072,7 +1075,7 @@ function scholarshipInfo(division, sport, gender) {
   // vóley/tenis masculino) es equivalencia. Antes esto estaba mal (vóley
   // como headcount sin chequear género, y gimnasia faltaba directamente).
   const headcountAnyGender = ["Basketball", "Football"];
-  const headcountWomenOnly = ["Volleyball", "Gymnastics", "Tennis"];
+  const headcountWomenOnly = ["Volleyball", "Gymnastics", "Tennis", "Softball"];
   if (division === "NCAA D3") return SCHOLARSHIP_RULES["NCAA D3|ninguna"];
   if (division === "NJCAA D3") return { tipo: "sin beca deportiva (regla NJCAA División III)", banda: "0% deportivo — puede haber ayuda académica o por necesidad", prob: "nula (deportiva)", pctLow: 0, pctHigh: 0 };
   if (division === "CCCAA") return { tipo: "sin beca deportiva (los junior colleges de California no las dan)", banda: "0% deportivo — puede haber ayuda académica o por necesidad", prob: "nula (deportiva)", pctLow: 0, pctHigh: 0 };
@@ -1282,6 +1285,7 @@ const POSITION_ALIASES = {
   "Soccer": [["M", "MF", "MID", "MIDFIELDER"], ["F", "FW", "ST", "S", "STRIKER", "FORWARD"], ["D", "DEF", "DEFENDER"], ["GK", "G", "GOALIE", "GOALKEEPER"]],
   "Volleyball": [["S", "SETTER"], ["OH", "OS", "OUTSIDE"], ["MB", "MH", "MIDDLE"], ["OPP", "RS", "OP", "OPPOSITE"], ["L", "LIB", "LIBERO"], ["DS", "DEFENSIVESPECIALIST"]],
   "Basketball": [["G", "PG", "SG", "GUARD"], ["F", "SF", "PF", "FORWARD"], ["C", "CENTER"]],
+  "Softball": [["P", "PITCHER"], ["C", "CATCHER"], ["IF", "INF", "1B", "2B", "3B", "SS"], ["OF", "LF", "CF", "RF"]],
 };
 function positionMatches(sport, needCode, profilePos) {
   const tokens = (x) => String(x || "").toUpperCase().split(/[^A-Z]+/).filter(Boolean);
@@ -2810,6 +2814,7 @@ const STAT_LABELS_EN = {
   "Volleyball": { goals: "Kills per set (average)", assists: "Assists/blocks per set (by position)" },
   "Basketball": { goals: "Points per game (average)", assists: "Assists or rebounds per game (by position)" },
   "Rugby": { goals: "Tries per season", assists: "Assists/tackles per game (by position)" },
+  "Softball": { goals: "Batting average (or ERA if you pitch)", assists: "RBIs per season" },
 };
 function statLabelsFor(sport, lang) {
   const table = lang === "en" ? STAT_LABELS_EN : STAT_LABELS;
