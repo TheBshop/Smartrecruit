@@ -924,9 +924,8 @@ function CoverageBlock({ r, profile }) {
 // pedidos del prompt original). checked = fecha en que se confirmó en el sitio oficial de la universidad; null = dato
 // aportado por el responsable del sitio, sin verificar todavía. email null = no publicado: no se deduce.
 const STAFF_BY_PROGRAM = [{"u": 197984, "sport": "Rugby", "gender": "M", "name": "Genaro Fessia", "role": "Head Coach", "email": "genarofessia@bac.edu", "country": "Argentina", "checked": "2026-10-02", "note": "Cordobés, ex-Puma (18 partidos con Argentina, Mundial 2011)."}, {"u": 199120, "sport": "Field Hockey", "gender": "F", "name": "Manuel Garcia Nieto", "role": "Assistant Coach", "email": "gnmanuel@email.unc.edu", "country": "Argentina", "checked": "2026-09-30", "note": "Nacido en Argentina; jugó y dirigió en Banco Provincia y Club Universitario."}, {"u": 183044, "sport": "Field Hockey", "gender": "F", "name": "Vicky Tinghitella", "role": "Assistant Coach", "email": "Victoria.Tinghitella@unh.edu", "country": "Argentina", "checked": "2026-09-30", "note": "Se ocupa, entre otras cosas, de las arqueras."}, {"u": 231581, "sport": "Field Hockey", "gender": "F", "name": "Brisa Uviedo", "role": "Assistant Field Hockey Coach", "email": "buviedo@bridgewater.edu", "country": "Argentina", "checked": null}, {"u": 166850, "sport": "Soccer", "gender": "F", "name": "Gabe Mejaíl", "role": "Head Women's Soccer Coach", "email": "mejailg@merrimack.edu", "country": "Argentina", "checked": null}, {"u": 219833, "sport": "Soccer", "gender": "M", "name": "Mariano Ilari", "role": "Assistant Men's Soccer Coach", "email": "milari@cbu.edu", "country": "Argentina", "checked": null}, {"u": 154101, "sport": "Soccer", "gender": "M", "name": "Juan Mackrey", "role": "Assistant Men's Soccer Coach", "email": "juan.mackrey@nwciowa.edu", "country": "Argentina", "checked": null}, {"u": 106485, "sport": "Volleyball", "gender": "F", "name": "Mirela Polete Vasconselos", "role": "Assistant Volleyball Coach", "email": null, "country": "Brasil", "checked": "2026-09-30", "note": "Su mail no está publicado: buscalo en el sitio de la universidad."}, {"u": 199032, "sport": "Volleyball", "gender": "F", "name": "Cristina Viera", "role": "Head Volleyball Coach", "email": "cristina.viera@montreat.edu", "country": "Uruguay", "checked": "2026-09-30", "note": "Jugó en la selección uruguaya de vóley."}];
-const COUNTRY_ALIASES = { argentina: "argentina", brasil: "brasil", brazil: "brasil", uruguay: "uruguay", colombia: "colombia", chile: "chile", paraguay: "paraguay", "méxico": "mexico", mexico: "mexico", "perú": "peru", peru: "peru", venezuela: "venezuela", ecuador: "ecuador", bolivia: "bolivia", "españa": "espana", spain: "espana" };
-const countryKey = (c) => { const k = String(c || "").replace(/[.,]/g, " ").replace(/\s+/g, " ").trim().toLowerCase(); return COUNTRY_ALIASES[k] || COUNTRY_ALIASES[k.normalize("NFD").replace(/[\u0300-\u036f]/g, "")] || k; };
-const COUNTRY_ADJ = { argentina: ["argentino", "argentina"], brasil: ["brasileño", "brasileña"], uruguay: ["uruguayo", "uruguaya"], colombia: ["colombiano", "colombiana"], chile: ["chileno", "chilena"], paraguay: ["paraguayo", "paraguaya"], mexico: ["mexicano", "mexicana"], peru: ["peruano", "peruana"] };
+const countryKey = (c) => mailCountryKey(c);
+const COUNTRY_ADJ = { argentina: ["argentino", "argentina"], brazil: ["brasileño", "brasileña"], uruguay: ["uruguayo", "uruguaya"], colombia: ["colombiano", "colombiana"], chile: ["chileno", "chilena"], paraguay: ["paraguayo", "paraguaya"], mexico: ["mexicano", "mexicana"], peru: ["peruano", "peruana"] };
 function staffFor(university, sport, gender) {
   const e = eadaFor(university);
   if (!e) return [];
@@ -936,7 +935,7 @@ function staffFor(university, sport, gender) {
 function staffCompatriotSignal(university, sport, gender, profile) {
   const mine = countryKey(profile && profile.country);
   if (!mine) return null;
-  const hits = staffFor(university, sport, gender).filter((x) => countryKey(x.country) === mine);
+  const hits = staffFor(university, sport, gender).filter((x) => mailCountrySame(x.country, profile.country));
   if (!hits.length) return null;
   const adj = (COUNTRY_ADJ[mine] || [profile.country, profile.country]);
   const text = hits.map((x) => `${x.name} (${x.role}${x.email ? `, ${x.email}` : ""})`).join(" y ");
@@ -1516,7 +1515,7 @@ function matchFromLoadedRosters(profile) {
     // Países normalizados: "Brasil" (perfil) y "Brazil" (plantel) son el mismo país. Antes se comparaba el texto tal cual
     // y solo coincidían los países que se escriben igual en castellano y en inglés (Argentina, Chile, Uruguay...).
     const myCountryKey = mailCountryKey(profile.country);
-    const compatriotas = myCountryKey && myCountryKey !== "usa" ? roster.filter((p) => mailCountryKey(p.country) === myCountryKey) : [];
+    const compatriotas = myCountryKey && myCountryKey !== "usa" ? roster.filter((p) => mailCountrySame(p.country, profile.country)) : [];
     if (compatriotas.length > 0) {
       const countBonus = Math.min(compatriotas.length - 1, 3) * 3; // +0 / +3 / +6 / +9 (tope en 4+)
       const mismaPosicion = compatriotas.filter((p) => rosterPosMatch(info.sport, p.position, profile.position));
@@ -2954,17 +2953,45 @@ const FOLLOWUP_WAIT = [10, 14, 21]; // días de espera antes del seguimiento 1, 
 // Países: el perfil se escribe a mano ("Brasil") y los rosters vienen en inglés ("Brazil", "The Netherlands").
 // Nombre canónico de un país (en inglés, minúsculas, sin acentos) para comparar el país del perfil —texto libre, casi
 // siempre en castellano— con el de los planteles, que viene en inglés y a veces abreviado ("Arg.", "The Netherlands").
-const MAIL_COUNTRY_ALIASES = {
-  arg: "argentina", argentine: "argentina", "republica argentina": "argentina", brasil: "brazil", bra: "brazil", uru: "uruguay", chi: "chile", col: "colombia",
-  mejico: "mexico", mex: "mexico", "republica dominicana": "dominican republic", "rep dominicana": "dominican republic", espana: "spain", esp: "spain",
-  "the netherlands": "netherlands", holanda: "netherlands", holland: "netherlands", "paises bajos": "netherlands", ned: "netherlands",
-  inglaterra: "england", eng: "england", escocia: "scotland", gales: "wales", irlanda: "ireland", "irlanda del norte": "northern ireland", "reino unido": "united kingdom", uk: "united kingdom", "great britain": "united kingdom",
-  alemania: "germany", ger: "germany", francia: "france", italia: "italy", belgica: "belgium", suiza: "switzerland", suecia: "sweden", noruega: "norway", dinamarca: "denmark", finlandia: "finland", islandia: "iceland",
-  polonia: "poland", grecia: "greece", croacia: "croatia", turquia: "turkey", turkiye: "turkey", "republica checa": "czech republic", czechia: "czech republic", lituania: "lithuania", letonia: "latvia", rusia: "russia", ucrania: "ukraine",
-  "bosnia and herzegovina": "bosnia", "bosnia & herzegovina": "bosnia", "bosnia y herzegovina": "bosnia",
-  "nueva zelanda": "new zealand", sudafrica: "south africa", japon: "japan", canada: "canada", can: "canada", jamaica: "jamaica", "trinidad y tobago": "trinidad & tobago", "trinidad and tobago": "trinidad & tobago",
-  "estados unidos": "usa", "united states": "usa", "united states of america": "usa", eeuu: "usa", "ee uu": "usa", us: "usa", "u s a": "usa", "u s": "usa",
-};
+const MAIL_COUNTRY_ALIASES = (() => {
+  // [nombre canónico en inglés, como lo escriben los planteles] → variantes en castellano / abreviaturas (sin acentos, minúsculas).
+  const T = [
+    ["argentina", "arg", "argentine", "republica argentina"], ["brazil", "brasil", "bra"], ["uruguay", "uru"], ["chile", "chi"], ["colombia", "col"],
+    ["mexico", "mejico", "mex"], ["dominican republic", "republica dominicana", "rep dominicana"], ["spain", "espana", "esp", "canary islands", "islas canarias"],
+    ["netherlands", "the netherlands", "holanda", "holland", "paises bajos", "ned"], ["england", "inglaterra", "eng"], ["scotland", "escocia"], ["wales", "gales"],
+    ["ireland", "irlanda"], ["northern ireland", "irlanda del norte"], ["united kingdom", "reino unido", "uk", "great britain", "gran bretana"],
+    ["germany", "alemania", "ger"], ["france", "francia"], ["italy", "italia"], ["belgium", "belgica"], ["switzerland", "suiza"], ["sweden", "suecia"], ["norway", "noruega"],
+    ["denmark", "dinamarca"], ["finland", "finlandia"], ["iceland", "islandia"], ["poland", "polonia"], ["greece", "grecia"], ["croatia", "croacia"],
+    ["turkey", "turkiye", "turquia"], ["czech republic", "czechia", "republica checa", "chequia"], ["lithuania", "lituania"], ["latvia", "letonia"], ["estonia"],
+    ["russia", "rusia"], ["ukraine", "ucrania"], ["bosnia", "bosnia and herzegovina", "bosnia & herzegovina", "bosnia y herzegovina"], ["serbia"], ["montenegro"],
+    ["slovenia", "eslovenia"], ["slovakia", "eslovaquia"], ["hungary", "hungria"], ["romania", "rumania"], ["bulgaria"], ["austria"], ["portugal"], ["luxembourg", "luxemburgo"],
+    ["macedonia", "north macedonia", "macedonia del norte"], ["kosovo"], ["georgia"], ["armenia"], ["belarus", "bielorrusia"], ["moldova", "moldavia"], ["cyprus", "chipre"], ["malta"],
+    ["new zealand", "nueva zelanda"], ["australia"], ["canada", "can"], ["jamaica"], ["trinidad & tobago", "trinidad y tobago", "trinidad and tobago"], ["bahamas"], ["barbados"],
+    ["belize", "belice"], ["grenada", "granada"], ["st lucia", "saint lucia", "santa lucia"], ["bermuda", "bermudas"], ["suriname", "surinam"], ["guyana"], ["haiti"], ["cuba"],
+    ["puerto rico"], ["costa rica"], ["panama"], ["guatemala"], ["honduras"], ["el salvador"], ["nicaragua"], ["venezuela"], ["ecuador"], ["peru"], ["bolivia"], ["paraguay"],
+    ["south africa", "sudafrica"], ["nigeria"], ["ghana"], ["senegal"], ["mali"], ["cameroon", "camerun"], ["ivory coast", "cote d ivoire", "costa de marfil"],
+    ["congo", "republica del congo", "congo brazzaville"], ["democratic republic of congo", "dr congo", "drc", "rd congo", "r d congo", "republica democratica del congo"],
+    ["south sudan", "sudan del sur"], ["sudan"], ["egypt", "egipto"], ["morocco", "marruecos"], ["algeria", "argelia"], ["tunisia", "tunez"], ["libya", "libia"],
+    ["angola"], ["mozambique"], ["madagascar"], ["guinea"], ["gambia"], ["benin"], ["togo"], ["rwanda", "ruanda"], ["gabon"], ["chad"], ["uganda"], ["kenya", "kenia"],
+    ["tanzania"], ["ethiopia", "etiopia"], ["zambia"], ["zimbabwe", "zimbabue"], ["namibia"], ["botswana", "botsuana"], ["sierra leone", "sierra leona"], ["liberia"],
+    ["cape verde", "cabo verde"], ["central african republic", "republica centroafricana"],
+    ["japan", "japon"], ["china"], ["taiwan"], ["south korea", "corea del sur", "korea"], ["north korea", "corea del norte"], ["philippines", "filipinas"], ["thailand", "tailandia"],
+    ["vietnam"], ["indonesia"], ["malaysia", "malasia"], ["singapore", "singapur"], ["cambodia", "camboya"], ["india"], ["pakistan"], ["mongolia"], ["kazakhstan", "kazajistan"],
+    ["uzbekistan"], ["israel"], ["lebanon", "libano"], ["jordan", "jordania"], ["iran"], ["iraq", "irak"], ["syria", "siria"], ["qatar", "catar"], ["kuwait"],
+    ["saudi arabia", "arabia saudita"], ["united arab emirates", "emiratos arabes unidos", "uae"], ["vanuatu"],
+    ["usa", "estados unidos", "united states", "united states of america", "eeuu", "ee uu", "us", "u s a", "u s"],
+  ];
+  const o = {};
+  T.forEach(([canon, ...vars]) => { o[canon] = canon; vars.forEach((v) => { o[v] = canon; }); });
+  return o;
+})();
+// Inglaterra, Escocia, Gales e Irlanda del Norte son "del mismo país" que Reino Unido para detectar compatriotas.
+const UK_NATIONS = new Set(["england", "scotland", "wales", "northern ireland", "united kingdom"]);
+function mailCountrySame(a, b) {
+  const x = mailCountryKey(a), y = mailCountryKey(b);
+  if (!x || !y) return false;
+  return x === y || (UK_NATIONS.has(x) && UK_NATIONS.has(y));
+}
 function mailCountryKey(c) {
   const k = String(c || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[.,]/g, " ").replace(/\s+/g, " ").trim();
   return MAIL_COUNTRY_ALIASES[k] || k;
@@ -3209,7 +3236,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     const eada = eadaFor(university);
     const teamGender = (rosterInfo && rosterInfo.gender) || profile.gender;
     const staff = eada ? STAFF_BY_PROGRAM.filter((x) => x.u === eada.u && x.sport === profile.sport && (!x.gender || x.gender === teamGender)) : [];
-    const same = staff.find((x) => mailCountryKey(x.country) === myCountry);
+    const same = staff.find((x) => mailCountrySame(x.country, profile.country));
     const latam = !same && iAmLatam ? staff.find((x) => LATAM_COUNTRIES.has(mailCountryKey(x.country))) : null;
     const pick = same || latam;
     let staffText = null;
@@ -3231,13 +3258,13 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
 
   // ---- Compatriotas en el roster (y, si no hay, otras jugadoras de Latinoamérica)
   if (carriesHook) {
-    let compatText = null, compatReason = rosterInfo ? `No hay jugadoras de ${profile.country} en el roster cargado.` : "Sin roster cargado para esta universidad.";
+    let compatText = null, compatReason = rosterInfo ? `No hay ${profile.gender === "M" ? "jugadores" : "jugadoras"} de ${profile.country} en el roster cargado.` : "Sin roster cargado para esta universidad.";
     if (rosterInfo && rosterInfo.partial && !(rosterInfo.roster || []).some((p) => p.country)) compatReason = "El plantel cargado es parcial (solo estadísticas): no trae país de origen.";
     if (rosterInfo && profile.country) {
       const current = activeRoster(rosterInfo);
       const stale = rosterSeasonOf(rosterInfo) < ROSTER_BASE_SEASON;
       const seasonLabel = rosterSeasonLabel(rosterInfo);
-      const compat = current.filter((p) => mailCountryKey(p.country) === myCountry);
+      const compat = current.filter((p) => mailCountrySame(p.country, profile.country));
       const region = compat.length === 0 && iAmLatam ? current.filter((p) => LATAM_COUNTRIES.has(mailCountryKey(p.country))) : [];
       if (compat.length > 0) {
         const names = joinList(compat.slice(0, 3).map((p) => p.player_name), lang);
@@ -4765,7 +4792,7 @@ const HOW_IT_WORKS_STEPS = [
   { n: "02", t: "Cruzamos necesidades activas", d: "Buscamos en el tablón público donde los coaches publican qué posición necesitan y para qué año." },
   { n: "03", t: "Comparamos contra el plantel real", d: "Medimos tu nivel contra las jugadoras que van a seguir en el equipo cuando entres, y proyectamos cuántos lugares se liberan hasta tu temporada de ingreso." },
   { n: "04", t: "Aplicamos el filtro académico y financiero real", d: "Chequeamos si la universidad ofrece tu carrera y qué tipo de beca es realista según la división." },
-  { n: "05", t: "Priorizamos afinidad nacional", d: "Si hay jugadoras de tu país en el plantel, sube el score — es el precedente más fuerte de que un coach ya sabe reclutar (y tramitar visa) desde tu país. La nacionalidad del cuerpo técnico todavía no está cargada, así que no cuenta." },
+  { n: "05", t: "Priorizamos afinidad nacional", d: "Si hay jugadores de tu país en el plantel, sube el score — es el precedente más fuerte de que un coach ya sabe reclutar (y tramitar visa) desde tu país. También suma si hay un entrenador de tu país en el cuerpo técnico, pero esa lista todavía es corta: solo cuenta cuando está cargado, y no descarta nada si falta." },
   { n: "06", t: "Te explicamos cada resultado, punto por punto", d: "Nada de porcentaje mágico sin justificar. Cada universidad en tu lista trae las razones específicas por las que apareció, y qué datos todavía faltan para afinar más." },
 ];
 
@@ -9074,8 +9101,8 @@ function ResultCard({ r, profile, onOpenSchool, isFav, toggleFav }) {
         <CoverageBlock r={r} profile={profile} />
         <ul className="rm-reasons">{r.reasons.map((x, i) => <li key={i}>{x}</li>)}</ul>
         <div className="rm-sch"><b>Beca típica en esta división:</b> {r.scholarship.tipo}. Banda estimada: {r.scholarship.banda}.</div>
-        {r.nationalityMatch === true && <div className="rm-nat">Hay jugadoras de tu misma nacionalidad en este plantel — buen punto de partida para el primer email.</div>}
-        {r.nationalityMatch === false && <div className="rm-missing">No hay jugadoras de tu nacionalidad en el roster cargado (no descarta nada, solo no suma este punto extra).</div>}
+        {r.nationalityMatch === true && <div className="rm-nat">Hay {profile && profile.gender === "M" ? "jugadores" : "jugadoras"} de tu misma nacionalidad en este plantel — buen punto de partida para el primer email.</div>}
+        {r.nationalityMatch === false && <div className="rm-missing">No hay {profile && profile.gender === "M" ? "jugadores" : "jugadoras"} de tu nacionalidad en el roster cargado (no descarta nada, solo no suma este punto extra).</div>}
         <div className="rm-missing">Falta para afinar: {r.missing.join(" · ")}.</div>
         <SchoolProfileBlock university={r.university} />
       </details>
@@ -9217,7 +9244,7 @@ function RecruitScoreCard({ profile, results }) {
   const analysis = (() => {
     const parts = [];
     parts.push(`Perfil de ${profile.sport}${profile.position ? " en " + profile.position : ""} de ${profile.country}, ingreso proyectado a la temporada ${getEntryYear(profile)}.`);
-    if (rs.natMatches > 0) parts.push(`Hay ${rs.natMatches} universidad(es) en tu top con compatriotas reales en el plantel — ventaja de adaptación real, no solo estadística. (Solo miramos jugadoras: la nacionalidad del cuerpo técnico todavía no está cargada.)`);
+    if (rs.natMatches > 0) parts.push(`Hay ${rs.natMatches} universidad(es) en tu top con compatriotas reales en el plantel — ventaja de adaptación real, no solo estadística. (También miramos el cuerpo técnico, pero esa lista todavía es corta.)`);
     else parts.push(`Ninguna de tus mejores matches tiene compatriotas confirmadas todavía en el roster — no es descalificador, pero tu primer email va a tener que venderte más por mérito deportivo/académico que por afinidad.`);
     if (rs.talent >= 60) parts.push(`Tu score de talento (${rs.talent}/100) surge de necesidades reales publicadas + comparación contra planteles reales — es un perfil competitivo para las universidades de tu top.`);
     else if (rs.talent >= 30) parts.push(`Tu score de talento (${rs.talent}/100) es moderado — hay matches reales, pero probablemente en un escalón más aterrizado (D2/D3/NAIA) que D1 de élite.`);
@@ -9416,7 +9443,7 @@ function TierBadge({ tier }) {
 // Línea corta armada solo con los datos (sin IA): por qué está en la lista.
 function quickLine(r) {
   const bits = [];
-  if (r.nationalityMatch) bits.push("🇦🇷 compatriotas en el plantel");
+  if (r.nationalityMatch) bits.push("🌎 compatriotas en el plantel");
   if (r.postUrl || (r.vacancy && r.vacancy.postedNear)) bits.push("búsqueda publicada");
   else if (r.vacancy && !r.vacancy.beyondHorizon && r.vacancy.known > 0 && r.vacancy.gone > 0) bits.push(`${r.vacancy.gone} se van antes de tu ingreso`);
   if (r.scholarship && r.scholarship.banda) bits.push(`ayuda: ${r.scholarship.banda}`);
