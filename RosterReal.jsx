@@ -3782,6 +3782,10 @@ function coachOptionsFor(university, sport, gender, profile) {
 }
 
 function ComposeLinks({ profile, r }) {
+  if (!isLoggedIn()) return <div className="rm-missing" style={{ marginTop: 10 }}>🔒 <b>El generador de mails a coaches se usa con tu cuenta gratuita.</b> <button type="button" className="rm-btn-inline" onClick={() => openSignup("mails_resultado")}>Crear cuenta →</button></div>;
+  return <ComposeLinksInner profile={profile} r={r} />;
+}
+function ComposeLinksInner({ profile, r }) {
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState(readEmailLang);
   const options = coachOptionsFor(r.university, profile.sport, profile.gender, profile);
@@ -4011,7 +4015,7 @@ function CompareTable({ schools, onOpenSchool }) {
     { label: "Ubicación", get: (d) => (d.prog?.City ? `${d.prog.City}, ${d.prog.State || ""}` : d.ncsa.city || "—"), best: null },
     { label: "Roster real cargado", get: (d) => (d.hasRoster ? "Sí ✓" : "No"), best: null },
     { label: "Contacto de coach", get: (d) => (d.contact ? "Sí ✓" : "No"), best: null },
-    { label: "Búsquedas activas", get: (d) => String(d.needs), num: (d) => d.needs, dir: "high" },
+    { label: "Búsquedas activas", get: (d) => (isLoggedIn() ? String(d.needs) : "🔒"), num: (d) => d.needs, dir: "high" },
     { label: "Tasa de admisión", get: (d) => d.ficha?.admit_rate || "—", num: (d) => pctNum(d.ficha?.admit_rate), dir: "high" },
     { label: "Rango SAT", get: (d) => d.ficha?.sat_range || (d.ncsa.sat_25 && d.ncsa.sat_75 ? `${d.ncsa.sat_25}-${d.ncsa.sat_75}` : "—"), best: null },
     { label: "GPA prom. ingresantes", get: (d) => d.ncsa.avg_freshman_gpa || "—", best: null },
@@ -4778,7 +4782,8 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
       </div>}
 
       {/* ---- Recruiting Needs activos en esta escuela ---- */}
-      {needsHere.length > 0 && (
+      {needsHere.length > 0 && !isLoggedIn() && <div className="rm-sp-section"><div className="rm-missing" style={{ textAlign: "center" }}>🔒 <b>Las búsquedas activas de los coaches se ven con tu cuenta gratuita.</b> <button type="button" className="rm-btn-inline" onClick={() => openSignup("needs_ficha")}>Crear cuenta →</button></div></div>}
+      {needsHere.length > 0 && isLoggedIn() && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas activas publicadas</h3>
           <div className="rm-needs-list">
