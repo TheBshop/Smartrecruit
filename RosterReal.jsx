@@ -745,7 +745,7 @@ function coachContactFor(university, sport, gender) {
   const legacy = legacyContactFor(university, sport, gender);
   // Si el contacto nuevo no tiene mail y el viejo sí, sirve más el viejo.
   if (c && !cWrongSport && (c.email || !legacy)) {
-    return { name: c.name, title: c.title, contactUrl: c.email ? `mailto:${c.email}` : null, label: c.email ? (c.generic ? `Escribirle al programa (${c.email})` : `Escribirle a ${c.name} (${c.email})`) : null, assistants: c.assistants || [], lastName: c.lastName || null, gk: c.gk || null, updated: c.updated || null, email: c.email || null, generic: !!c.generic };
+    return { name: c.name, title: c.title, contactUrl: c.email ? `mailto:${c.email}` : (c.profileUrl || null), label: c.email ? (c.generic ? `Escribirle al programa (${c.email})` : `Escribirle a ${c.name} (${c.email})`) : (c.profileUrl ? `Escribirle a ${c.name} por FieldLevel (publicó una vacante ahí)` : null), assistants: c.assistants || [], lastName: c.lastName || null, gk: c.gk || null, updated: c.updated || null, email: c.email || null, generic: !!c.generic };
   }
   return legacy;
 }
