@@ -11900,6 +11900,7 @@ function AppInner() {
           )}
 
           {!profile && <DemoVideo />}
+          {!profile && <CompareDIY setStage={setStage} />}
           <OnboardingPanel profile={profile} setStage={setStage} />
           <OpportunitiesBoard profile={profile} />
         </>
@@ -11937,6 +11938,40 @@ function AppInner() {
       <LegalFooter setStage={setStage} />
       </React.Fragment>
       </div>
+    </div>
+  );
+}
+
+
+function CompareDIY({ setStage }) {
+  const contacts = (GATED_TOTALS.contacts || 0).toLocaleString("es");
+  const offers = (GATED_TOTALS.offers || 0).toLocaleString("es");
+  const rows = [
+    ["Los contactos", `Los mails de los coaches son públicos. Acá tenés ${contacts} mails oficiales, con la página de donde salió cada uno.`, "Suelen presentarse como \"contactos propios\", sin mostrar de dónde salen."],
+    ["Quién escribe", "Vos. Los coaches contestan más cuando el mensaje es del atleta y refleja interés real.", "Un tercero escribe en tu nombre o mandan mails masivos."],
+    ["Vacantes", `${offers} búsquedas abiertas de coaches, filtradas por tu posición.`, "Muchas veces no las ves: te cuentan las que ellos eligen."],
+    ["Showcamps", "Con un buen video y datos al día un coach puede evaluarte sin viajar. Te explicamos cuándo un camp sí tiene sentido.", "Se vende exposición, pero un camp sin coach interesado puede ser plata gastada."],
+    ["Costo", "Gratis para empezar, con tu cuenta.", "Pagos que suelen ser altos y por adelantado. Preguntá siempre qué incluye."],
+    ["Resultado", "No prometemos becas. Te damos las herramientas y el orden de los pasos.", "Revisá bien cualquier promesa de resultado: nadie puede garantizarla."],
+  ];
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 20 }}>
+      <h2 className="rm-condensed">Hacerlo por tu cuenta vs. agencia o showcamp</h2>
+      <p className="rm-hint">Una comparación honesta. Hay agencias y camps serios y otros que no, y no todos funcionan igual. Usá esto como lista de preguntas para cualquier propuesta que recibas.</p>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, minWidth: 560 }}>
+          <thead><tr style={{ textAlign: "left" }}><th style={{ padding: "8px 10px" }}></th><th style={{ padding: "8px 10px" }}>Con Smartrecruit</th><th style={{ padding: "8px 10px" }}>Modelo típico de agencia o camp</th></tr></thead>
+          <tbody>
+            {rows.map(([a, b, c]) => (
+              <tr key={a} style={{ borderTop: "1px solid rgba(128,128,128,.25)", verticalAlign: "top" }}>
+                <td style={{ padding: "10px", fontWeight: 700 }}>{a}</td><td style={{ padding: "10px" }}>{b}</td><td style={{ padding: "10px" }}>{c}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="rm-hint" style={{ marginTop: 12 }}>Smartrecruit es una guía educativa. No es una agencia, no garantiza becas ni admisiones y no está afiliada a la NCAA, la NAIA ni a ninguna universidad.</p>
+      <button className="rm-btn" onClick={() => setStage("start")}>Empezar en 10 minutos →</button>
     </div>
   );
 }
