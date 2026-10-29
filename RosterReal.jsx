@@ -937,7 +937,7 @@ function staffCompatriotSignal(university, sport, gender, profile) {
   if (!hits.length) return null;
   const adj = (COUNTRY_ADJ[mine] || [profile.country, profile.country]);
   const text = hits.map((x) => `${x.name} (${x.role}${x.email ? `, ${x.email}` : ""})`).join(" y ");
-  return { delta: 10, staff: hits, reason: `En el cuerpo técnico hay ${hits.length === 1 ? "alguien de tu país" : "gente de tu país"}: ${text}. Escribile también, en castellano si querés: suele ser la puerta de entrada más natural.${hits.some((x) => !x.checked) ? " Dato sin verificar en el sitio oficial." : ""}` };
+  return { delta: hits.some((x) => /assistant|asist|associate/i.test(x.role || "")) ? 14 : 10, staff: hits, reason: `En el cuerpo técnico hay ${hits.length === 1 ? "alguien de tu país" : "gente de tu país"}: ${text}. Escribile también, en castellano si querés: suele ser la puerta de entrada más natural.${hits.some((x) => !x.checked) ? " Dato sin verificar en el sitio oficial." : ""}` };
 }
 // Rugby masculino de la National Collegiate Rugby (NCR), la otra organización del rugby universitario de EE.UU.: el catálogo
 // solo tenía la CRAA. Equipos de NCR D1 y D1AA según RuckMob (ruckmob.com/competitions/ncr-d1 y ncr-d1aa, 8/10/2026).
@@ -3724,19 +3724,26 @@ function contactWindowNote(profile) {
 }
 
 // Coaches a los que se puede escribir en este programa: el principal y sus asistentes (cada uno con su mail).
-function coachOptionsFor(university, sport, gender) {
+function coachOptionsFor(university, sport, gender, profile) {
   const c = coachContactFor(university, sport, gender);
   if (!c) return [];
   const opts = [];
-  if (c.name) opts.push({ key: "head", name: c.name, title: c.title || null, email: c.email || getCoachEmail(university, sport, gender) || null });
-  (c.assistants || []).forEach((a, i) => { if (a && a.name) opts.push({ key: `asst-${i}`, name: a.name, title: "Asistente", email: a.email || null }); });
+  if (c.name) opts.push({ key: "head", name: c.name, title: c.title || null, email: c.email || getCoachEmail(university, sport, gender) || null, head: true });
+  (c.assistants || []).forEach((a, i) => { if (a && a.name) opts.push({ key: `asst-${i}`, name: a.name, title: "Asistente", email: a.email || null, head: false }); });
+  // Compatriotas del cuerpo técnico confirmados (STAFF_BY_PROGRAM): se marcan en la lista.
+  const comp = profile && profile.country ? staffFor(university, sport, gender).filter((x) => mailCountrySame(x.country, profile.country)).map((x) => x.name) : [];
+  opts.forEach((o) => { o.comp = comp.includes(o.name); if (o.comp) o.title = `${o.title || "Staff"} · de tu país`; });
+  // Los asistentes suelen contestar antes que el head coach: van primero los que tienen mail (compatriotas antes), después el head coach.
+  const rank = (o) => (!o.head && o.email ? (o.comp ? 0 : 1) : o.head && o.email ? 2 : 3);
+  opts.sort((a, b) => rank(a) - rank(b));
+  if (opts[0] && !opts[0].head && opts[0].email) opts[0].title = `${opts[0].title} · recomendado para empezar`;
   return opts;
 }
 
 function ComposeLinks({ profile, r }) {
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState(readEmailLang);
-  const options = coachOptionsFor(r.university, profile.sport, profile.gender);
+  const options = coachOptionsFor(r.university, profile.sport, profile.gender, profile);
   const [pick, setPick] = useState(0);
   const idx = Math.min(pick, Math.max(0, options.length - 1));
   const sel = options[idx] || null;
@@ -3780,6 +3787,7 @@ function ComposeLinks({ profile, r }) {
               </select>
             </label>
           )}
+          {options.length > 1 && options[0] && !options[0].head && options[0].email && <p style={{ fontSize: 12, margin: "0 0 8px", opacity: 0.8 }}>Te sugerimos empezar por un asistente: suelen contestar antes que el head coach. Si no hay respuesta, escribile al head coach.</p>}
           {sel && (
             <label style={{ fontSize: 12.5, display: "block", margin: "0 0 8px" }}>Mail de {selName}{" "}
               <input type="email" value={emailDraft} onChange={(e) => setEmailDraft(e.target.value)} placeholder="coach@universidad.edu" style={{ maxWidth: "100%", width: 260 }} />{" "}
