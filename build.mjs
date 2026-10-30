@@ -75,4 +75,14 @@ const V = Date.now().toString(36);
 for (const f of ["dist/index.html", "dist/privacidad/index.html", "dist/terminos/index.html"]) {
   fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace(/\?v=[0-9a-z]*/g, `?v=${V}`));
 }
+// Precarga en paralelo con el JS los datos públicos que loadData pide siempre (los gated se piden con token, no se precargan).
+{
+  const src = fs.readFileSync("RosterReal.jsx", "utf8");
+  const m = src.match(/const names = \[([^\]]+)\]/);
+  const wanted = m ? m[1].match(/"([A-Z0-9_]+)"/g).map((x) => x.replace(/"/g, "")) : [];
+  const links = wanted.filter((n) => manifest[n] && !GATED.includes(n)).map((n) => `    <link rel="preload" as="fetch" crossorigin="anonymous" href="/data/${manifest[n]}" />`).join("\n");
+  const f = "dist/index.html";
+  fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace('<script defer src="/assets/analytics.js', links + '\n    <script defer src="/assets/analytics.js'));
+  console.log("precarga:", wanted.filter((n) => manifest[n] && !GATED.includes(n)).length);
+}
 console.log("ok", Object.keys(manifest).length, "archivos de datos");
