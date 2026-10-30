@@ -2762,7 +2762,7 @@ const emptyProfile = {
 --------------------------------------------------------------- */
 const EMAIL_LANG_KEY = "rr_email_lang";
 // El inglés es el idioma por defecto (los coaches de EE.UU. leen en inglés); solo se usa español si la atleta lo eligió.
-function readEmailLang() { try { return localStorage.getItem(EMAIL_LANG_KEY) === "es" ? "es" : "en"; } catch (e) { return "en"; } }
+function readEmailLang() { return "en"; } // los mails a coaches salen siempre en inglés
 function writeEmailLang(lang) { try { lsSetSynced(EMAIL_LANG_KEY, lang); } catch (e) { /* modo privado */ } }
 
 // Email del coach: el cargado en el sitio o el que la atleta pegó a mano (se guarda en este navegador).
@@ -3065,6 +3065,7 @@ const MAIL_FACT_FIELDS = {
   deadline: { label: "¿Hasta qué fecha necesitás para decidir?", es: "el 15 de diciembre", en: "December 15" },
   reason: { label: "Motivo de tu decisión (opcional)", es: "elegí un programa que se ajusta mejor a la carrera que quiero estudiar", en: "I chose a program that is a better fit for what I want to study" },
 };
+function looksSpanish(t) { const v = String(t || "").toLowerCase(); return /[¿¡]/.test(v) || /\b(mi|mis|su|sus|el|la|los|las|del|que|con|para|por|una|un|entrenador|partido|torneo|campeon\w*|salimos|fui|vi|jugu\w*|de lunes|hora de)\b/.test(v); }
 const cap1 = (t) => String(t || "").charAt(0).toLocaleUpperCase() + String(t || "").slice(1);
 function cleanMailFacts(facts) {
   const out = {};
@@ -3844,10 +3845,6 @@ function ComposeLinksInner({ profile, r }) {
           {to
             ? <p style={{ fontSize: 12, color: "var(--field-dark)", margin: "0 0 8px", fontWeight: 600 }}>✓ Mail de {selName || "este coach"}: {to}</p>
             : <p style={{ fontSize: 12, color: "#9a6a12", margin: "0 0 8px", fontWeight: 600 }}>⚠ {sel ? `No tenemos el mail de ${selName} cargado. ` : "Todavía no tenemos el email de este coach cargado. "}Buscalo en la web oficial de la universidad (sección "Coaches" o "Staff Directory"){(r.coach_profile_url || r.post_url) ? <> o escribile directo por FieldLevel: <a href={r.coach_profile_url || r.post_url} target="_blank" rel="noopener noreferrer">ver el perfil del coach →</a></> : "."}</p>}
-          <div className="rm-seg" style={{ marginBottom: 10 }} role="group" aria-label="Idioma del mail">
-            <button type="button" className={lang === "es" ? "on" : ""} onClick={() => { setLang("es"); writeEmailLang("es"); }}>Español</button>
-            <button type="button" className={lang === "en" ? "on" : ""} onClick={() => { setLang("en"); writeEmailLang("en"); }}>English</button>
-          </div>
           {timing && <p style={{ fontSize: 12, color: timing.ok ? "var(--field-dark)" : "#9a6a12", margin: "0 0 10px" }}>{timing.ok ? "🟢 " : "🟡 "}{timing.text}</p>}
           <textarea className="rm-compose-text" readOnly value={`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`} rows={12} />
           <div className="rm-compose-actions">
@@ -5431,15 +5428,8 @@ function MailComposer({ profile, log, pick, onTracked }) {
             {Object.entries(MAIL_KINDS).map(([k, v]) => <option key={k} value={k}>{v.label}{target && k === step.kind ? " — sugerido" : ""}</option>)}
           </select>
         </label>
-        <div className="rm-mail-field">
-          <span>Idioma del mail</span>
-          <div className="rm-seg" role="group" aria-label="Idioma del mail">
-            <button type="button" className={lang === "es" ? "on" : ""} onClick={() => changeLang("es")}>Español</button>
-            <button type="button" className={lang === "en" ? "on" : ""} onClick={() => changeLang("en")}>English</button>
-          </div>
-        </div>
       </div>
-      <p className="rm-today-note" style={{ marginTop: 6 }}>Los mails salen en English por defecto porque los coaches de EE.UU. leen en inglés. Si el programa es hispanohablante, pasalo a Español.</p>
+      <p className="rm-today-note" style={{ marginTop: 6 }}>Los mails salen siempre en inglés, porque es el idioma en que los coaches de EE.UU. leen y responden.</p>
 
       {!email ? (
         <p className="rm-hint" style={{ marginTop: 16 }}>Elegí una universidad de la lista para generar el mail.</p>
@@ -5502,7 +5492,7 @@ function MailComposer({ profile, log, pick, onTracked }) {
             {factKeys.length > 0 && (
               <details className="rm-mail-details" open={factKeys.some((k) => facts[k]) || kind === "reply" || kind === "update"}>
                 <summary>Sumá un dato tuyo (opcional): se integra solo al mail</summary>
-                <p className="rm-today-note">Escribilo en el idioma del mail ({lang === "en" ? "English" : "Español"}), sin punto final. Solo cosas ciertas: el coach las puede comprobar.</p>
+                <p className="rm-today-note">Escribilo en inglés (el mail sale en inglés), sin punto final. Solo cosas ciertas: el coach las puede comprobar.</p>
                 {factKeys.map((k) => {
                   const f = MAIL_FACT_FIELDS[k];
                   return (
@@ -5510,7 +5500,8 @@ function MailComposer({ profile, log, pick, onTracked }) {
                       <span>{f.label}</span>
                       {f.long
                         ? <textarea className="rm-compose-text" rows={4} value={facts[k] || ""} onChange={(e) => setFact(k, e.target.value)} placeholder={lang === "en" ? "Yes, I can send my transcripts this week. My SAT is scheduled for December 6." : "Sí, puedo enviar mi analítico esta semana. Rindo el SAT el 6 de diciembre."} />
-                        : <input value={facts[k] || ""} onChange={(e) => setFact(k, e.target.value)} placeholder={lang === "en" ? f.en : f.es} />}
+                        : <input value={facts[k] || ""} onChange={(e) => setFact(k, e.target.value)} placeholder={f.en} />}
+                      {facts[k] && looksSpanish(facts[k]) && <small style={{ color: "#b3261e", display: "block", marginTop: 4 }}>⚠ Parece que está en español. Escribilo en inglés: el mail sale en inglés y el coach lo lee tal cual.</small>}
                     </label>
                   );
                 })}
@@ -5539,12 +5530,27 @@ function MailComposer({ profile, log, pick, onTracked }) {
             <label className="rm-mail-field"><span>Mail (podés editarlo antes de enviarlo)</span>
               <textarea className="rm-compose-text" rows={kind === "first" ? 18 : 12} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} />
             </label>
-            {email.missing.length > 0 && !aiUsed && (
-              <details className="rm-mail-details" open>
-                <summary>Antes de enviar ({email.missing.length})</summary>
-                <ul>{email.missing.map((m, i) => <li key={i}>{m}</li>)}</ul>
-              </details>
-            )}
+            {!aiUsed && (() => {
+              const optional = (m) => /\(opcional\)|si querés|si quer[eé]s|No hay roster cargado/i.test(m);
+              const must = email.missing.filter((m) => !optional(m));
+              const nice = email.missing.filter(optional);
+              return (
+                <>
+                  {must.length > 0 && (
+                    <details className="rm-mail-details" open>
+                      <summary>Importante antes de enviar ({must.length})</summary>
+                      <ul>{must.map((m, i) => <li key={i}>{m}</li>)}</ul>
+                    </details>
+                  )}
+                  {nice.length > 0 && (
+                    <details className="rm-mail-details">
+                      <summary>Opcional, para completar mejor ({nice.length})</summary>
+                      <ul>{nice.map((m, i) => <li key={i}>{m}</li>)}</ul>
+                    </details>
+                  )}
+                </>
+              );
+            })()}
             <div className="rm-compose-actions">
               <a className="rm-compose-btn" href={urls.gmailUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Gmail</a>
               <a className="rm-compose-btn" href={urls.outlookUrl} target="_blank" rel="noreferrer" onClick={track}>Abrir en Outlook</a>
