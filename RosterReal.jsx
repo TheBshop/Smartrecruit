@@ -10175,7 +10175,7 @@ function OpportunitiesBoard({ profile }) {
     <div className="rm-section" id="rm-offers-board" style={{ borderTop: "none", paddingTop: 20 }}>
       <div className="rm-wrap">
         <h2 className="rm-condensed" style={{ fontSize: 22, marginBottom: 4 }}>Coaches buscando jugadoras y jugadores ahora</h2>
-        <p className="rm-hint" style={{ marginBottom: 16 }}>{(isLoggedIn() ? OFFERS_BOARD.length : GATED_TOTALS.offers || OFFERS_BOARD.length).toLocaleString("es")} búsquedas publicadas por coaches en FieldLevel. Algunas pueden estar cerradas: confirmá la vigencia con el coach. Filtrá por tu posición.</p>
+        <p className="rm-hint" style={{ marginBottom: 16 }}>{(isLoggedIn() ? OFFERS_BOARD.length : GATED_TOTALS.offers || OFFERS_BOARD.length).toLocaleString("es")} búsquedas publicadas por coaches</p>
         <SampleBanner what="búsquedas de coaches" shown={OFFERS_BOARD.length} total={GATED_TOTALS.offers} motivo="needs_home" />
 
         {expanded && (
