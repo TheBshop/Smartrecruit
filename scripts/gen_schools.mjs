@@ -22,6 +22,28 @@ function eadaDivision(c0) {
 const SPORT_ES = { Soccer: "Fútbol", Basketball: "Básquet", Volleyball: "Vóley", Softball: "Softbol", "Field Hockey": "Hockey sobre césped", Rugby: "Rugby", Baseball: "Béisbol", Track: "Atletismo", Tennis: "Tenis", Golf: "Golf", Swimming: "Natación", Lacrosse: "Lacrosse", "Cross Country": "Cross country", Gymnastics: "Gimnasia" };
 const EADA_ES = { soc: "Fútbol", bkb: "Básquet", vb: "Vóley", fh: "Hockey sobre césped", gym: "Gimnasia", trk: "Atletismo", xc: "Cross country", ten: "Tenis", sb: "Softbol", bsb: "Béisbol", swm: "Natación", golf: "Golf", lax: "Lacrosse", rug: "Rugby" };
 const GUIDE = { Soccer: ["beca-futbol-estados-unidos-latinoamericanos", "Becas de fútbol"], Basketball: ["beca-basquet-estados-unidos-latinoamericanos", "Becas de básquet"], Volleyball: ["beca-voley-estados-unidos-latinoamericanas", "Becas de vóley"], Softball: ["beca-softbol-estados-unidos-latinoamericanas", "Becas de softbol"], "Field Hockey": ["beca-hockey-cesped-estados-unidos-latinoamericanas", "Becas de hockey sobre césped"], Rugby: ["beca-rugby-estados-unidos-latinoamericanos", "Becas de rugby"] };
+
+// ---- Jugadores internacionales por plantel (solo cifras agregadas; sin nombres) ----
+const ES_C = { Canada: "Canadá", England: "Inglaterra", Spain: "España", Germany: "Alemania", Australia: "Australia", France: "Francia", Netherlands: "Países Bajos", Sweden: "Suecia", Brazil: "Brasil", Italy: "Italia", Norway: "Noruega", Japan: "Japón", "New Zealand": "Nueva Zelanda", Serbia: "Serbia", Portugal: "Portugal", Denmark: "Dinamarca", Nigeria: "Nigeria", Israel: "Israel", Belgium: "Bélgica", Ireland: "Irlanda", Mexico: "México", Senegal: "Senegal", Iceland: "Islandia", Lithuania: "Lituania", Ghana: "Ghana", Finland: "Finlandia", Austria: "Austria", "South Africa": "Sudáfrica", Slovenia: "Eslovenia", Greece: "Grecia", "United Kingdom": "Reino Unido", Croatia: "Croacia", Scotland: "Escocia", Switzerland: "Suiza", Hungary: "Hungría", Poland: "Polonia", Jamaica: "Jamaica", Latvia: "Letonia", Cyprus: "Chipre", Montenegro: "Montenegro", Russia: "Rusia", Cameroon: "Camerún", "South Sudan": "Sudán del Sur", Egypt: "Egipto", "Czech Republic": "República Checa", Uganda: "Uganda", Wales: "Gales", Turkey: "Turquía", "Türkiye": "Turquía", China: "China", "Dominican Republic": "República Dominicana", Estonia: "Estonia", Slovakia: "Eslovaquia", Bulgaria: "Bulgaria", "Northern Ireland": "Irlanda del Norte", Bahamas: "Bahamas", Peru: "Perú", Ukraine: "Ucrania", Kenya: "Kenia", Romania: "Rumania", "South Korea": "Corea del Sur", Panama: "Panamá", Congo: "Congo", Angola: "Angola", Paraguay: "Paraguay", Luxembourg: "Luxemburgo", Taiwan: "Taiwán", "Bosnia & Herzegovina": "Bosnia y Herzegovina" };
+const LATAM = new Set(["Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Costa Rica", "Cuba", "Dominican Republic", "Ecuador", "El Salvador", "Guatemala", "Honduras", "Mexico", "Nicaragua", "Panama", "Paraguay", "Peru", "Uruguay", "Venezuela", "Puerto Rico"]);
+const esC = (c) => ES_C[c] || c;
+const rosterAgg = new Map(); // school -> [{label, total, known, intl, countries:{}}]
+function addRoster(school, label, countries) {
+  const total = countries.length, kn = countries.filter(Boolean);
+  if (total < 8 || kn.length / total < 0.8) return;
+  const intl = kn.filter((c) => !/^(USA|United States|US)$/i.test(c)), by = {};
+  intl.forEach((c) => { by[c] = (by[c] || 0) + 1; });
+  if (!rosterAgg.has(school)) rosterAgg.set(school, []);
+  rosterAgg.get(school).push({ label, total, known: kn.length, intl: intl.length, by });
+}
+{
+  const d = R("BBALL_ROSTERS"); for (const [s, l] of Object.entries(d)) addRoster(s, "Básquet masculino", l.map((p) => p.country || ""));
+  const d2 = R("BBALL_D2_ROSTERS"); for (const [s, v] of Object.entries(d2)) addRoster(s, "Básquet masculino", (v[1] || []).map((r) => r[4] || ""));
+  const w = R("WBB_ROSTERS_2026_27"); for (const [s, v] of Object.entries(w)) addRoster(s, "Básquet femenino", (v.rows || []).map((r) => r[4] || ""));
+  for (const f of ["SOCCER_BIO_2026", "SOCCER_D2F_BIO_2026", "SOCCER_D2M_BIO_2026"]) { const b = R(f); for (const [g, sch] of Object.entries(b)) for (const [s, pl] of Object.entries(sch)) addRoster(s, g === "F" ? "Fútbol femenino" : "Fútbol masculino", Object.values(pl).map((v) => v[3] || "")); }
+  const h = R("HOCKEY_BIO_2026"); for (const [s, pl] of Object.entries(h)) addRoster(s, "Hockey sobre césped", Object.values(pl).map((v) => v[3] || ""));
+  const h2 = R("HOCKEY_D2_BIO_2026"); for (const sch of Object.values(h2)) for (const [s, pl] of Object.entries(sch)) addRoster(s, "Hockey sobre césped", Object.values(pl).map((v) => v[3] || ""));
+}
 const bySchool = new Map();
 for (const p of PROGRAMS) { if (!bySchool.has(p.School)) bySchool.set(p.School, []); bySchool.get(p.School).push(p); }
 const used = new Set(), pages = [];
@@ -46,6 +68,12 @@ for (const [school, progs] of [...bySchool].sort((a, b) => a[0].localeCompare(b[
   const lead = `<b>${esc(school)} es una ${e.lvl === 2 ? "institución de 2 años" : "universidad"} ${pub}${place ? ` de ${esc(place)}` : ""} que compite en ${esc(division)}.</b> En Smartrecruit figura con programas de ${esc(ownEs.slice(0, 6).join(", "))}${ownEs.length > 6 ? " y otros" : ""}. Acá tenés sus datos oficiales de deportes, becas, costo y admisión.`;
   let body = `<h2>Datos básicos</h2><div class="k"><div><span>Asociación deportiva</span><b>${esc(division)}</b></div><div><span>Tipo</span><b>${esc(pub[0].toUpperCase() + pub.slice(1))} · ${esc(kind)}</b></div>${place ? `<div><span>Ubicación</span><b>${esc(place)}</b></div>` : ""}${first.Conference ? `<div><span>Conferencia</span><b>${esc(first.Conference)}</b></div>` : ""}</div>`;
   if (teams.length) body += `<h2>Deportes y cantidad de atletas</h2><p>Cantidad de deportistas por deporte que la institución reportó al Departamento de Educación de EE.UU. (EADA 2024).</p><div class="wrap"><table><tr><th>Deporte</th><th>Varones</th><th>Mujeres</th></tr>${teams.map(([k, v]) => `<tr><td>${esc(EADA_ES[k] || k)}</td><td>${v[0] || "—"}</td><td>${v[1] || "—"}</td></tr>`).join("")}</table></div>`;
+  const ra = rosterAgg.get(school) || [];
+  let latamTotal = 0, argTotal = 0;
+  if (ra.length) {
+    ra.forEach((r) => { Object.entries(r.by).forEach(([c, n]) => { if (LATAM.has(c)) latamTotal += n; if (c === "Argentina") argTotal += n; }); });
+    body += `<h2>Jugadores internacionales en los planteles</h2><p>Cifras agregadas de los planteles más recientes que tenemos, contando solo jugadores con país de origen informado. No publicamos nombres.</p><div class="wrap"><table><tr><th>Equipo</th><th>Jugadores con país informado</th><th>Internacionales</th><th>Países más frecuentes</th></tr>${ra.map((r) => `<tr><td>${esc(r.label)}</td><td>${r.known}</td><td>${r.intl}</td><td>${esc(Object.entries(r.by).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([c, n]) => `${esC(c)} (${n})`).join(", ") || "—")}</td></tr>`).join("")}</table></div>${latamTotal > 0 ? `<p>En total aparecen <b>${latamTotal} jugador${latamTotal === 1 ? "" : "es"} de Latinoamérica</b>${argTotal > 0 ? `, de los cuales ${argTotal} ${argTotal === 1 ? "es" : "son"} de Argentina` : ""}. Si venís de la región, es una señal de que el programa recluta en tu zona.</p>` : ""}`;
+  }
   body += `<h2>Becas deportivas</h2>`;
   if (d3) body += `<p>${esc(school)} compite en la Division III de la NCAA, que no da becas deportivas. Los atletas reciben ayuda académica o por necesidad económica.</p>`;
   else if (aidAny) body += `<p>${esc(school)} reportó ayuda económica para atletas${perAth(0) > 0 ? ` de ${usd(perAth(0))} por deportista varón` : ""}${perAth(0) > 0 && perAth(1) > 0 ? " y" : ""}${perAth(1) > 0 ? ` de ${usd(perAth(1))} por deportista mujer` : ""}, en promedio. Ojo: en la mayoría de los deportes la beca se reparte entre varios atletas, así que las ofertas varían mucho de un jugador a otro. Nunca asumas una beca completa.</p>`;
@@ -61,6 +89,7 @@ for (const [school, progs] of [...bySchool].sort((a, b) => a[0].localeCompare(b[
     [`¿En qué división compite ${school}?`, `Compite en ${division}.`],
     [`¿Qué deportes tiene ${school} en Smartrecruit?`, `${ownEs.join(", ")}.`],
   ];
+  if (ra.length) faq.push([`¿Hay jugadores internacionales en ${school}?`, `En los planteles que tenemos con datos completos, ${ra.reduce((a, r) => a + r.intl, 0)} de ${ra.reduce((a, r) => a + r.known, 0)} jugadores con país informado son internacionales${latamTotal > 0 ? `; ${latamTotal} son de Latinoamérica${argTotal > 0 ? ` y ${argTotal} de Argentina` : ""}` : ""}. Los planteles cambian cada temporada.`]);
   if (sc && (sc.co || sc.ci)) faq.splice(2, 0, [`¿Cuánto cuesta estudiar en ${school} siendo internacional?`, `El costo anual estimado es de ${usd(sc.co || sc.ci)} antes de becas${e.ctl === 1 ? " (es el costo fuera del estado, que es el que paga un estudiante internacional)" : ""}. Confirmalo en el sitio oficial de la universidad.`]);
   const url = `${BASE}/universidades/${slug}/`;
   const title = `${school}: becas deportivas, costos y deportes para internacionales`;
