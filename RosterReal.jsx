@@ -4606,6 +4606,25 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
+      {(() => {
+        const nn = RECRUITING_NEEDS_GENERAL.filter((n) => n.school === school);
+        if (!nn.length) return null;
+        return (
+          <div className="rm-sp-section">
+            <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas publicadas por coaches en {school}</h3>
+            <p className="rm-exam-note" style={{ marginTop: 0 }}>Posiciones que el coach publicó que está buscando. Es la señal más fuerte de que hay lugar: escribile mencionándola.</p>
+            <div className="rm-catalog-list">
+              {nn.slice(0, 8).map((n, i) => (
+                <div className="rm-catalog-row" key={`need-${i}`} style={{ cursor: "default" }}>
+                  <div className="rm-catalog-row-main"><b>{n.sport}</b><span style={{ fontSize: 12.5 }}>{n.position}{n.datePosted ? ` · publicada ${n.datePosted}` : ""}</span></div>
+                  <div className="rm-catalog-row-meta">{n.sourceUrl ? <a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda en FieldLevel →</a> : null}{n.description ? <span style={{ display: "block", marginTop: 3 }}>“{n.description}”</span> : null}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Los planteles y estadísticas alimentan el matching, pero no se muestran a los usuarios. */}
       {SHOW_ROSTER_TABLES && rosters.filter((r) => !r.partial).map((r) => {
         const hasStats = r.roster.some((p) => p.games_played != null || p.goals != null || p.points != null);
@@ -4630,7 +4649,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         );
       })}
 
-      {partialRosters.map((r) => (
+      {SHOW_ROSTER_TABLES && partialRosters.map((r) => (
         <div className="rm-sp-section" key={r.sport}>
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>{r.sport === "Soccer" ? (r.gender === "F" ? "Fútbol femenino" : "Fútbol masculino") : r.sport === "Volleyball" ? (r.gender === "M" ? "Vóley masculino" : "Vóley femenino") : r.sport === "Basketball" ? (r.gender === "M" ? "Básquet masculino" : "Básquet femenino") : r.sport} · jugadores y estadísticas {r.statsSeason}</h3>
           <p className="rm-exam-note" style={{ marginTop: 0 }}>{r.roster.length} jugadores con estadísticas.{r.positionsKnown ? ` Solo figuran las jugadoras con 20 sets o más; la fuente no trae el año de clase ni el país de origen: por eso este programa entra al ranking por el nivel de tu misma posición, sin proyección de vacante ni afinidad nacional.${r.teamStats ? ` Equipo: ${r.teamStats.record} en partidos, ${r.teamStats.sets} en sets, % de ataque ${r.teamStats.hit}.` : ""}` : ` Falta el año de clase${r.sport === "Basketball" ? "" : ", la posición"} y la ciudad de origen: por eso este programa entra al ranking solo por el nivel de sus 8 máximos productores, sin proyección de vacante ni afinidad nacional.`}</p>
