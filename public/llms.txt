@@ -53,3 +53,9 @@
 - [NCSA vs Smartrecruit: a comparison for international athletes](https://smartrecruit.com.ar/en/guides/ncsa-vs-smartrecruit/)
 - [U.S. universities directory](https://smartrecruit.com.ar/en/universities/)
 - Note: the app is currently in Spanish; guides and the university directory are available in English.
+
+## Blog (datos propios y novedades)
+- [Blog](https://smartrecruit.com.ar/blog/)
+- [¿Cuántos jugadores internacionales hay en los planteles universitarios de EE.UU.?](https://smartrecruit.com.ar/blog/jugadores-internacionales-planteles-universitarios-eeuu/)
+- [House v. NCAA: de topes de becas a límites de plantel, qué cambia para un atleta extranjero](https://smartrecruit.com.ar/blog/house-v-ncaa-becas-limites-de-plantel/)
+- [Calendario de reclutamiento para quien termina la secundaria en diciembre](https://smartrecruit.com.ar/blog/calendario-reclutamiento-secundaria-termina-en-diciembre/)

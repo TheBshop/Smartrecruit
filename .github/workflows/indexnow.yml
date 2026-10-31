@@ -2,7 +2,7 @@ name: IndexNow
 on:
   push:
     branches: [main]
-    paths: ["public/guias/**", "public/en/**", "public/index.html", "public/sitemap.xml"]
+    paths: ["public/guias/**", "public/en/**", "public/blog/**", "public/index.html", "public/sitemap.xml"]
 jobs:
   ping:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
       - name: Esperar el deploy y avisar solo lo que cambió
         run: |
           KEY=$(ls public/*.txt | grep -v robots | grep -v llms | head -1 | xargs basename | sed 's/.txt//')
-          URLS=$(git diff --name-only HEAD~1 HEAD -- public/guias public/en public/index.html | sed -E 's#public/index.html#/#; s#public/(guias/.*)/index.html#/\1/#; s#public/guias/index.html#/guias/#; s#public/en/index.html#/en/#; s#public/(en/guides/.*)/index.html#/\1/#; s#public/en/guides/index.html#/en/guides/#' | sort -u | sed 's#^#https://smartrecruit.com.ar#' | jq -R . | jq -s .)
+          URLS=$(git diff --name-only HEAD~1 HEAD -- public/guias public/en public/blog public/index.html | sed -E 's#public/index.html#/#; s#public/(guias/.*)/index.html#/\1/#; s#public/guias/index.html#/guias/#; s#public/en/index.html#/en/#; s#public/(en/guides/.*)/index.html#/\1/#; s#public/en/guides/index.html#/en/guides/#; s#public/blog/index.html#/blog/#; s#public/(blog/.*)/index.html#/\1/#' | sort -u | sed 's#^#https://smartrecruit.com.ar#' | jq -R . | jq -s .)
           [ "$URLS" = "[]" ] && exit 0
           sleep 120
           curl -s -o /dev/null -w "%{http_code}\n" -X POST https://api.indexnow.org/indexnow -H 'Content-Type: application/json' -d "{\"host\":\"smartrecruit.com.ar\",\"key\":\"$KEY\",\"keyLocation\":\"https://smartrecruit.com.ar/$KEY.txt\",\"urlList\":$URLS}"
