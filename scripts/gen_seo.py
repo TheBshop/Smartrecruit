@@ -58,7 +58,7 @@ def page(p):
 </body>
 </html>
 """
-EXISTING = [("elegibilidad-ncaa-latinoamerica", "Cómo registrarte en el NCAA Eligibility Center desde Latinoamérica"), ("cuanto-cubre-una-beca-deportiva", "¿Cuánto cubre una beca deportiva en Estados Unidos?"), ("video-highlight-universidades", "Cómo hacer un video highlight para universidades de Estados Unidos"), ("beca-futbol-estados-unidos-latinoamericanos", "Becas de fútbol en Estados Unidos para latinoamericanos: paso a paso"), ("beca-basquet-estados-unidos-latinoamericanos", "Becas de básquet en Estados Unidos para latinoamericanos: paso a paso"), ("como-escribirle-a-un-coach", "Cómo escribirle a un coach universitario de Estados Unidos")]
+EXISTING = [("elegibilidad-ncaa-latinoamerica", "Cómo registrarte en el NCAA Eligibility Center desde Latinoamérica"), ("cuanto-cubre-una-beca-deportiva", "¿Cuánto cubre una beca deportiva en Estados Unidos?"), ("video-highlight-universidades", "Cómo hacer un video highlight para universidades de Estados Unidos"), ("como-escribirle-a-un-coach", "Cómo escribirle a un coach universitario de Estados Unidos")]
 for p in PAGES:
     d = f"{ROOT}/public/guias/{p['slug']}"; os.makedirs(d, exist_ok=True)
     open(f"{d}/index.html", "w", encoding="utf-8").write(page(p))
