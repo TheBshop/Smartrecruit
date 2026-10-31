@@ -4606,25 +4606,6 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       )}
 
-      {(() => {
-        const nn = RECRUITING_NEEDS_GENERAL.filter((n) => n.school === school);
-        if (!nn.length) return null;
-        return (
-          <div className="rm-sp-section">
-            <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas publicadas por coaches en {school}</h3>
-            <p className="rm-exam-note" style={{ marginTop: 0 }}>Posiciones que el coach publicó que está buscando. Es la señal más fuerte de que hay lugar: escribile mencionándola.</p>
-            <div className="rm-catalog-list">
-              {nn.slice(0, 8).map((n, i) => (
-                <div className="rm-catalog-row" key={`need-${i}`} style={{ cursor: "default" }}>
-                  <div className="rm-catalog-row-main"><b>{n.sport}</b><span style={{ fontSize: 12.5 }}>{n.position}{n.datePosted ? ` · publicada ${n.datePosted}` : ""}</span></div>
-                  <div className="rm-catalog-row-meta">{n.sourceUrl ? <a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda en FieldLevel →</a> : null}{n.description ? <span style={{ display: "block", marginTop: 3 }}>“{n.description}”</span> : null}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })()}
-
       {/* Los planteles y estadísticas alimentan el matching, pero no se muestran a los usuarios. */}
       {SHOW_ROSTER_TABLES && rosters.filter((r) => !r.partial).map((r) => {
         const hasStats = r.roster.some((p) => p.games_played != null || p.goals != null || p.points != null);
@@ -4811,6 +4792,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
                 <div className="rm-needs-top"><b>{n.position}</b><span className="rm-needs-when">{offerAgeFromText(n.datePosted)}</span></div>
                 <div className="rm-needs-meta">{n.sport} · {n.division}</div>
                 {n.description && <div className="rm-needs-desc">"{n.description}"</div>}
+                {(n.sourceUrl || n.coachProfileUrl) && <div className="rm-needs-meta">{n.sourceUrl ? <a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda original →</a> : null}{n.sourceUrl && n.coachProfileUrl ? " · " : ""}{n.coachProfileUrl ? <a href={n.coachProfileUrl} target="_blank" rel="noopener noreferrer">Perfil del coach →</a> : null}</div>}
               </div>
             ))}
           </div>
