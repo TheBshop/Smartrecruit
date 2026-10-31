@@ -146,7 +146,7 @@ La etapa "Firma, visa y viaje" de `buildYearChecklist` pasó de 3 casilleros a 6
 ## Planteles, estadísticas y staff desde los sitios oficiales (plataforma Sidearm)
 `datos-src/planteles_web/hacer_sitemaps.mjs <hosts.txt> [deporte] [temporada]` genera 3 sitemaps importables en la extensión Web Scraper (webscraper.io): estadísticas del año anterior (`/stats/AÑO`), plantel actual (`/roster`) y coaches (`/coaches`). `hosts.txt`: una línea `sitio | nombre exacto en el catálogo`. Los selectores se verificaron en los sitios de Lewis, Findlay y Grand Valley State. No cubre los sitios que muestran el staff solo en un directorio general (por ejemplo Ashland) ni los que bloquean el acceso (Tampa, Barry). `extractor_sidearm.js` hace lo mismo pegándolo en el navegador, escuela por escuela.
 
-## Vacantes de FieldLevel (29/10/2026)
+## Vacantes de FieldLevel (31/10/2026)
 - `datos/FIELDLEVEL_NEEDS.json`: las búsquedas de coaches de los últimos 50 días (sin cerradas ni ofuscadas, descripción cortada en 170 caracteres) + 182 registros de RosterHunter (`source` distinto de `fieldlevel`, se conservan). Fuente: API pública `/api/RecruitingNeedApi/needs?sportEnum=<deporte>&page=N` (20 por página, las más nuevas primero), 29 deportes.
 - **Las edades son horas al momento de la descarga.** Al abrir la app `__ageAndDeriveNeeds()` les suma el tiempo transcurrido desde `NEEDS_SNAPSHOT_AT` (constante en `RosterReal.jsx`). **Al actualizar el archivo hay que cambiar esa fecha** por la hora (UTC) de la descarga.
 - `RECRUITING_NEEDS_GENERAL` ya no es un archivo propio: se arma al abrir a partir de `FIELDLEVEL_NEEDS` (antes era una copia con fechas relativas congeladas). `datos/RECRUITING_NEEDS_GENERAL.json` queda vacío.

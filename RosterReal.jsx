@@ -11326,7 +11326,7 @@ function catalogPlace(school) {
 // Fecha y hora (UTC) en que se bajaron las búsquedas de FieldLevel de datos/FIELDLEVEL_NEEDS.json. Las edades ("hace 3 días") se guardan
 // como horas al momento de la descarga; al abrir la app se les suma el tiempo transcurrido, así no quedan congeladas.
 // AL ACTUALIZAR EL ARCHIVO HAY QUE CAMBIAR ESTA FECHA (ver LEEME.md, sección "Vacantes de FieldLevel").
-const NEEDS_SNAPSHOT_AT = "2026-10-29T15:26:21Z";
+const NEEDS_SNAPSHOT_AT = "2026-10-31T20:02:33Z";
 function needsRelEn(h) {
   if (h < 1) return "an hour ago";
   if (h < 24) { const n = Math.round(h); return n === 1 ? "an hour ago" : `${n} hours ago`; }
