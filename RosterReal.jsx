@@ -2314,6 +2314,8 @@ h2.rm-condensed::before{ content:""; position:absolute; left:0; top:2px; width:0
 .rm-needs-when{ font-size:11.5px; color:var(--ink-soft); font-family:'Space Mono',monospace; white-space:nowrap; }
 .rm-needs-school{ font-size:13.5px; font-weight:600; margin-top:3px; }
 .rm-needs-meta{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+.rm-needs-coach{ font-size:13px; margin-top:8px; padding:8px 10px; background:var(--field-tint,#f1f6ee); border-radius:8px; }
+.rm-needs-coach>span:first-child{ font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); }
 .rm-needs-desc{ font-size:13px; font-style:italic; color:var(--ink-soft); margin-top:6px; }
 .rm-needs-links{ display:flex; gap:14px; margin-top:8px; }
 .rm-needs-links a{ font-size:12px; color:var(--accent); font-weight:600; text-decoration:none; }
@@ -3898,7 +3900,24 @@ END:VCALENDAR`;
 /* ---------------------------------------------------------------
    PÁGINA: CATÁLOGO (2.447 programas, 4 deportes)
 --------------------------------------------------------------- */
-function RecruitingNeedsPage() {
+// Une la búsqueda publicada con el coach cargado en Smartrecruit para ese programa (universidad + deporte + rama).
+// Si no tenemos al coach, queda el perfil de FieldLevel como último recurso.
+function NeedCoach({ n }) {
+  const c = n.school && n.sportBase ? coachContactFor(n.school, n.sportBase, n.gender) : null;
+  if (c && isLockedContact(c)) return <CoachLock motivo="ficha" />;
+  if (c && (c.contactUrl || c.name)) {
+    const isMail = c.contactUrl && c.contactUrl.startsWith("mailto:");
+    return (
+      <div className="rm-needs-coach">
+        <span>Coach del programa</span> <b>{c.name}</b>{c.title ? ` · ${c.title}` : ""}
+        {c.contactUrl && <> — <a href={c.contactUrl} target={isMail ? undefined : "_blank"} rel={isMail ? undefined : "noopener noreferrer"}>{isMail ? c.contactUrl.replace("mailto:", "") : "Contactar →"}</a></>}
+        {c.assistants && c.assistants.some((x) => x.email) ? <span style={{ display: "block", fontSize: 12.5 }}>Asistentes: {c.assistants.filter((x) => x.email).map((x, i) => <span key={i}>{i ? ", " : ""}{x.name} (<a href={`mailto:${x.email}`}>{x.email}</a>)</span>)}</span> : null}
+      </div>
+    );
+  }
+  return n.coachProfileUrl ? <div className="rm-needs-coach">Todavía no tenemos el mail de este coach. <a href={n.coachProfileUrl} target="_blank" rel="noopener noreferrer">Contactarlo por FieldLevel →</a></div> : null;
+}
+function RecruitingNeedsPage({ onOpenSchool }) {
   const [sport, setSport] = useState(() => {
     const p = readStoredProfile();
     if (!p || !p.sport) return "todos";
@@ -3952,9 +3971,10 @@ function RecruitingNeedsPage() {
             <div className="rm-needs-meta">{n.division}{n.place ? ` en ${n.place}` : ""}</div>
             {n.description && <div className="rm-needs-desc">“{n.description}”</div>}
             <div className="rm-needs-links">
-              {n.coachProfileUrl && <a href={n.coachProfileUrl} target="_blank" rel="noreferrer">Ver perfil del coach →</a>}
               {n.sourceUrl && <a href={n.sourceUrl} target="_blank" rel="noreferrer">Ver publicación original →</a>}
+              {onOpenSchool && n.school && <button type="button" className="rm-link-btn" onClick={() => onOpenSchool(n.school)}>Ver la universidad →</button>}
             </div>
+            <NeedCoach n={n} />
           </div>
         ))}
         {filtered.length === 0 && <p className="rm-hint">No hay publicaciones cargadas todavía para ese filtro — se van a ir sumando a medida que carguemos más lotes.</p>}
@@ -4580,7 +4600,8 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
                 <div className="rm-needs-top"><b>{n.position}</b><span className="rm-needs-when">{offerAgeFromText(n.datePosted)}</span></div>
                 <div className="rm-needs-meta">{n.sport} · {n.division}</div>
                 {n.description && <div className="rm-needs-desc">"{n.description}"</div>}
-                {(n.sourceUrl || n.coachProfileUrl) && <div className="rm-needs-meta">{n.sourceUrl ? <a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda original →</a> : null}{n.sourceUrl && n.coachProfileUrl ? " · " : ""}{n.coachProfileUrl ? <a href={n.coachProfileUrl} target="_blank" rel="noopener noreferrer">Perfil del coach →</a> : null}</div>}
+                {n.sourceUrl && <div className="rm-needs-meta"><a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda original →</a></div>}
+                <NeedCoach n={n} />
               </div>
             ))}
           </div>
@@ -11344,7 +11365,7 @@ function __ageAndDeriveNeeds() {
   RECRUITING_NEEDS_GENERAL = fl.filter((n) => n.university && n.post_url).map((n) => {
     const sport = n.sport === "Track" ? "Track & Field" : n.sport === "Football" && n.gender === "F" ? "Flag Football" : n.sport === "Baseball" || n.sport === "Softball" || n.sport === "Football" ? n.sport : `${NEEDS_GENDER_PREFIX[n.gender] || ""}${n.sport}`;
     return {
-      school: n.university, sport, division: n.division, place: n.place,
+      school: n.university, sport, sportBase: n.sport, gender: n.gender, division: n.division, place: n.place,
       position: n.position_code && n.class_year_needed ? `${n.position_code} needed for ${n.class_year_needed}` : n.class_year_needed ? `Recruiting ${n.class_year_needed}s` : "Recruiting",
       description: n.description || "", coachProfileUrl: n.coach_profile_url, sourceUrl: n.post_url,
       datePosted: n.hours_since_posted == null ? "" : needsRelEn(n.hours_since_posted),
@@ -11934,7 +11955,7 @@ function AppInner() {
       {stage === "mylist" && <AccountGate motivo="lista" title="Tu lista de universidades, guardada en tu cuenta" text="Armá tu lista corta, compará y seguí el estado de cada postulación." bullets={["Tu lista no se pierde si cambiás de dispositivo","Tablero de seguimiento de cada coach","Recordatorio semanal de qué hacer"]}><MyListPage setStage={setStage} onOpenSchool={openSchool} /></AccountGate>}
       {stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
       {stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
-      {stage === "needs" && <RecruitingNeedsPage />}
+      {stage === "needs" && <RecruitingNeedsPage onOpenSchool={openSchool} />}
       {stage === "eligibility" && <EligibilityPage />}
       {stage === "video" && <VideoGuidePage />}
       {stage === "money" && <MoneyGuidePage />}
