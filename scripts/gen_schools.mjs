@@ -1,6 +1,7 @@
 // Genera una página estática por universidad (dist/universidades/<slug>/) con datos oficiales de EE.UU. (EADA, IPEDS, College Scorecard)
 // y los programas que tiene Smartrecruit. Sin contactos de coaches (esos son solo con cuenta). Se ejecuta desde build.mjs.
 import fs from "fs";
+import { buildEn, buildEnIndex } from "./gen_schools_en.mjs";
 const R = (f) => JSON.parse(fs.readFileSync(`datos/${f}.json`, "utf8"));
 const BASE = "https://smartrecruit.com.ar";
 const PROGRAMS = R("PROGRAMS_ALL_SPORTS"), EADA = R("EADA_DATA"), SITE = R("EADA_SITE_NAMES"), SC = R("SCORECARD_BY_ID"), SCN = R("SCORECARD_NAME_IDS");
@@ -106,6 +107,7 @@ for (const [school, progs] of [...bySchool].sort((a, b) => a[0].localeCompare(b[
 <title>${esc(title)} | Smartrecruit</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
+<link rel="alternate" hreflang="es" href="${url}"><link rel="alternate" hreflang="en" href="${BASE}/en/universities/${slug}/"><link rel="alternate" hreflang="x-default" href="${url}">
 <meta property="og:title" content="${esc(title)} | Smartrecruit">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}">
@@ -135,10 +137,12 @@ ${footer}
 </body>
 </html>
 `;
+  buildEn({ school, slug, e, sc, division, place, city, state, conference: first.Conference, ownSports, teams, ra, latamTotal, argTotal, perAth, aidAny, d3, style, esUrl: url });
   fs.mkdirSync(`dist/universidades/${slug}`, { recursive: true });
   fs.writeFileSync(`dist/universidades/${slug}/index.html`, html);
   pages.push({ school, slug, state: state || "Otros", division });
 }
+buildEnIndex(pages, style);
 // Índice
 const byState = new Map(); pages.forEach((p) => { if (!byState.has(p.state)) byState.set(p.state, []); byState.get(p.state).push(p); });
 const idxBody = [...byState].sort((a, b) => a[0].localeCompare(b[0])).map(([st, ps]) => `<h2 id="${slugify(st)}">${esc(st)}</h2><ul class="cols">${ps.map((p) => `<li><a href="/universidades/${p.slug}/">${esc(p.school)}</a> <small>${esc(p.division)}</small></li>`).join("")}</ul>`).join("");
@@ -148,6 +152,7 @@ fs.writeFileSync("dist/universidades/index.html", `<!doctype html>
 <title>Universidades de EE.UU. con deporte universitario: becas, costos y programas | Smartrecruit</title>
 <meta name="description" content="Más de ${pages.length} universidades y colleges de EE.UU. con sus deportes, división, ayuda económica para atletas, costo anual y admisión, con datos oficiales.">
 <link rel="canonical" href="${idxUrl}">
+<link rel="alternate" hreflang="es" href="${idxUrl}"><link rel="alternate" hreflang="en" href="${BASE}/en/universities/"><link rel="alternate" hreflang="x-default" href="${idxUrl}">
 <meta property="og:title" content="Universidades de EE.UU. con deporte universitario | Smartrecruit"><meta property="og:url" content="${idxUrl}"><meta property="og:type" content="website"><meta property="og:locale" content="es_AR">
 <meta name="theme-color" content="#0b2a6b"><link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
@@ -163,5 +168,5 @@ ${idxBody}
 // Sitemap: agrega las páginas a dist/sitemap.xml
 const lm = new Date().toISOString().slice(0, 10);
 const smp = "dist/sitemap.xml";
-fs.writeFileSync(smp, fs.readFileSync(smp, "utf8").replace("</urlset>", [`${idxUrl}`, ...pages.map((p) => `${BASE}/universidades/${p.slug}/`)].map((u) => `  <url><loc>${u}</loc><lastmod>${lm}</lastmod></url>\n`).join("") + "</urlset>"));
+fs.writeFileSync(smp, fs.readFileSync(smp, "utf8").replace("</urlset>", [`${idxUrl}`, `${BASE}/en/universities/`, ...pages.map((p) => `${BASE}/universidades/${p.slug}/`), ...pages.map((p) => `${BASE}/en/universities/${p.slug}/`)].map((u) => `  <url><loc>${u}</loc><lastmod>${lm}</lastmod></url>\n`).join("") + "</urlset>"));
 console.log("universidades:", pages.length);

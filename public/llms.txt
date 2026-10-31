@@ -33,3 +33,17 @@
 ## La app
 - [Inicio](https://smartrecruit.com.ar/)
 - Los contactos completos de coaches y las vacantes requieren una cuenta gratuita.
+
+## English
+- [Home (English)](https://smartrecruit.com.ar/en/)
+- [Guides](https://smartrecruit.com.ar/en/guides/)
+- [NCAA and NAIA eligibility for international athletes: step by step](https://smartrecruit.com.ar/en/guides/ncaa-eligibility-international-athletes/)
+- [How much does a U.S. college athletic scholarship cover?](https://smartrecruit.com.ar/en/guides/athletic-scholarship-coverage-international/)
+- [How to email a U.S. college coach](https://smartrecruit.com.ar/en/guides/how-to-email-a-college-coach/)
+- [How to make a highlight video for U.S. college recruiting](https://smartrecruit.com.ar/en/guides/highlight-video-college-recruiting/)
+- [Sports recruiting agency vs doing it yourself: an honest comparison](https://smartrecruit.com.ar/en/guides/recruiting-agency-vs-do-it-yourself/)
+- [Are recruiting showcases worth it for a U.S. scholarship?](https://smartrecruit.com.ar/en/guides/are-showcases-worth-it/)
+- [Soccer scholarships in the U.S. for international players: step by step](https://smartrecruit.com.ar/en/guides/soccer-scholarship-international-players/)
+- [Volleyball scholarships in the U.S. for international players: step by step](https://smartrecruit.com.ar/en/guides/volleyball-scholarship-international-players/)
+- [U.S. universities directory](https://smartrecruit.com.ar/en/universities/)
+- Note: the app is currently in Spanish; guides and the university directory are available in English.
