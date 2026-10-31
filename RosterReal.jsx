@@ -4569,6 +4569,24 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
         </div>
       </div>
 
+      {/* ---- Recruiting Needs activos en esta escuela ---- */}
+      {needsHere.length > 0 && (
+        <div className="rm-sp-section">
+          <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas activas de coaches ahora ({needsHere.length})</h3>
+          <p className="rm-exam-note" style={{ marginTop: 0 }}>Publicadas por los coaches de esta universidad en FieldLevel: si tu posición coincide, es la mejor señal de que hay lugar. Escribile mencionándola.</p>
+          <div className="rm-needs-list">
+            {needsHere.map((n, i) => (
+              <div className="rm-needs-row" key={i}>
+                <div className="rm-needs-top"><b>{n.position}</b><span className="rm-needs-when">{offerAgeFromText(n.datePosted)}</span></div>
+                <div className="rm-needs-meta">{n.sport} · {n.division}</div>
+                {n.description && <div className="rm-needs-desc">"{n.description}"</div>}
+                {(n.sourceUrl || n.coachProfileUrl) && <div className="rm-needs-meta">{n.sourceUrl ? <a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda original →</a> : null}{n.sourceUrl && n.coachProfileUrl ? " · " : ""}{n.coachProfileUrl ? <a href={n.coachProfileUrl} target="_blank" rel="noopener noreferrer">Perfil del coach →</a> : null}</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {eada && <EadaSection e={eada} profileMajor={profileMajor} />}
 
       {eada && STAFF_BY_PROGRAM.some((x) => x.u === eada.u) && STAFF_BY_PROGRAM.filter((x) => x.u === eada.u).every((x) => isLockedContact(x)) && <CoachLock motivo="ficha" />}
@@ -4781,23 +4799,6 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
           ))}
         </div>
       </div>}
-
-      {/* ---- Recruiting Needs activos en esta escuela ---- */}
-      {needsHere.length > 0 && (
-        <div className="rm-sp-section">
-          <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas activas publicadas</h3>
-          <div className="rm-needs-list">
-            {needsHere.map((n, i) => (
-              <div className="rm-needs-row" key={i}>
-                <div className="rm-needs-top"><b>{n.position}</b><span className="rm-needs-when">{offerAgeFromText(n.datePosted)}</span></div>
-                <div className="rm-needs-meta">{n.sport} · {n.division}</div>
-                {n.description && <div className="rm-needs-desc">"{n.description}"</div>}
-                {(n.sourceUrl || n.coachProfileUrl) && <div className="rm-needs-meta">{n.sourceUrl ? <a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda original →</a> : null}{n.sourceUrl && n.coachProfileUrl ? " · " : ""}{n.coachProfileUrl ? <a href={n.coachProfileUrl} target="_blank" rel="noopener noreferrer">Perfil del coach →</a> : null}</div>}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* ---- Coach y contacto ---- */}
       {contact && !isLockedContact(contact) && (
