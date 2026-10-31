@@ -44,6 +44,7 @@ function previewOf(name, data) {
   }
   return out;
 }
+let NCSA_DONE = false;
 for (const f of fs.readdirSync("datos").filter((x) => x.endsWith(".json") && !x.startsWith("_"))) {
   const name = f.replace(/\.json$/, "");
   const buf = fs.readFileSync(`datos/${f}`);
@@ -63,12 +64,15 @@ for (const f of fs.readdirSync("datos").filter((x) => x.endsWith(".json") && !x.
     // se separa en NCSA_MAJORS (carga diferida, después de que la app ya está lista).
     const all = JSON.parse(buf.toString("utf8")), slim = {}, majors = {};
     for (const [k, v] of Object.entries(all)) { const { majors: m, ...rest } = v; slim[k] = rest; if (m) majors[k] = m; }
-    fs.writeFileSync(`dist/data/${out}`, JSON.stringify(slim));
+    const sb = Buffer.from(JSON.stringify(slim)), sh = crypto.createHash("sha1").update(sb).digest("hex").slice(0, 10);
+    fs.writeFileSync(`dist/data/${name}.${sh}.json`, sb);
+    manifest[name] = `${name}.${sh}.json`;
+    NCSA_DONE = true;
     const mb = Buffer.from(JSON.stringify(majors)), mh = crypto.createHash("sha1").update(mb).digest("hex").slice(0, 10);
     fs.writeFileSync(`dist/data/NCSA_MAJORS.${mh}.json`, mb);
     manifest.NCSA_MAJORS = `NCSA_MAJORS.${mh}.json`;
   } else fs.writeFileSync(`dist/data/${out}`, buf);
-  manifest[name] = out;
+  if (!NCSA_DONE || name !== "SCHOOL_PROFILES_NCSA") manifest[name] = out;
 }
 for (const g of GATED) if (!manifestPriv[g]) throw new Error("falta dataset gated " + g);
 await build({
