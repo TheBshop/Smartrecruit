@@ -93,7 +93,7 @@ open(f"{ROOT}/public/en/index.html", "w", encoding="utf-8").write(head("Get a U.
 <p>It is a free tool and a set of guides for athletes in NCAA, NAIA and NJCAA recruiting, covering soccer, basketball, volleyball, softball, field hockey, rugby and more. It is not an agency or an intermediary, it does not guarantee scholarships or admission, it does not charge for its use, and it is not affiliated with the NCAA, the NAIA, the NJCAA or any university.</p>
 <h2>Start here</h2>
 <ul>{cards}</ul>
-<p>Browse the <a href="/en/universities/">U.S. universities directory</a> for sports, athletic aid, cost and admission data for each school, or <a href="/">open the app</a>.</p>
+<p>Browse the <a href="/en/universities/">U.S. universities directory</a> for sports, athletic aid, cost and admission data for each school, read the <a href="/en/blog/">blog</a> for original data, or <a href="/">open the app</a>.</p>
 </main>{FOOT}</body></html>
 ''')
 # hreflang on Spanish counterparts (idempotent)
