@@ -4,7 +4,7 @@ const BASE = "https://smartrecruit.com.ar";
 export const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const usd = (v) => "USD " + Math.round(v).toLocaleString("en-US");
 const SPORT = { soc: "Soccer", bkb: "Basketball", vb: "Volleyball", fh: "Field hockey", gym: "Gymnastics", trk: "Track and field", xc: "Cross country", ten: "Tennis", sb: "Softball", bsb: "Baseball", swm: "Swimming", golf: "Golf", lax: "Lacrosse", rug: "Rugby" };
-const GUIDE = { Soccer: ["soccer-scholarship-international-players", "Soccer scholarships for international players"], Volleyball: ["volleyball-scholarship-international-players", "Volleyball scholarships for international players"] };
+const GUIDE = { Soccer: ["soccer-scholarship-international-players", "Soccer scholarships for international players"], Volleyball: ["volleyball-scholarship-international-players", "Volleyball scholarships for international players"], Basketball: ["basketball-scholarship-international-players", "Basketball scholarships for international players"], Softball: ["softball-scholarship-international-players", "Softball scholarships for international players"], "Field Hockey": ["field-hockey-scholarship-international-players", "Field hockey scholarships for international players"], Rugby: ["rugby-scholarship-international-players", "Rugby scholarships for international players"] };
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
 const LABEL = { "Básquet masculino": "Men's basketball", "Básquet femenino": "Women's basketball", "Fútbol femenino": "Women's soccer", "Fútbol masculino": "Men's soccer", "Hockey sobre césped": "Field hockey" };
 export function enFooter() {

@@ -197,5 +197,141 @@ add(slug="volleyball-scholarship-international-players", es="beca-voley-estados-
   ["How tall do I need to be to play college volleyball?","There is no single height: it depends on position and division. Setters and liberos are usually shorter than middle blockers. If unsure, email the coach and ask."],
   ["When should I start contacting coaches?","As early as possible for eligibility and video. Coaches in each division have rules about when they can contact you first, but you can show interest whenever you want."]])
 
+
+add(slug="softball-scholarship-international-players", es="beca-softbol-estados-unidos-latinoamericanas",
+ title="Softball Scholarships in the U.S. for International Players: Step by Step",
+ h1="Softball scholarships in the U.S. for international players: step by step",
+ desc="How to get a softball scholarship at a U.S. college: divisions and scholarships, positions, what coaches look for, the video and how to email them.",
+ lead="<b>To get a softball scholarship in the U.S. you need to meet eligibility, build a video by position, pick programs at your level and email the coaches yourself.</b> There are thousands of programs, so it pays to start with an organized list.",
+ body="""<h2>1. Understand the divisions and scholarships</h2>
+<p>Women's softball is played in the NCAA (Divisions I, II and III), the NAIA and the NJCAA (junior colleges), among other leagues. Division III gives no athletic scholarships: aid is academic or need-based. In Division II the limit is 7.2 scholarship equivalencies per team, which the coach splits into portions. In Division I, since 2025-26 and the House v. NCAA settlement, the scholarship cap was replaced by a roster limit (25 players in softball) and each university decides how much to offer. Rules change, so confirm them on the official sites. More in <a href="/en/guides/athletic-scholarship-coverage-international/">how much a scholarship covers</a>.</p>
+<h2>2. Solve eligibility</h2>
+<p>NCAA D1 and D2 require the Eligibility Center, and the NAIA has its own. Do it early: see the <a href="/en/guides/ncaa-eligibility-international-athletes/">eligibility guide</a>.</p>
+<h2>3. Know the positions</h2>
+<p>Pitcher, catcher, first base, second base, third base, shortstop, outfielders (left, center, right) and designated player. Many players cover more than one position and coaches value that. Each program has different openings depending on its players' graduation years.</p>
+<h2>4. Build a video by position</h2>
+<p>Pitchers: show your pitches from two angles, with your pitch types and location. Fielders: fielding, throwing and speed. Hitters: your swing from two angles and real at-bats. Add measurable numbers (pitch speed, time to first base) if you have them. Follow the <a href="/en/guides/highlight-video-college-recruiting/">video guide</a>.</p>
+<h2>5. Build your university list</h2>
+<p>Smartrecruit lists <b>more than 1,600 softball programs</b> across all divisions. Build a list of ambitious, realistic and safety programs, and look at the major, the cost and the positions each one needs.</p>
+<h2>6. Email the coaches</h2>
+<p>Send a short email in English with your position, graduation year, measurables, GPA and video link, personalized with something concrete about that program. Follow up after 10 to 14 days if there is no reply. Follow the <a href="/en/guides/how-to-email-a-college-coach/">email guide</a>.</p>""",
+ faq=[["Are there softball scholarships for international players?","Yes. Universities can recruit international athletes, subject to each governing body's rules and each university's admissions."],
+  ["How many scholarships does a softball team have?","It depends on the division. In Division II the maximum is 7.2 equivalencies per team; Division III has no athletic scholarships; Division I has had a 25-player roster limit instead of a scholarship cap since 2025-26. The NAIA and NJCAA have their own rules."],
+  ["Are softball and baseball the same for recruiting?","No. Women's softball and men's baseball are different sports with their own programs and rules. This guide is about softball."],
+  ["Which position has the most opportunities?","It depends on each program and year. Pitchers and players who can cover several positions tend to draw more interest, but the best approach is to see what each program needs."]])
+
+add(slug="field-hockey-scholarship-international-players", es="beca-hockey-cesped-estados-unidos-latinoamericanas",
+ title="Field Hockey Scholarships in the U.S. for International Players",
+ h1="Field hockey scholarships in the U.S. for international players",
+ desc="How to get a field hockey scholarship in the U.S.: it is played only in the NCAA, how many scholarships there are, the video, positions and how to email the coach.",
+ lead="<b>College field hockey in the U.S. is played in the NCAA, with more than 280 programs, and not in the NAIA or the NJCAA.</b> That makes it a sport with few spots, so start early with a well-built list.",
+ body="""<h2>1. Where it is played</h2>
+<p>College field hockey is an NCAA sport (Divisions I, II and III). The NAIA and the NJCAA do not sponsor it; at many of those schools it exists only as a club. There are about 280 NCAA programs, concentrated in the Northeast, the Mid-Atlantic, the Southeast and the Midwest, and very few in California.</p>
+<h2>2. How many scholarships there are</h2>
+<p>In Division II the limit is 6.3 scholarship equivalencies per team. Division III gives no athletic scholarships: aid is academic or need-based. In Division I, since 2025-26 and the House v. NCAA settlement, the scholarship cap was replaced by a roster limit of 27 players and each university decides how much to offer. With few spots, many players combine athletic aid with academic aid. Always confirm the rules with each university.</p>
+<h2>3. Solve eligibility</h2>
+<p>NCAA D1 and D2 require registration with the Eligibility Center. See the <a href="/en/guides/ncaa-eligibility-international-athletes/">eligibility guide</a>.</p>
+<h2>4. Positions and what coaches look for</h2>
+<p>Coaches look for goalkeepers, defenders, midfielders and forwards with good stick skills, game reading and fitness. If you come from a country with a field hockey tradition, your competitive level is an advantage: show it through your club, national team or the tournaments you have played.</p>
+<h2>5. Build your video</h2>
+<p>A short video with your best plays, your position clearly identified and your number and jersey visible. Add a full game as a separate link. Follow the <a href="/en/guides/highlight-video-college-recruiting/">video guide</a>.</p>
+<h2>6. Email the coaches</h2>
+<p>Smartrecruit lists <b>284 NCAA field hockey programs</b>. Division I coaches may only contact you starting June 15 after your sophomore year of high school, but you can show your interest earlier. Send a short email in English with your details and video, and follow up after 10 to 14 days. Follow the <a href="/en/guides/how-to-email-a-college-coach/">email guide</a>.</p>""",
+ faq=[["Is there field hockey in the NAIA or the NJCAA?","No. Those leagues do not sponsor it; college field hockey is played in the NCAA."],
+  ["How many scholarships does a field hockey team have?","In Division II the maximum is 6.3 equivalencies per team; Division III has no athletic scholarships; Division I has had a 27-player roster limit instead of a scholarship cap since 2025-26."],
+  ["Can international players take part?","Yes. Universities recruit international players, subject to NCAA rules and each school's admissions."],
+  ["When can a Division I coach contact me?","Under NCAA rules, starting June 15 after your sophomore year of high school. You can show interest earlier, but confirm the current dates with the NCAA."]])
+
+add(slug="rugby-scholarship-international-players", es="beca-rugby-estados-unidos-latinoamericanos",
+ title="Rugby Scholarships in the U.S. for International Players: How It Works",
+ h1="Rugby scholarships in the U.S. for international players: how it works",
+ desc="College rugby in the U.S.: women's rugby as an NCAA emerging sport, men's rugby mostly club, what scholarships exist and how to contact coaches.",
+ lead="<b>Women's rugby is an NCAA emerging sport, with about 30 varsity programs in 2026, and men's college rugby is mostly club.</b> That changes how players are recruited and what scholarships exist, so understand it before writing to anyone.",
+ body="""<h2>1. Women's rugby: an NCAA emerging sport</h2>
+<p>Women's rugby is an NCAA \"Emerging Sport\": it does not yet have an NCAA championship, but about 30 programs field it as a varsity team, in Divisions I, II and III. Most compete in the NIRA league and the rest in NCR. The number and mix change every season as programs are added or dropped.</p>
+<h2>2. Men's rugby: mostly club</h2>
+<p>In men's college rugby most teams are club teams, run by students with varying support from the university. Some universities have programs with more structure and may offer financial aid, but that is not the norm. Always ask the coach what kind of program it is and what support it gives.</p>
+<h2>3. What scholarships exist</h2>
+<p>In NCAA women's rugby, few Division I and II programs can offer athletic scholarships, and fewer give a full one. In most programs aid comes through academic merit or the university's own financial aid, so a good GPA weighs as much as your level of play. In men's rugby, aid is usually academic or from the university rather than a classic athletic scholarship.</p>
+<h2>4. Solve eligibility</h2>
+<p>If the program is NCAA (D1 or D2), you must register with the Eligibility Center. Club teams do not require it, but you still need admission to the university. See the <a href="/en/guides/ncaa-eligibility-international-athletes/">eligibility guide</a>.</p>
+<h2>5. How to show yourself</h2>
+<p>A match video with your position clearly identified (forwards or backs) and your physical data. If you play for a national team, provincial or regional selections or high-level clubs, put it first. Follow the <a href="/en/guides/highlight-video-college-recruiting/">video guide</a>.</p>
+<h2>6. Email the coach</h2>
+<p>Smartrecruit lists <b>94 men's rugby programs</b> and the NCAA women's rugby programs, with coach contacts available with an account. Send a short email in English with your details and video, and follow up after 10 to 14 days. Follow the <a href="/en/guides/how-to-email-a-college-coach/">email guide</a>.</p>
+<p>Always confirm current rules on the official NCAA and NAIA websites: they change often.</p>""",
+ faq=[["Is rugby an NCAA sport?","Women's rugby is an NCAA emerging sport, with about 30 programs in 2026. Men's college rugby is mostly club."],
+  ["Are there rugby scholarships for international players?","Few programs offer athletic scholarships, and very few give full ones. Many athletes combine a partial scholarship with academic or financial aid from the university."],
+  ["Do I need the Eligibility Center to play college rugby?","For NCAA programs in Division I or II, yes. For club teams, no, but you still need to be admitted to the university."],
+  ["What is NIRA?","It is the league that organizes women's rugby for NCAA programs. Other programs compete in the NCR league."]])
+
+add(slug="mens-volleyball-scholarship-international-players", es="beca-voley-masculino-estados-unidos-latinoamericanos",
+ title="Men's Volleyball Scholarships in the U.S. for International Players",
+ h1="Men's volleyball scholarships in the U.S. for international players",
+ desc="How to get a men's volleyball scholarship in the U.S.: few programs, scholarship limits by division, the video, positions and how to contact coaches.",
+ lead="<b>College men's volleyball has far fewer programs than women's, but scholarships can be split into portions and coaches do recruit international players.</b> With few spots, the key is a well-built list and direct emails.",
+ body="""<h2>1. Few programs, a lot of competition per spot</h2>
+<p>College men's volleyball is played in the NCAA (Divisions I, II and III) and other leagues, but there are far fewer programs than in women's volleyball. Many are in California, the Northeast and the Midwest. With fewer spots, write to several programs and also look at schools in lower divisions.</p>
+<h2>2. How scholarships work</h2>
+<p>Men's volleyball is an \"equivalency\" sport: the total scholarship value is split among several players in portions. In Division II the limit is 4.5 equivalencies per team. Division III gives no athletic scholarships: aid is academic or need-based. In Division I, since December 2025 and the House v. NCAA settlement, the scholarship cap was replaced by a roster limit of 18 players and each university decides how much to offer. It is common to combine a partial athletic scholarship with academic aid.</p>
+<h2>3. Eligibility</h2>
+<p>NCAA D1 and D2 require registration with the Eligibility Center. See the <a href="/en/guides/ncaa-eligibility-international-athletes/">eligibility guide</a>.</p>
+<h2>4. Positions and what coaches look for</h2>
+<p>Setter, outside hitter, middle blocker, opposite and libero. Coaches look at height, jump, technique, game reading and competitive level. If you play in top leagues or national teams in your country, put it on your profile.</p>
+<h2>5. The video</h2>
+<p>Real matches and full rallies with your position identified: serving, passing, defense, attack and, if you are a setter, your setting. Follow the <a href="/en/guides/highlight-video-college-recruiting/">video guide</a>.</p>
+<h2>6. Email the coaches</h2>
+<p>Send a short email in English with your details and video link, and follow up after 10 to 14 days. Follow the <a href="/en/guides/how-to-email-a-college-coach/">email guide</a>. NCAA contact rules limit when a coach may write to you first, but you can show your interest whenever you like.</p>
+<p>Always confirm current rules on the official NCAA and NAIA websites: they change often.</p>""",
+ faq=[["Are there men's volleyball scholarships in the U.S.?","Yes, in Division I and Division II; Division III gives no athletic scholarships. They are split in portions among several players."],
+  ["How many scholarships does a men's volleyball team have?","In Division II the maximum is 4.5 equivalencies per team. In Division I, since December 2025, there is an 18-player roster limit instead of a scholarship cap."],
+  ["Are there fewer men's volleyball programs than women's?","Yes, far fewer. That is why it makes sense to look at several divisions and write to several programs."],
+  ["Can international players take part?","Yes. Universities recruit international players, subject to NCAA rules and each school's admissions."]])
+
+add(slug="basketball-scholarship-international-players", es="beca-basquet-estados-unidos-latinoamericanos",
+ title="Basketball Scholarships in the U.S. for International Players: Step by Step",
+ h1="Basketball scholarships in the U.S. for international players: step by step",
+ desc="How to get a basketball scholarship at a U.S. college: divisions and scholarships, eligibility, the video and how to contact coaches.",
+ lead="<b>To get a basketball scholarship in the U.S. you need to choose the right level, sort out eligibility, build a video that shows game reading and email the coaches yourself.</b> College basketball has thousands of programs, and choosing where to aim is half the work.",
+ body="""<h2>1. Choose your level</h2>
+<p>There are programs in the NCAA (D1, D2 and D3), the NAIA and junior colleges. Many international players start at a junior college or in the NAIA, adapt to the game and the language, and then move to a four-year university. Smartrecruit lists more than 1,700 men's basketball programs.</p>
+<h2>2. Understand how scholarships work</h2>
+<p>In Division II the limit is 10 equivalencies per team, in both men's and women's basketball, which the coach splits into portions. Division III has no athletic scholarships. In Division I, since 2025-26 and the House v. NCAA settlement, the scholarship cap was replaced by a roster limit of 15 players and each university decides how much to offer. More in <a href="/en/guides/athletic-scholarship-coverage-international/">how much a scholarship covers</a>.</p>
+<h2>3. Sort out your eligibility</h2>
+<p>The NCAA and the NAIA have different eligibility centers. If you played for a club with a professional team or were paid anything, read the amateurism section of the <a href="/en/guides/ncaa-eligibility-international-athletes/">eligibility guide</a> carefully.</p>
+<h2>4. Video: more than points</h2>
+<p>Coaches want to see game reading, shooting, defense and transition. Include your height and wingspan on the opening title card. Follow the <a href="/en/guides/highlight-video-college-recruiting/">video guide</a>.</p>
+<h2>5. Contact the coaches</h2>
+<p>Smartrecruit has official emails for more than 500 basketball programs. Write short, personalized emails in English and follow up after 10 to 14 days. Follow the <a href="/en/guides/how-to-email-a-college-coach/">email guide</a>.</p>
+<p>Always confirm current rules on the official NCAA and NAIA websites: they change often.</p>""",
+ faq=[["Are there basketball scholarships for international players?","Yes. Universities recruit international players, subject to each governing body's rules and each university's admissions."],
+  ["How many scholarships does a basketball team have?","In Division II the maximum is 10 equivalencies per team; Division III has no athletic scholarships; Division I has had a 15-player roster limit instead of a scholarship cap since 2025-26."],
+  ["Is it a good idea to start at a junior college?","For many international players, yes: it lets you adapt to the game and the language before moving to a four-year university."],
+  ["What measurements should I put in the video?","Your height and wingspan on the opening title card, and your position and number identified on each play."]])
+
+add(slug="ncsa-vs-smartrecruit", es="ncsa-vs-smartrecruit-comparativa",
+ title="NCSA vs Smartrecruit: Comparison for International Athletes",
+ h1="NCSA vs Smartrecruit: a comparison for international athletes",
+ desc="What NCSA (ncsasports.org) offers, what Smartrecruit offers and how they differ for an international athlete pursuing a U.S. college scholarship.",
+ lead="<b>NCSA is a U.S. recruiting service with paid memberships; Smartrecruit is a free website for doing the process on your own, built for athletes from Latin America.</b> Each serves a different profile. Here are the differences, without exaggeration.",
+ body="""<h2>The short answer</h2>
+<p>If you want a service with guidance and are willing to pay for a membership, NCSA is a well-known option. If you prefer to do the process yourself, for free, with a focus on athletes from Latin America, Smartrecruit is built for that. Both are independent of the NCAA and of the universities.</p>
+<h2>Comparison</h2>
+<div class="wrap"><table><tr><th></th><th>Smartrecruit</th><th>NCSA</th></tr>
+<tr><td>Language</td><td>The app is in Spanish; the emails to coaches are generated in English. Guides are available in English and Spanish.</td><td>Site and content in English.</td></tr>
+<tr><td>Cost</td><td>Free with an account.</td><td>Offers paid memberships. Check its site for the price and what it includes.</td></tr>
+<tr><td>Focus</td><td>Athletes from Argentina and Latin America: international eligibility, GPA conversion and emails in English.</td><td>A general recruiting service with guides by sport.</td></tr>
+<tr><td>Coach contacts</td><td>Official emails with the source of each one.</td><td>Ask exactly what contact access each plan includes.</td></tr>
+<tr><td>Who writes to coaches</td><td>You, with an email built from your data.</td><td>Check how it works on the plan you choose.</td></tr>
+<tr><td>Personal guidance</td><td>No: it is a tool with guides, no advisor.</td><td>Ask what advisory support each plan includes.</td></tr></table></div>
+<h2>When each makes sense</h2>
+<p><b>Smartrecruit</b> if you want to save money, understand each step and stay in control, and if you are comfortable with a Spanish-language app. <b>A paid service like NCSA</b> if you want to delegate part of the work and value the guidance. In any case, no service can guarantee a scholarship.</p>
+<h2>Before paying for any service</h2>
+<p>Ask in writing what the price includes, how long the contract lasts, what happens if you receive no offers and how to cancel. More questions in the <a href="/en/guides/recruiting-agency-vs-do-it-yourself/">agency comparison</a>.</p>""",
+ faq=[["Is NCSA free?","Its site offers paid memberships. Prices and conditions change, so confirm them on its official page."],
+  ["Is Smartrecruit affiliated with NCSA?","No. Smartrecruit is independent and is not affiliated with NCSA, the NCAA, the NAIA or any university."],
+  ["Do I need to pay to contact a coach?","No. Coaches' emails are public and you can write to them directly on your own."],
+  ["Can I use Smartrecruit and another service at the same time?","Yes. Smartrecruit is free and has no exclusivity."]])
+
 json.dump(P,open("/home/claude/smartrecruit/scripts/seo_pages_en.json","w",encoding="utf-8"),ensure_ascii=False,indent=1)
 print(len(P))
