@@ -64,10 +64,16 @@ for p in PAGES:
     open(f"{d}/index.html", "w", encoding="utf-8").write(page(p))
 # guías/index: agregar las nuevas
 idx_p = f"{ROOT}/public/guias/index.html"; idx = open(idx_p, encoding="utf-8").read()
+main_list = re.search(r'(<p class="lead">.*?<ul>)(.*?)(</ul>)', idx, re.S)
+other_list = re.search(r'(<div class="next"><b>Otras guías</b><ul>)(.*?)(</ul>)', idx, re.S)
 for p in PAGES:
-    if f'/guias/{p["slug"]}/' in idx: continue
-    idx = idx.replace("</ul>\n<div class=\"next\">" if False else '</ul><div class="next">', f'<li><a href="/guias/{p["slug"]}/">{esc(p["h1"])}</a> — {esc(p["desc"])}</li></ul><div class="next">', 1)
-    idx = re.sub(r'(<div class="next"><b>Otras guías</b><ul>.*?)(</ul></div>)', lambda m: m.group(1) + f'<li><a href="/guias/{p["slug"]}/">{esc(p["h1"])}</a></li>' + m.group(2), idx, count=1, flags=re.S)
+    href = f'href="/guias/{p["slug"]}/"'
+    idx_main = re.search(r'(<p class="lead">.*?<ul>)(.*?)(</ul>)', idx, re.S)
+    if href not in idx_main.group(2):
+        idx = idx[:idx_main.end(2)] + f'<li><a {href}>{esc(p["h1"])}</a> — {esc(p["desc"])}</li>' + idx[idx_main.end(2):]
+    idx_other = re.search(r'(<div class="next"><b>Otras guías</b><ul>)(.*?)(</ul>)', idx, re.S)
+    if href not in idx_other.group(2):
+        idx = idx[:idx_other.end(2)] + f'<li><a {href}>{esc(p["h1"])}</a></li>' + idx[idx_other.end(2):]
 open(idx_p, "w", encoding="utf-8").write(idx)
 # sitemap
 urls = ["/", "/guias/"] + [f"/guias/{s}/" for s, _ in EXISTING] + [f"/guias/{p['slug']}/" for p in PAGES]
