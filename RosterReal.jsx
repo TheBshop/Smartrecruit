@@ -10770,7 +10770,7 @@ const LEGAL_INFO = {
   providers: "Cloudflare (alojamiento del sitio y funciones de servidor), Supabase (base de datos de cuentas), PostHog (analítica de uso, solo si el usuario la acepta), Anthropic (redacción de borradores con inteligencia artificial) y Google (envío de correos, solo si el usuario conecta su cuenta) y Resend (envío de los recordatorios semanales por correo, solo si el usuario los activa)",
   updated: "24 de octubre de 2026",
 };
-const SHORT_DISCLAIMER = "Smartrecruit es una herramienta educativa que orienta el proceso de autorreclutamiento deportivo universitario en Estados Unidos. No es un agente ni un intermediario, no garantiza becas ni admisiones y no cobra por su uso. No está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.";
+const SHORT_DISCLAIMER = "Smartrecruit es una página para conseguir una beca deportiva en Estados Unidos por tu propia cuenta, de forma gratuita. No es un agente ni un intermediario, no garantiza becas ni admisiones y no cobra por su uso. No está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.";
 
 function LegalFooter({ setStage }) {
   return (

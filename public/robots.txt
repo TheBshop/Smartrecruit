@@ -1,5 +1,29 @@
 User-agent: *
 Allow: /
 Disallow: /baja
+Disallow: /priv/
+Disallow: /api/
+
+# Bots de buscadores y de IA: permitidos
+User-agent: Bingbot
+Allow: /
+User-agent: Googlebot
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
 
 Sitemap: https://smartrecruit.com.ar/sitemap.xml

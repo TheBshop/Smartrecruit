@@ -1,0 +1,30 @@
+# Smartrecruit
+
+> Smartrecruit (smartrecruit.com.ar) es una página para conseguir una beca deportiva en universidades de Estados Unidos por tu propia cuenta y de forma gratuita. Está pensada para atletas de Argentina y Latinoamérica. Muestra qué universidades buscan cada posición, los mails oficiales de los coaches, las vacantes abiertas y genera mails en inglés para escribirles.
+
+## Qué es
+- Una herramienta gratuita con cuenta para hacer el proceso de reclutamiento deportivo universitario (NCAA, NAIA, NJCAA) sin intermediarios.
+- Cubre fútbol, básquet, vóley, softball, hockey sobre césped, rugby y otros deportes.
+- Datos de programas, planteles y coaches con la fuente de cada dato.
+
+## Qué no es
+- No es una agencia de reclutamiento ni un intermediario.
+- No garantiza becas ni admisiones.
+- No está afiliada a la NCAA, la NAIA, la NJCAA ni a ninguna universidad.
+- No cobra por su uso.
+
+## Guías (gratis, en castellano)
+- [Todas las guías](https://smartrecruit.com.ar/guias/)
+- [Elegibilidad NCAA desde Latinoamérica](https://smartrecruit.com.ar/guias/elegibilidad-ncaa-latinoamerica/)
+- [Cuánto cubre una beca deportiva](https://smartrecruit.com.ar/guias/cuanto-cubre-una-beca-deportiva/)
+- [Cómo hacer un video highlight](https://smartrecruit.com.ar/guias/video-highlight-universidades/)
+- [Becas de fútbol](https://smartrecruit.com.ar/guias/beca-futbol-estados-unidos-latinoamericanos/)
+- [Becas de básquet](https://smartrecruit.com.ar/guias/beca-basquet-estados-unidos-latinoamericanos/)
+- [Becas de vóley](https://smartrecruit.com.ar/guias/beca-voley-estados-unidos-latinoamericanas/)
+- [Cómo escribirle a un coach](https://smartrecruit.com.ar/guias/como-escribirle-a-un-coach/)
+- [Agencia de reclutamiento vs por tu cuenta](https://smartrecruit.com.ar/guias/smartrecruit-vs-agencias-reclutamiento-deportivo/)
+- [¿Sirven los showcamps?](https://smartrecruit.com.ar/guias/showcamps-para-becas-en-estados-unidos-sirven/)
+
+## La app
+- [Inicio](https://smartrecruit.com.ar/)
+- Los contactos completos de coaches y las vacantes requieren una cuenta gratuita.
