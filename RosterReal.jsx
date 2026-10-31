@@ -4632,7 +4632,7 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
 
       {partialRosters.map((r) => (
         <div className="rm-sp-section" key={r.sport}>
-          <h3 className="rm-condensed" style={{ fontSize: 17 }}>{r.sport === "Soccer" ? "Fútbol masculino" : r.sport === "Volleyball" ? "Vóley femenino" : r.sport === "Basketball" ? "Básquet femenino" : r.sport} · jugadores y estadísticas {r.statsSeason}</h3>
+          <h3 className="rm-condensed" style={{ fontSize: 17 }}>{r.sport === "Soccer" ? (r.gender === "F" ? "Fútbol femenino" : "Fútbol masculino") : r.sport === "Volleyball" ? (r.gender === "M" ? "Vóley masculino" : "Vóley femenino") : r.sport === "Basketball" ? (r.gender === "M" ? "Básquet masculino" : "Básquet femenino") : r.sport} · jugadores y estadísticas {r.statsSeason}</h3>
           <p className="rm-exam-note" style={{ marginTop: 0 }}>{r.roster.length} jugadores con estadísticas.{r.positionsKnown ? ` Solo figuran las jugadoras con 20 sets o más; la fuente no trae el año de clase ni el país de origen: por eso este programa entra al ranking por el nivel de tu misma posición, sin proyección de vacante ni afinidad nacional.${r.teamStats ? ` Equipo: ${r.teamStats.record} en partidos, ${r.teamStats.sets} en sets, % de ataque ${r.teamStats.hit}.` : ""}` : ` Falta el año de clase${r.sport === "Basketball" ? "" : ", la posición"} y la ciudad de origen: por eso este programa entra al ranking solo por el nivel de sus 8 máximos productores, sin proyección de vacante ni afinidad nacional.`}</p>
           <div className="rm-exam-tablewrap">
             {r.sport === "Basketball" ? (
