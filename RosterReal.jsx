@@ -11630,6 +11630,15 @@ function __deriveAll() {
   });
   CAREER_CANDIDATES = Array.from(new Set([...Object.keys(CDS_DATA), ...Object.keys(MAJOR_DATA_BY_SCHOOL), ...EADA_DATA.filter((e) => e.car).map((e) => EADA_DISPLAY_NAME.get(e.u) || e.n)]));
 }
+// Listado de carreras (NCSA): carga diferida, no bloquea el arranque. Se usa en la ficha y en el mail de una universidad puntual.
+function __loadNcsaMajors() {
+  try {
+    const f = typeof DATA_MANIFEST !== "undefined" ? DATA_MANIFEST.NCSA_MAJORS : null;
+    if (!f) return;
+    const go = () => fetch("/data/" + f).then((r) => (r.ok ? r.json() : null)).then((m) => { if (m) Object.keys(m).forEach((k) => { if (SCHOOL_PROFILES_NCSA[k]) SCHOOL_PROFILES_NCSA[k].majors = m[k]; }); }).catch(() => {});
+    if (typeof requestIdleCallback === "function") requestIdleCallback(go, { timeout: 4000 }); else setTimeout(go, 1500);
+  } catch (e) {}
+}
 let __dataPromise = null;
 export function loadData() {
   if (!__dataPromise) {
@@ -11641,7 +11650,7 @@ export function loadData() {
     __dataPromise = tokenP.then((tok) => Promise.all(names.map((n) => (tok && priv[n]
       ? getJson("/priv/" + priv[n], { Authorization: "Bearer " + tok }).catch(() => getJson("/data/" + DATA_MANIFEST[n]))
       : getJson("/data/" + DATA_MANIFEST[n])))))
-      .then((vals) => { const d = {}; names.forEach((n, i) => { d[n] = vals[i]; }); __restoreNaN(d); __assignData(d); __deriveAll(); })
+      .then((vals) => { const d = {}; names.forEach((n, i) => { d[n] = vals[i]; }); __restoreNaN(d); __assignData(d); __deriveAll(); __loadNcsaMajors(); })
       .catch((e) => { __dataPromise = null; throw e; });
   }
   return __dataPromise;

@@ -58,6 +58,15 @@ for (const f of fs.readdirSync("datos").filter((x) => x.endsWith(".json") && !x.
     if (name === "FIELDLEVEL_NEEDS") totals.needs = data.length;
     if (name === "OFFERS_BOARD") totals.offers = data.length;
     if (name === "COACH_CONTACTS_BY_PROGRAM") totals.contacts = Object.values(data).filter((v) => v && v.email).length;
+  } else if (name === "SCHOOL_PROFILES_NCSA") {
+    // El listado de carreras (NCSA) pesa ~70% del archivo y solo se usa en la ficha y en el mail de una universidad puntual:
+    // se separa en NCSA_MAJORS (carga diferida, después de que la app ya está lista).
+    const all = JSON.parse(buf.toString("utf8")), slim = {}, majors = {};
+    for (const [k, v] of Object.entries(all)) { const { majors: m, ...rest } = v; slim[k] = rest; if (m) majors[k] = m; }
+    fs.writeFileSync(`dist/data/${out}`, JSON.stringify(slim));
+    const mb = Buffer.from(JSON.stringify(majors)), mh = crypto.createHash("sha1").update(mb).digest("hex").slice(0, 10);
+    fs.writeFileSync(`dist/data/NCSA_MAJORS.${mh}.json`, mb);
+    manifest.NCSA_MAJORS = `NCSA_MAJORS.${mh}.json`;
   } else fs.writeFileSync(`dist/data/${out}`, buf);
   manifest[name] = out;
 }
