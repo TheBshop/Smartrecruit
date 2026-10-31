@@ -85,4 +85,5 @@ for (const f of ["dist/index.html", "dist/privacidad/index.html", "dist/terminos
   fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace('<script defer src="/assets/analytics.js', links + '\n    <script defer src="/assets/analytics.js'));
   console.log("precarga:", wanted.filter((n) => manifest[n] && !GATED.includes(n)).length);
 }
+await import("./scripts/gen_schools.mjs");
 console.log("ok", Object.keys(manifest).length, "archivos de datos");
