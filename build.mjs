@@ -44,7 +44,7 @@ function previewOf(name, data) {
   }
   return out;
 }
-let NCSA_DONE = false;
+let NCSA_DONE = false, EADA_DONE = false;
 for (const f of fs.readdirSync("datos").filter((x) => x.endsWith(".json") && !x.startsWith("_"))) {
   const name = f.replace(/\.json$/, "");
   const buf = fs.readFileSync(`datos/${f}`);
@@ -71,8 +71,19 @@ for (const f of fs.readdirSync("datos").filter((x) => x.endsWith(".json") && !x.
     const mb = Buffer.from(JSON.stringify(majors)), mh = crypto.createHash("sha1").update(mb).digest("hex").slice(0, 10);
     fs.writeFileSync(`dist/data/NCSA_MAJORS.${mh}.json`, mb);
     manifest.NCSA_MAJORS = `NCSA_MAJORS.${mh}.json`;
+  } else if (name === "EADA_DATA") {
+    // Los títulos por carrera (car) pesan más de la mitad del archivo y solo se usan al buscar/confirmar una carrera: van aparte (EADA_CAR), de carga diferida.
+    const all = JSON.parse(buf.toString("utf8")), car = {};
+    const slim = all.map((e) => { const { car: c, ...rest } = e; if (c) car[e.u] = c; return rest; });
+    const sb = Buffer.from(JSON.stringify(slim)), sh = crypto.createHash("sha1").update(sb).digest("hex").slice(0, 10);
+    fs.writeFileSync(`dist/data/${name}.${sh}.json`, sb);
+    const cb = Buffer.from(JSON.stringify(car)), ch = crypto.createHash("sha1").update(cb).digest("hex").slice(0, 10);
+    fs.writeFileSync(`dist/data/EADA_CAR.${ch}.json`, cb);
+    manifest.EADA_CAR = `EADA_CAR.${ch}.json`;
+    manifest[name] = `${name}.${sh}.json`;
+    EADA_DONE = true;
   } else fs.writeFileSync(`dist/data/${out}`, buf);
-  if (!NCSA_DONE || name !== "SCHOOL_PROFILES_NCSA") manifest[name] = out;
+  if ((!NCSA_DONE || name !== "SCHOOL_PROFILES_NCSA") && (!EADA_DONE || name !== "EADA_DATA")) manifest[name] = out;
 }
 for (const g of GATED) if (!manifestPriv[g]) throw new Error("falta dataset gated " + g);
 await build({

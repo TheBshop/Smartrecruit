@@ -11311,8 +11311,6 @@ function __assignData(d) {
   SOCCER_D2F_BIO_2026 = d.SOCCER_D2F_BIO_2026;
   VB_D1_2026 = d.VB_D1_2026;
   VB_D2_2026 = d.VB_D2_2026;
-  MAJOR_DATA_BY_SCHOOL = d.MAJOR_DATA_BY_SCHOOL;
-  FOS_BY_ID = d.FOS_BY_ID;
   FOS_NAME_IDS = d.FOS_NAME_IDS;
   EADA_DATA = d.EADA_DATA;
   EADA_SITE_NAMES = d.EADA_SITE_NAMES;
@@ -11336,6 +11334,7 @@ function __assignData(d) {
 // JSON no tiene NaN: en estos datos "sin dato" se guarda como null y acá vuelve a ser NaN (así los consumidores no cambian).
 function __restoreNaN(d) {
   for (const n of ["MAJOR_DATA_BY_SCHOOL","FOS_BY_ID"]) {
+    if (!d[n]) continue;
     for (const rows of Object.values(d[n])) for (const r of rows) for (let i = 1; i < r.length; i++) if (r[i] === null) r[i] = NaN;
   }
 }
@@ -11662,10 +11661,28 @@ function __loadNcsaMajors() {
     if (typeof requestIdleCallback === "function") requestIdleCallback(go, { timeout: 4000 }); else setTimeout(go, 1500);
   } catch (e) {}
 }
+// Datos de carreras (ingresos por carrera y títulos de IPEDS, ~480 KB comprimidos): no bloquean el arranque.
+// Se bajan al terminar de cargar la app, o antes si hacen falta (perfil con carrera, ficha, buscador de carreras, comparador).
+let __careerPromise = null, __careerDone = false;
+function ensureCareer() {
+  if (!__careerPromise) {
+    const get = (n) => fetch("/data/" + DATA_MANIFEST[n]).then((r) => { if (!r.ok) throw new Error(n + " " + r.status); return r.json(); });
+    __careerPromise = Promise.all([get("MAJOR_DATA_BY_SCHOOL"), get("FOS_BY_ID"), get("EADA_CAR")]).then(([m, f, car]) => {
+      const d = { MAJOR_DATA_BY_SCHOOL: m, FOS_BY_ID: f }; __restoreNaN(d);
+      MAJOR_DATA_BY_SCHOOL = m; FOS_BY_ID = f;
+      Object.entries(FOS_NAME_IDS).forEach(([name, u]) => { if (!MAJOR_DATA_BY_SCHOOL[name] && FOS_BY_ID[u]) MAJOR_DATA_BY_SCHOOL[name] = FOS_BY_ID[u]; });
+      EADA_DATA.forEach((e) => { if (car[e.u]) e.car = car[e.u]; });
+      EADA_CAREERS_CACHE.clear();
+      CAREER_CANDIDATES = Array.from(new Set([...Object.keys(CDS_DATA), ...Object.keys(MAJOR_DATA_BY_SCHOOL), ...EADA_DATA.filter((e) => e.car).map((e) => EADA_DISPLAY_NAME.get(e.u) || e.n)]));
+      __careerDone = true;
+    }).catch((e) => { __careerPromise = null; throw e; });
+  }
+  return __careerPromise;
+}
 let __dataPromise = null;
 export function loadData() {
   if (!__dataPromise) {
-    const names = ["STAFF_BY_PROGRAM","BBALL_D2_COACHES_2026","RUGBY_WOMEN_PROGRAMS","RUGBY_MEN_COACHES","VOLLEYBALL_MEN_COACHES","BASKETBALL_WOMEN_COACHES","FIELDLEVEL_NEEDS","FIELD_HOCKEY_HEAD_COACHES","ROSTER_COACH_CONTACTS","BIGTEN_MSOC_STATS_2025","BBALL_D2_CONFERENCES","PSAC_FH_STATS","HOCKEY_D2_STATS_2026","HOCKEY_D2_BIO_2026","CDS_DATA","ESSLO_DATA","CIP_NAMES","FOS_ASSOCIATE_SCHOOLS","SCORECARD_NAME_IDS","BBALL_D2_COACHES_FCP","BBALL_D2_COACHES_WEB","OFFERS_BOARD","SCHOOL_PROFILES_NCSA","RECRUITING_NEEDS_GENERAL","PROGRAMS_ALL_SPORTS","BBALL_ROSTERS","BBALL_D2_ROSTERS","WBB_ROSTERS_2026_27","WBB_ESPN_STATS_2025_26","HOCKEY_PARTIAL_STATS_2026","HOCKEY_BIO_2026","SOCCER_PARTIAL_STATS_2026","SOCCER_BIO_2026","SOCCER_D2M_STATS_2026","SOCCER_D2M_BIO_2026","SOCCER_D2F_STATS_2026","SOCCER_D2F_STATS_2025","SOCCER_D2F_BIO_2026","VB_D1_2026","VB_D2_2026","MAJOR_DATA_BY_SCHOOL","FOS_BY_ID","FOS_NAME_IDS","EADA_DATA","EADA_SITE_NAMES","SCORECARD_BY_ID","COACH_CONTACTS_BY_PROGRAM"];
+    const names = ["STAFF_BY_PROGRAM","BBALL_D2_COACHES_2026","RUGBY_WOMEN_PROGRAMS","RUGBY_MEN_COACHES","VOLLEYBALL_MEN_COACHES","BASKETBALL_WOMEN_COACHES","FIELDLEVEL_NEEDS","FIELD_HOCKEY_HEAD_COACHES","ROSTER_COACH_CONTACTS","BIGTEN_MSOC_STATS_2025","BBALL_D2_CONFERENCES","PSAC_FH_STATS","HOCKEY_D2_STATS_2026","HOCKEY_D2_BIO_2026","CDS_DATA","ESSLO_DATA","CIP_NAMES","FOS_ASSOCIATE_SCHOOLS","SCORECARD_NAME_IDS","BBALL_D2_COACHES_FCP","BBALL_D2_COACHES_WEB","OFFERS_BOARD","SCHOOL_PROFILES_NCSA","RECRUITING_NEEDS_GENERAL","PROGRAMS_ALL_SPORTS","BBALL_ROSTERS","BBALL_D2_ROSTERS","WBB_ROSTERS_2026_27","WBB_ESPN_STATS_2025_26","HOCKEY_PARTIAL_STATS_2026","HOCKEY_BIO_2026","SOCCER_PARTIAL_STATS_2026","SOCCER_BIO_2026","SOCCER_D2M_STATS_2026","SOCCER_D2M_BIO_2026","SOCCER_D2F_STATS_2026","SOCCER_D2F_STATS_2025","SOCCER_D2F_BIO_2026","VB_D1_2026","VB_D2_2026","FOS_NAME_IDS","EADA_DATA","EADA_SITE_NAMES","SCORECARD_BY_ID","COACH_CONTACTS_BY_PROGRAM"];
     const priv = typeof DATA_MANIFEST_PRIV !== "undefined" ? DATA_MANIFEST_PRIV : {};
     const getJson = (url, headers) => fetch(url, headers ? { headers } : undefined).then((r) => { if (!r.ok) throw new Error(url + " " + r.status); return r.json(); });
     // Con sesión, los datos con mails de coaches y vacantes se piden completos a /priv (el servidor valida el token); sin sesión, o si falla, queda la muestra pública.
@@ -11673,7 +11690,12 @@ export function loadData() {
     __dataPromise = tokenP.then((tok) => Promise.all(names.map((n) => (tok && priv[n]
       ? getJson("/priv/" + priv[n], { Authorization: "Bearer " + tok }).catch(() => getJson("/data/" + DATA_MANIFEST[n]))
       : getJson("/data/" + DATA_MANIFEST[n])))))
-      .then((vals) => { const d = {}; names.forEach((n, i) => { d[n] = vals[i]; }); __restoreNaN(d); __assignData(d); __deriveAll(); __loadNcsaMajors(); })
+      .then((vals) => { const d = {}; names.forEach((n, i) => { d[n] = vals[i]; }); __restoreNaN(d); __assignData(d); __deriveAll(); __loadNcsaMajors();
+        let need = false; try { const sp = readStoredProfile(); need = !!(sp && sp.major); } catch (e) {}
+        if (need) return ensureCareer();
+        const go = () => ensureCareer().catch(() => {});
+        if (typeof requestIdleCallback === "function") requestIdleCallback(go, { timeout: 6000 }); else setTimeout(go, 3000);
+      })
       .catch((e) => { __dataPromise = null; throw e; });
   }
   return __dataPromise;
@@ -11719,6 +11741,11 @@ function AppInner() {
     setProfile(normalized);
     writeJSON("rr_profile", normalized);
   };
+  // Los datos de carreras se bajan aparte: si la pantalla los necesita y todavía no llegaron, se espera acá en vez de mostrar datos incompletos.
+  const needsCareer = !!(profile && profile.major) || stage === "school" || stage === "careers" || stage === "mylist";
+  const [, setCareerTick] = useState(0);
+  useEffect(() => { if (needsCareer && !__careerDone) ensureCareer().then(() => setCareerTick((t) => t + 1)).catch(() => {}); }, [needsCareer]);
+  const careerWait = needsCareer && !__careerDone;
   usePlanReminder();
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [outreachPick, setOutreachPick] = useState(null);
@@ -11923,7 +11950,8 @@ function AppInner() {
           </div>
         </div>
       )}
-      {stage === "landing" && (
+      {careerWait && <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}><p className="rm-hint">Cargando datos de carreras…</p></div>}
+      {!careerWait && stage === "landing" && (
         <>
           {profile ? (
             <DailyPanel profile={profile} setStage={(st) => { setStage(st); window.scrollTo(0, 0); }} saveProfile={saveProfile} dataAsOf={dataAsOf} />
@@ -11944,35 +11972,35 @@ function AppInner() {
         </>
       )}
 
-      {stage === "roadmap" && <RoadmapPage profile={profile} setStage={setStage} />}
-      {stage === "camino" && <CaminoPage profile={profile} setStage={setStage} />}
-      {stage === "glosario" && <GlossaryPage setStage={setStage} />}
-      {stage === "familia" && <FamilyPage profile={profile} setStage={setStage} />}
-      {stage === "chequeo" && <AccountGate motivo="chequeo" title="Tu chequeo trimestral, con tu cuenta" text="Cada tres meses revisás tu avance y actualizás tus números para que tus mails usen datos al día." bullets={["Seguimiento de tu progreso trimestre a trimestre","Mails que se actualizan con tus últimos resultados","Todo guardado en tu cuenta"]}><QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /></AccountGate>}
-      {stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
-      {stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
-      {stage === "outreach" && <AccountGate motivo="mails" title="Tus mails a coaches, con tu cuenta" text="Acá se generan los mails personalizados con datos reales de cada programa y se arma tu historial." bullets={["Mails en inglés y español con el gancho justo para cada coach","Contactos de coaches de cada universidad","Todo guardado y sincronizado entre tu compu y tu celular"]}><MailPage profile={profile} setStage={setStage} initialPick={outreachPick} /></AccountGate>}
-      {stage === "mylist" && <AccountGate motivo="lista" title="Tu lista de universidades, guardada en tu cuenta" text="Armá tu lista corta, compará y seguí el estado de cada postulación." bullets={["Tu lista no se pierde si cambiás de dispositivo","Tablero de seguimiento de cada coach","Recordatorio semanal de qué hacer"]}><MyListPage setStage={setStage} onOpenSchool={openSchool} /></AccountGate>}
-      {stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
-      {stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
-      {stage === "needs" && <RecruitingNeedsPage onOpenSchool={openSchool} />}
-      {stage === "eligibility" && <EligibilityPage />}
-      {stage === "video" && <VideoGuidePage />}
-      {stage === "money" && <MoneyGuidePage />}
-      {stage === "plan" && <AccountGate motivo="plan" title="Tu plan de hoy, con tu cuenta" text="Cada día te decimos qué paso sigue en tu camino hacia la beca, según tu año y tu avance." bullets={["Tareas diarias y semanales para tu perfil","Racha y seguimiento de lo que hiciste","Recordatorio por mail para que no se te pase"]}><PlanPage profile={profile} setStage={setStage} /></AccountGate>}
-      {stage === "baja" && <BajaPage setStage={setStage} />}
-      {stage === "calendar" && <AccountGate motivo="calendario" title="Tu calendario de recruiting, con tu cuenta" text="Fechas y plazos clave para tu año de ingreso, organizados para vos." bullets={["Períodos de contacto permitidos y fechas límite","Tus propios recordatorios","Sincronizado en todos tus dispositivos"]}><CalendarPage /></AccountGate>}
-      {stage === "history" && <AccountGate motivo="envios" title="Tus envíos, guardados en tu cuenta" text="Registrá a qué coaches les escribiste, cuándo, con qué mail y si respondieron." bullets={["Historial y tablero por etapa","Alertas de a quién hacerle seguimiento","Disponible desde cualquier dispositivo"]}><OutreachHistoryPage profile={profile} setStage={setStage} /></AccountGate>}
-      {stage === "exams" && <ExamsPage setStage={setStage} />}
-      {stage === "gpa" && <GpaCalculatorPage />}
-      {stage === "careers" && <CareerFinderPage profile={profile} onOpenSchool={openSchool} />}
-      {stage === "resources" && <ResourcesPage />}
-      {stage === "form" && <ProfileForm initial={profile} onSubmit={(p) => { saveProfile(p); setStage("results"); window.scrollTo(0, 0); }} />}
-      {stage === "profile" && (profile ? <ProfilePage profile={profile} setStage={setStage} onOpenSchool={openSchool} /> : <ProfileForm onSubmit={(p) => { saveProfile(p); setStage("profile"); window.scrollTo(0, 0); }} />)}
-      {stage === "results" && profile && <Results profile={profile} onBack={() => setStage("profile")} onOpenSchool={openSchool} />}
-      {stage === "terms" && <TermsPage />}
-      {stage === "privacy" && <PrivacyPage />}
-      {stage === "about" && <AboutPage setStage={setStage} />}
+      {!careerWait && stage === "roadmap" && <RoadmapPage profile={profile} setStage={setStage} />}
+      {!careerWait && stage === "camino" && <CaminoPage profile={profile} setStage={setStage} />}
+      {!careerWait && stage === "glosario" && <GlossaryPage setStage={setStage} />}
+      {!careerWait && stage === "familia" && <FamilyPage profile={profile} setStage={setStage} />}
+      {!careerWait && stage === "chequeo" && <AccountGate motivo="chequeo" title="Tu chequeo trimestral, con tu cuenta" text="Cada tres meses revisás tu avance y actualizás tus números para que tus mails usen datos al día." bullets={["Seguimiento de tu progreso trimestre a trimestre","Mails que se actualizan con tus últimos resultados","Todo guardado en tu cuenta"]}><QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /></AccountGate>}
+      {!careerWait && stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
+      {!careerWait && stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
+      {!careerWait && stage === "outreach" && <AccountGate motivo="mails" title="Tus mails a coaches, con tu cuenta" text="Acá se generan los mails personalizados con datos reales de cada programa y se arma tu historial." bullets={["Mails en inglés y español con el gancho justo para cada coach","Contactos de coaches de cada universidad","Todo guardado y sincronizado entre tu compu y tu celular"]}><MailPage profile={profile} setStage={setStage} initialPick={outreachPick} /></AccountGate>}
+      {!careerWait && stage === "mylist" && <AccountGate motivo="lista" title="Tu lista de universidades, guardada en tu cuenta" text="Armá tu lista corta, compará y seguí el estado de cada postulación." bullets={["Tu lista no se pierde si cambiás de dispositivo","Tablero de seguimiento de cada coach","Recordatorio semanal de qué hacer"]}><MyListPage setStage={setStage} onOpenSchool={openSchool} /></AccountGate>}
+      {!careerWait && stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
+      {!careerWait && stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
+      {!careerWait && stage === "needs" && <RecruitingNeedsPage onOpenSchool={openSchool} />}
+      {!careerWait && stage === "eligibility" && <EligibilityPage />}
+      {!careerWait && stage === "video" && <VideoGuidePage />}
+      {!careerWait && stage === "money" && <MoneyGuidePage />}
+      {!careerWait && stage === "plan" && <AccountGate motivo="plan" title="Tu plan de hoy, con tu cuenta" text="Cada día te decimos qué paso sigue en tu camino hacia la beca, según tu año y tu avance." bullets={["Tareas diarias y semanales para tu perfil","Racha y seguimiento de lo que hiciste","Recordatorio por mail para que no se te pase"]}><PlanPage profile={profile} setStage={setStage} /></AccountGate>}
+      {!careerWait && stage === "baja" && <BajaPage setStage={setStage} />}
+      {!careerWait && stage === "calendar" && <AccountGate motivo="calendario" title="Tu calendario de recruiting, con tu cuenta" text="Fechas y plazos clave para tu año de ingreso, organizados para vos." bullets={["Períodos de contacto permitidos y fechas límite","Tus propios recordatorios","Sincronizado en todos tus dispositivos"]}><CalendarPage /></AccountGate>}
+      {!careerWait && stage === "history" && <AccountGate motivo="envios" title="Tus envíos, guardados en tu cuenta" text="Registrá a qué coaches les escribiste, cuándo, con qué mail y si respondieron." bullets={["Historial y tablero por etapa","Alertas de a quién hacerle seguimiento","Disponible desde cualquier dispositivo"]}><OutreachHistoryPage profile={profile} setStage={setStage} /></AccountGate>}
+      {!careerWait && stage === "exams" && <ExamsPage setStage={setStage} />}
+      {!careerWait && stage === "gpa" && <GpaCalculatorPage />}
+      {!careerWait && stage === "careers" && <CareerFinderPage profile={profile} onOpenSchool={openSchool} />}
+      {!careerWait && stage === "resources" && <ResourcesPage />}
+      {!careerWait && stage === "form" && <ProfileForm initial={profile} onSubmit={(p) => { saveProfile(p); setStage("results"); window.scrollTo(0, 0); }} />}
+      {!careerWait && stage === "profile" && (profile ? <ProfilePage profile={profile} setStage={setStage} onOpenSchool={openSchool} /> : <ProfileForm onSubmit={(p) => { saveProfile(p); setStage("profile"); window.scrollTo(0, 0); }} />)}
+      {!careerWait && stage === "results" && profile && <Results profile={profile} onBack={() => setStage("profile")} onOpenSchool={openSchool} />}
+      {!careerWait && stage === "terms" && <TermsPage />}
+      {!careerWait && stage === "privacy" && <PrivacyPage />}
+      {!careerWait && stage === "about" && <AboutPage setStage={setStage} />}
       <LegalFooter setStage={setStage} />
       </React.Fragment>
       </div>
