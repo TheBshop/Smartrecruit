@@ -8813,6 +8813,40 @@ const EMAIL_REMINDERS_LIVE = true;
 // quien quiera borrar sus datos lo pide por mail (la Política de Privacidad lo explica).
 const ACCOUNT_DELETE_LIVE = false;
 // El sitio guarda un resumen corto (etapa, próxima acción, semana) para que el mail del domingo lo use.
+// Fechas próximas del deporte de la atleta para el mail semanal: períodos relevantes del calendario NCAA, primer contacto y amateurismo.
+// Se guardan con fecha absoluta (AAAA-MM-DD): la función de envío filtra las que caen en los próximos días.
+function upcomingDatesForDigest(profile, now = new Date()) {
+  const out = [];
+  try {
+    const today = isoDate(now.getFullYear(), now.getMonth(), now.getDate());
+    const horizon = new Date(now.getTime() + 75 * 86400000);
+    const hz = isoDate(horizon.getFullYear(), horizon.getMonth(), horizon.getDate());
+    const short = (iso) => { const d = new Date(iso + "T12:00:00"); return `${d.getDate()}/${d.getMonth() + 1}`; };
+    const cal = sportCalendarFor(profile.sport, profile.gender);
+    if (cal && Array.isArray(cal.events)) {
+      const NAME = { dead: "período muerto: sin contacto en persona (mails y llamadas siguen)", shutdown: "recruiting shutdown: nadie puede comunicarse", contact: "período de contacto: pueden verte en persona", quiet: "período silencioso" };
+      const groups = new Map();
+      cal.events.forEach((e) => {
+        if (!NAME[e.type] || e.start < today || e.start > hz) return;
+        const k = `${e.start}|${e.type}|${e.end}`;
+        if (!groups.has(k)) groups.set(k, { e, divs: [], end: e.end });
+        groups.get(k).divs.push(e.div);
+      });
+      groups.forEach(({ e, divs, end }) => out.push({ d: e.start, t: `NCAA ${divs.join(" y ")}: empieza un ${NAME[e.type]}${end && end !== e.start ? `, hasta el ${short(end)}` : ""}.` }));
+    }
+    ["NCAA D1", "NCAA D2"].forEach((div) => {
+      const c = contactStartFor(profile, div, now);
+      if (!c) return;
+      if (c.comm && !c.commOpen) { const iso = isoDate(c.comm.getFullYear(), c.comm.getMonth(), c.comm.getDate()); if (iso <= hz) out.push({ d: iso, t: `${div}: desde hoy los coaches pueden escribirte, llamarte y hacerte ofertas.` }); }
+      if (c.visits && !c.visitsOpen) { const iso = isoDate(c.visits.getFullYear(), c.visits.getMonth(), c.visits.getDate()); if (iso <= hz) out.push({ d: iso, t: `${div}: se habilitan las visitas y el contacto en persona.` }); }
+    });
+    if (profile.gradYear) {
+      const a = isoDate(getEntryYear(profile), 3, 1); // 1.º de abril anterior al ingreso: se puede pedir la certificación final de amateurismo
+      if (a >= today && a <= hz) out.push({ d: a, t: "NCAA D1/D2: ya podés pedir la certificación final de amateurismo en tu cuenta del Eligibility Center." });
+    }
+  } catch (err) { /* sin calendario para este deporte: no se agrega nada */ }
+  return out.sort((x, y) => x.d.localeCompare(y.d)).slice(0, 8);
+}
 function reminderDigest(profile, now = new Date()) {
   const state = readPlanState();
   const tasks = planTasksFor(profile, now);
@@ -8827,6 +8861,7 @@ function reminderDigest(profile, now = new Date()) {
     next: next ? { title: next.title, when: next.when, required: !!next.required } : null,
     week: planWeekLine(wk, true), reqOpen: tasks.filter((t) => t.required && !done.has(t.id)).length,
     coaches: (() => { try { return coachesForToday(Object.values(readOutreachLog() || {}), 3).map(({ e, step }) => ({ u: e.university, k: step.kind })); } catch (err) { return []; } })(),
+    dates: upcomingDatesForDigest(profile, now),
     quarterly: (() => { try { const q = quarterlyStatus(profile, now); return { due: q.due, days: q.days }; } catch (err) { return { due: false }; } })(),
     updated: now.toISOString(),
   };
