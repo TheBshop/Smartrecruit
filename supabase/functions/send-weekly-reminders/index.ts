@@ -51,7 +51,8 @@ Deno.serve(async (req) => {
     if (!consent.ok) { skip(consent.reason || "sin_consentimiento"); continue; }
     if (!r.email) { skip("sin_email"); continue; }
     const unsubUrl = `${siteUrl.replace(/\/+$/, "")}/baja?token=${r.unsub_token}`;
-    const mail = buildReminderEmail({ firstName: consent.firstName, digest: r.digest, unsubUrl, siteUrl, now });
+    const replyBase = `${siteUrl.replace(/\/+$/, "")}/respuesta?token=${r.unsub_token}`;
+    const mail = buildReminderEmail({ firstName: consent.firstName, digest: r.digest, unsubUrl, siteUrl, replyBase, now });
     if (dry) { result.sent++; continue; }
 
     // Se "reserva" el envío antes de mandar: si dos ejecuciones coinciden, solo una gana.

@@ -9009,6 +9009,56 @@ function BajaPage({ setStage }) {
     </div>
   );
 }
+// Página de respuesta: el link del mail trae /respuesta?token=...&u=Universidad; se elige el resultado y se confirma con un clic (los escáneres de links no registran nada).
+function RespuestaPage({ setStage }) {
+  const { token, uni } = (() => { try { const q = new URLSearchParams(window.location.search); return { token: q.get("token") || "", uni: (q.get("u") || "").slice(0, 80) }; } catch (e) { return { token: "", uni: "" }; } })();
+  const valid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token) && !!uni;
+  const [state, setState] = useState("idle"); // idle | busy | done | fail
+  const [chosen, setChosen] = useState("");
+  const send = async (st) => {
+    setChosen(st); setState("busy");
+    try {
+      const { data, error } = await supabase.rpc("mark_coach_reply", { p_token: token, p_university: uni, p_status: st });
+      setState(!error && data ? "done" : "fail");
+    } catch (e) { setState("fail"); }
+  };
+  const OPTS = [["respondio", "Me respondió"], ["visita", "Me invitó a una visita"], ["oferta", "Me hizo una oferta"], ["rechazo", "Me dijo que no"]];
+  return (
+    <div className="rm-wrap" style={{ paddingTop: 40, paddingBottom: 60 }}>
+      <h2 className="rm-condensed">¿Te respondió el coach?</h2>
+      {!valid && <p className="rm-hint">Este link no es válido. Podés marcar la respuesta desde "Mis envíos" en el sitio.</p>}
+      {valid && state !== "done" && (<>
+        <p className="rm-hint">Contanos qué pasó con <b>{uni}</b> y lo anotamos en tus envíos la próxima vez que entres.</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 320 }}>
+          {OPTS.map(([k, l]) => <button key={k} className="rm-btn" disabled={state === "busy"} onClick={() => send(k)}>{l}</button>)}
+        </div>
+      </>)}
+      {state === "busy" && <p className="rm-hint">Un momento…</p>}
+      {state === "done" && <p className="rm-hint"><b>Listo.</b> Lo anotamos ({(OPTS.find((o) => o[0] === chosen) || [0, ""])[1].toLowerCase()}). Se refleja en tus envíos cuando entres al sitio.</p>}
+      {state === "fail" && <p className="rm-hint">No pudimos anotarlo. Entrá a "Mis envíos" y marcalo desde ahí.</p>}
+      <div style={{ marginTop: 16 }}><button className="rm-btn-ghost" onClick={() => setStage("plan")}>Ir a mi plan</button></div>
+    </div>
+  );
+}
+// Al iniciar sesión se traen las respuestas marcadas desde el mail, se aplican al registro de envíos y se borran del servidor.
+async function applyMailedReplies() {
+  try {
+    if (!EMAIL_REMINDERS_LIVE) return;
+    const { data } = await supabase.auth.getSession();
+    const uid = data && data.session && data.session.user && data.session.user.id;
+    if (!uid) return;
+    const { data: rows, error } = await supabase.from("coach_reply_marks").select("id,university,status").eq("user_id", uid).order("created_at", { ascending: true }).limit(50);
+    if (error || !rows || !rows.length) return;
+    let log = readOutreachLog();
+    const done = [];
+    for (const r of rows) {
+      if (OUTREACH_REPLY_STATUSES.includes(r.status) && log[r.university]) log = withOutreachStatus(log, r.university, r.status);
+      done.push(r.id);
+    }
+    writeOutreachLog(log);
+    await supabase.from("coach_reply_marks").delete().in("id", done);
+  } catch (e) { /* sin red o sin tabla: se ignora */ }
+}
 function usePlanReminder() {
   useEffect(() => {
     const id = setInterval(() => {
@@ -9080,7 +9130,7 @@ function PlanPage({ profile, setStage }) {
   const wkMax = Math.max(1, wkNow.total, ...wkPast.map((w) => w.total));
   const monthDone = Object.entries(state.doneByDay || {}).filter(([k]) => k.slice(0, 7) === today.slice(0, 7)).reduce((n, [, ids]) => n + (ids || []).length, 0);
   const [copied, setCopied] = useState(false);
-  useEffect(() => { syncReminderDigest(profile); }, [profile]);
+  useEffect(() => { applyMailedReplies().then(() => syncReminderDigest(profile)); }, [profile]);
   const familySummary = () => {
     const open = tasks.filter((t) => !doneSet.has(t.id)).slice(0, 4).map((t) => `- ${t.title}`).join("\n");
     const txt = `Resumen de ${profile.name || "mi"} en Smartrecruit (${today}):\nEtapa: ${stage.label}${stage.monthsLeft > 0 ? ` · faltan unos ${stage.monthsLeft} meses para el ingreso` : ""}.\nPasos hechos este mes: ${monthDone}. Semanas seguidas: ${weekStreak}.\n${planWeekLine(wkNow, true)}\nLo que sigue:\n${open || "- Nada pendiente."}`;
@@ -10738,7 +10788,7 @@ function DailyPanel({ profile, setStage, saveProfile, dataAsOf }) {
             ? planAction(planAny)
             : { title: "Esta semana está al día", why: "Explorá escuelas nuevas o revisá tu hoja de ruta.", cta: "Ver escuelas", run: () => setStage("catalog") };
   const wkReview = planWeekReview(planState, log, checkins, new Date(), 0);
-  useEffect(() => { syncReminderDigest(profile); }, [profile]);
+  useEffect(() => { applyMailedReplies().then(() => syncReminderDigest(profile)); }, [profile]);
   useEffect(() => { ensureQuarterlySince(); }, []);
   const qStatus = quarterlyStatus(profile);
   const setStatus = (university, status) => {
@@ -11384,7 +11434,7 @@ function AccountMenu({ session }) {
 // Secciones con dirección propia (/eligibility, /catalog...): al recargar o compartir el link se vuelve a la misma sección.
 // false: los planteles y estadísticas de jugadoras se usan solo para el matching, no se muestran.
 const SHOW_ROSTER_TABLES = false;
-const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja", "chequeo", "familia"];
+const PATH_STAGES = ["start", "camino", "glosario", "about", "careers", "catalog", "eligibility", "exams", "form", "gpa", "mylist", "needs", "outreach", "plan", "profile", "resources", "results", "baja", "respuesta", "chequeo", "familia"];
 const stageFromPath = () => {
   try {
     const p = window.location.pathname.replace(/^\/+|\/+$/g, "");
@@ -12164,6 +12214,7 @@ function AppInner() {
       {!careerWait && stage === "money" && <MoneyGuidePage />}
       {!careerWait && stage === "plan" && <AccountGate motivo="plan" title="Tu plan de hoy, con tu cuenta" text="Cada día te decimos qué paso sigue en tu camino hacia la beca, según tu año y tu avance." bullets={["Tareas diarias y semanales para tu perfil","Racha y seguimiento de lo que hiciste","Recordatorio por mail para que no se te pase"]}><PlanPage profile={profile} setStage={setStage} /></AccountGate>}
       {!careerWait && stage === "baja" && <BajaPage setStage={setStage} />}
+      {!careerWait && stage === "respuesta" && <RespuestaPage setStage={setStage} />}
       {!careerWait && stage === "calendar" && <AccountGate motivo="calendario" title="Tu calendario de recruiting, con tu cuenta" text="Fechas y plazos clave para tu año de ingreso, organizados para vos." bullets={["Períodos de contacto permitidos y fechas límite","Tus propios recordatorios","Sincronizado en todos tus dispositivos"]}><CalendarPage /></AccountGate>}
       {!careerWait && stage === "history" && <AccountGate motivo="envios" title="Tus envíos, guardados en tu cuenta" text="Registrá a qué coaches les escribiste, cuándo, con qué mail y si respondieron." bullets={["Historial y tablero por etapa","Alertas de a quién hacerle seguimiento","Disponible desde cualquier dispositivo"]}><OutreachHistoryPage profile={profile} setStage={setStage} /></AccountGate>}
       {!careerWait && stage === "exams" && <ExamsPage setStage={setStage} />}

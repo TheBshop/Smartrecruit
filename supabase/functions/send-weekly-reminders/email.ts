@@ -39,7 +39,7 @@ export function isDue(lastSentAt: string | null | undefined, now: Date, force = 
   return now.getTime() - t >= 6 * 86400000;
 }
 
-export function buildReminderEmail(opts: { firstName: string; digest: Digest | null | undefined; unsubUrl: string; siteUrl: string; now?: Date }) {
+export function buildReminderEmail(opts: { firstName: string; digest: Digest | null | undefined; unsubUrl: string; siteUrl: string; replyBase?: string; now?: Date }) {
   const now = opts.now || new Date();
   const d: Digest = (opts.digest && typeof opts.digest === "object") ? opts.digest : {};
   const upd = d.updated ? new Date(d.updated).getTime() : NaN;
@@ -60,8 +60,9 @@ export function buildReminderEmail(opts: { firstName: string; digest: Digest | n
   const stageLine = stage ? `Tu etapa: ${stage}${months ? ` (faltan unos ${months} ${months === 1 ? "mes" : "meses"} para tu ingreso)` : ""}.` : "";
   const KIND: Record<string, string> = { reply: "contestale (te respondió)", thanks: "mandá un agradecimiento", offer: "pedí el detalle de la oferta", followup: "toca seguimiento" };
   const coaches = (Array.isArray(d.coaches) ? d.coaches : []).slice(0, 3).map((c) => ({ u: clip(c && c.u, 80), k: KIND[String(c && c.k)] || "escribile" })).filter((c) => c.u);
-  const coachText = coaches.length ? ["Coaches para atender:", ...coaches.map((c) => `- ${c.u}: ${c.k}`), ""].join("\n") : "";
-  const coachHtml = coaches.length ? `<div style="margin:0 0 18px"><div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Coaches para atender</div><ul style="margin:0;padding-left:18px;font-size:14px">${coaches.map((c) => `<li><b>${escapeHtml(c.u)}</b>: ${escapeHtml(c.k)}</li>`).join("")}</ul></div>` : "";
+  const replyUrl = (u: string) => opts.replyBase ? `${opts.replyBase}&u=${encodeURIComponent(u)}` : "";
+  const coachText = coaches.length ? ["Coaches para atender:", ...coaches.map((c) => `- ${c.u}: ${c.k}${replyUrl(c.u) ? `\n  ¿Te respondió? Avisanos: ${replyUrl(c.u)}` : ""}`), ""].join("\n") : "";
+  const coachHtml = coaches.length ? `<div style="margin:0 0 18px"><div style="font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Coaches para atender</div><ul style="margin:0;padding-left:18px;font-size:14px">${coaches.map((c) => `<li><b>${escapeHtml(c.u)}</b>: ${escapeHtml(c.k)}${replyUrl(c.u) ? ` · <a href="${escapeHtml(replyUrl(c.u))}" style="color:#14213d">¿Te respondió?</a>` : ""}</li>`).join("")}</ul></div>` : "";
   // Fechas que se vienen (próximos 21 días): períodos del calendario, primer contacto y amateurismo. Vienen con fecha absoluta (AAAA-MM-DD).
   const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
   const day0 = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).getTime();

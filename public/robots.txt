@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /baja
+Disallow: /respuesta
 Disallow: /priv/
 Disallow: /api/
 
