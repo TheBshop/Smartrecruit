@@ -70,7 +70,7 @@ L = {
 <h2>Preguntas frecuentes</h2>
 <h3>¿De dónde salen estas búsquedas?</h3><p>Son publicaciones de los coaches de cada programa. Smartrecruit las reúne, las ordena y les suma el mail del coach; no es parte de ninguna universidad.</p>
 <h3>¿Puede postularse una jugadora argentina?</h3><p>Sí: las universidades pueden reclutar atletas internacionales, sujetas a las reglas de su asociación y a la admisión de cada una. Revisá la elegibilidad antes de escribir.</p>
-<h3>¿Hay softbol universitario masculino?</h3><p>No. El softbol de la NCAA, la NAIA y la NJCAA es solo femenino y no hay becas para varones. Solo existen clubes universitarios sin becas. El deporte equivalente para varones es el béisbol.</p>
+<h3>¿Hay softbol universitario masculino?</h3><p>No. El softbol de la NCAA, la NAIA y la NJCAA es solo femenino y no hay becas para varones. Solo existen clubes universitarios sin becas. El deporte equivalente para varones es el béisbol: mirá la <a href="/guias/beca-beisbol-estados-unidos-latinoamericanos/">guía de becas de béisbol</a>.</p>
 <h3>¿Cada cuánto se actualiza?</h3><p>Aproximadamente cada tres días. La fecha de los datos figura arriba.</p>""",
    cta='<div class="box"><b>Hacelo por tu cuenta, gratis, con Smartrecruit:</b> armá tu perfil, mirá qué universidades encajan con vos, conseguí los contactos de los coaches y generá el mail en inglés en minutos. <a href="/">Empezar ahora →</a></div>',
    header='<header><div class="in"><a class="brand" href="/">Smartrecruit</a><a class="cta" href="/">Armá tu perfil gratis</a></div></header>'),
@@ -91,7 +91,7 @@ L = {
 <h2>Frequently asked questions</h2>
 <h3>Where do these needs come from?</h3><p>They are posts by each program's coaches. Smartrecruit gathers and sorts them and adds the coach's email; it is not part of any college.</p>
 <h3>Can an international player apply?</h3><p>Yes: colleges can recruit international athletes, subject to their association's rules and each school's admission. Check eligibility before writing.</p>
-<h3>Is there men's college softball?</h3><p>No. NCAA, NAIA and NJCAA softball is women's only, and there are no scholarships for men. Only unfunded club teams exist. The equivalent sport for men is baseball.</p>
+<h3>Is there men's college softball?</h3><p>No. NCAA, NAIA and NJCAA softball is women's only, and there are no scholarships for men. Only unfunded club teams exist. The equivalent sport for men is baseball: see the <a href="/en/guides/baseball-scholarship-international-players/">baseball scholarship guide</a>.</p>
 <h3>How often is it updated?</h3><p>About every three days. The data date is shown above.</p>""",
    cta='<div class="box"><b>Do it yourself, for free, with Smartrecruit:</b> build your profile, see which universities fit you, get the coaches\' contacts and generate the email in English in minutes. The app itself is currently in Spanish. <a href="/en/">Learn more →</a></div>',
    header='<header><div class="in"><a class="brand" href="/en/">Smartrecruit</a><a class="cta" href="/">Open the app (Spanish)</a></div></header>'),
