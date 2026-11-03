@@ -9005,7 +9005,7 @@ function BajaPage({ setStage }) {
       {state === "busy" && <p className="rm-hint">Un momento…</p>}
       {state === "done" && <p className="rm-hint"><b>Listo.</b> No vas a recibir más recordatorios. Si cambiás de idea, los podés volver a activar desde "Mi plan de hoy".</p>}
       {state === "fail" && <p className="rm-hint">No pudimos procesar la baja. Escribinos a {LEGAL_INFO.email} y la hacemos a mano.</p>}
-      <div style={{ marginTop: 16 }}><button className="rm-btn-ghost" onClick={() => setStage("plan")}>Ir a mi plan</button></div>
+      <div style={{ marginTop: 16 }}><button className="rm-btn-ghost" style={{ color: "var(--navy)", borderColor: "var(--navy)" }} onClick={() => setStage("plan")}>Ir a mi plan</button></div>
     </div>
   );
 }
@@ -9036,7 +9036,7 @@ function RespuestaPage({ setStage }) {
       {state === "busy" && <p className="rm-hint">Un momento…</p>}
       {state === "done" && <p className="rm-hint"><b>Listo.</b> Lo anotamos ({(OPTS.find((o) => o[0] === chosen) || [0, ""])[1].toLowerCase()}). Se refleja en tus envíos cuando entres al sitio.</p>}
       {state === "fail" && <p className="rm-hint">No pudimos anotarlo. Entrá a "Mis envíos" y marcalo desde ahí.</p>}
-      <div style={{ marginTop: 16 }}><button className="rm-btn-ghost" onClick={() => setStage("plan")}>Ir a mi plan</button></div>
+      <div style={{ marginTop: 16 }}><button className="rm-btn-ghost" style={{ color: "var(--navy)", borderColor: "var(--navy)" }} onClick={() => setStage("plan")}>Ir a mi plan</button></div>
     </div>
   );
 }
