@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Páginas de búsquedas abiertas de softbol: /softbol/ (es) y /en/softball/ (en).
+"""Páginas de búsquedas abiertas de softbol: /softball/ (es) y /en/softball/ (en).
 Estáticas, con filtros en JS mínimo. Correr DESPUÉS de gen_seo.py, gen_seo_en.py y gen_blog.py
 (agrega sus URLs al sitemap y a llms.txt). Se regenera cada vez que se actualiza datos/FIELDLEVEL_NEEDS.json."""
 import re, json, html, datetime, os
@@ -53,7 +53,7 @@ function a(){var v={};f.forEach(function(s){v[s.name]=s.value});var n=0;r.forEac
 f.forEach(function(s){s.addEventListener('change',a)});a()})();</script>"""
 
 L = {
- "es": dict(lang="es", loc="es_AR", url=f"{BASE}/softbol/", alt=f"{BASE}/en/softball/", out="public/softbol/index.html",
+ "es": dict(lang="es", loc="es_AR", url=f"{BASE}/softball/", alt=f"{BASE}/en/softball/", out="public/softball/index.html",
    title="Búsquedas abiertas de softbol en universidades de EE.UU. (coaches que reclutan ahora)",
    h1="Búsquedas abiertas de softbol en universidades de EE.UU.",
    desc=f"{N} búsquedas de coaches de softbol femenino, filtrables por división, estado, posición y año de egreso. NCAA, NAIA y NJCAA. Actualizado al {SNAP.strftime('%d/%m/%Y')}.",
@@ -73,7 +73,7 @@ L = {
 <h3>¿Cada cuánto se actualiza?</h3><p>Aproximadamente cada tres días. La fecha de los datos figura arriba.</p>""",
    cta='<div class="box"><b>Hacelo por tu cuenta, gratis, con Smartrecruit:</b> armá tu perfil, mirá qué universidades encajan con vos, conseguí los contactos de los coaches y generá el mail en inglés en minutos. <a href="/">Empezar ahora →</a></div>',
    header='<header><div class="in"><a class="brand" href="/">Smartrecruit</a><a class="cta" href="/">Armá tu perfil gratis</a></div></header>'),
- "en": dict(lang="en", loc="en_US", url=f"{BASE}/en/softball/", alt=f"{BASE}/softbol/", out="public/en/softball/index.html",
+ "en": dict(lang="en", loc="en_US", url=f"{BASE}/en/softball/", alt=f"{BASE}/softball/", out="public/en/softball/index.html",
    title="Open softball recruiting needs at U.S. colleges (coaches recruiting now)",
    h1="Open softball recruiting needs at U.S. colleges",
    desc=f"{N} recruiting needs posted by college softball coaches, filterable by division, state, position and graduation year. NCAA, NAIA and NJCAA. Updated {SNAP.strftime('%B %d, %Y').replace(' 0', ' ')}.",
@@ -113,7 +113,7 @@ def build(k):
     ld = json.dumps([
         {"@context": "https://schema.org", "@type": "WebPage", "name": c["h1"], "description": c["desc"], "inLanguage": c["lang"], "url": c["url"], "dateModified": SNAP.date().isoformat(), "publisher": {"@type": "Organization", "name": "Smartrecruit", "url": BASE}},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": re.sub(r"<[^>]+>", "", a)}} for q, a in faq]}], ensure_ascii=False)
-    alt = f'<link rel="alternate" hreflang="{c["lang"]}" href="{c["url"]}"><link rel="alternate" hreflang="{"en" if k == "es" else "es"}" href="{c["alt"]}"><link rel="alternate" hreflang="x-default" href="{BASE}/softbol/">'
+    alt = f'<link rel="alternate" hreflang="{c["lang"]}" href="{c["url"]}"><link rel="alternate" hreflang="{"en" if k == "es" else "es"}" href="{c["alt"]}"><link rel="alternate" hreflang="x-default" href="{BASE}/softball/">'
     page = f'''<!doctype html>
 <html lang="{c['lang']}">
 <head>
@@ -160,10 +160,10 @@ build("es"); build("en")
 
 # sitemap y llms.txt (idempotente)
 sp = f"{ROOT}/public/sitemap.xml"; sm = open(sp, encoding="utf-8").read()
-sm = re.sub(r"\s*<url><loc>[^<]*/(softbol|en/softball)/</loc>.*?</url>", "", sm)
-sm = sm.replace("</urlset>", "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{SNAP.date().isoformat()}</lastmod></url>\n" for u in ("/softbol/", "/en/softball/")) + "</urlset>")
+sm = re.sub(r"\s*<url><loc>[^<]*/(softball|en/softball)/</loc>.*?</url>", "", sm)
+sm = sm.replace("</urlset>", "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{SNAP.date().isoformat()}</lastmod></url>\n" for u in ("/softball/", "/en/softball/")) + "</urlset>")
 open(sp, "w", encoding="utf-8").write(sm)
 lp = f"{ROOT}/public/llms.txt"; l = open(lp, encoding="utf-8").read().split("\n## Softbol")[0].rstrip("\n")
-l += f"\n\n## Softbol (búsquedas abiertas de coaches)\n- [Búsquedas abiertas de softbol]({BASE}/softbol/)\n- [Open softball needs (English)]({BASE}/en/softball/)\n"
+l += f"\n\n## Softbol (búsquedas abiertas de coaches)\n- [Búsquedas abiertas de softbol]({BASE}/softball/)\n- [Open softball needs (English)]({BASE}/en/softball/)\n"
 open(lp, "w", encoding="utf-8").write(l)
 print("softbol rows:", N, "divisions:", len(divs), "states:", len(sts))
