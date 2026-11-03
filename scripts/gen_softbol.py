@@ -95,6 +95,26 @@ L = {
    header='<header><div class="in"><a class="brand" href="/en/">Smartrecruit</a><a class="cta" href="/">Open the app (Spanish)</a></div></header>'),
 }
 
+
+RO = json.load(open(f"{ROOT}/datos/SOFTBALL_ROSTERS.json", encoding="utf-8"))
+DIVMAP = {x["university"]: x["division"] or "" for x in rows}
+def ro_section(k):
+    es = k == "es"
+    JUCO = ("NJCAA", "CCCAA", "NWAC")
+    trs = []
+    for u in sorted(RO, key=lambda u: (DIVMAP.get(u, ""), u)):
+        v = RO[u]; c = v["cls"]; d = DIVMAP.get(u, "")
+        leave = c.get("So", 0) if d.startswith(JUCO) else c.get("Sr", 0) + c.get("Gr", 0)
+        pos = v.get("pos", {}); P = sum(n for q, n in pos.items() if q.startswith("P")); C = sum(n for q, n in pos.items() if q.startswith("C"))
+        comp = " · ".join(f"{q} {c[q]}" for q in ("Fr", "So", "Jr", "Sr", "Gr") if c.get(q))
+        intl = len(v.get("intl", []))
+        trs.append(f"<tr><td>{esc(u)}</td><td>{esc(d)}</td><td>{v['season']}</td><td>{v['n']}</td><td>{comp}</td><td>{leave}</td><td>{P}/{C}</td><td>{intl or '—'}</td></tr>")
+    if es:
+        return ("<h2>Cupos por año de egreso según el roster</h2><p>Del roster público de cada programa tomamos cuántas jugadoras hay por año, cuántas terminan su ciclo (egresadas en las universidades de 4 años; de segundo año en los junior colleges), cuántas lanzadoras y receptoras tiene y si hay jugadoras internacionales. Es la temporada indicada: los cupos reales pueden haber cambiado. Cubre %d de %d programas; los demás figuran en la lista de arriba pero todavía sin roster cargado.</p>" % (len(RO), len(set(x["university"] for x in rows)))
+          + '<div class="wrap"><table class="sb"><thead><tr><th>Universidad</th><th>División</th><th>Temporada</th><th>Plantel</th><th>Por año</th><th>Salen</th><th>Lanz./Recep.</th><th>Intern.</th></tr></thead><tbody>' + "".join(trs) + "</tbody></table></div><p>Fr = primer año, So = segundo, Jr = tercero, Sr = cuarto, Gr = posgrado. Sin jugadoras argentinas ni latinoamericanas en estos planteles; las internacionales son de Canadá, Japón y Nueva Zelanda.</p>")
+    return ("<h2>Roster openings by class year</h2><p>From each program's public roster we count players per class, how many finish their cycle (seniors at 4-year colleges; sophomores at junior colleges), how many pitchers and catchers there are, and whether there are international players. It reflects the season shown: real openings may have changed. Covers %d of %d programs; the others appear in the list above without roster data yet.</p>" % (len(RO), len(set(x["university"] for x in rows)))
+      + '<div class="wrap"><table class="sb"><thead><tr><th>College</th><th>Division</th><th>Season</th><th>Roster</th><th>By class</th><th>Leaving</th><th>P/C</th><th>Intl.</th></tr></thead><tbody>' + "".join(trs) + "</tbody></table></div><p>Fr = freshman, So = sophomore, Jr = junior, Sr = senior, Gr = graduate. No Argentine or Latin American players on these rosters; the international players are from Canada, Japan and New Zealand.</p>")
+
 def build(k):
     c = L[k]
     def sel(name, label, opts):
@@ -146,6 +166,7 @@ def build(k):
 <p id="cnt" aria-live="polite"></p>
 {table}
 {c['how']}
+{ro_section(k)}
 {c['tail']}
 {c['cta']}
 </main>
