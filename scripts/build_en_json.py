@@ -333,5 +333,8 @@ add(slug="ncsa-vs-smartrecruit", es="ncsa-vs-smartrecruit-comparativa",
   ["Do I need to pay to contact a coach?","No. Coaches' emails are public and you can write to them directly on your own."],
   ["Can I use Smartrecruit and another service at the same time?","Yes. Smartrecruit is free and has no exclusivity."]])
 
+for _p in P:  # enlace a la página de búsquedas abiertas de softbol (gen_softbol.py)
+    if _p["slug"]=="softball-scholarship-international-players" and "/en/softball/" not in _p["body"]:
+        _p["body"]+='\n<h2>See which coaches are recruiting now</h2>\n<p>Browse the <a href="/en/softball/">open softball needs</a>, filtered by division, state, position and graduation year, and read <a href="/en/blog/how-us-college-softball-works-divisions-scholarships-calendar/">how U.S. college softball works</a>.</p>'
 json.dump(P,open("/home/claude/smartrecruit/scripts/seo_pages_en.json","w",encoding="utf-8"),ensure_ascii=False,indent=1)
 print(len(P))

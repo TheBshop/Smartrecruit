@@ -54,5 +54,9 @@ body="<h2>Division I: dates by sport</h2>\n<p>These dates refer to when the coac
 ["Men's basketball","June 15 after sophomore year","August 1, at the start of junior year"],
 ["Women's basketball","Conversations: June 1 after sophomore year. Verbal offers: June 15 of junior year","January 1 of junior year"]))+
 "\n<h2>Division II</h2>\n<p>Coaches can contact you at any time by phone, message or email, even in freshman or sophomore year. In-person contact is limited until June 15 after sophomore year, which is also when they can make verbal offers and plan official visits. Unofficial visits have no date restrictions.</p>\n<h2>What you can do before those dates</h2>\n<p>These rules limit the coach, not you. You can send a short email whenever you want, show your interest and send your video. Many coaches will read and save it, even if they cannot reply yet. The best use of that time is to have your eligibility profile, video and grades ready. See the <a href=\"/en/guides/how-to-email-a-college-coach/\">guide to emailing a coach</a> and the <a href=\"/en/blog/recruiting-timeline-finishing-high-school-in-december/\">timeline for finishing high school in December</a>.</p>\n<h2>A note for students outside the U.S.</h2>\n<p>These dates are counted by U.S. high school year (sophomore is second year, junior is third). If you study in a country with a different calendar, find your graduation year and count from there: your third year of high school is equivalent to junior year.</p>"))
+import os
+_f=os.path.join(os.path.dirname(os.path.abspath(__file__)),"blog_posts_en.json")
+if os.path.exists(_f):  # conservar posts agregados por otros scripts (p. ej. build_blog_softbol.py)
+    _have={p["slug"] for p in P}; P+=[e for e in json.load(open(_f,encoding="utf-8")) if e["slug"] not in _have]
 json.dump(P,open("blog_posts_en.json","w",encoding="utf-8"),ensure_ascii=False,indent=1)
 print(len(P))
