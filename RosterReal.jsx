@@ -3727,6 +3727,54 @@ function quarterlySummaryText(profile, now = new Date()) {
   ].filter((x) => x !== null).join("\n");
 }
 
+// ---- "Pegá la respuesta del coach": clasifica en el navegador (no se envía a ningún servidor) para actualizar el estado y proponer el próximo paso ----
+// Reglas simples sobre el texto en inglés (o español). Devuelve el estado sugerido, qué pidió el coach y por qué, para que la atleta confirme.
+function classifyCoachReply(raw) {
+  const t = String(raw || "").replace(/\s+/g, " ").trim();
+  if (t.length < 15) return null;
+  const has = (re) => re.test(t);
+  const offer = has(/\b(we(?:'d| would) (?:like|love) to offer|(?:would|want to|happy to|pleased to) offer you|(?:i|we) (?:am|are) (?:offering|pleased to offer)|offer(?:ing)? you (?:a|an|the)|(?:scholarship|athletic aid|full ride) offer|offer (?:of )?(?:a )?(?:full|partial|athletic)?\s?(?:scholarship|athletic aid|ride)|roster spot (?:for you|is yours)|te ofrecemos|oferta de beca)\b/i);
+  const reject = has(/\b(unfortunately|not (?:going to be )?a (?:fit|match)|no (?:more )?(?:spots|roster spots|room|openings?)|(?:class|roster|team) is (?:full|set|filled)|(?:already )?filled (?:our|the|that)|won'?t be able to|cannot (?:offer|recruit)|can'?t (?:offer|recruit)|not (?:recruiting|looking for) (?:your|that|this) (?:class|position)|good luck (?:with|in) your|lamentablemente|no tenemos lugar)\b/i);
+  const visit = has(/\b(visit|campus|phone call|zoom|video call|schedule a (?:call|time|chat)|set up a (?:call|time)|give (?:me|us) a call|(?:call|talk|chat) (?:with )?(?:you|me)|meet (?:with )?you|are you (?:free|available)|llamada|visita)\b/i);
+  const asks = [];
+  if (has(/\b(transcripts?|grades|gpa|report cards?|boletines?|notas)\b/i)) asks.push("tus notas o transcript");
+  if (has(/\b(highlight|film|video|reel|game footage|full game|videos?)\b/i)) asks.push("tu video");
+  if (has(/\b(sat|act|toefl|duolingo|ielts|test scores?)\b/i)) asks.push("tus puntajes de exámenes");
+  if (has(/\b(questionnaire|recruiting form|fill out|complete (?:our|the) (?:form|profile)|cuestionario)\b/i)) asks.push("el cuestionario de reclutamiento del programa");
+  if (has(/\b(schedule|upcoming (?:games|tournaments?)|where (?:will|are) you (?:be )?play|calendar of games)\b/i)) asks.push("tu calendario de partidos");
+  let status = "respondio", why = "Te contestó: respondele dentro de las 24 horas.";
+  if (offer && !reject) { status = "oferta"; why = "Parece una oferta. Pedí el detalle por escrito antes de aceptar nada."; }
+  else if (reject) { status = "rechazo"; why = "Parece que no tiene lugar. Un mail corto de agradecimiento deja la puerta abierta."; }
+  else if (visit) { status = "visita"; why = "Propone una llamada o una visita: confirmá fecha y horario, y mandá un agradecimiento después."; }
+  else if (asks.length) why = "Te pide material: mandáselo cuanto antes, en el mismo hilo.";
+  return { status, asks, why };
+}
+function ReplyPaste({ entry, onApply }) {
+  const [txt, setTxt] = useState("");
+  const [res, setRes] = useState(null);
+  const label = OUTREACH_STATUS_LABELS;
+  return (
+    <details style={{ flexBasis: "100%", marginTop: 8 }}>
+      <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--ink-soft)" }}>¿Te contestó? Pegá su respuesta</summary>
+      <textarea aria-label={`Respuesta de ${entry.university}`} value={txt} onChange={(ev) => { setTxt(ev.target.value); setRes(null); }} maxLength={4000} rows={4} placeholder="Pegá acá el texto del mail del coach. Se analiza en tu navegador: no se envía a ningún lado." style={{ width: "100%", marginTop: 6, padding: 8, fontSize: 13, border: "2px solid var(--line)", boxSizing: "border-box" }} />
+      <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginTop: 6 }}>
+        <button type="button" className="rm-btn-inline" onClick={() => setRes(classifyCoachReply(txt) || { none: true })}>Analizar</button>
+        {res && res.none && <span style={{ fontSize: 13, color: "var(--ink-soft)" }}>Pegá un texto más largo para poder analizarlo.</span>}
+      </div>
+      {res && !res.none && (
+        <div className="rm-today-note" style={{ marginTop: 8 }}>
+          <div><b>Parece: {label[res.status]}.</b> {res.why}</div>
+          {res.asks.length > 0 && <div style={{ marginTop: 4 }}>Te pide: {res.asks.join(", ")}.</div>}
+          <div style={{ marginTop: 6, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            {entry.status !== res.status && <button type="button" className="rm-btn-inline" onClick={() => { onApply(res.status); setRes(null); setTxt(""); }}>Marcar como "{label[res.status]}"</button>}
+            {entry.status === res.status && <span style={{ fontSize: 13 }}>Ya está marcado así.</span>}
+            <span style={{ fontSize: 12, color: "var(--ink-soft)" }}>Es una lectura automática y puede equivocarse: revisá la respuesta antes de confirmar.</span>
+          </div>
+        </div>
+      )}
+    </details>
+  );
+}
 const OUTREACH_STATUS_LABELS = {
   sin_respuesta: "Sin respuesta",
   respondio: "Respondió",
@@ -5702,6 +5750,7 @@ function MailPage({ profile, setStage, embedded, initialPick }) {
                     {profile && <button type="button" className="rm-btn-inline" onClick={() => followUp(e.university)}>Escribir {MAIL_KINDS[step.kind].label.toLowerCase()} →</button>}
                     <button type="button" className="rm-btn-inline" style={{ color: "var(--ink-soft)" }} onClick={() => remove(e.university)}>Quitar del registro</button>
                   </div>
+                  <ReplyPaste entry={e} onApply={(st) => updateStatus(e.university, st)} />
                   <details style={{ flexBasis: "100%", marginTop: 8 }} open={!!e.notes}>
                     <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--ink-soft)" }}>Notas sobre este coach{e.notes ? " ✓" : ""}</summary>
                     <textarea aria-label={`Notas sobre ${e.university}`} defaultValue={e.notes || ""} maxLength={600} rows={3} placeholder="Qué te dijo, qué te pidió (video, notas, llamada), fechas de visita…" onBlur={(ev) => { if (ev.target.value !== (e.notes || "")) saveNote(e.university, ev.target.value); }} style={{ width: "100%", marginTop: 6, padding: 8, fontSize: 13, border: "2px solid var(--line)", fontFamily: "inherit", boxSizing: "border-box" }} />
