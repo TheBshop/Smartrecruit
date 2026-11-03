@@ -1,282 +1,300 @@
 [
-  {
-    "School": "Brown University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Ros Chou, Ph.D.",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Dartmouth College",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Katie Dowty",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "Kathryn.B.Dowty@Dartmouth.edu"
-  },
-  {
-    "School": "Harvard University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Mel Denham",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "melanie_denham@fas.harvard.edu"
-  },
-  {
-    "School": "La Salle University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Kelsie McDowell",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "mcdowell@lasalle.edu"
-  },
-  {
-    "School": "Lindenwood University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Trevor Locke",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Long Island University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Alex Artus",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Mount St. Mary's University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Maggie Myles",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "m.r.myles@msmary.edu"
-  },
-  {
-    "School": "Princeton University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Karameli Fa'ae'e",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Queens University of Charlotte",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Danny Harlow",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Women's Rugby Coach",
-    "Email": "harlowd@queens.edu"
-  },
-  {
-    "School": "Sacred Heart University",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Michelle Reed",
-    "Source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)",
-    "SourceUrl": "https://sacredheartpioneers.com/coaches.aspx?rc=159",
-    "Title": "Head Coach",
-    "Email": "reedm14@sacredheart.edu"
-  },
-  {
-    "School": "United States Military Academy",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Jenn Salomon-Clayton",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "United States Naval Academy",
-    "Division": "NCAA D1",
-    "Conference": "NIRA",
-    "Coach": "Murph McCarthy",
-    "Source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)",
-    "SourceUrl": "https://navysports.com/staff.aspx?staff=1527",
-    "Title": "Head Coach",
-    "Email": "jmccart@usna.edu"
-  },
-  {
-    "School": "American International College",
-    "Division": "NCAA D2",
-    "Conference": "NIRA",
-    "Coach": "Annekkia Ritter-Truxal",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Associate Head Women's Rugby Coach",
-    "Email": "annekkia.rittertruxal@aic.edu"
-  },
-  {
-    "School": "Davenport University",
-    "Division": "NCAA D2",
-    "Conference": "NIRA",
-    "Coach": "Greg Teliczan",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "greg.teliczan@davenport.edu"
-  },
-  {
-    "School": "Emory & Henry University",
-    "Division": "NCAA D2",
-    "Conference": "NIRA",
-    "Coach": "Doc O'Neill",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Frostburg State University",
-    "Division": "NCAA D2",
-    "Conference": "NIRA",
-    "Coach": "John Baker",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Interim Head Women's Rugby Coach",
-    "Email": "jebaker@frostburg.edu"
-  },
-  {
-    "School": "West Chester University of Pennsylvania",
-    "Division": "NCAA D2",
-    "Conference": "NIRA",
-    "Coach": "Tony DeRemer",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "aderemer@wcupa.edu"
-  },
-  {
-    "School": "Bowdoin College",
-    "Division": "NCAA D3",
-    "Conference": "NIRA",
-    "Coach": "Laura Miller",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "l.miller@bowdoin.edu"
-  },
-  {
-    "School": "Guilford College",
-    "Division": "NCAA D3",
-    "Conference": "NIRA",
-    "Coach": "Christine Newcomb",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Women's Rugby Coach",
-    "Email": "cnewcomb@guilford.edu"
-  },
-  {
-    "School": "University of New England",
-    "Division": "NCAA D3",
-    "Conference": "NIRA",
-    "Coach": "Ashley Potvin",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Warren Wilson College",
-    "Division": "NCAA D3",
-    "Conference": "NIRA",
-    "Coach": "Angelica Rodriguez",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Adrian College",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Eric Enright",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Alfred University",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Dr. Nicole Bernsen",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Director of Rugby/Head Coach",
-    "Email": "bernsen@alfred.edu"
-  },
-  {
-    "School": "Lander University",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Makayla Lowe Richesin",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Women's Rugby Coach",
-    "Email": "mlowe@lander.edu"
-  },
-  {
-    "School": "New England College",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Rupert Leeming",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Women's Rugby Coach",
-    "Email": "rleeming@nec.edu"
-  },
-  {
-    "School": "University of New Haven",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Emily Record",
-    "Source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)",
-    "SourceUrl": "https://newhavenchargers.com/coaches.aspx?rc=1489",
-    "Title": "Head Women's Rugby Coach",
-    "Email": "erecord@newhaven.edu"
-  },
-  {
-    "School": "Norwich University",
-    "Division": "NCAA D2",
-    "Conference": "NCR",
-    "Coach": "Baylee Annis",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Coach",
-    "Email": "bannis@norwich.edu"
-  },
-  {
-    "School": "Thomas College",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Farrah Douglas",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Head Women's Rugby Coach",
-    "Email": "farrah.douglas@thomas.edu"
-  },
-  {
-    "School": "Vermont State University Castleton",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Erin LaMountain",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
-  },
-  {
-    "School": "Walsh University",
-    "Division": "NCR",
-    "Conference": "NCR",
-    "Coach": "Kelly Wallenhorst",
-    "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
-    "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
-    "Title": "Women's Head Coach",
-    "Email": "kwallenhorst@walsh.edu"
-  }
+ {
+  "School": "Brown University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Rosalind Chou, Ph.D.",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://brownbears.com/sports/womens-rugby/coaches",
+  "Title": "Women's Rugby Head Coach",
+  "Email": "rosalind_chou@brown.edu"
+ },
+ {
+  "School": "Dartmouth College",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Katie Dowty",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "Kathryn.B.Dowty@Dartmouth.edu"
+ },
+ {
+  "School": "Harvard University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Mel Denham",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "melanie_denham@fas.harvard.edu"
+ },
+ {
+  "School": "La Salle University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Kelsie McDowell",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "mcdowell@lasalle.edu"
+ },
+ {
+  "School": "Lindenwood University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Trevor Locke",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://lindenwoodlions.com/sports/womens-rugby/coaches",
+  "Title": "Women's Rugby Head Coach",
+  "Email": "tlocke@lindenwood.edu"
+ },
+ {
+  "School": "Long Island University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Alex Artus",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://www.liuathletics.com/staff-directory",
+  "Title": "Head Coach",
+  "Email": "alex.artus@liu.edu"
+ },
+ {
+  "School": "Mount St. Mary's University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Maggie Myles",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "m.r.myles@msmary.edu"
+ },
+ {
+  "School": "Princeton University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Karameli Fa'ae'e",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://goprincetontigers.com/sports/womens-rugby/coaches",
+  "Title": "Head Coach",
+  "Email": "karamelifaaee@princeton.edu"
+ },
+ {
+  "School": "Queens University of Charlotte",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Danny Harlow",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "harlowd@queens.edu"
+ },
+ {
+  "School": "Sacred Heart University",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Michelle Reed",
+  "Source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)",
+  "SourceUrl": "https://sacredheartpioneers.com/coaches.aspx?rc=159",
+  "Title": "Head Coach",
+  "Email": "reedm14@sacredheart.edu"
+ },
+ {
+  "School": "United States Military Academy",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Jenn Salomon-Clayton",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://goarmywestpoint.com/sports/womens-rugby/coaches",
+  "Title": "Women's Rugby Head Coach",
+  "Email": "jennifer.salomon@westpoint.edu"
+ },
+ {
+  "School": "United States Naval Academy",
+  "Division": "NCAA D1",
+  "Conference": "NIRA",
+  "Coach": "Murph McCarthy",
+  "Source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)",
+  "SourceUrl": "https://navysports.com/staff.aspx?staff=1527",
+  "Title": "Head Coach",
+  "Email": "jmccart@usna.edu"
+ },
+ {
+  "School": "American International College",
+  "Division": "NCAA D2",
+  "Conference": "NIRA",
+  "Coach": "Annekkia Ritter-Truxal",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Associate Head Women's Rugby Coach",
+  "Email": "annekkia.rittertruxal@aic.edu"
+ },
+ {
+  "School": "Davenport University",
+  "Division": "NCAA D2",
+  "Conference": "NIRA",
+  "Coach": "Greg Teliczan",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "greg.teliczan@davenport.edu"
+ },
+ {
+  "School": "Emory & Henry University",
+  "Division": "NCAA D2",
+  "Conference": "NIRA",
+  "Coach": "Tom \"Doc\" O'Neill",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://emoryhenry.prestosports.com/sports/wrugby/coaches/index",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "toneill@emoryhenry.edu"
+ },
+ {
+  "School": "Frostburg State University",
+  "Division": "NCAA D2",
+  "Conference": "NIRA",
+  "Coach": "John Baker",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Interim Head Women's Rugby Coach",
+  "Email": "jebaker@frostburg.edu"
+ },
+ {
+  "School": "West Chester University of Pennsylvania",
+  "Division": "NCAA D2",
+  "Conference": "NIRA",
+  "Coach": "Tony DeRemer",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "aderemer@wcupa.edu"
+ },
+ {
+  "School": "Bowdoin College",
+  "Division": "NCAA D3",
+  "Conference": "NIRA",
+  "Coach": "Laura Miller",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "l.miller@bowdoin.edu"
+ },
+ {
+  "School": "Guilford College",
+  "Division": "NCAA D3",
+  "Conference": "NIRA",
+  "Coach": "Christine Newcomb",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "cnewcomb@guilford.edu"
+ },
+ {
+  "School": "University of New England",
+  "Division": "NCAA D3",
+  "Conference": "NIRA",
+  "Coach": "Ashley Potvin",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://athletics.une.edu/sports/womens-rugby/coaches",
+  "Title": "Head Coach",
+  "Email": "apotvin1@une.edu"
+ },
+ {
+  "School": "Warren Wilson College",
+  "Division": "NCAA D3",
+  "Conference": "NIRA",
+  "Coach": "Abby Berberich",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://warrenwilsonowls.com/sports/womens-rugby/coaches",
+  "Title": "Interim Head Women's Rugby Coach",
+  "Email": "aberberich@warren-wilson.edu"
+ },
+ {
+  "School": "Adrian College",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Eric Enright",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/"
+ },
+ {
+  "School": "Alfred University",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Dr. Nicole Bernsen",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Director of Rugby/Head Coach",
+  "Email": "bernsen@alfred.edu"
+ },
+ {
+  "School": "Lander University",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Makayla Lowe Richesin",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "mlowe@lander.edu"
+ },
+ {
+  "School": "New England College",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Rupert Leeming",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "rleeming@nec.edu"
+ },
+ {
+  "School": "University of New Haven",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Emily Record",
+  "Source": "Sitio oficial de atletismo de la universidad (relevado 22/10/2026)",
+  "SourceUrl": "https://newhavenchargers.com/coaches.aspx?rc=1489",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "erecord@newhaven.edu"
+ },
+ {
+  "School": "Norwich University",
+  "Division": "NCAA D2",
+  "Conference": "NCR",
+  "Coach": "Baylee Annis",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Coach",
+  "Email": "bannis@norwich.edu"
+ },
+ {
+  "School": "Thomas College",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Farrah Douglas",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Head Women's Rugby Coach",
+  "Email": "farrah.douglas@thomas.edu"
+ },
+ {
+  "School": "Vermont State University Castleton",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Erin LaMountain",
+  "Source": "Sitio oficial del programa (verificado 3/11/2026)",
+  "SourceUrl": "https://castletonsports.com/sports/womens-rugby/coaches",
+  "Title": "Head Coach",
+  "Email": "erin.lamountain@vermontstate.edu"
+ },
+ {
+  "School": "Walsh University",
+  "Division": "NCR",
+  "Conference": "NCR",
+  "Coach": "Kelly Wallenhorst",
+  "Source": "The Rugby Breakdown, 'Tracking NCAA Varsity Programs' (actualizado 15/10/2026)",
+  "SourceUrl": "https://therugbybreakdown.com/tracking-ncaa-varsity-programs/",
+  "Title": "Women's Head Coach",
+  "Email": "kwallenhorst@walsh.edu"
+ }
 ]
