@@ -741,7 +741,7 @@ function coachContactFor(university, sport, gender) {
   const legacy = legacyContactFor(university, sport, gender);
   // Si el contacto nuevo no tiene mail y el viejo sí, sirve más el viejo.
   if (c && !cWrongSport && (c.email || !legacy)) {
-    return { locked: !!c.locked, name: c.name, title: c.title, contactUrl: c.email ? `mailto:${c.email}` : (c.profileUrl || null), label: c.email ? (c.generic ? `Escribirle al programa (${c.email})` : `Escribirle a ${c.name} (${c.email})`) : (c.profileUrl ? `Escribirle a ${c.name} por FieldLevel (publicó una vacante ahí)` : null), assistants: c.assistants || [], lastName: c.lastName || null, gk: c.gk || null, updated: c.updated || null, email: c.email || null, generic: !!c.generic };
+    return { locked: !!c.locked, name: c.name, title: c.title, contactUrl: c.email ? `mailto:${c.email}` : null, label: c.email ? (c.generic ? `Escribirle al programa (${c.email})` : `Escribirle a ${c.name} (${c.email})`) : null, assistants: c.assistants || [], lastName: c.lastName || null, gk: c.gk || null, updated: c.updated || null, email: c.email || null, generic: !!c.generic };
   }
   return legacy;
 }
@@ -1475,12 +1475,12 @@ function matchFieldLevel(profile) {
       university: row.university,
       division: row.division,
       place: row.place || catalogPlace(row.university),
-      source: row.source || "FieldLevel (necesidad publicada por el coach)",
+      source: "Búsqueda publicada por el coach",
       score: Math.max(0, Math.min(100, score)),
       reasons,
       coachLocked: isLockedContact(coachContactFor(row.university, row.sport, row.gender || profile.gender)),
-      coachContact: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).contactUrl || row.coach_profile_url,
-      coachLabel: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).label || row.coach_label || "Ver perfil del coach en FieldLevel",
+      coachContact: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).contactUrl || null,
+      coachLabel: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).label || null,
       coachName: (coachContactFor(row.university, row.sport, row.gender || profile.gender) || {}).name || null,
       positionCode: row.position_code || null,
       classYearNeeded: row.class_year_needed || null,
@@ -1709,8 +1709,8 @@ function matchFromLoadedRosters(profile) {
       score: Math.max(0, Math.min(100, score)),
       reasons,
       coachLocked: isLockedContact(contact),
-      coachContact: contact.contactUrl || (need && need.row.coach_profile_url) || null,
-      coachLabel: contact.label || (!contact.contactUrl && need && need.row.coach_profile_url ? "Ver perfil del coach en FieldLevel" : null),
+      coachContact: contact.contactUrl || null,
+      coachLabel: contact.label || null,
       coachName: contact.name || null,
       coachTitle: contact.title || null,
       coachPhone: contact.phone || null,
@@ -3235,7 +3235,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
   }
 
   // ---- Búsqueda publicada por ESE coach
-  let needText = null, needReason = "Este coach no tiene búsquedas publicadas en las fuentes cargadas (FieldLevel y tablero de ofertas).";
+  let needText = null, needReason = "Este coach no tiene búsquedas publicadas en las fuentes cargadas (búsquedas publicadas y tablero de ofertas).";
   if (need && need.diff <= 1) {
     const title = needTitle(need.row);
     if (need.row.position_code && !need.posMatch) {
@@ -3251,7 +3251,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
       strength.need = 90;
     }
   } else if (need) needReason = `Este coach publicó búsquedas, pero para la clase ${need.row.class_year_needed || "de otro año"}, lejos de tu ingreso (${entry}): no se citan.`;
-  if (carriesHook) add("need", HOOK_LABELS.need, "FieldLevel + tablero de ofertas", needText, needReason);
+  if (carriesHook) add("need", HOOK_LABELS.need, "Búsquedas publicadas + tablero de ofertas", needText, needReason);
 
   // ---- Entrenador compatriota (o latinoamericano) en el staff
   if (carriesHook) {
@@ -3846,7 +3846,7 @@ function ComposeLinksInner({ profile, r }) {
           )}
           {to
             ? <p style={{ fontSize: 12, color: "var(--field-dark)", margin: "0 0 8px", fontWeight: 600 }}>✓ Mail de {selName || "este coach"}: {to}</p>
-            : <p style={{ fontSize: 12, color: "#9a6a12", margin: "0 0 8px", fontWeight: 600 }}>⚠ {sel ? `No tenemos el mail de ${selName} cargado. ` : "Todavía no tenemos el email de este coach cargado. "}Buscalo en la web oficial de la universidad (sección "Coaches" o "Staff Directory"){(r.coach_profile_url || r.post_url) ? <> o escribile directo por FieldLevel: <a href={r.coach_profile_url || r.post_url} target="_blank" rel="noopener noreferrer">ver el perfil del coach →</a></> : "."}</p>}
+            : <p style={{ fontSize: 12, color: "#9a6a12", margin: "0 0 8px", fontWeight: 600 }}>⚠ {sel ? `No tenemos el mail de ${selName} cargado. ` : "Todavía no tenemos el email de este coach cargado. "}Buscalo en la web oficial de la universidad (sección "Coaches" o "Staff Directory").</p>}
           {timing && <p style={{ fontSize: 12, color: timing.ok ? "var(--field-dark)" : "#9a6a12", margin: "0 0 10px" }}>{timing.ok ? "🟢 " : "🟡 "}{timing.text}</p>}
           <textarea className="rm-compose-text" readOnly value={`${lang === "en" ? "Subject" : "Asunto"}: ${subject}\n\n${body}`} rows={12} />
           <div className="rm-compose-actions">
@@ -3901,7 +3901,7 @@ END:VCALENDAR`;
    PÁGINA: CATÁLOGO (2.447 programas, 4 deportes)
 --------------------------------------------------------------- */
 // Une la búsqueda publicada con el coach cargado en Smartrecruit para ese programa (universidad + deporte + rama).
-// Si no tenemos al coach, queda el perfil de FieldLevel como último recurso.
+// Si todavía no tenemos al coach, solo se avisa (nunca se redirige a otra página).
 function NeedCoach({ n }) {
   const c = n.school && n.sportBase ? coachContactFor(n.school, n.sportBase, n.gender) : null;
   if (c && isLockedContact(c)) return <CoachLock motivo="ficha" />;
@@ -3915,7 +3915,7 @@ function NeedCoach({ n }) {
       </div>
     );
   }
-  return n.coachProfileUrl ? <div className="rm-needs-coach">Todavía no tenemos el mail de este coach. <a href={n.coachProfileUrl} target="_blank" rel="noopener noreferrer">Contactarlo por FieldLevel →</a></div> : null;
+  return <div className="rm-needs-coach">Todavía no tenemos el mail del coach de este programa.</div>;
 }
 function RecruitingNeedsPage({ onOpenSchool }) {
   const [sport, setSport] = useState(() => {
@@ -3971,7 +3971,6 @@ function RecruitingNeedsPage({ onOpenSchool }) {
             <div className="rm-needs-meta">{n.division}{n.place ? ` en ${n.place}` : ""}</div>
             {n.description && <div className="rm-needs-desc">“{n.description}”</div>}
             <div className="rm-needs-links">
-              {n.sourceUrl && <a href={n.sourceUrl} target="_blank" rel="noreferrer">Ver publicación original →</a>}
               {onOpenSchool && n.school && <button type="button" className="rm-link-btn" onClick={() => onOpenSchool(n.school)}>Ver la universidad →</button>}
             </div>
             <NeedCoach n={n} />
@@ -4593,14 +4592,13 @@ function SchoolProfilePage({ school, onBack, profileMajor }) {
       {needsHere.length > 0 && (
         <div className="rm-sp-section">
           <h3 className="rm-condensed" style={{ fontSize: 17 }}>Búsquedas activas de coaches ahora ({needsHere.length})</h3>
-          <p className="rm-exam-note" style={{ marginTop: 0 }}>Publicadas por los coaches de esta universidad en FieldLevel: si tu posición coincide, es la mejor señal de que hay lugar. Escribile mencionándola.</p>
+          <p className="rm-exam-note" style={{ marginTop: 0 }}>Publicadas por los coaches de esta universidad: si tu posición coincide, es la mejor señal de que hay lugar. Escribile mencionándola.</p>
           <div className="rm-needs-list">
             {needsHere.map((n, i) => (
               <div className="rm-needs-row" key={i}>
                 <div className="rm-needs-top"><b>{n.position}</b><span className="rm-needs-when">{offerAgeFromText(n.datePosted)}</span></div>
                 <div className="rm-needs-meta">{n.sport} · {n.division}</div>
                 {n.description && <div className="rm-needs-desc">"{n.description}"</div>}
-                {n.sourceUrl && <div className="rm-needs-meta"><a href={n.sourceUrl} target="_blank" rel="noopener noreferrer">Ver búsqueda original →</a></div>}
                 <NeedCoach n={n} />
               </div>
             ))}
@@ -4904,7 +4902,7 @@ Mis números de esta última temporada: [X goles / X asistencias, u otras stats 
 Mi promedio académico es [GPA en escala 4.0, aclarando la conversión desde tu país].
 
 Te dejo mi highlight video: [link]
-Y mi perfil con más stats: [link, ej. FieldLevel/NCSA]
+Y mi perfil con más stats: [link, ej. NCSA]
 
 ¿Hay lugar en el plantel para mi año de ingreso? Me encantaría poder hablar más sobre el programa.
 
@@ -9147,10 +9145,7 @@ function CoachCard({ r }) {
     return <div className="rm-missing">Todavía no tenemos el contacto del coach de esta universidad — buscalo en la ficha de la universidad o en su sitio deportivo.</div>;
   }
   if (r.coachLocked) return <div className="rm-missing">🔒 Los contactos de coaches se ven con tu cuenta gratuita. <button type="button" className="rm-btn-inline" onClick={() => openSignup("contacto_resultado")}>Crear cuenta →</button></div>;
-  if (!r.coachName) {
-    // Resultado de FieldLevel: no tenemos nombre/email/teléfono real del coach, solo el link de perfil.
-    return <a className="rm-contact" href={r.coachContact} target="_blank" rel="noreferrer">{r.coachLabel} →</a>;
-  }
+  if (!r.coachName) return <div className="rm-missing">Todavía no tenemos el contacto del coach de esta universidad.</div>;
   const isEmail = r.coachContact.startsWith("mailto:");
   const email = isEmail ? r.coachContact.replace("mailto:", "") : null;
   return (
@@ -10146,19 +10141,13 @@ function OfferDetail({ offer }) {
         {text
           ? <p className="rm-offer-fulltext">{text}</p>
           : <p className="rm-offer-fulltext is-empty">Esta publicación no trae el texto del coach.</p>}
-        {truncated && <p className="rm-offer-trunc">FieldLevel corta el texto en su listado y acá llega solo el comienzo. El mensaje completo está en el perfil del coach.</p>}
+        {truncated && <p className="rm-offer-trunc">El texto del coach se muestra resumido: escribile para conocer el detalle.</p>}
       </div>
       <dl className="rm-offer-facts">
         {facts.map(([label, value]) => (
           <React.Fragment key={label}><dt>{label}</dt><dd>{value}</dd></React.Fragment>
         ))}
       </dl>
-      {(coachUrl || (posted && posted.sourceUrl)) && (
-        <div className="rm-offer-links">
-          {coachUrl && <a href={coachUrl} target="_blank" rel="noreferrer">Ver perfil del coach →</a>}
-          {posted && posted.sourceUrl && <a href={posted.sourceUrl} target="_blank" rel="noreferrer">Ver publicación original →</a>}
-        </div>
-      )}
       {posted && <p className="rm-offer-note">* Antigüedad al momento en que se cargaron los datos en Smartrecruit. El listado de origen no trae la fecha exacta.</p>}
     </div>
   );

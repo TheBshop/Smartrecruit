@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Páginas de búsquedas abiertas de softbol (FieldLevel): /softbol/ (es) y /en/softball/ (en).
+"""Páginas de búsquedas abiertas de softbol: /softbol/ (es) y /en/softball/ (en).
 Estáticas, con filtros en JS mínimo. Correr DESPUÉS de gen_seo.py, gen_seo_en.py y gen_blog.py
 (agrega sus URLs al sitemap y a llms.txt). Se regenera cada vez que se actualiza datos/FIELDLEVEL_NEEDS.json."""
 import re, json, html, datetime, os
@@ -27,6 +27,10 @@ for x in rows:
     x["_date"] = (SNAP - datetime.timedelta(hours=x.get("hours_since_posted", 0))).date()
     x["_g"] = GROUP.get(x.get("position_code"), "")
 
+CC = json.load(open(f"{ROOT}/datos/COACH_CONTACTS_BY_PROGRAM.json", encoding="utf-8"))
+def has_mail(x):
+    c = CC.get(f"{x['university']}|Softball|F") or {}
+    return bool(c.get("email") or any(a.get("email") for a in c.get("assistants", [])))
 def counts(key):
     c = {}
     for x in rows: c[x[key]] = c.get(x[key], 0) + 1
@@ -41,7 +45,7 @@ FOOT_ES = None
 tpl = open(f"{ROOT}/public/guias/como-escribirle-a-un-coach/index.html", encoding="utf-8").read()
 style = re.search(r"<style>.*?</style>", tpl, re.S).group(0)
 footer_es = re.search(r"<footer>.*?</footer>", tpl, re.S).group(0)
-footer_en = '<footer><div class="in">Smartrecruit is a website for getting a U.S. college sports scholarship on your own, for free. It is not an agent or an intermediary, does not guarantee scholarships or admission, and does not charge for its use. It is not affiliated with the NCAA, the NAIA, the NJCAA, FieldLevel or any university. Rules change: always confirm with official sources. The Smartrecruit app itself is currently in Spanish.</div></footer>'
+footer_en = '<footer><div class="in">Smartrecruit is a website for getting a U.S. college sports scholarship on your own, for free. It is not an agent or an intermediary, does not guarantee scholarships or admission, and does not charge for its use. It is not affiliated with the NCAA, the NAIA, the NJCAA or any university. Rules change: always confirm with official sources. The Smartrecruit app itself is currently in Spanish.</div></footer>'
 FONTS = '<link rel="icon" href="/favicon.ico" sizes="any" />\n<link rel="apple-touch-icon" href="/apple-touch-icon.png" />\n<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">'
 
 JS = """<script>(function(){var f=document.querySelectorAll('.flt select'),r=document.querySelectorAll('#t tbody tr'),c=document.getElementById('cnt'),T=%d,M=%s;
@@ -52,19 +56,19 @@ L = {
  "es": dict(lang="es", loc="es_AR", url=f"{BASE}/softbol/", alt=f"{BASE}/en/softball/", out="public/softbol/index.html",
    title="Búsquedas abiertas de softbol en universidades de EE.UU. (coaches que reclutan ahora)",
    h1="Búsquedas abiertas de softbol en universidades de EE.UU.",
-   desc=f"{N} búsquedas de coaches de softbol femenino publicadas en FieldLevel, filtrables por división, estado, posición y año de egreso. NCAA, NAIA y NJCAA. Actualizado al {SNAP.strftime('%d/%m/%Y')}.",
+   desc=f"{N} búsquedas de coaches de softbol femenino, filtrables por división, estado, posición y año de egreso. NCAA, NAIA y NJCAA. Actualizado al {SNAP.strftime('%d/%m/%Y')}.",
    home="/", homet="Inicio", brand_cta="Armá tu perfil gratis", crumbs='<a href="/">Inicio</a> › <a href="/guias/">Guías</a> › Búsquedas abiertas de softbol',
    upd=f"Datos al {SNAP.strftime('%d/%m/%Y')}",
-   lead=f"<b>Hay {N} búsquedas abiertas de softbol femenino de {len(set(x['university'] for x in rows))} universidades, publicadas por sus coaches en FieldLevel.</b> Filtralas por división, estado, posición y año de egreso, y escribile al coach con el mail que genera Smartrecruit.",
-   how="<h2>Cómo usar esta lista</h2><p>Cada fila es una publicación de un coach que busca jugadoras para un puesto y un año de egreso. <b>Egreso</b> es el año en que la jugadora termina el secundario. Si terminás en diciembre de 2026 y empezás la universidad en agosto de 2027, en general te corresponde la <i>class</i> de 2027: confirmalo con cada coach. Las publicaciones tienen días o semanas, así que el cupo puede estar cubierto: abrí la publicación original, fijate la fecha y escribile al coach igual si tu perfil encaja.</p>",
-   cols=["Universidad", "División", "Lugar", "Posición", "Egreso", "Publicada", "Publicación"],
+   lead=f"<b>Hay {N} búsquedas abiertas de softbol femenino de {len(set(x['university'] for x in rows))} universidades, publicadas por sus coaches.</b> Filtralas por división, estado, posición y año de egreso, y escribile al coach con el mail que genera Smartrecruit.",
+   how="<h2>Cómo usar esta lista</h2><p>Cada fila es una publicación de un coach que busca jugadoras para un puesto y un año de egreso. <b>Egreso</b> es el año en que la jugadora termina el secundario. Si terminás en diciembre de 2026 y empezás la universidad en agosto de 2027, en general te corresponde la <i>class</i> de 2027: confirmalo con cada coach. Las publicaciones tienen días o semanas, así que el cupo puede estar cubierto: fijate la fecha y escribile al coach igual si tu perfil encaja.</p>",
+   cols=["Universidad", "División", "Lugar", "Posición", "Egreso", "Publicada", "Mail del coach"],
    fl=dict(d="División", s="Estado", p="Posición", y="Año de egreso", all="Todas", alls="Todos"),
    pos={"P": "Lanzadora", "C": "Receptora", "IF": "Cuadro (1B, 2B, 3B, SS)", "OF": "Jardín (LF, CF, RF)"},
-   cnt="Mostrando {n} de {t} búsquedas", link="Ver publicación", fmt=lambda d: d.strftime("%d/%m"),
+   cnt="Mostrando {n} de {t} búsquedas", link="🔒 Ver mail (cuenta gratis)", fmt=lambda d: d.strftime("%d/%m"),
    foot=footer_es,
    tail=f"""<h2>Qué divisiones aparecen</h2><p>La mayoría de las búsquedas son de junior colleges (NJCAA y asociaciones regionales como CCCAA y NWAC) y de la NAIA; la NCAA Division I tiene muy pocas. Para entender qué da cada división, leé <a href="/blog/softbol-universitario-eeuu-divisiones-becas-calendario/">cómo funciona el softbol universitario en EE.UU.</a> y la <a href="/guias/beca-softbol-estados-unidos-latinoamericanas/">guía de becas de softbol</a>.</p>
 <h2>Preguntas frecuentes</h2>
-<h3>¿De dónde salen estas búsquedas?</h3><p>Son publicaciones de coaches en FieldLevel, una plataforma de reclutamiento. Smartrecruit las recopila y las ordena; no es parte de FieldLevel ni de ninguna universidad.</p>
+<h3>¿De dónde salen estas búsquedas?</h3><p>Son publicaciones de los coaches de cada programa. Smartrecruit las reúne, las ordena y les suma el mail del coach; no es parte de ninguna universidad.</p>
 <h3>¿Puede postularse una jugadora argentina?</h3><p>Sí: las universidades pueden reclutar atletas internacionales, sujetas a las reglas de su asociación y a la admisión de cada una. Revisá la elegibilidad antes de escribir.</p>
 <h3>¿Cada cuánto se actualiza?</h3><p>Aproximadamente cada tres días. La fecha de los datos figura arriba.</p>""",
    cta='<div class="box"><b>Hacelo por tu cuenta, gratis, con Smartrecruit:</b> armá tu perfil, mirá qué universidades encajan con vos, conseguí los contactos de los coaches y generá el mail en inglés en minutos. <a href="/">Empezar ahora →</a></div>',
@@ -72,19 +76,19 @@ L = {
  "en": dict(lang="en", loc="en_US", url=f"{BASE}/en/softball/", alt=f"{BASE}/softbol/", out="public/en/softball/index.html",
    title="Open softball recruiting needs at U.S. colleges (coaches recruiting now)",
    h1="Open softball recruiting needs at U.S. colleges",
-   desc=f"{N} recruiting needs posted by college softball coaches on FieldLevel, filterable by division, state, position and graduation year. NCAA, NAIA and NJCAA. Updated {SNAP.strftime('%B %d, %Y').replace(' 0', ' ')}.",
+   desc=f"{N} recruiting needs posted by college softball coaches, filterable by division, state, position and graduation year. NCAA, NAIA and NJCAA. Updated {SNAP.strftime('%B %d, %Y').replace(' 0', ' ')}.",
    crumbs='<a href="/en/">Home</a> › <a href="/en/guides/">Guides</a> › Open softball needs',
    upd=f"Data as of {SNAP.strftime('%B %d, %Y').replace(' 0', ' ')}",
-   lead=f"<b>There are {N} open women's softball needs from {len(set(x['university'] for x in rows))} colleges, posted by their coaches on FieldLevel.</b> Filter by division, state, position and graduation year, then write to the coach with the email Smartrecruit generates.",
-   how="<h2>How to use this list</h2><p>Each row is a coach's post looking for players at a position and graduation year. <b>Class</b> is the year the player finishes high school. If you finish in December 2026 and start college in August 2027, you generally fit the class of 2027: confirm with each coach. Posts are days or weeks old, so the spot may already be filled: open the original post, check the date and email the coach anyway if your profile fits.</p>",
-   cols=["College", "Division", "Location", "Position", "Class", "Posted", "Post"],
+   lead=f"<b>There are {N} open women's softball needs from {len(set(x['university'] for x in rows))} colleges, posted by their coaches.</b> Filter by division, state, position and graduation year, then write to the coach with the email Smartrecruit generates.",
+   how="<h2>How to use this list</h2><p>Each row is a coach's post looking for players at a position and graduation year. <b>Class</b> is the year the player finishes high school. If you finish in December 2026 and start college in August 2027, you generally fit the class of 2027: confirm with each coach. Posts are days or weeks old, so the spot may already be filled: check the date and email the coach anyway if your profile fits.</p>",
+   cols=["College", "Division", "Location", "Position", "Class", "Posted", "Coach email"],
    fl=dict(d="Division", s="State", p="Position", y="Class", all="All", alls="All"),
    pos={"P": "Pitcher", "C": "Catcher", "IF": "Infield (1B, 2B, 3B, SS)", "OF": "Outfield (LF, CF, RF)"},
-   cnt="Showing {n} of {t} needs", link="View post", fmt=lambda d: d.strftime("%b %d").replace(" 0", " "),
+   cnt="Showing {n} of {t} needs", link="🔒 View email (free account)", fmt=lambda d: d.strftime("%b %d").replace(" 0", " "),
    foot=footer_en,
    tail="""<h2>Which divisions appear</h2><p>Most needs come from junior colleges (NJCAA and regional associations such as CCCAA and NWAC) and the NAIA; NCAA Division I has very few. To understand what each division offers, read <a href="/en/blog/how-us-college-softball-works-divisions-scholarships-calendar/">how U.S. college softball works</a> and the <a href="/en/guides/">guides</a>.</p>
 <h2>Frequently asked questions</h2>
-<h3>Where do these needs come from?</h3><p>They are coach posts on FieldLevel, a recruiting platform. Smartrecruit collects and sorts them; it is not part of FieldLevel or of any college.</p>
+<h3>Where do these needs come from?</h3><p>They are posts by each program's coaches. Smartrecruit gathers and sorts them and adds the coach's email; it is not part of any college.</p>
 <h3>Can an international player apply?</h3><p>Yes: colleges can recruit international athletes, subject to their association's rules and each school's admission. Check eligibility before writing.</p>
 <h3>How often is it updated?</h3><p>About every three days. The data date is shown above.</p>""",
    cta='<div class="box"><b>Do it yourself, for free, with Smartrecruit:</b> build your profile, see which universities fit you, get the coaches\' contacts and generate the email in English in minutes. The app itself is currently in Spanish. <a href="/en/">Learn more →</a></div>',
@@ -102,8 +106,8 @@ def build(k):
     y_opts = [(str(y), f"{y} ({n})") for y, n in sorted(yrs.items()) if y]
     filters = '<div class="flt">' + sel("d", c["fl"]["d"], d_opts) + sel("s", c["fl"]["s"], s_opts) + sel("p", c["fl"]["p"], p_opts) + sel("y", c["fl"]["y"], y_opts) + "</div>"
     body_rows = "".join(
-        f'<tr data-d="{esc(x["division"] or "")}" data-s="{x["_st"]}" data-p="{x["_g"]}" data-y="{x.get("class_year_needed") or ""}"><td>{esc(x["university"])}</td><td>{esc(x["division"] or "")}</td><td>{esc(x["place"] or "")}</td><td>{esc(x.get("position_code") or "")}</td><td>{x.get("class_year_needed") or ""}</td><td class="p">{c["fmt"](x["_date"])}</td><td><a href="{esc(x["post_url"])}" rel="nofollow noopener" target="_blank">{c["link"]}</a></td></tr>'
-        for x in rows if x.get("post_url"))
+        f'<tr data-d="{esc(x["division"] or "")}" data-s="{x["_st"]}" data-p="{x["_g"]}" data-y="{x.get("class_year_needed") or ""}"><td>{esc(x["university"])}</td><td>{esc(x["division"] or "")}</td><td>{esc(x["place"] or "")}</td><td>{esc(x.get("position_code") or "")}</td><td>{x.get("class_year_needed") or ""}</td><td class="p">{c["fmt"](x["_date"])}</td><td>' + (f'<a href="/">{c["link"]}</a>' if has_mail(x) else "—") + "</td></tr>"
+        for x in rows)
     table = '<div class="wrap"><table class="sb" id="t"><thead><tr>' + "".join(f"<th>{h}</th>" for h in c["cols"]) + f"</tr></thead><tbody>{body_rows}</tbody></table></div>"
     faq = re.findall(r"<h3>(.*?)</h3><p>(.*?)</p>", c["tail"])
     ld = json.dumps([
