@@ -5,6 +5,8 @@ import json, os, re, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 rows = [x for x in json.load(open(f"{ROOT}/datos/FIELDLEVEL_NEEDS.json", encoding="utf-8")) if "softball" in str(x.get("sport", "")).lower()]
 SNAP = datetime.datetime.strptime(re.search(r'NEEDS_SNAPSHOT_AT\s*=\s*"([^"]+)"', open(f"{ROOT}/RosterReal.jsx", encoding="utf-8").read()).group(1), "%Y-%m-%dT%H:%M:%SZ")
+_RO = json.load(open(f"{ROOT}/datos/SOFTBALL_ROSTERS.json", encoding="utf-8"))
+RO_N = len(_RO); RO_I = sum(len(v.get('intl', [])) for v in _RO.values()); RO_P = sum(1 for v in _RO.values() if v.get('intl'))
 N = len(rows); U = len(set(x["university"] for x in rows))
 def cnt(f):
     c = {}
@@ -76,7 +78,7 @@ es = dict(
 <h2>Qué significa para una jugadora de Argentina</h2>
 <p>Esta es nuestra lectura de los datos, no una garantía. Tres de cada cuatro búsquedas ({pct(juco + dv.get("NAIA", 0))}) son de junior colleges o de la NAIA, y solo {dv.get("NCAA D1", 0)} son de la D1 de la NCAA: son los niveles que más reclutan en este momento. En la NJCAA D1 hay becas completas, y desde un junior college muchas jugadoras se transfieren después a una universidad de cuatro años. Las lanzadoras y las receptoras suman {pct(pg.get("P", 0) + pg.get("C", 0))} de las búsquedas, aunque cada programa y cada año son distintos. Antes de escribir, revisá la <a href="/guias/beca-softbol-estados-unidos-latinoamericanas/">guía de becas de softbol</a> y la elegibilidad.</p>
 <h2>Límites de estos datos</h2>
-<p>Son publicaciones de coaches, con días o semanas de antigüedad: el cupo puede estar cubierto. No son todas las vacantes que existen, porque muchos coaches reclutan sin publicar. Tampoco sabemos cuántas jugadoras internacionales hay en los planteles de softbol. Las cifras de becas de la NAIA y de la NJCAA D1 vienen en parte de una fuente de reclutamiento y conviene confirmarlas.</p>
+<p>Son publicaciones de coaches, con días o semanas de antigüedad: el cupo puede estar cubierto. No son todas las vacantes que existen, porque muchos coaches reclutan sin publicar. De los {RO_N} planteles que pudimos leer, {RO_I} jugadoras figuran con hometown fuera de EE.UU. ({RO_P} programas) y ninguna de Argentina ni de Latinoamérica; en los otros programas no pudimos leer el plantel. Las cifras de becas de la NAIA y de la NJCAA D1 vienen en parte de una fuente de reclutamiento y conviene confirmarlas.</p>
 <h2>Fuentes</h2>
 {src_li()}""")
 
@@ -124,7 +126,7 @@ en = dict(
 <h2>What this means for an international player</h2>
 <p>This is our reading of the data, not a guarantee. Three out of four needs ({pct_en(juco + dv.get("NAIA", 0))}) are from junior colleges or the NAIA, and only {dv.get("NCAA D1", 0)} are from NCAA Division I: those are the levels recruiting most right now. NJCAA Division I offers full scholarships, and many players later transfer from a junior college to a four-year school. Pitchers and catchers add up to {pct_en(pg.get("P", 0) + pg.get("C", 0))} of the needs, although every program and year is different. Before writing, read the <a href="/en/guides/">guides</a> and check eligibility.</p>
 <h2>Limits of this data</h2>
-<p>These are coach posts, days or weeks old: the spot may be filled. They are not every vacancy, because many coaches recruit without posting. We also do not know how many international players are on softball rosters. NAIA and NJCAA Division I scholarship figures come partly from a recruiting source and should be confirmed.</p>
+<p>These are coach posts, days or weeks old: the spot may be filled. They are not every vacancy, because many coaches recruit without posting. Of the {RO_N} rosters we could read, {RO_I} players list a hometown outside the U.S. ({RO_P} programs) and none from Argentina or Latin America; for the other programs we could not read the roster. NAIA and NJCAA Division I scholarship figures come partly from a recruiting source and should be confirmed.</p>
 <h2>Sources</h2>
 {src_li()}""")
 

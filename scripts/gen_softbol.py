@@ -108,11 +108,15 @@ def ro_section(k):
     for u in sorted(set(RO) | set(ST), key=lambda u: (DIVMAP.get(u, ""), u)):
         v = RO.get(u) or {"cls": {}, "season": "—", "n": "—", "pos": {}, "intl": []}; c = v["cls"]; d = DIVMAP.get(u, ""); st = ST.get(u)
         stx = f"<td>{st['rec']}</td><td>{st['avg']:.3f}/{st['ops']:.3f}</td><td>{st['era']:.2f}</td>" if st else "<td>—</td><td>—</td><td>—</td>"
-        leave = c.get("So", 0) if d.startswith(JUCO) else c.get("Sr", 0) + c.get("Gr", 0)
-        pos = v.get("pos", {}); P = sum(n for q, n in pos.items() if q.startswith("P")); C = sum(n for q, n in pos.items() if q.startswith("C"))
-        comp = " · ".join(f"{q} {c[q]}" for q in ("Fr", "So", "Jr", "Sr", "Gr") if c.get(q))
+        known = sum(c.get(q, 0) for q in ("Fr", "So", "Jr", "Sr", "Gr"))
+        okc = known >= 0.6 * v["n"] if isinstance(v["n"], int) else False
+        leave = (c.get("So", 0) if d.startswith(JUCO) else c.get("Sr", 0) + c.get("Gr", 0)) if okc else "—"
+        pos = v.get("pos", {}); okp = sum(pos.values()) >= 0.6 * v["n"] if isinstance(v["n"], int) else False
+        P = sum(n for q, n in pos.items() if q.startswith("P")); C = sum(n for q, n in pos.items() if q.startswith("C"))
+        pc = f"{P}/{C}" if okp else "—"
+        comp = " · ".join(f"{q} {c[q]}" for q in ("Fr", "So", "Jr", "Sr", "Gr") if c.get(q)) if okc else "—"
         intl = len(v.get("intl", []))
-        trs.append(f"<tr><td>{esc(u)}</td><td>{esc(d)}</td><td>{v['season']}</td><td>{v['n']}</td><td>{comp}</td><td>{leave}</td><td>{P}/{C}</td><td>{intl or '—'}</td>{stx}</tr>")
+        trs.append(f"<tr><td>{esc(u)}</td><td>{esc(d)}</td><td>{v['season']}</td><td>{v['n']}</td><td>{comp}</td><td>{leave}</td><td>{pc}</td><td>{intl or '—'}</td>{stx}</tr>")
     if es:
         return ("<h2>Cupos por año de egreso según el roster</h2><p>Del roster público de cada programa tomamos cuántas jugadoras hay por año, cuántas terminan su ciclo (egresadas en las universidades de 4 años; de segundo año en los junior colleges), cuántas lanzadoras y receptoras tiene y si hay jugadoras internacionales. Es la temporada indicada: los cupos reales pueden haber cambiado. Récord, promedio de bateo/OPS y ERA son del equipo en 2026 (disponibles para 20 programas). Cubre %d de %d programas; los demás figuran en la lista de arriba pero todavía sin roster cargado.</p>" % (len(set(RO) | set(ST)), len(set(x["university"] for x in rows)))
           + '<div class="wrap"><table class="sb"><thead><tr><th>Universidad</th><th>División</th><th>Temporada</th><th>Plantel</th><th>Por año</th><th>Salen</th><th>Lanz./Recep.</th><th>Intern.</th><th>Récord 2026</th><th>AVG/OPS</th><th>ERA</th></tr></thead><tbody>' + "".join(trs) + "</tbody></table></div><p>Fr = primer año, So = segundo, Jr = tercero, Sr = cuarto, Gr = posgrado. Sin jugadoras argentinas ni latinoamericanas en estos planteles; las internacionales son de Canadá, Japón, Nueva Zelanda y Australia.</p>")
