@@ -18,12 +18,8 @@ def grp(pos):
         if t in IF: return "IF"
         if t in OF: return "OF"
     return None
-US = r"(,\s*(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC|Pa|Wash|Calif|Ore|Fla|Ill|Mass)\.?\s*$)"
-STATES = "Alabama Alaska Arizona Arkansas California Colorado Connecticut Delaware Florida Georgia Hawaii Idaho Illinois Indiana Iowa Kansas Kentucky Louisiana Maine Maryland Massachusetts Michigan Minnesota Mississippi Missouri Montana Nebraska Nevada Hampshire Jersey Mexico York Carolina Dakota Ohio Oklahoma Oregon Pennsylvania Rhode Tennessee Texas Utah Vermont Virginia Washington Wisconsin Wyoming Columbia".split()
-def foreign(h):
-    if re.search(US, h): return False
-    if any(s in h for s in STATES) and not re.search(r"Canada|Mexico$", h): return False
-    return True
+FOREIGN = re.compile(r"Canada|Alberta|Ontario|British Columbia|B\\.C\\.|Manitoba|Saskatchewan|Quebec|Nova Scotia|Japan|New Zealand|Australia|Denmark|Germany|Spain|Brazil|Venezuela|(?<!New )Mexico|Colombia|Argentina|England|Scotland|Ireland|Netherlands|Italy|France|Sweden|Norway|Finland|Bahamas|Jamaica|Dominican|Cuba|Panama|Korea|China|Philippines", re.I)
+def foreign(h): return bool(FOREIGN.search(h))
 cur = None; rows = {}
 for f in sorted(glob.glob(os.path.join(root, "datos-src", "planteles_pegados", "softbol_*.txt"))):
     for ln in open(f, encoding="utf-8"):
