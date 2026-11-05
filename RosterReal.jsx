@@ -1856,7 +1856,16 @@ function buildTieredResults(profile) {
     try { e2 = matchFromCatalog(profile, new Set([...excl, ...e1.map((r) => r.university)]), 150 - e1.length); } catch (e) { e2 = []; }
     return [...e1, ...e2];
   })();
-  const pool = [...base, ...extra].sort((x, y) => y.score - x.score);
+  // Una universidad = una sola tarjeta. Si llega por dos vías (roster/búsqueda y catálogo/EADA, o dos filas del mismo programa),
+  // se queda la más completa: primero la de base (roster o búsqueda real), y entre iguales la de mayor puntaje.
+  const uKey = (u) => String(u || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, " ").replace(/\b(the|of|at|university|college)\b/g, "").replace(/\s+/g, " ").trim();
+  const seen = new Map();
+  [...base.map((r) => [r, 1]), ...extra.map((r) => [r, 0])].forEach(([r, fromBase]) => {
+    const k = uKey(r.university);
+    const prev = seen.get(k);
+    if (!prev || fromBase > prev.fromBase || (fromBase === prev.fromBase && r.score > prev.r.score)) seen.set(k, { r, fromBase });
+  });
+  const pool = [...seen.values()].map((v) => v.r).sort((x, y) => y.score - x.score);
   const noMajor = (r) => r.academicFit && (r.academicFit.status === "confirmado_no" || r.academicFit.status === "ipeds_no");
   const ok = pool.filter((r) => !noMajor(r));
   // Sin tope por división, las ~100 universidades D1 con roster cargado (que suman puntos por compatriotas, vacante y nivel) llenan
@@ -9356,7 +9365,7 @@ function ResultCard({ r, profile, onOpenSchool, isFav, toggleFav }) {
         <div style={{ textAlign: "right" }}>
           <div className="rm-score">{r.score}<small>PTS</small></div>
           {!hardFail && (() => {
-            const fit = classifyFit(r.score);
+            const fit = fitOf(r);
             return <span className="rm-fit-chip" style={{ background: fit.color + "1a", color: fit.color, marginTop: 4, display: "inline-block" }}>{fit.label}</span>;
           })()}
         </div>
@@ -9434,6 +9443,10 @@ const UPSIDE_BY_YEARS_REMAINING = [15, 35, 60, 85, 100];
 
 // Clasifica un match puntual como Reach/Target/Safety según su score de compatibilidad —
 // misma lógica que "Target School Alignment" de NextCommit, aplicada a cada universidad.
+const TIER_FIT = { aspiracional: { key: "Reach", label: "Ambiciosa", color: "#b3401a" }, realista: { key: "Target", label: "Realista", color: "#2f6fb3" }, segura: { key: "Safety", label: "Segura", color: "#1f7a3f" } };
+// Una sola clasificación en toda la pantalla: si el resultado ya trae su grupo (ambiciosa / realista / alta probabilidad), se usa ese;
+// el puntaje solo se usa de respaldo cuando no hay grupo.
+function fitOf(r) { return (r && r.tier && TIER_FIT[r.tier.key]) || classifyFit(r.score); }
 function classifyFit(score) {
   // En inglés: Safety / Target / Reach. Acá se muestran en español; `key` es el nombre interno.
   if (score >= 65) return { key: "Safety", label: "Segura", color: "#1f7a3f" };
@@ -9501,7 +9514,7 @@ function computeRecruitScore(profile, results) {
 
   // Alineación de la lista: cuántos de los matches del pool son Reach/Target/Safety (internamente; en pantalla: ambiciosas, realistas y seguras).
   const fitCounts = { Reach: 0, Target: 0, Safety: 0 };
-  pool.forEach((r) => { fitCounts[classifyFit(r.score).key]++; });
+  results.forEach((r) => { fitCounts[fitOf(r).key]++; });
 
   // Gaps concretos — solo se listan los que de verdad aplican, nada relleno.
   const gaps = [];
@@ -9691,7 +9704,7 @@ function RecruitScoreSimulator({ profile, results, baseRs }) {
 function BestOptionCard({ profile, results, onOpenSchool }) {
   const best = results.find((r) => !(r.academicFit && r.academicFit.status === "confirmado_no"));
   if (!best) return null;
-  const fit = classifyFit(best.score);
+  const fit = fitOf(best);
 
   return (
     <div className="rm-best-option">
