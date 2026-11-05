@@ -812,13 +812,30 @@ function selectivityRank(university) {
   if (sel) return { level: 0, rate, sel };
   return { level: null, rate, sel };
 }
+// GPA de referencia de los ingresantes estimado con los datos reales de College Scorecard (SAT del 25-75 % y tasa de admisión), en lugar
+// del piso fijo por división. Es una aproximación: sirve para distinguir una universidad de 12 % de admisión de una de 70 %.
+function gpaBenchFromScorecard(university) {
+  const d = scorecardFor(university);
+  if (!d) return null;
+  const sat = d.s ? d.s.split("-").map(Number) : null;
+  if (sat && sat.length === 2 && sat[0] > 0 && sat[1] > 0) {
+    const mid = (sat[0] + sat[1]) / 2;
+    const pts = [[850, 2.8], [1000, 3.05], [1100, 3.25], [1250, 3.55], [1400, 3.8], [1500, 3.95]];
+    if (mid <= pts[0][0]) return pts[0][1];
+    for (let i = 1; i < pts.length; i++) if (mid <= pts[i][0]) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; return Math.round((y0 + ((mid - x0) / (x1 - x0)) * (y1 - y0)) * 100) / 100; }
+    return 3.95;
+  }
+  const rate = d.a ? parseFloat(d.a) : NaN;
+  if (Number.isFinite(rate)) return rate < 10 ? 3.95 : rate < 25 ? 3.8 : rate < 50 ? 3.5 : rate < 70 ? 3.2 : 3.0;
+  return null;
+}
 // Probabilidad de admisión aproximada: selectividad de la universidad y GPA del atleta contra el de sus ingresantes.
 function admissionOdds(university, division, profile) {
   const e = eadaFor(university);
   if (e && e.lvl === 2) return { level: "alta", delta: 3, text: "Admisión: los junior colleges tienen admisión abierta; alcanza con terminar la secundaria y el examen de inglés." };
   const gpa = profile && typeof profile.gpa4 === "number" && profile.gpa4 > 0 ? profile.gpa4 : null;
   const ncsa = SCHOOL_PROFILES_NCSA[university] || {};
-  const bench = parseFloat(ncsa.avg_freshman_gpa) || ACADEMIC_GPA_BENCHMARK[division] || 3.0;
+  const bench = parseFloat(ncsa.avg_freshman_gpa) || gpaBenchFromScorecard(university) || ACADEMIC_GPA_BENCHMARK[division] || 3.0;
   const s = selectivityRank(university);
   if (s.level === null || gpa === null) return { level: "sin dato", delta: 0, text: gpa === null ? "Admisión: convertí tu promedio en el Conversor GPA para estimar tus chances." : "Admisión: no tenemos la tasa de admisión ni la selectividad de esta universidad." };
   const rateTxt = Number.isFinite(s.rate) ? `admite al ${s.rate}%` : `selectividad "${SELECTIVITY_LABEL[s.sel] || s.sel}"`;
