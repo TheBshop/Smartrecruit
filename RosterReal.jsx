@@ -3956,7 +3956,9 @@ END:VCALENDAR`;
 // Une la búsqueda publicada con el coach cargado en Smartrecruit para ese programa (universidad + deporte + rama).
 // Si todavía no tenemos al coach, solo se avisa (nunca se redirige a otra página).
 function NeedCoach({ n }) {
-  const c = n.school && n.sportBase ? coachContactFor(n.school, n.sportBase, n.gender) : null;
+  // FieldLevel no trae la rama del softbol (gender nulo) y los contactos se guardan como Softball|F: solo se muestra softbol femenino.
+  const g = n.gender || (n.sportBase === "Softball" ? "F" : n.gender);
+  const c = n.school && n.sportBase ? coachContactFor(n.school, n.sportBase, g) : null;
   if (c && isLockedContact(c)) return <CoachLock motivo="ficha" />;
   if (c && (c.contactUrl || c.name)) {
     const isMail = c.contactUrl && c.contactUrl.startsWith("mailto:");
