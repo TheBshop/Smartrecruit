@@ -9841,10 +9841,10 @@ function DemoVideo() {
   return (
     <div className="rm-section" style={{ borderTop: "none", paddingTop: 30, paddingBottom: 6 }}>
       <div className="rm-wrap" style={{ maxWidth: 920 }}>
-        <h2 className="rm-condensed" style={{ fontSize: 26, margin: "0 0 6px" }}>Mirá cómo funciona en 1 minuto</h2>
-        <p style={{ fontSize: 14, color: "var(--ink-soft)", margin: "0 0 12px" }}>Del registro al primer mail a un coach, y todo lo que hay en la página. Tiene subtítulos: no hace falta sonido.</p>
-        <video controls playsInline preload="none" poster="/video/demo-poster.jpg" style={{ width: "100%", borderRadius: 10, border: "2px solid var(--line)", background: "#0e1e30" }} aria-label="Video de un minuto que muestra cómo funciona Smartrecruit">
-          <source src="/video/demo.mp4" type="video/mp4" />
+        <h2 className="rm-condensed" style={{ fontSize: 26, margin: "0 0 6px" }}>Mirá cómo funciona en un minuto</h2>
+        <p style={{ fontSize: 14, color: "var(--ink-soft)", margin: "0 0 12px" }}>Un recorrido por la página, del registro al primer mail a un coach. Con voz y subtítulos: lo podés ver sin sonido.</p>
+        <video controls playsInline preload="none" poster="/video/demo-tour-poster.jpg" style={{ display: "block", margin: "0 auto", width: "100%", maxWidth: 340, aspectRatio: "9 / 16", borderRadius: 10, border: "2px solid var(--line)", background: "#0e1e30" }} aria-label="Video de un minuto con voz y subtítulos que muestra cómo funciona Smartrecruit">
+          <source src="/video/demo-tour.mp4" type="video/mp4" />
           Tu navegador no puede reproducir el video.
         </video>
       </div>
