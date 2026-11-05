@@ -9476,17 +9476,21 @@ function computeRecruitScore(profile, results) {
   const projectedDivision = divisions.length ? divisions.slice(0, 2).map((d) => d.replace("NCAA ", "")).join("/") : "Sin datos suficientes";
 
   // Rango de ayuda en USD: combina % de la beca típica con el costo real (CDS) de las universidades del top.
-  let low = null, high = null;
+  let low = null, high = null; const lows = [], highs = [];
   pool.forEach((r) => {
-    const cds = r.academicFit?.cds;
     const sch = r.scholarship;
-    if (cds && sch && typeof sch.pctLow === "number") {
-      const l = Math.round((cds.cost_of_attendance_usd * sch.pctLow) / 100);
-      const h = Math.round((cds.cost_of_attendance_usd * sch.pctHigh) / 100);
-      if (low === null || l < low) low = l;
-      if (high === null || h > high) high = h;
+    // Costo real: Common Data Set o College Scorecard (no los promedios genéricos por tipo de institución).
+    let cost = r.academicFit?.cds ? r.academicFit.cds.cost_of_attendance_usd : null;
+    if (!cost) { try { const c = estimateCost(r.university); if (c && c.confidence !== "baja") cost = c.value; } catch (e) {} }
+    if (cost && sch && typeof sch.pctLow === "number") {
+      const l = Math.round((cost * sch.pctLow) / 100);
+      const h = Math.round((cost * sch.pctHigh) / 100);
+      lows.push(l); highs.push(h);
     }
   });
+  // Mediana de las universidades de la lista (el mínimo y el máximo extremos daban rangos de 0 a 80.000 que no sirven para decidir).
+  const med = (a) => { const b = [...a].sort((x, y) => x - y); return b.length ? b[Math.floor((b.length - 1) / 2)] : null; };
+  low = med(lows); high = med(highs);
 
   // Exposure: proxy real basado en cuántos emails generó/envió desde este navegador (localStorage).
   let outreachCount = 0;
