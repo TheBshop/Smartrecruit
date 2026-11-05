@@ -1763,6 +1763,11 @@ function applyRealismCaps(r, profile) {
   else if (sig.adm.level === "baja") { cap = Math.min(cap, 55); why.push("la admisión es difícil con tu promedio"); }
   if (r.academicFit && (r.academicFit.status === "confirmado_no" || r.academicFit.status === "ipeds_no")) { cap = Math.min(cap, 35); why.push("no dicta tu carrera"); }
   if (sig.cov.status === "falta" && sig.cov.gap > 15000) { cap = Math.min(cap, 45); why.push(`te faltarían más de USD 15.000 por año`); }
+  // Qué datos no tenemos de esta universidad (se muestra en "Falta para afinar"): así se ve qué parte del puntaje es una estimación.
+  const gaps = [];
+  if (sig.adm.level === "sin dato") gaps.push("la tasa de admisión de esta universidad");
+  if (sig.cov.cost && sig.cov.cost.confidence === "baja") gaps.push("el costo real de asistencia (se usó un promedio de instituciones parecidas)");
+  if (gaps.length) r = { ...r, missing: [...(r.missing || []), ...gaps.filter((g) => !(r.missing || []).includes(g))] };
   if (r.score > cap) return { ...r, score: cap, reasons: [...r.reasons, `Tope de realismo: ${why.join(" y ")}, así que el puntaje queda en ${cap} aunque el resto sume más.`] };
   return r;
 }
@@ -9814,6 +9819,11 @@ function Results({ profile, onBack, onOpenSchool }) {
           <b>Pocas opciones por tu carrera.</b> Solo {total} universidades con {profile.sport.toLowerCase()} {profile.gender === "F" ? "femenino" : "masculino"} figuran en nuestros datos oficiales como que dictan o podrían dictar "{profile.major}". Si te interesa ver más, probá una carrera afín más general (por ejemplo Ingeniería en general, Química o Ciencias) en tu perfil.
         </p>
       )}
+      {POSITION_SELECT[profile.sport] && !profile.position && (
+        <p className="rm-hint" style={{ marginBottom: 12, padding: "10px 12px", border: "1px solid var(--gold, #FFB81C)", borderRadius: 8, background: "#fffbea" }}>
+          <b>Elegí tu posición.</b> Sin ella no podemos medir cuántas vacantes hay en tu puesto ni compararte con las jugadoras que ya están: los puntajes son más generales. Se cambia en <b>Editar mi perfil</b>.
+        </p>
+      )}
       <div className="rm-tier-legend">
         {counts(top).map((t) => <span key={t.key} className={`rm-tier rm-tier-${t.key}`} title={t.hint}>{t.emoji} {t.label}: {t.n}</span>)}
       </div>
@@ -12000,7 +12010,7 @@ function AppInner() {
     return () => { cancelled = true; };
   }, []);
   const [profile, setProfile] = useState(() => {
-    try { const p = JSON.parse(localStorage.getItem("rr_profile") || "null"); return p; } catch (e) { return null; }
+    try { const p = JSON.parse(localStorage.getItem("rr_profile") || "null"); return p && p.gpaScale && GPA_SCALES[p.gpaScale] ? normalizeProfile(p) : p; } catch (e) { return null; }
   });
   const saveProfile = (p) => {
     const normalized = normalizeProfile(p);
@@ -12311,7 +12321,10 @@ function CompareDIY({ setStage }) {
 
 function normalizeProfile(p) {
   const gpa4 = GPA_SCALES[p.gpaScale].convert(parseFloat(p.gpaRaw));
-  return { ...p, gpa4: Math.round(gpa4 * 100) / 100 };
+  // Una posición que no existe en el deporte (quedó de otro deporte al cambiarlo) se borra: así el perfil la vuelve a pedir.
+  const validPos = POSITION_SELECT[p.sport];
+  const position = validPos && p.position && !validPos.includes(p.position) ? "" : p.position;
+  return { ...p, position, gpa4: Math.round(gpa4 * 100) / 100 };
 }
 
 // ---- Modo familia: qué es el proceso, en palabras simples, para madre, padre o tutor (y un resumen del avance para compartir) ----
