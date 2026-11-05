@@ -1769,6 +1769,9 @@ function applyRealismCaps(r, profile) {
 
 // Lista completa ordenada por score (sin recortar). runMatch devuelve los 10 primeros: es lo que usan Inicio, el Recruit Score y el resto de la app.
 function runMatchAll(profile) {
+  // Una posición que no existe en el deporte (por ejemplo "M" de mediocampista guardada cuando el perfil era de fútbol y después se pasó a básquet) se ignora.
+  const validPos = POSITION_SELECT[profile.sport];
+  if (validPos && profile.position && !validPos.includes(profile.position)) profile = { ...profile, position: "" };
   const a = matchFieldLevel(profile);
   const b = matchFromLoadedRosters(profile);
   // Si una universidad tiene roster cargado y además búsqueda publicada, queda una sola tarjeta:
@@ -9722,8 +9725,10 @@ function RecruitScoreSimulator({ profile, results, baseRs }) {
 // mismos datos reales que ya arma cada tarjeta (vacante + necesidad + nivel +
 // academia + plata). Se salta cualquier match con filtro académico confirmado
 // en contra (hardFail), aunque tenga el score más alto.
+// La mejor opción se muestra destacada arriba y no se repite como tarjeta de la lista.
+function bestOf(results) { return results.find((r) => !(r.academicFit && r.academicFit.status === "confirmado_no")) || null; }
 function BestOptionCard({ profile, results, onOpenSchool }) {
-  const best = results.find((r) => !(r.academicFit && r.academicFit.status === "confirmado_no"));
+  const best = bestOf(results);
   if (!best) return null;
   const fit = fitOf(best);
 
@@ -9819,7 +9824,7 @@ function Results({ profile, onBack, onOpenSchool }) {
       </button>
       {top.length === 0 && <p>No encontramos necesidades publicadas para esa combinación de deporte/género todavía. Probá otra posición o revisá el deporte elegido.</p>}
       <div id="rm-full-results">
-        {(loggedIn ? top : top.slice(0, FREE_RESULTS)).map((r, i) => (
+        {(loggedIn ? top : top.slice(0, FREE_RESULTS)).filter((r) => r !== bestOf(top)).map((r, i) => (
           <div key={i}>
             <div style={{ margin: "14px 0 -6px" }}><TierBadge tier={r.tier} /></div>
             <ResultCard r={r} profile={profile} onOpenSchool={onOpenSchool} isFav={isFav} toggleFav={toggleFav} />
