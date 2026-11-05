@@ -5403,7 +5403,9 @@ function MailComposer({ profile, log, pick, onTracked }) {
 
   const [university, setUniversity] = useState(() => {
     if (pick && pick.university) return pick.university;
-    const fresh = results.find((r) => !log[r.university]);
+    // Por defecto: la primera de tu lista a la que todavía no le escribiste y que ya tiene mail de coach (se puede escribir hoy mismo);
+    // si ninguna tiene mail cargado, la primera sin escribir.
+    const fresh = results.find((r) => !log[r.university] && getCoachEmail(r.university, profile.sport, profile.gender)) || results.find((r) => !log[r.university]);
     return (fresh || results[0] || {}).university || "__other";
   });
   const [other, setOther] = useState("");
