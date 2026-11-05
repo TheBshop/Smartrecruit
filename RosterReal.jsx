@@ -3430,7 +3430,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     if (noMajor) { /* sin carrera cargada: no hay nada que verificar */ }
     else if (fit.status === "confirmado_no") missing.push(`Según su Common Data Set, ${university} no ofrece "${profile.major}": pensá si querés escribirle igual.`);
     if (!noMajor && fit.status === "ipeds_no") missing.push(`Según IPEDS, ${university} no otorgó títulos en "${profile.major}" en 2024-25: confirmá que la dicte antes de escribirle.`);
-    const gpa = profile.gpa4 ?? T("[convertí tu GPA en la calculadora]", "[convert your GPA in the calculator]");
+    const gpa = profile.gpa4 ? Number(profile.gpa4).toFixed(1) : T("[convertí tu GPA en la calculadora]", "[convert your GPA in the calculator]");
     add("academic", "Carrera y promedio", fit.status === "confirmado_si" ? (fit.cds ? "Common Data Set + tu perfil" : fit.ipeds ? "IPEDS + tu perfil" : "College Scorecard + tu perfil") : "Tu perfil",
       T(`${profile.gpa4 ? `Mi GPA en escala 4.0 es ${gpa}. ` : ""}${majorLine}${profile.gpa4 ? "" : `. Mi GPA convertido a escala 4.0 es ${gpa}`}. ¿Podrías contarme cómo ${university} acompaña académicamente a los atletas internacionales?`,
         `${profile.gpa4 ? `I hold a ${gpa} GPA on the 4.0 scale. ` : ""}${majorLine}${profile.gpa4 ? "" : `. My GPA converted to the 4.0 scale is ${gpa}`}. Could you tell me more about how ${university} supports international student-athletes academically?`), null, true);
@@ -3566,7 +3566,7 @@ function composeEmail({ profile, university, r = null, kind = "first", lang = "e
     const cmS = Number(profile.heightCm) || 0;
     const ftS = cmS >= 120 && cmS <= 240 ? (() => { const t = Math.round(cmS / 2.54); return `${Math.floor(t / 12)}'${t % 12}"`; })() : "";
     const posS = [lang === "en" ? ftS : (cmS ? `${cmS} cm` : ""), posShort].filter(Boolean).join(" ");
-    subject = [name, T(`Clase ${entry}`, `${entry} Grad`), posS || null, profile.gpa4 ? `${profile.gpa4} GPA` : null, profile.videoLink ? T("con video", "Video included") : null].filter(Boolean).join(", ");
+    subject = [name, T(`Clase ${entry}`, `${entry} Grad`), posS || null, profile.gpa4 ? `${Number(profile.gpa4).toFixed(1)} GPA` : null, profile.videoLink ? T("con video", "Video included") : null].filter(Boolean).join(", ");
   }
   else if (thread) subject = /^re:/i.test(thread) ? thread : `Re: ${thread}`;
   else if (followup) subject = `${T("Seguimiento", "Following up")} | ${idBit}${videoBit}`;
@@ -8300,13 +8300,13 @@ function StartPage({ onDone, setStage }) {
         <div className="rm-grid">
           {step === 0 && (<>
             <div className="rm-field"><label>¿Qué deporte practicás?</label>
-              <select value={p.sport} onChange={(e) => { const v = e.target.value; setP({ ...p, sport: v, position: "" }); }}>
+              <select value={p.sport} onChange={(e) => { const v = e.target.value; setP({ ...p, sport: v, position: "", ...(v === "Softball" ? { gender: "F" } : {}) }); }}>
                 <option value="">Elegí tu deporte</option>
                 {SPORTS.map((sp) => <option key={sp} value={sp}>{sp}{sportHasData(sp) ? "" : " (próximamente)"}</option>)}
               </select>
             </div>
             <div className="rm-field"><label>Rama</label>
-              <select value={p.gender} onChange={set("gender")}><option value="F">Femenino</option><option value="M">Masculino</option></select>
+              <select value={p.gender} onChange={set("gender")}><option value="F">Femenino</option>{p.sport !== "Softball" && <option value="M">Masculino</option>}</select>
             </div>
             {p.sport && (() => { const cv = sportCoverage(p.sport, p.gender);
               if (!cv.coaches && !cv.rosters) return <p className="rm-hint rm-full" style={{ margin: 0, color: "var(--flag)" }}>⚠ Para este deporte y rama todavía no cargamos coaches. Vas a ver las búsquedas que publican los coaches, pero no vas a tener sus mails.</p>;
@@ -8379,7 +8379,7 @@ function FirstMailPage({ profile, setStage, onWrite, onOpenSchool }) {
               </div>
               <div className="rm-catalog-row-meta">{r.division}{r.state ? ` · ${r.state}` : ""} · {withEmail(r) ? "con mail del coach" : "sin mail de coach cargado todavía"}</div>
               <div style={{ marginTop: 8, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-                <button type="button" className="rm-btn" onClick={() => onWrite(r.university)}>Escribirle a este coach →</button>
+                <button type="button" className="rm-btn" onClick={() => onWrite(r.university)}>{withEmail(r) ? "Escribirle a este coach →" : "Armar el mail →"}</button>
                 <button type="button" className="rm-btn-inline" onClick={() => onOpenSchool(r.university)}>Ver la universidad</button>
               </div>
             </div>
@@ -8432,7 +8432,7 @@ function ProfileForm({ onSubmit, initial }) {
               return <span style={{ fontSize: 12, color: "var(--field-dark)", marginTop: 2 }}>✓ {n(cv.coaches)} programas con email de coaches y {n(cv.rosters)} planteles reales cargados.</span>; })()}
           </div>
           <div className="rm-field"><label>Género de la división</label>
-            <select value={p.gender} onChange={set("gender")}><option value="F">Femenino</option><option value="M">Masculino</option></select>
+            <select value={p.gender} onChange={set("gender")}><option value="F">Femenino</option>{p.sport !== "Softball" && <option value="M">Masculino</option>}</select>
           </div>
 
           <div className="rm-field"><label>Posición / evento / especialidad</label>
@@ -8598,7 +8598,7 @@ function planTasksRaw(profile, now = new Date()) {
     (cal.events || []).forEach((ev) => {
       const startIn = Math.round((new Date(ev.start) - new Date(t0)) / 86400000);
       const endIn = Math.round((new Date(ev.end) - new Date(t0)) / 86400000);
-      if (startIn <= 0 && endIn >= 0) tasks.push({ id: `cal-now-${ev.div}-${ev.start}`, title: `Ahora: ${ev.label} (${ev.div}) hasta el ${ev.end}. El período limita visitas y contacto en persona.`, go: "calendar" });
+      if (startIn <= 0 && endIn >= 0) tasks.push({ id: `cal-now-${ev.div}-${ev.start}`, title: `Ahora: ${ev.label} (${ev.div}) hasta el ${new Date(ev.end + "T12:00:00").toLocaleDateString("es-AR", { day: "numeric", month: "long" })}. El período limita visitas y contacto en persona.`, go: "calendar" });
       else if (startIn > 0 && startIn <= 30) tasks.push({ id: `cal-soon-${ev.div}-${ev.start}`, title: `En ${startIn} día${startIn === 1 ? "" : "s"}: empieza ${ev.label} (${ev.div}). Dejá listos tus mails antes.`, go: "calendar" });
     });
   }
@@ -12206,7 +12206,7 @@ function AppInner() {
       {!careerWait && stage === "chequeo" && <AccountGate motivo="chequeo" title="Tu chequeo trimestral, con tu cuenta" text="Cada tres meses revisás tu avance y actualizás tus números para que tus mails usen datos al día." bullets={["Seguimiento de tu progreso trimestre a trimestre","Mails que se actualizan con tus últimos resultados","Todo guardado en tu cuenta"]}><QuarterlyPage profile={profile} setStage={setStage} onWrite={(u, kind) => { setOutreachPick({ university: u, kind: kind || "checkin", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /></AccountGate>}
       {!careerWait && stage === "start" && <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />}
       {!careerWait && stage === "firstmail" && (profile ? <FirstMailPage profile={profile} setStage={setStage} onOpenSchool={openSchool} onWrite={(u) => { setOutreachPick({ university: u, kind: "first", nonce: Date.now() }); setStage("outreach"); window.scrollTo(0, 0); }} /> : <StartPage setStage={setStage} onDone={(p) => { saveProfile(p); setStage("firstmail"); window.scrollTo(0, 0); }} />)}
-      {!careerWait && stage === "outreach" && <AccountGate motivo="mails" title="Tus mails a coaches, con tu cuenta" text="Acá se generan los mails personalizados con datos reales de cada programa y se arma tu historial." bullets={["Mails en inglés y español con el gancho justo para cada coach","Contactos de coaches de cada universidad","Todo guardado y sincronizado entre tu compu y tu celular"]}><MailPage profile={profile} setStage={setStage} initialPick={outreachPick} /></AccountGate>}
+      {!careerWait && stage === "outreach" && <AccountGate motivo="mails" title="Tus mails a coaches, con tu cuenta" text="Acá se generan los mails personalizados con datos reales de cada programa y se arma tu historial." bullets={["Mails en inglés con el gancho justo para cada coach","Contactos de coaches de cada universidad","Todo guardado y sincronizado entre tu compu y tu celular"]}><MailPage profile={profile} setStage={setStage} initialPick={outreachPick} /></AccountGate>}
       {!careerWait && stage === "mylist" && <AccountGate motivo="lista" title="Tu lista de universidades, guardada en tu cuenta" text="Armá tu lista corta, compará y seguí el estado de cada postulación." bullets={["Tu lista no se pierde si cambiás de dispositivo","Tablero de seguimiento de cada coach","Recordatorio semanal de qué hacer"]}><MyListPage setStage={setStage} onOpenSchool={openSchool} /></AccountGate>}
       {!careerWait && stage === "catalog" && <CatalogPage onOpenSchool={openSchool} />}
       {!careerWait && stage === "school" && selectedSchool && <SchoolProfilePage school={selectedSchool} onBack={() => setStage("catalog")} profileMajor={profile?.major} />}
